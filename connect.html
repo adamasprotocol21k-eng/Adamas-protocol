@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification | ADAMAS</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="checkWalletStatus()">
+
+    <div class="header-pro" style="padding: 40px 20px; text-align: center;">
+        <h2 class="text-neon-yellow">MISSION CONTROL</h2>
+        <p style="color: var(--text-sub); font-size: 0.7rem;">COMPLETE TASKS TO UNLOCK REWARDS</p>
+    </div>
+
+    <div style="padding: 0 20px;">
+        <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h4 style="margin:0;">Join Telegram</h4>
+                <small style="color: var(--neon-green);">+500 ABP</small>
+            </div>
+            <button class="btn-neon" style="width: auto; padding: 8px 15px; font-size: 0.7rem;" onclick="doTask('tg', 'https://t.me/yourlink')">JOIN</button>
+        </div>
+
+        <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h4 style="margin:0;">Follow on X</h4>
+                <small style="color: var(--neon-green);">+500 ABP</small>
+            </div>
+            <button class="btn-neon" style="width: auto; padding: 8px 15px; font-size: 0.7rem;" onclick="doTask('x', 'https://x.com/yourlink')">FOLLOW</button>
+        </div>
+
+        <p id="lockMsg" style="text-align: center; color: var(--neon-red); font-size: 0.6rem; margin-top: 20px;">
+            ⚠️ COMPLETE ALL MISSIONS TO ACTIVATE TERMINAL
+        </p>
+
+        <button id="enterBtn" class="btn-neon" style="margin-top: 10px; opacity: 0.3;" disabled onclick="enterApp()">
+            ENTER DASHBOARD
+        </button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        let tasks = { tg: false, x: false };
+
+        function checkWalletStatus() {
+            const w = localStorage.getItem('adamas_wallet');
+            if(!w) window.location.href = "index.html";
+            loadUserData(w); // Load from Firebase via app.js
+        }
+
+        function doTask(type, link) {
+            window.open(link, '_blank');
+            tasks[type] = true;
+            if(tasks.tg && tasks.x) {
+                const btn = document.getElementById('enterBtn');
+                btn.style.opacity = "1";
+                btn.disabled = false;
+                document.getElementById('lockMsg').innerHTML = "✅ MISSIONS COMPLETE! TERMINAL READY.";
+                document.getElementById('lockMsg').style.color = "var(--neon-green)";
+            }
+        }
+
+        function enterApp() {
+            if(!userStats.isSocialVerified) {
+                userStats.balance += 1000;
+                userStats.isSocialVerified = true;
+                saveToFirebase();
+            }
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</body>
+</html>
+
