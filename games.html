@@ -3,82 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Zone | ADAMAS Protocol</title>
+    <title>Game Center | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 0 15px;
         }
-        .game-cell {
-            height: 100px;
-            background: #2b2f36;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            cursor: pointer;
-            border: 2px solid transparent;
+
+        .game-card {
+            margin: 0 !important;
+            padding: 25px 15px !important;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
             transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .game-cell:active { transform: scale(0.95); }
-        .win { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.1); }
-        .lose { border-color: var(--neon-red); background: rgba(255, 49, 49, 0.1); }
-        .bet-box { margin-bottom: 20px; text-align: center; }
+
+        .game-card:active { transform: scale(0.95); }
+
+        .game-icon {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .jackpot-banner {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #1e2026 0%, #000 100%);
+            border: 1px solid var(--binance-yellow) !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px !important;
+        }
+
+        .live-tag {
+            background: var(--neon-red);
+            color: white;
+            font-size: 0.5rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .badge-new {
+            background: var(--neon-blue);
+            color: black;
+            font-size: 0.5rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body onload="updateUI()">
 
-    <div class="header-pro" style="padding: 20px; text-align: center;">
-        <h2 style="color: var(--binance-yellow);">💎 DIAMOND HUNT</h2>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Find Diamonds to 2x your ABP</p>
+    <div class="news-ticker">
+        <div class="ticker-content">
+            🎰 NEW GAME ADDED: TEEN PATTI | 💎 BIGGEST WINNER TODAY: 0x4B... EARNED 12,500 ABP | 🚀 MULTIPLY YOUR ASSETS NOW
+        </div>
     </div>
 
-    <div class="glass-card">
-        <div class="bet-box">
-            <p style="font-size: 0.8rem; color: #8b949e;">Entry Fee: <b class="text-neon-blue">100 ABP</b></p>
-            <h4 id="game-msg">Tap a box to start!</h4>
-        </div>
+    <div class="header-pro" style="margin-top: 20px;">
+        <h2 class="text-neon-yellow">GAME CENTER</h2>
+        <p style="font-size: 0.7rem; color: var(--text-sub); letter-spacing: 2px;">BET & MULTIPLY YOUR ABP</p>
+    </div>
 
-        <div class="game-grid" id="grid">
-            <div class="game-cell" onclick="playGame(this, 0)">?</div>
-            <div class="game-cell" onclick="playGame(this, 1)">?</div>
-            <div class="game-cell" onclick="playGame(this, 2)">?</div>
-            <div class="game-cell" onclick="playGame(this, 3)">?</div>
-            <div class="game-cell" onclick="playGame(this, 4)">?</div>
-            <div class="game-cell" onclick="playGame(this, 5)">?</div>
-            <div class="game-cell" onclick="playGame(this, 6)">?</div>
-            <div class="game-cell" onclick="playGame(this, 7)">?</div>
-            <div class="game-cell" onclick="playGame(this, 8)">?</div>
-        </div>
+    <div class="game-grid">
         
-        <button class="btn-neon" style="width: 100%; margin-top: 20px; border-color: var(--text-sub); color: var(--text-sub);" onclick="resetGame()">Reset Board</button>
+        <div class="glass-card game-card" onclick="location.href='teenpatti.html'">
+            <span class="live-tag">LIVE</span>
+            <span class="game-icon">🃏</span>
+            <h4 style="margin: 0;">TEEN PATTI</h4>
+            <small style="color: var(--text-sub); font-size: 0.6rem;">MULTIPLY 10X</small>
+        </div>
+
+        <div class="glass-card game-card" onclick="location.href='mines.html'">
+            <span class="badge-new" style="position: absolute; top:10px; right:10px;">POPULAR</span>
+            <span class="game-icon">💣</span>
+            <h4 style="margin: 0;">MINES</h4>
+            <small style="color: var(--text-sub); font-size: 0.6rem;">STRATEGY GAME</small>
+        </div>
+
+        <div class="glass-card game-card jackpot-banner" onclick="location.href='lottery.html'">
+            <div style="text-align: left;">
+                <h3 style="margin: 0; color: var(--binance-yellow);">🎟️ LOTTERY</h3>
+                <p style="font-size: 0.6rem; color: var(--text-sub); margin: 5px 0;">WEEKLY JACKPOT DRAW</p>
+                <div style="font-size: 1.2rem; font-weight: bold;" class="text-neon-green">50,000 ABP</div>
+            </div>
+            <button class="btn-neon" style="width: auto; padding: 8px 15px; font-size: 0.7rem;">BUY TICKET</button>
+        </div>
+
+        <div class="glass-card game-card" style="opacity: 0.6;">
+            <span class="game-icon">🎡</span>
+            <h4 style="margin: 0;">LUCKY SPIN</h4>
+            <small style="color: var(--text-sub); font-size: 0.6rem;">COMING SOON</small>
+        </div>
+
+        <div class="glass-card game-card" style="opacity: 0.6;">
+            <span class="game-icon">🎲</span>
+            <h4 style="margin: 0;">DICE ROLL</h4>
+            <small style="color: var(--text-sub); font-size: 0.6rem;">COMING SOON</small>
+        </div>
+
     </div>
 
-    <div class="glass-card" style="display: flex; justify-content: space-around; text-align: center;">
-        <div>
-            <small>Played</small>
-            <h4 id="totalPlayed">0</h4>
-        </div>
-        <div>
-            <small>Win Rate</small>
-            <h4 id="winRate">0%</h4>
+    <div style="padding: 15px;">
+        <div class="glass-card" style="background: rgba(0, 210, 255, 0.05); border: 1px dashed var(--neon-blue);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <small style="color: var(--text-sub);">Your Balance</small>
+                    <h3 id="balance" style="margin:0;">0</h3>
+                </div>
+                <div style="text-align: right;">
+                    <small style="color: var(--text-sub);">Rank</small>
+                    <div class="rank-badge">SILVER MINER</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">🏠<br>Home</a>
-        <a href="games.html" class="nav-item active">🎮<br>Games</a>
-        <a href="stake.html" class="nav-item">🔐<br>Stake</a>
-        <a href="refer.html" class="nav-item">👥<br>Refer</a>
-        <a href="wallet.html" class="nav-item">💰<br>Wallet</a>
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠</span>Home
+        </a>
+        <a href="games.html" class="nav-item active">
+            <span>🎮</span>Games
+        </a>
+        <a href="stake.html" class="nav-item">
+            <span>🔐</span>Stake
+        </a>
+        <a href="refer.html" class="nav-item">
+            <span>👥</span>Refer
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <span>💰</span>Wallet
+        </a>
     </nav>
 
     <script src="js/app.js"></script>
-    <script src="js/game.js"></script>
 </body>
 </html>
-
