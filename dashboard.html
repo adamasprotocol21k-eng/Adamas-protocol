@@ -3,39 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Adamas Protocol</title>
+    <title>Dashboard | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body onload="updateUI()">
+<body onload="initDashboard()">
 
-    <div class="header" style="padding: 20px; text-align: center;">
-        <h2 style="color: var(--neon-blue);">ADAMAS PROTOCOL</h2>
-        <small id="walletAddress">Not Connected</small>
-    </div>
-
-    <div class="card" style="text-align: center; border: 2px solid var(--neon-blue);">
-        <p>Your ABP Balance</p>
-        <h1 id="balance" style="font-size: 3rem; margin: 10px 0;">0</h1>
-        <button class="btn-neon" onclick="window.location.href='earn.html'">Start Earning</button>
-    </div>
-
-    <div class="card" style="background: linear-gradient(45deg, #161b22, #0d1117);">
-        <h4>ADS Token Status</h4>
-        <p style="font-size: 0.8rem; color: #8b949e;">Fixed Supply: 21,000 ADS</p>
-        <div style="width: 100%; background: #30363d; height: 10px; border-radius: 5px; margin-top: 10px;">
-            <div style="width: 5%; background: var(--neon-blue); height: 100%; border-radius: 5px;"></div>
+    <div class="header-pro" style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
+        <div>
+            <span style="color: var(--text-sub); font-size: 0.7rem; text-transform: uppercase;">Identity</span>
+            <h4 id="walletAddress" class="text-neon-blue">Connecting...</h4>
         </div>
-        <p style="font-size: 0.7rem; margin-top: 5px;">Phase 1: Early Mining Active</p>
+        <div class="rank-badge">Silver Miner</div>
+    </div>
+
+    <div class="glass-card" style="text-align: center; background: linear-gradient(135deg, rgba(243, 186, 47, 0.1) 0%, rgba(11, 14, 17, 0.7) 100%); border: 1px solid var(--binance-yellow);">
+        <p style="color: var(--binance-yellow); font-size: 0.8rem; letter-spacing: 2px;">TOTAL ABP BALANCE</p>
+        <h1 id="balance" style="font-size: 3.2rem; margin: 10px 0; font-weight: 800;">0.00</h1>
+        <div style="display: flex; justify-content: center; gap: 20px; font-size: 0.7rem; color: var(--text-sub);">
+            <span>Staked: <b id="stakedVal">0</b></span>
+            <span>Ref Rewards: <b id="refVal">0</b></span>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+            <h4>Daily Rewards</h4>
+            <span id="streakDay" class="text-neon-green">Day 1</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; overflow-x: auto; padding-bottom: 10px;">
+            <div class="streak-dot streak-active">1</div>
+            <div class="streak-dot">2</div>
+            <div class="streak-dot">3</div>
+            <div class="streak-dot">4</div>
+            <div class="streak-dot">5</div>
+            <div class="streak-dot">6</div>
+            <div class="streak-dot" style="border-color: var(--binance-yellow);">🎁</div>
+        </div>
+        <button id="claimDailyBtn" class="btn-neon" style="width: 100%; margin-top: 10px; border-color: var(--binance-yellow); color: var(--binance-yellow);" onclick="handleDailyLogin()">Claim Daily Reward</button>
+    </div>
+
+    <div style="padding: 0 15px;">
+        <h5 style="margin-bottom: 10px; color: var(--text-sub);">QUICK ACTIVITIES</h5>
+        <div class="activity-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="glass-card" style="margin: 0; padding: 15px; text-align: center;" onclick="location.href='games.html'">
+                <span style="font-size: 1.5rem;">🎮</span>
+                <p style="font-size: 0.8rem; margin-top: 5px;">Play Game</p>
+            </div>
+            <div class="glass-card" style="margin: 0; padding: 15px; text-align: center;" onclick="location.href='quiz.html'">
+                <span style="font-size: 1.5rem;">🧠</span>
+                <p style="font-size: 0.8rem; margin-top: 5px;">Start Quiz</p>
+            </div>
+            <div class="glass-card" style="margin: 0; padding: 15px; text-align: center;" onclick="location.href='stake.html'">
+                <span style="font-size: 1.5rem;">🔐</span>
+                <p style="font-size: 0.8rem; margin-top: 5px;">Stake ABP</p>
+            </div>
+            <div class="glass-card" style="margin: 0; padding: 15px; text-align: center;" onclick="location.href='lottery.html'">
+                <span style="font-size: 1.5rem;">🎟️</span>
+                <p style="font-size: 0.8rem; margin-top: 5px;">Buy Lottery</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card" style="margin-top: 20px; border-top: 2px solid #30363d;">
+        <h5 style="color: var(--text-sub); margin-bottom: 15px;">PLATFORM STATISTICS</h5>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <small style="color: #8b949e;">Active Players</small>
+                <p style="font-weight: bold;">12,504</p>
+            </div>
+            <div>
+                <small style="color: #8b949e;">Total ABP Earned</small>
+                <p style="font-weight: bold;">8.4M</p>
+            </div>
+        </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="active">🏠<br>Home</a>
-        <a href="earn.html">⛏️<br>Earn</a>
-        <a href="stake.html">🔐<br>Stake</a>
-        <a href="refer.html">👥<br>Refer</a>
-        <a href="wallet.html">💰<br>Wallet</a>
+        <a href="dashboard.html" class="nav-item active">🏠<br>Home</a>
+        <a href="earn.html" class="nav-item">⛏️<br>Earn</a>
+        <a href="stake.html" class="nav-item">🔐<br>Stake</a>
+        <a href="refer.html" class="nav-item">👥<br>Refer</a>
+        <a href="wallet.html" class="nav-item">💰<br>Wallet</a>
     </nav>
 
     <script src="js/app.js"></script>
+    <script>
+        function initDashboard() {
+            updateUI();
+            // यहाँ डेली स्ट्रीक चेक करने का लॉजिक आएगा
+        }
+    </script>
 </body>
 </html>
