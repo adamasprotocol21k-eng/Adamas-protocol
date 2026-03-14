@@ -2,73 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard | ADAMAS PROTOCOL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Adamas Protocol</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
-<body>
-    <header>
-        <div class="navbar">
-            <div class="logo">ADAMAS <span>PROTOCOL</span></div>
-            <nav class="nav-menu">
-                <a href="index.html">Home</a>
-                <a href="dashboard.html" class="active">Dashboard</a>
-                <a href="staking.html">Staking</a>
-                <a href="games.html">Games</a>
-                <a href="wallet.html">Wallet</a>
-            </nav>
-            <button id="connectBtn" class="neon-btn">CONNECT WALLET</button>
+<body onload="updateUI()">
+
+    <div class="header" style="padding: 20px; text-align: center;">
+        <h2 style="color: var(--neon-blue);">ADAMAS PROTOCOL</h2>
+        <small id="walletAddress">Not Connected</small>
+    </div>
+
+    <div class="card" style="text-align: center; border: 2px solid var(--neon-blue);">
+        <p>Your ABP Balance</p>
+        <h1 id="balance" style="font-size: 3rem; margin: 10px 0;">0</h1>
+        <button class="btn-neon" onclick="window.location.href='earn.html'">Start Earning</button>
+    </div>
+
+    <div class="card" style="background: linear-gradient(45deg, #161b22, #0d1117);">
+        <h4>ADS Token Status</h4>
+        <p style="font-size: 0.8rem; color: #8b949e;">Fixed Supply: 21,000 ADS</p>
+        <div style="width: 100%; background: #30363d; height: 10px; border-radius: 5px; margin-top: 10px;">
+            <div style="width: 5%; background: var(--neon-blue); height: 100%; border-radius: 5px;"></div>
         </div>
-    </header>
+        <p style="font-size: 0.7rem; margin-top: 5px;">Phase 1: Early Mining Active</p>
+    </div>
 
-    <main class="dashboard-container">
-        <div class="welcome-banner">
-            <h2>Welcome, <span id="userGreeting" class="neon-blue">Operative</span></h2>
-            <p>Complete your daily tasks to maximize your ABP yield.</p>
-        </div>
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="active">🏠<br>Home</a>
+        <a href="earn.html">⛏️<br>Earn</a>
+        <a href="stake.html">🔐<br>Stake</a>
+        <a href="refer.html">👥<br>Refer</a>
+        <a href="wallet.html">💰<br>Wallet</a>
+    </nav>
 
-        <div class="dash-grid">
-            <div class="glass-card">
-                <h3>Daily Check-in</h3>
-                <p>Earn 50 ABP every 24 hours.</p>
-                <div id="checkInTimer" class="timer-text">Ready to Claim!</div>
-                <button id="claimDailyBtn" class="btn-main">CLAIM 50 ABP</button>
-            </div>
-
-            <div class="glass-card">
-                <h3>Account Stats</h3>
-                <div class="stat-row">
-                    <span>Total ABP Earned:</span>
-                    <span id="globalBalance" class="neon-gold">0</span>
-                </div>
-                <div class="stat-row">
-                    <span>Rank:</span>
-                    <span class="neon-blue">Alpha Miner</span>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="js/main.js"></script>
-    <script>
-        // Dashboard Specific Logic
-        document.getElementById('claimDailyBtn').addEventListener('click', function() {
-            const lastClaim = localStorage.getItem('last_daily_claim');
-            const now = Date.now();
-            const oneDay = 24 * 60 * 60 * 1000;
-
-            if (!lastClaim || (now - lastClaim) > oneDay) {
-                window.addABP(50);
-                localStorage.setItem('last_daily_claim', now);
-                alert("Success! 50 ABP added to your vault.");
-                this.disabled = true;
-                this.innerText = "CLAIMED TODAY";
-            } else {
-                alert("You have already claimed your reward today. Come back tomorrow!");
-            }
-        });
-    </script>
+    <script src="js/app.js"></script>
 </body>
 </html>
-
