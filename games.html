@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Zone | ADAMAS Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .game-cell {
+            height: 100px;
+            background: #2b2f36;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        .game-cell:active { transform: scale(0.95); }
+        .win { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.1); }
+        .lose { border-color: var(--neon-red); background: rgba(255, 49, 49, 0.1); }
+        .bet-box { margin-bottom: 20px; text-align: center; }
+    </style>
+</head>
+<body onload="updateUI()">
+
+    <div class="header-pro" style="padding: 20px; text-align: center;">
+        <h2 style="color: var(--binance-yellow);">💎 DIAMOND HUNT</h2>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Find Diamonds to 2x your ABP</p>
+    </div>
+
+    <div class="glass-card">
+        <div class="bet-box">
+            <p style="font-size: 0.8rem; color: #8b949e;">Entry Fee: <b class="text-neon-blue">100 ABP</b></p>
+            <h4 id="game-msg">Tap a box to start!</h4>
+        </div>
+
+        <div class="game-grid" id="grid">
+            <div class="game-cell" onclick="playGame(this, 0)">?</div>
+            <div class="game-cell" onclick="playGame(this, 1)">?</div>
+            <div class="game-cell" onclick="playGame(this, 2)">?</div>
+            <div class="game-cell" onclick="playGame(this, 3)">?</div>
+            <div class="game-cell" onclick="playGame(this, 4)">?</div>
+            <div class="game-cell" onclick="playGame(this, 5)">?</div>
+            <div class="game-cell" onclick="playGame(this, 6)">?</div>
+            <div class="game-cell" onclick="playGame(this, 7)">?</div>
+            <div class="game-cell" onclick="playGame(this, 8)">?</div>
+        </div>
+        
+        <button class="btn-neon" style="width: 100%; margin-top: 20px; border-color: var(--text-sub); color: var(--text-sub);" onclick="resetGame()">Reset Board</button>
+    </div>
+
+    <div class="glass-card" style="display: flex; justify-content: space-around; text-align: center;">
+        <div>
+            <small>Played</small>
+            <h4 id="totalPlayed">0</h4>
+        </div>
+        <div>
+            <small>Win Rate</small>
+            <h4 id="winRate">0%</h4>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">🏠<br>Home</a>
+        <a href="games.html" class="nav-item active">🎮<br>Games</a>
+        <a href="stake.html" class="nav-item">🔐<br>Stake</a>
+        <a href="refer.html" class="nav-item">👥<br>Refer</a>
+        <a href="wallet.html" class="nav-item">💰<br>Wallet</a>
+    </nav>
+
+    <script src="js/app.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
+
