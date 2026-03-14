@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallet | ADAMAS PROTOCOL</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">ADAMAS <span>PROTOCOL</span></div>
+            <nav class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="wallet.html" class="active">Wallet</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="dash-grid">
+            <div class="glass-card">
+                <h3>Withdraw ABP</h3>
+                <p>Minimum: <span class="neon-blue">5,000 ABP</span></p>
+                <input type="number" id="withdrawAmount" placeholder="Amount to Withdraw">
+                <button id="withdrawBtn" class="btn-main">INITIATE WITHDRAWAL</button>
+                <p id="withdrawStatus" class="small-info"></p>
+            </div>
+
+            <div class="glass-card">
+                <h3>Referral Program</h3>
+                <p>Earn 200 ABP per invite.</p>
+                <div class="ref-box">
+                    <input type="text" id="refLink" value="https://adamas.io/ref=USER123" readonly>
+                    <button onclick="copyRef()" class="btn-sub">COPY</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('withdrawBtn').addEventListener('click', () => {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const balance = parseFloat(localStorage.getItem('adamas_abp_balance') || 0);
+
+            if(amount < 5000) {
+                alert("Minimum withdrawal is 5000 ABP.");
+            } else if(amount > balance) {
+                alert("Insufficient balance!");
+            } else {
+                window.addABP(-amount);
+                document.getElementById('withdrawStatus').innerText = "Status: Processing withdrawal to your Polygon Wallet...";
+                alert("Withdrawal request sent to Amoy Testnet!");
+            }
+        });
+
+        function copyRef() {
+            const copyText = document.getElementById("refLink");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Referral link copied!");
+        }
+    </script>
+</body>
+</html>
+
