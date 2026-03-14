@@ -3,28 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Web3</title>
+    <title>Adamas Protocol | The Future of Scarcity</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* खास लैंडिंग पेज के लिए एक्स्ट्रा स्टाइल */
+        .hero-section {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .logo-glow {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+        .subtitle {
+            color: var(--text-sub);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 0 15px;
+        }
+        .small-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-dim);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="container" style="text-align: center; margin-top: 100px;">
-        <h1 style="color: var(--neon-blue);">💎 ADAMAS</h1>
-        <p>The 21,000 Scarcity Protocol</p>
+    <div class="hero-section">
+        <div class="logo-glow">ADAMAS</div>
+        <div class="subtitle">21,000 SCARCITY PROTOCOL</div>
         
-        <div class="card">
-            <h3>Connect Your Future</h3>
-            <button class="btn-neon" onclick="connectWallet()">Connect Wallet</button>
+        <div class="card" style="width: 85%; border: 1px solid rgba(0, 210, 255, 0.3);">
+            <p style="margin-bottom: 20px; font-weight: 300;">Experience the world's rarest <br><span class="text-neon-blue">Digital Asset Ecosystem</span></p>
+            <button class="btn-neon" style="width: 100%; padding: 18px;" onclick="connectWallet()">Launch App</button>
+        </div>
+
+        <div class="feature-grid">
+            <div class="small-card">
+                <span class="text-neon-green">✓</span> Fixed Supply
+            </div>
+            <div class="small-card">
+                <span class="text-neon-green">✓</span> Proof of Work
+            </div>
         </div>
     </div>
-
-    <nav class="bottom-nav">
-        <a href="dashboard.html">🏠</a>
-        <a href="earn.html">⛏️</a>
-        <a href="stake.html">🔐</a>
-        <a href="refer.html">👥</a>
-        <a href="wallet.html">💰</a>
-    </nav>
 
     <script src="js/app.js"></script>
 </body>
