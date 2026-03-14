@@ -3,83 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Vault | ADAMAS</title>
+    <title>Bonus | ADAMAS</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .gift-container {
-            text-align: center;
-            perspective: 1000px;
-            margin-top: 50px;
-        }
-
-        .gift-box {
-            font-size: 5rem;
-            cursor: pointer;
-            display: inline-block;
-            transition: 0.5s;
-            filter: drop-shadow(0 0 20px rgba(243, 186, 47, 0.4));
-        }
-
-        .gift-box.shake {
-            animation: shakeBox 0.5s infinite;
-        }
-
-        @keyframes shakeBox {
-            0% { transform: rotate(0); }
-            25% { transform: rotate(5deg); }
-            50% { transform: rotate(0); }
-            75% { transform: rotate(-5deg); }
-            100% { transform: rotate(0); }
-        }
-
-        .promo-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px dashed var(--border-dim);
-            color: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            width: 80%;
-            text-align: center;
-            font-family: monospace;
-            letter-spacing: 5px;
-            margin-top: 30px;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-        }
-
-        .promo-input:focus {
-            border-color: var(--binance-yellow);
-            outline: none;
-            box-shadow: 0 0 15px rgba(243, 186, 47, 0.2);
-        }
-    </style>
 </head>
 <body onload="updateUI()">
 
-    <div class="header-pro">
-        <h2 style="color: var(--binance-yellow);">SECRET REWARDS</h2>
-        <p style="font-size: 0.7rem; color: var(--text-sub);">ENTER PROTOCOL CODE TO UNLOCK ASSETS</p>
+    <div class="news-ticker">
+        <div class="ticker-content">
+            🎁 NEW PROMO CODE DROPPED ON TELEGRAM | 💎 REDEEM NOW FOR FREE ABP
+        </div>
     </div>
 
-    <div style="padding: 0 15px;">
-        <div class="glass-card gift-container">
-            <div id="giftElement" class="gift-box">🎁</div>
-            
-            <p id="hintText" style="margin-top: 20px; font-size: 0.8rem; color: var(--text-sub);">
-                Hint: Check our Official Telegram for the weekly code!
-            </p>
+    <div class="header-pro" style="margin-top: 15px;">
+        <h2 style="color: var(--binance-yellow);">SECRET REWARDS</h2>
+    </div>
 
-            <input type="text" id="promoCode" class="promo-input" placeholder="XXXXXX">
-            
-            <button class="btn-neon" style="width: 100%; margin-top: 20px;" onclick="unlockBonus()">REDEEM CODE</button>
-        </div>
-
-        <div class="glass-card" style="background: rgba(0, 210, 255, 0.03); border: 1px solid rgba(0, 210, 255, 0.1);">
-            <h5 style="margin-bottom: 10px;">PROMO LOGS</h5>
-            <div style="font-size: 0.7rem; color: #848e9c;" id="bonusLog">
-                No codes redeemed yet.
-            </div>
-        </div>
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 5rem;">🎁</div>
+        <input type="text" id="promoCode" placeholder="ENTER CODE" style="margin-top: 20px; text-align: center; letter-spacing: 5px;">
+        <button class="btn-neon" style="margin-top: 20px;" onclick="unlockBonus()">REDEEM</button>
     </div>
 
     <nav class="bottom-nav">
@@ -94,44 +36,11 @@
     <script>
         function unlockBonus() {
             const code = document.getElementById('promoCode').value.toUpperCase();
-            const gift = document.getElementById('giftElement');
-            const log = document.getElementById('bonusLog');
-
-            // Secret Codes (आप यहाँ और कोड जोड़ सकते हैं)
-            const rewards = {
-                "ADAMAS500": 500,
-                "LAUNCH2026": 1000,
-                "DIAMOND": 250
-            };
-
-            if (localStorage.getItem('used_code_' + code)) {
-                alert("This code has already been redeemed!");
-                return;
-            }
-
-            if (rewards[code]) {
-                gift.classList.add('shake');
-                
-                setTimeout(() => {
-                    const amount = rewards[code];
-                    userStats.balance += amount;
-                    saveStats();
-                    updateUI();
-
-                    localStorage.setItem('used_code_' + code, 'true');
-                    
-                    gift.classList.remove('shake');
-                    gift.innerHTML = "💎"; // Box turns into Diamond
-                    alert(`🎉 BOOM! You unlocked ${amount} ABP!`);
-                    
-                    log.innerHTML = `<div style="color: var(--neon-green);">+ ${amount} ABP (Code: ${code})</div>`;
-                    document.getElementById('promoCode').value = "";
-                }, 1500);
-            } else {
-                alert("Invalid Protocol Code. Try again!");
-            }
+            if (code === "ADAMAS500") {
+                userStats.balance += 500; saveStats(); updateUI();
+                alert("🎉 Success! +500 ABP added.");
+            } else { alert("Invalid Code!"); }
         }
     </script>
 </body>
 </html>
-
