@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal | ADAMAS Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* KYC Overlay */
+        #kycOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .kyc-card {
+            background: #121212; border: 1px solid var(--binance-yellow);
+            padding: 30px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center;
+        }
+        .kyc-input {
+            width: 100%; padding: 15px; background: #000; border: 1px solid var(--border-dim);
+            border-radius: 12px; color: #fff; margin: 20px 0; text-align: center; font-size: 1rem;
+        }
+        .warning-label {
+            color: var(--neon-red); font-size: 0.6rem; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;
+        }
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .mini-card { background: var(--glass); padding: 15px; border-radius: 20px; border: 1px solid var(--border-dim); }
+    </style>
+</head>
+<body onload="initDashboard()">
+
+    <div id="kycOverlay" style="display: none;">
+        <div class="kyc-card">
+            <h2 style="color: var(--binance-yellow);">IDENTITY CHECK</h2>
+            <p style="font-size: 0.75rem; color: var(--text-sub);">Enter your **Full Legal Name** for reward matching.</p>
+            
+            <input type="text" id="kycName" class="kyc-input" placeholder="Legal Name (e.g. Rahul Kumar)">
+            
+            <p class="warning-label">
+                ⚠️ ATTENTION: Name must match your Government ID. <br>
+                Inconsistent data will lead to permanent reward forfeiture.
+            </p>
+            
+            <button class="btn-neon" style="margin-top: 20px;" onclick="verifyKYC()">CONFIRM IDENTITY</button>
+        </div>
+    </div>
+
+    <div class="news-ticker">
+        <div class="ticker-content" id="globalTicker">LOADING PROTOCOL UPDATES...</div>
+    </div>
+
+    <div class="header-pro" style="padding: 20px 15px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <small style="color: var(--text-sub);">Protocol Active</small>
+            <h3 id="userNameDisplay" style="margin:0; text-transform: capitalize;">Miner</h3>
+        </div>
+        <div id="walletBadge" class="nav-item" style="background: var(--glass); padding: 5px 10px; border-radius: 10px; border: 1px solid var(--binance-yellow); color: var(--binance-yellow);">0x...</div>
+    </div>
+
+    <div style="padding: 0 15px;">
+        <div class="glass-card" style="background: linear-gradient(135deg, #0d1117 0%, #000 100%); text-align: center; border: 1px solid var(--neon-blue);">
+            <small style="color: var(--text-sub);">Total Extracted Assets</small>
+            <h1 style="font-size: 3rem; margin: 10px 0;"><span id="balance">0</span> <small style="font-size: 1rem; color: var(--binance-yellow);">ABP</small></h1>
+            <button class="btn-neon" style="width: auto; padding: 10px 30px;" onclick="location.href='earn.html'">START MINING</button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="mini-card">
+            <small style="color: var(--neon-green);">🔐 STAKED</small>
+            <h3 id="stakedBalance" style="margin: 5px 0;">0.00</h3>
+            <small style="font-size: 0.5rem; color: var(--text-sub);">Daily Interest: 0.5%</small>
+        </div>
+        <div class="mini-card">
+            <small style="color: var(--binance-yellow);">👥 REFERRALS</small>
+            <h3 id="refCount" style="margin: 5px 0;">0</h3>
+            <small style="font-size: 0.5rem; color: var(--text-sub);">Earn 10% Bonus</small>
+        </div>
+    </div>
+
+    <div style="padding: 0 15px;">
+        <div class="glass-card" style="margin-top: 0; display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 0.65rem; color: var(--text-sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 70%;" id="refLink">
+                adamas.protocol/?ref=loading...
+            </div>
+            <button onclick="copyRefLink()" style="background: var(--binance-yellow); border: none; padding: 5px 12px; border-radius: 8px; font-weight: bold; font-size: 0.7rem;">COPY</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active"><span>🏠</span>Home</a>
+        <a href="games.html" class="nav-item"><span>🎮</span>Games</a>
+        <a href="earn.html" class="nav-item"><span>⛏️</span>Earn</a>
+        <a href="wallet.html" class="nav-item"><span>💰</span>Wallet</a>
+    </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        function initDashboard() {
+            const wallet = localStorage.getItem('adamas_wallet');
+            if(!wallet) { window.location.href = "index.html"; return; }
+            
+            // Firebase से डेटा लोड करें
+            loadUserData(wallet).then(() => {
+                // चेक करें कि क्या यूजर ने पहले से नाम सेव किया है
+                if(!userStats.realName || userStats.realName === "") {
+                    document.getElementById('kycOverlay').style.display = 'flex';
+                } else {
+                    document.getElementById('userNameDisplay').innerText = userStats.realName;
+                }
+                
+                // रिफरल लिंक अपडेट करें
+                document.getElementById('refLink').innerText = "adamas.app/?ref=" + wallet.substring(0, 8);
+            });
+        }
+
+        function verifyKYC() {
+            const name = document.getElementById('kycName').value.trim();
+            if(name.length < 3) {
+                alert("Please enter your official Full Name.");
+                return;
+            }
+            
+            userStats.realName = name;
+            saveToFirebase(); // Firebase में सिंक करें
+            
+            document.getElementById('kycOverlay').style.display = 'none';
+            document.getElementById('userNameDisplay').innerText = name;
+            showNotification("Identity Linked Successfully ✅");
+        }
+
+        function copyRefLink() {
+            const link = document.getElementById('refLink').innerText;
+            navigator.clipboard.writeText(link);
+            showNotification("Referral Link Copied!");
+        }
+    </script>
+</body>
+</html>
+
