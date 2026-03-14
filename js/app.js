@@ -1,37 +1,52 @@
-// Adamas Protocol - Global Logic
+// ADAMAS PROTOCOL - CORE ENGINE V2.0
 let userStats = JSON.parse(localStorage.getItem('adamas_user')) || {
     balance: 0,
-    referrals: 0,
-    isWalletConnected: false,
-    address: ""
+    wallet: "0x" + Math.random().toString(16).slice(2, 10) + "..." + Math.random().toString(16).slice(2, 6),
+    rank: "Silver Miner",
+    staked: 0
 };
 
+// Global function to update UI elements
+function updateUI() {
+    const balEl = document.getElementById('balance');
+    const wallEl = document.getElementById('walletAddress');
+    
+    if (balEl) balEl.innerText = userStats.balance.toLocaleString();
+    if (wallEl) wallEl.innerText = userStats.wallet;
+    
+    // Update other common elements if they exist
+    if (document.getElementById('stakedVal')) document.getElementById('stakedVal').innerText = userStats.staked;
+}
+
+// Save data to LocalStorage
 function saveStats() {
     localStorage.setItem('adamas_user', JSON.stringify(userStats));
 }
 
-// Wallet Connection Logic
-async function connectWallet() {
-    if (window.ethereum) {
-        try {
-            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            userStats.address = accounts[0];
-            userStats.isWalletConnected = true;
-            saveStats();
-            window.location.href = "dashboard.html";
-        } catch (error) {
-            alert("Connection rejected");
-        }
-    } else {
-        alert("Please use a Web3 Browser or MetaMask");
+// Power-Up Social Task Logic
+function handleSocialTask(platform, link) {
+    let storageKey = 'adamas_task_' + platform;
+    
+    if (localStorage.getItem(storageKey)) {
+        alert("Mission already completed!");
+        return;
     }
+
+    // Open link
+    window.open(link, '_blank');
+
+    // Simulate verification
+    setTimeout(() => {
+        if (confirm(`Did you follow/join our ${platform.toUpperCase()}? Click OK to verify and claim 1,000 ABP.`)) {
+            userStats.balance += 1000;
+            localStorage.setItem(storageKey, 'true');
+            saveStats();
+            updateUI();
+            alert("Verification Successful! +1,000 ABP added to your wallet.");
+            location.reload(); // Refresh to show 'DONE' status
+        }
+    }, 2000);
 }
 
-// Update UI Data
-function updateUI() {
-    const balEl = document.getElementById('balance');
-    const addrEl = document.getElementById('walletAddress');
-    if (balEl) balEl.innerText = userStats.balance.toFixed(2);
-    if (addrEl) addrEl.innerText = userStats.address.substring(0, 6) + "..." + userStats.address.substring(38);
-}
-
+// Initial Call
+updateUI();
