@@ -3,78 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community | ADAMAS Protocol</title>
+    <title>Community Missions | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .social-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card-glass);
+        .task-card {
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-dim);
-            padding: 20px;
             border-radius: 16px;
-            margin-bottom: 15px;
-            text-decoration: none;
-            color: white;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             transition: 0.3s;
         }
-        .social-btn:active { transform: scale(0.98); background: rgba(255,255,255,0.05); }
-        .social-icon { font-size: 1.8rem; margin-right: 15px; }
-        .bonus-tag {
-            background: var(--binance-yellow);
-            color: black;
-            font-size: 0.6rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
+        .task-info h4 { margin: 0; font-size: 0.95rem; }
+        .task-info p { margin: 5px 0 0; font-size: 0.75rem; color: var(--neon-blue); }
+        .status-badge { font-size: 0.6rem; padding: 4px 8px; border-radius: 5px; background: #2b2f36; color: #8b949e; }
+        .completed { opacity: 0.6; border-color: var(--neon-green); }
     </style>
 </head>
-<body onload="updateUI()">
+<body onload="updateUI(); checkTaskStatus();">
 
-    <div class="header-pro" style="padding: 20px; text-align: center;">
-        <h2 style="color: var(--binance-yellow);">🌐 COMMUNITY</h2>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Join our ecosystem & earn rewards</p>
+    <div class="header-pro">
+        <h2 style="color: var(--binance-yellow);">🚀 MISSION CONTROL</h2>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Join our social power-ups to unlock Airdrops</p>
     </div>
 
     <div style="padding: 0 15px;">
-        <div class="glass-card" style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 25px;">
-            <div>
-                <small style="color: #8b949e;">Total Members</small>
-                <h4 class="text-neon-blue">45.2K</h4>
-            </div>
-            <div>
-                <small style="color: #8b949e;">Online Now</small>
-                <h4 class="text-neon-green">1,840</h4>
-            </div>
+        <div class="glass-card" style="display: flex; justify-content: space-around; text-align: center; border-bottom: 2px solid var(--neon-blue);">
+            <div><small>Community</small><h4>45K+</h4></div>
+            <div><small>Bonus Pool</small><h4 class="text-neon-green">2,000 ABP</h4></div>
         </div>
 
-        <a href="https://t.me/your_telegram_link" target="_blank" class="social-btn" onclick="claimCommunityBonus('tg')">
-            <div style="display: flex; align-items: center;">
-                <span class="social-icon">🔹</span>
-                <div>
-                    <div style="font-weight: bold;">Join Telegram</div>
-                    <small style="color: #8b949e;">Latest news & airdrops</small>
-                </div>
+        <div class="task-card" id="task-tg">
+            <div class="task-info">
+                <h4>Join Official Telegram</h4>
+                <p>+1,000 ABP Reward</p>
             </div>
-            <span id="tg-bonus" class="bonus-tag">+500 ABP</span>
-        </a>
+            <button class="btn-neon" style="width: auto; padding: 8px 15px; font-size: 0.7rem;" onclick="handleSocialTask('tg', 'https://t.me/your_telegram')">JOIN</button>
+        </div>
 
-        <a href="https://twitter.com/your_twitter_link" target="_blank" class="social-btn" onclick="claimCommunityBonus('x')">
-            <div style="display: flex; align-items: center;">
-                <span class="social-icon">🐦</span>
-                <div>
-                    <div style="font-weight: bold;">Follow on X</div>
-                    <small style="color: #8b949e;">Updates & Announcements</small>
-                </div>
+        <div class="task-card" id="task-x">
+            <div class="task-info">
+                <h4>Follow on X (Twitter)</h4>
+                <p>+1,000 ABP Reward</p>
             </div>
-            <span id="x-bonus" class="bonus-tag">+500 ABP</span>
-        </a>
+            <button class="btn-neon" style="width: auto; padding: 8px 15px; font-size: 0.7rem;" onclick="handleSocialTask('x', 'https://twitter.com/your_twitter')">FOLLOW</button>
+        </div>
 
-        <div class="glass-card" style="margin-top: 20px; border: 1px dashed var(--border-dim);">
-            <p style="font-size: 0.75rem; color: #8b949e; line-height: 1.5; text-align: center;">
-                The ADAMAS Protocol is powered by its community. Every interaction you make helps build the value of the future ecosystem.
+        <div class="glass-card" style="background: rgba(255, 49, 49, 0.05); border: 1px dashed var(--neon-red);">
+            <p style="font-size: 0.7rem; color: #ff3131; text-align: center;">
+                ⚠️ <b>ATTENTION:</b> Social verification is required for ADS Token conversion. Uncompleted tasks may delay your airdrop.
             </p>
         </div>
     </div>
@@ -84,26 +64,23 @@
         <a href="earn.html" class="nav-item">⛏️<br>Earn</a>
         <a href="stake.html" class="nav-item">🔐<br>Stake</a>
         <a href="refer.html" class="nav-item">👥<br>Refer</a>
-        <a href="wallet.html" class="nav-item">💰<br>Wallet</a>
+        <a href="community.html" class="nav-item active">🌐<br>Community</a>
     </nav>
 
     <script src="js/app.js"></script>
     <script>
-        function claimCommunityBonus(platform) {
-            let key = 'bonus_claimed_' + platform;
-            if (localStorage.getItem(key)) return; // Already claimed
-
-            userStats.balance += 500;
-            localStorage.setItem(key, 'true');
-            saveStats();
-            updateUI();
-            alert("Success! 500 ABP added for joining our " + platform + " community.");
-            
-            // UI Update
-            document.getElementById(platform + '-bonus').innerText = "CLAIMED";
-            document.getElementById(platform + '-bonus').style.background = "#30363d";
+        function checkTaskStatus() {
+            if(localStorage.getItem('adamas_task_tg')) {
+                document.getElementById('task-tg').classList.add('completed');
+                document.getElementById('task-tg').querySelector('button').innerText = "DONE ✅";
+                document.getElementById('task-tg').querySelector('button').disabled = true;
+            }
+            if(localStorage.getItem('adamas_task_x')) {
+                document.getElementById('task-x').classList.add('completed');
+                document.getElementById('task-x').querySelector('button').innerText = "DONE ✅";
+                document.getElementById('task-x').querySelector('button').disabled = true;
+            }
         }
     </script>
 </body>
 </html>
-
