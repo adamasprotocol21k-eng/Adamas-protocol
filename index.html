@@ -8,11 +8,13 @@
     <style>
         body, html {
             height: 100%;
-            overflow: hidden; /* Landing page animation handles scrolling */
+            overflow: hidden; 
             background: #000;
+            margin: 0;
+            font-family: sans-serif;
         }
 
-        /* Animated Background Canvas Effect */
+        /* Animated Background */
         .bg-animate {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -46,7 +48,7 @@
         }
 
         .logo-glow {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 900;
             color: #fff;
             text-shadow: 0 0 30px rgba(0, 210, 255, 0.8);
@@ -66,9 +68,24 @@
             padding: 40px 30px;
             border-radius: 30px;
             width: 85%;
-            max-width: 400px;
+            max-width: 380px;
             text-align: center;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Essential Button Style if CSS doesn't load */
+        .btn-neon {
+            cursor: pointer;
+            background: none;
+            color: #F3BA2F;
+            border: 1px solid #F3BA2F;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+        .btn-neon:hover {
+            background: #F3BA2F;
+            color: #000;
+            box-shadow: 0 0 20px #F3BA2F;
         }
     </style>
 </head>
@@ -78,34 +95,39 @@
 
     <div class="hero-container">
         <div class="logo-glow">ADAMAS</div>
-        <p style="color: var(--binance-yellow); letter-spacing: 4px; font-size: 0.7rem; margin-bottom: 40px; font-weight: bold;">
+        <p style="color: #F3BA2F; letter-spacing: 4px; font-size: 0.7rem; margin-bottom: 40px; font-weight: bold;">
             SCARCITY PROTOCOL v2.0
         </p>
 
         <div class="launch-box">
-            <h3 style="margin-bottom: 10px; font-weight: 300;">Ready to Mine?</h3>
-            <p style="color: var(--text-sub); font-size: 0.8rem; margin-bottom: 30px;">
+            <h3 style="margin-bottom: 10px; font-weight: 300; color: #fff;">Ready to Mine?</h3>
+            <p style="color: #848e9c; font-size: 0.8rem; margin-bottom: 30px;">
                 Connect your secure wallet to access the <br>
-                <span class="text-neon-blue">Diamond Asset Ecosystem</span>
+                <span style="color: #00d2ff;">Diamond Asset Ecosystem</span>
             </p>
 
-            <button id="launchBtn" class="btn-neon" style="width: 100%; padding: 20px; font-size: 1rem; letter-spacing: 2px;" onclick="connectWallet()">
+            <button id="launchBtn" class="btn-neon" style="width: 100%; padding: 20px; font-size: 1rem; letter-spacing: 2px; font-weight: bold;" onclick="enterProtocol()">
                 LAUNCH TERMINAL
             </button>
         </div>
 
         <div style="margin-top: 40px; display: flex; gap: 20px;">
-            <div style="color: var(--text-sub); font-size: 0.6rem;">● SECURE</div>
-            <div style="color: var(--text-sub); font-size: 0.6rem;">● DECENTRALIZED</div>
-            <div style="color: var(--text-sub); font-size: 0.6rem;">● SCARCE</div>
+            <div style="color: #848e9c; font-size: 0.6rem;">● SECURE</div>
+            <div style="color: #848e9c; font-size: 0.6rem;">● DECENTRALIZED</div>
+            <div style="color: #848e9c; font-size: 0.6rem;">● SCARCE</div>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
+        // Function to move to next page
+        function enterProtocol() {
+            window.location.href = "connect.html";
+        }
+
         // Generate Floating Diamonds
         function createParticles() {
             const container = document.getElementById('particles');
+            if(!container) return;
             for (let i = 0; i < 15; i++) {
                 const p = document.createElement('div');
                 p.className = 'diamond-particle';
