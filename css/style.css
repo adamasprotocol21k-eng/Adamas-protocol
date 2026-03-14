@@ -1,0 +1,107 @@
+/* Core Variables */
+:root {
+    --primary: #00f3ff;
+    --secondary: #bc13fe;
+    --gold: #ffd700;
+    --dark-bg: #0a0b10;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --neon-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+}
+
+body {
+    background: var(--dark-bg);
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background: rgba(10, 11, 16, 0.8);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--card-bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.logo span { color: var(--primary); }
+
+.nav-menu a {
+    color: #ccc;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+    color: var(--primary);
+    text-shadow: var(--neon-shadow);
+}
+
+/* Neon Button */
+.neon-btn {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 25px;
+    font-family: 'Orbitron';
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.neon-btn:hover {
+    background: var(--primary);
+    color: #000;
+    box-shadow: 0 0 30px var(--primary);
+}
+
+/* Glitch Effect */
+.glitch-text {
+    font-family: 'Orbitron';
+    font-size: 4rem;
+    position: relative;
+    color: #fff;
+}
+
+.glitch-text::before, .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+}
+
+.glitch-text::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--secondary);
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(31px, 9999px, 94px, 0); }
+    100% { clip: rect(70px, 9999px, 71px, 0); }
+}
+
+/* Stats Pill */
+.balance-pill {
+    background: var(--card-bg);
+    padding: 5px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+}
+
