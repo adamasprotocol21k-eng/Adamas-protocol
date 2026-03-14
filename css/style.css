@@ -1,116 +1,45 @@
-/* =========================================
-   ADAMAS PROTOCOL - PREMIUM DEFI THEME
-   ========================================= */
-
+/* ADAMAS PROTOCOL V2.0 - PREMUM CSS */
 :root {
-    /* गहरे रंग (Deep Colors) */
-    --bg-dark: #07090c;
-    --bg-panel: #0d1117;
-    
-    /* नियॉन रंग (Neon Glows) */
-    --neon-blue: #00d2ff;
-    --neon-green: #39ff14;
-    --neon-red: #ff3131;
-    --neon-yellow: #ffee00;
-    
-    /* टेक्स्ट और बॉर्डर (Text & Borders) */
-    --text-main: #f0f6fc;
-    --text-sub: #8b949e;
-    --border-dim: rgba(255, 255, 255, 0.08);
+    --binance-yellow: #F3BA2F;
+    --bg-main: #0b0e11;
+    --card-glass: rgba(30, 32, 38, 0.7);
+    --neon-glow: 0 0 15px rgba(243, 186, 47, 0.3);
 }
 
-/* 1. Global Reset & Space Background */
 body {
-    background-color: var(--bg-dark);
-    /* बीच से चमकता हुआ रेडियल ग्रेडिएंट */
-    background-image: radial-gradient(circle at 50% 50%, #1a2230 0%, #07090c 100%);
-    color: var(--text-main);
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    margin: 0;
-    padding-bottom: 90px; /* नेविगेशन के लिए थोड़ी और जगह */
-    overflow-x: hidden;
+    background: var(--bg-main);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(243, 186, 47, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(88, 166, 255, 0.05) 0%, transparent 20%);
+    font-family: 'Inter', sans-serif;
 }
 
-h1, h2, h3, h4, p { margin: 0; }
-
-/* 2. प्रीमियम 'शीशे' (Glassmorphism) वाले कार्ड्स */
-.card {
-    background: rgba(22, 27, 34, 0.7); /* हल्का ट्रांसपेरेंट */
-    border: 1px solid var(--border-dim);
-    border-radius: 16px; /* ज़्यादा गोल किनारे */
-    padding: 24px;
-    margin: 16px;
-    backdrop-filter: blur(8px); /* पीछे का हिस्सा धुंधला */
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); /* गहरा शैडो */
-    transition: 0.3s ease-in-out;
+/* Glassmorphism Card */
+.glass-card {
+    background: var(--card-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 15px;
+    box-shadow: var(--neon-glow);
 }
 
-/* 3. Butons: मॉडर्न और चमकते हुए */
-.btn-neon {
-    background: transparent;
-    border: 1px solid var(--neon-blue);
-    color: var(--neon-blue);
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    /* हल्की नियॉन चमक */
-    box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
-}
-
-.btn-neon:active {
-    background: rgba(0, 210, 255, 0.1);
-    box-shadow: 0 0 25px rgba(0, 210, 255, 0.4);
-    transform: scale(0.98);
-}
-
-/* 4. Bottom Navigation (ऐप जैसा अनुभव) */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 70px;
-    background: rgba(13, 17, 23, 0.95);
-    display: flex;
-    justify-content: space-around;
+/* Day Streak Buttons */
+.streak-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2b2f36;
+    display: inline-flex;
     align-items: center;
-    border-top: 1px solid var(--border-dim);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    z-index: 10000;
-    padding-bottom: env(safe-area-inset-bottom);
-}
-
-.nav-item {
-    text-decoration: none;
-    color: var(--text-sub);
+    justify-content: center;
+    margin: 5px;
     font-size: 10px;
-    font-weight: 500;
-    text-align: center;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: 0.2s ease;
+    border: 1px solid var(--border-dim);
 }
-
-.nav-item .icon {
-    font-size: 20px;
-    margin-bottom: 4px;
+.streak-active {
+    background: var(--binance-yellow);
+    color: black;
+    box-shadow: 0 0 10px var(--binance-yellow);
 }
-
-/* एक्टिव बटन के लिए नियॉन चमक */
-.nav-item.active {
-    color: var(--neon-blue);
-    font-weight: 700;
-    text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-}
-
-/* 5. Utility Classes (चमकदार टेक्स्ट) */
-.text-neon-blue { color: var(--neon-blue); text-shadow: 0 0 10px rgba(0, 210, 255, 0.5); }
-.text-neon-green { color: var(--neon-green); text-shadow: 0 0 10px rgba(57, 255, 20, 0.5); }
