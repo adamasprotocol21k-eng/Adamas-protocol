@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | ADAMAS PROTOCOL</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">ADAMAS <span>PROTOCOL</span></div>
+            <nav class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="staking.html">Staking</a>
+                <a href="games.html">Games</a>
+                <a href="wallet.html">Wallet</a>
+            </nav>
+            <button id="connectBtn" class="neon-btn">CONNECT WALLET</button>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="welcome-banner">
+            <h2>Welcome, <span id="userGreeting" class="neon-blue">Operative</span></h2>
+            <p>Complete your daily tasks to maximize your ABP yield.</p>
+        </div>
+
+        <div class="dash-grid">
+            <div class="glass-card">
+                <h3>Daily Check-in</h3>
+                <p>Earn 50 ABP every 24 hours.</p>
+                <div id="checkInTimer" class="timer-text">Ready to Claim!</div>
+                <button id="claimDailyBtn" class="btn-main">CLAIM 50 ABP</button>
+            </div>
+
+            <div class="glass-card">
+                <h3>Account Stats</h3>
+                <div class="stat-row">
+                    <span>Total ABP Earned:</span>
+                    <span id="globalBalance" class="neon-gold">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Rank:</span>
+                    <span class="neon-blue">Alpha Miner</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Dashboard Specific Logic
+        document.getElementById('claimDailyBtn').addEventListener('click', function() {
+            const lastClaim = localStorage.getItem('last_daily_claim');
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
+
+            if (!lastClaim || (now - lastClaim) > oneDay) {
+                window.addABP(50);
+                localStorage.setItem('last_daily_claim', now);
+                alert("Success! 50 ABP added to your vault.");
+                this.disabled = true;
+                this.innerText = "CLAIMED TODAY";
+            } else {
+                alert("You have already claimed your reward today. Come back tomorrow!");
+            }
+        });
+    </script>
+</body>
+</html>
+
