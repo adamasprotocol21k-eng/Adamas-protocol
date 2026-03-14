@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Adamas</title><link rel="stylesheet" href="css/style.css">
+    <style>
+        .profile-pic { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--binance-yellow); margin-bottom: 15px; }
+        .login-btn { background: #fff; color: #000; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; border-radius: 12px; padding: 12px; width: 100%; border: none; margin-top: 20px; }
+    </style>
+</head>
+<body onload="checkProfileStatus()">
+
+    <div class="header-pro" style="text-align: center; padding: 30px 20px;">
+        <div id="profileView" style="display: none;">
+            <img id="userImg" src="https://via.placeholder.com/80" class="profile-pic">
+            <h2 id="userNameDisplay">Loading...</h2>
+            <p id="userEmail" style="font-size: 0.7rem; color: var(--text-sub);"></p>
+        </div>
+
+        <div id="loginView">
+            <h2 style="color: var(--binance-yellow);">WELCOME</h2>
+            <p style="font-size: 0.7rem; color: var(--text-sub);">Sign in to secure your assets</p>
+            <button class="login-btn" onclick="signInWithGoogle()">
+                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" width="20">
+                CONTINUE WITH GOOGLE
+            </button>
+        </div>
+    </div>
+
+    <div class="admin-container" id="kycSection" style="display: none;">
+        <div class="glass-card">
+            <h4 style="margin: 0;">SET LEGAL IDENTITY</h4>
+            <p style="font-size: 0.6rem; color: var(--text-sub); margin: 5px 0 15px 0;">This name will be used for withdrawals.</p>
+            <input type="text" id="fullRealName" class="btn-neon" style="background: #000; text-align: left; color: #fff;" placeholder="Enter Full Legal Name">
+            <button class="btn-neon" style="margin-top: 15px; border-color: var(--neon-green); color: var(--neon-green);" onclick="saveProfileName()">SAVE PROFILE</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item"><span>🏠</span>Home</a>
+        <a href="games.html" class="nav-item"><span>🎮</span>Games</a>
+        <a href="profile.html" class="nav-item active"><span>👤</span>Profile</a>
+        <a href="wallet.html" class="nav-item"><span>💰</span>Wallet</a>
+    </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        function checkProfileStatus() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    document.getElementById('loginView').style.display = 'none';
+                    document.getElementById('profileView').style.display = 'block';
+                    document.getElementById('userImg').src = user.photoURL;
+                    document.getElementById('userEmail').innerText = user.email;
+                    
+                    // Check if name is already set
+                    db.ref('users/' + user.uid).once('value', (snap) => {
+                        if (snap.exists() && snap.val().realName) {
+                            document.getElementById('userNameDisplay').innerText = snap.val().realName;
+                            document.getElementById('kycSection').style.display = 'none';
+                        } else {
+                            document.getElementById('userNameDisplay').innerText = "Guest User";
+                            document.getElementById('kycSection').style.display = 'block';
+                        }
+                    });
+                } else {
+                    document.getElementById('loginView').style.display = 'block';
+                }
+            });
+        }
+
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider).then((res) => {
+                localStorage.setItem('adamas_uid', res.user.uid);
+                showNotification("Logged In!");
+            }).catch(e => alert(e.message));
+        }
+
+        function saveProfileName() {
+            const name = document.getElementById('fullRealName').value.trim();
+            const user = firebase.auth().currentUser;
+            if (name.length < 3) return alert("Enter full name");
+
+            db.ref('users/' + user.uid).update({
+                realName: name,
+                email: user.email,
+                wallet: userStats.wallet // Link Web3 wallet to Google ID
+            }).then(() => {
+                showNotification("Identity Verified!");
+                location.reload();
+            });
+        }
+    </script>
+</body>
+</html>
+
