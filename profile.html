@@ -2,37 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile | Adamas</title><link rel="stylesheet" href="css/style.css">
+    <title>Identity | ADAMAS</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        .profile-pic { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--binance-yellow); margin-bottom: 15px; }
-        .login-btn { background: #fff; color: #000; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; border-radius: 12px; padding: 12px; width: 100%; border: none; margin-top: 20px; }
+        .profile-container { padding: 20px; text-align: center; animation: fadeIn 0.8s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .id-card {
+            background: linear-gradient(135deg, #1a2230 0%, #000 100%);
+            border: 1px solid var(--binance-yellow); border-radius: 25px;
+            padding: 30px 20px; position: relative; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+        .user-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 3px solid var(--binance-yellow); padding: 5px;
+            margin-bottom: 15px; box-shadow: 0 0 20px rgba(243, 186, 47, 0.3);
+        }
+        .verified-badge {
+            background: var(--neon-green); color: #000; font-size: 0.5rem;
+            padding: 2px 10px; border-radius: 50px; font-weight: bold;
+            display: inline-block; margin-top: 5px;
+        }
+        .login-btn {
+            background: #fff; color: #000; display: flex; align-items: center; justify-content: center;
+            gap: 12px; font-weight: bold; border-radius: 15px; padding: 15px; width: 100%;
+            border: none; margin-top: 30px; cursor: pointer; transition: 0.3s;
+        }
+        .login-btn:active { transform: scale(0.95); }
     </style>
 </head>
-<body onload="checkProfileStatus()">
+<body onload="initAuth()">
 
-    <div class="header-pro" style="text-align: center; padding: 30px 20px;">
+    <div class="profile-container">
+        <div id="loginView" style="display: none; margin-top: 50px;">
+            <div class="logo-main" style="font-size: 2.5rem;">ADAMAS</div>
+            <p style="color: var(--text-sub); margin-bottom: 40px;">SECURE YOUR MINING ASSETS</p>
+            
+            <div class="glass-card">
+                <p style="font-size: 0.75rem;">Join the scarcity protocol using your global identity.</p>
+                <button class="login-btn" onclick="signInWithGoogle()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" width="22">
+                    CONTINUE WITH GOOGLE
+                </button>
+            </div>
+        </div>
+
         <div id="profileView" style="display: none;">
-            <img id="userImg" src="https://via.placeholder.com/80" class="profile-pic">
-            <h2 id="userNameDisplay">Loading...</h2>
-            <p id="userEmail" style="font-size: 0.7rem; color: var(--text-sub);"></p>
-        </div>
+            <h2 style="margin-bottom: 25px; letter-spacing: 2px;">IDENTITY CARD</h2>
+            
+            <div class="id-card">
+                <img id="uPic" src="" class="user-avatar">
+                <div id="isVerified" class="verified-badge" style="display:none;">VERIFIED CITIZEN</div>
+                
+                <h3 id="uName" style="margin: 10px 0 5px 0; color: #fff;">...</h3>
+                <p id="uEmail" style="font-size: 0.65rem; color: var(--text-sub); margin-bottom: 20px;">...</p>
 
-        <div id="loginView">
-            <h2 style="color: var(--binance-yellow);">WELCOME</h2>
-            <p style="font-size: 0.7rem; color: var(--text-sub);">Sign in to secure your assets</p>
-            <button class="login-btn" onclick="signInWithGoogle()">
-                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" width="20">
-                CONTINUE WITH GOOGLE
-            </button>
-        </div>
-    </div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-around;">
+                    <div>
+                        <small style="color: var(--binance-yellow); display: block;">ASSETS</small>
+                        <span id="balance" style="font-weight: bold; font-size: 1.2rem;">0</span> <small>ABP</small>
+                    </div>
+                    <div style="border-left: 1px solid rgba(255,255,255,0.1);"></div>
+                    <div>
+                        <small style="color: var(--neon-blue); display: block;">RANK</small>
+                        <span style="font-weight: bold; font-size: 1.2rem;">ELITE</span>
+                    </div>
+                </div>
+            </div>
 
-    <div class="admin-container" id="kycSection" style="display: none;">
-        <div class="glass-card">
-            <h4 style="margin: 0;">SET LEGAL IDENTITY</h4>
-            <p style="font-size: 0.6rem; color: var(--text-sub); margin: 5px 0 15px 0;">This name will be used for withdrawals.</p>
-            <input type="text" id="fullRealName" class="btn-neon" style="background: #000; text-align: left; color: #fff;" placeholder="Enter Full Legal Name">
-            <button class="btn-neon" style="margin-top: 15px; border-color: var(--neon-green); color: var(--neon-green);" onclick="saveProfileName()">SAVE PROFILE</button>
+            <div id="kycBox" class="glass-card" style="margin-top: 25px; display: none; border-color: var(--neon-red);">
+                <h4 style="margin:0; color: var(--neon-red);">ACTION REQUIRED</h4>
+                <p style="font-size: 0.65rem; margin: 10px 0;">Please enter your <b>Full Legal Name</b> to unlock withdrawals.</p>
+                <input type="text" id="realNameInput" class="btn-neon" style="background:#000; color:#fff; text-align:left;" placeholder="Legal Name (As per ID)">
+                <button class="btn-neon" style="margin-top: 15px;" onclick="saveRealName()">VERIFY IDENTITY</button>
+            </div>
+
+            <button class="btn-neon" style="margin-top: 40px; opacity: 0.5; font-size: 0.6rem;" onclick="firebase.auth().signOut().then(() => location.reload())">LOGOUT SESSION</button>
         </div>
     </div>
 
@@ -48,53 +94,51 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
     <script>
-        function checkProfileStatus() {
+        function initAuth() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
                     document.getElementById('loginView').style.display = 'none';
                     document.getElementById('profileView').style.display = 'block';
-                    document.getElementById('userImg').src = user.photoURL;
-                    document.getElementById('userEmail').innerText = user.email;
                     
-                    // Check if name is already set
-                    db.ref('users/' + user.uid).once('value', (snap) => {
-                        if (snap.exists() && snap.val().realName) {
-                            document.getElementById('userNameDisplay').innerText = snap.val().realName;
-                            document.getElementById('kycSection').style.display = 'none';
-                        } else {
-                            document.getElementById('userNameDisplay').innerText = "Guest User";
-                            document.getElementById('kycSection').style.display = 'block';
+                    document.getElementById('uPic').src = user.photoURL;
+                    document.getElementById('uEmail').innerText = user.email;
+
+                    // Fetch user details from Database
+                    db.ref('users/' + user.uid).on('value', (snap) => {
+                        if (snap.exists()) {
+                            const data = snap.val();
+                            if (data.realName) {
+                                document.getElementById('uName').innerText = data.realName.toUpperCase();
+                                document.getElementById('kycBox').style.display = 'none';
+                                document.getElementById('isVerified').style.display = 'inline-block';
+                            } else {
+                                document.getElementById('uName').innerText = user.displayName;
+                                document.getElementById('kycBox').style.display = 'block';
+                            }
+                            // Global app.js updateUI will handle balance
                         }
                     });
                 } else {
                     document.getElementById('loginView').style.display = 'block';
+                    document.getElementById('profileView').style.display = 'none';
                 }
             });
         }
 
         function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider).then((res) => {
-                localStorage.setItem('adamas_uid', res.user.uid);
-                showNotification("Logged In!");
-            }).catch(e => alert(e.message));
+            firebase.auth().signInWithPopup(provider).catch(e => alert(e.message));
         }
 
-        function saveProfileName() {
-            const name = document.getElementById('fullRealName').value.trim();
+        function saveRealName() {
+            const name = document.getElementById('realNameInput').value.trim();
+            if (name.length < 3) return alert("Please enter your full official name.");
+            
             const user = firebase.auth().currentUser;
-            if (name.length < 3) return alert("Enter full name");
-
-            db.ref('users/' + user.uid).update({
-                realName: name,
-                email: user.email,
-                wallet: userStats.wallet // Link Web3 wallet to Google ID
-            }).then(() => {
-                showNotification("Identity Verified!");
-                location.reload();
+            db.ref('users/' + user.uid).update({ realName: name }).then(() => {
+                showNotification("Identity Linked Successfully!");
             });
         }
     </script>
 </body>
 </html>
-
