@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teen Patti Pro | ADAMAS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .table-area {
+            height: 350px; background: radial-gradient(circle, #0a4d26 0%, #052613 100%);
+            border: 8px solid #3d2b1f; border-radius: 50% / 20%;
+            margin: 20px 10px; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
+        }
+        .card-slot { display: flex; gap: 10px; min-height: 80px; }
+        .card {
+            width: 50px; height: 75px; background: #fff; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 1.2rem; color: #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            animation: dealCard 0.5s ease-out forwards;
+        }
+        @keyframes dealCard { from { transform: translateY(-200px) rotate(360deg); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .hidden-card { background: linear-gradient(45deg, #b30000, #4d0000); color: transparent; border: 2px solid #fff; }
+        .action-zone { padding: 15px; text-align: center; }
+        .status-msg { font-size: 0.8rem; color: var(--binance-yellow); margin-bottom: 10px; height: 20px; }
+    </style>
+</head>
+<body onload="updateUI()">
+
+    <div class="header-pro" style="padding: 10px 15px; display: flex; justify-content: space-between;">
+        <button onclick="location.href='games.html'" style="background:none; border:none; color:#fff;">← Back</button>
+        <div id="walletBadge" style="font-size: 0.7rem;">0x...</div>
+    </div>
+
+    <div class="table-area">
+        <div class="card-slot" id="dealerCards">
+            </div>
+        
+        <div style="color: rgba(255,255,255,0.2); font-weight: 900; letter-spacing: 5px;">ADAMAS CASINO</div>
+
+        <div class="card-slot" id="playerCards">
+            </div>
+    </div>
+
+    <div class="action-zone">
+        <div class="status-msg" id="gameStatus">Place your bet to start</div>
+        
+        <div class="glass-card" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <small>BET AMOUNT</small>
+            <input type="number" id="betAmt" value="500" style="width: 80px; background: none; border: 1px solid var(--binance-yellow); color: #fff; text-align: center; border-radius: 5px;">
+        </div>
+
+        <button id="playBtn" class="btn-neon" onclick="dealHand()">DEAL CARDS</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const cardValues = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+        function dealHand() {
+            let bet = parseInt(document.getElementById('betAmt').value);
+            if(userStats.balance < bet) { alert("Insufficient Balance!"); return; }
+
+            // Deduct Bet
+            userStats.balance -= bet;
+            saveToFirebase();
+            updateUI();
+
+            document.getElementById('playBtn').disabled = true;
+            document.getElementById('gameStatus').innerText = "Shuffling...";
+            
+            // Clear Slots
+            document.getElementById('dealerCards').innerHTML = '';
+            document.getElementById('playerCards').innerHTML = '';
+
+            setTimeout(() => {
+                // Dealer Cards (Hidden)
+                for(let i=0; i<3; i++) {
+                    let div = document.createElement('div');
+                    div.className = 'card hidden-card';
+                    div.innerText = '?';
+                    document.getElementById('dealerCards').appendChild(div);
+                }
+
+                // Player Cards
+                let pScore = 0;
+                for(let i=0; i<3; i++) {
+                    let valIndex = Math.floor(Math.random() * cardValues.length);
+                    pScore += valIndex;
+                    let div = document.createElement('div');
+                    div.className = 'card';
+                    div.innerText = cardValues[valIndex];
+                    document.getElementById('playerCards').appendChild(div);
+                }
+
+                // Dealer Reveal & Result
+                setTimeout(() => {
+                    let dScore = 0;
+                    document.getElementById('dealerCards').innerHTML = '';
+                    for(let i=0; i<3; i++) {
+                        let valIndex = Math.floor(Math.random() * cardValues.length);
+                        dScore += valIndex;
+                        let div = document.createElement('div');
+                        div.className = 'card';
+                        div.innerText = cardValues[valIndex];
+                        document.getElementById('dealerCards').appendChild(div);
+                    }
+
+                    determineWinner(pScore, dScore, bet);
+                }, 1500);
+            }, 800);
+        }
+
+        function determineWinner(p, d, bet) {
+            const status = document.getElementById('gameStatus');
+            if(p > d) {
+                let win = bet * 2;
+                userStats.balance += win;
+                status.innerText = "🎉 YOU WON " + win + " ABP!";
+                showNotification("WINNER! +"+win);
+            } else if (p === d) {
+                userStats.balance += bet;
+                status.innerText = "🤝 DRAW! Bet Returned";
+            } else {
+                status.innerText = "❌ DEALER WINS. Try Again!";
+            }
+            
+            saveToFirebase();
+            updateUI();
+            document.getElementById('playBtn').disabled = false;
+        }
+    </script>
+</body>
+</html>
+
