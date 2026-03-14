@@ -1,3 +1,28 @@
+// app.js के शुरुआत में यह जोड़ें
+const auth = firebase.auth();
+
+// इस फंक्शन को अपडेट करें ताकि Google UID से डेटा लोड हो
+async function loadUserData() {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.ref('users/' + user.uid).on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    userStats = snapshot.val();
+                    updateUI();
+                } else {
+                    // Create new user profile
+                    db.ref('users/' + user.uid).set({
+                        balance: 0,
+                        realName: "",
+                        email: user.email,
+                        wallet: localStorage.getItem('adamas_wallet') || "0x..."
+                    });
+                }
+            });
+        }
+    });
+}
+
 // --- FIREBASE CONFIGURATION ---
 // (अपनी Firebase Console वाली Keys यहाँ पेस्ट करें)
 const firebaseConfig = {
