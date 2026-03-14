@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lottery | ADAMAS PROTOCOL</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">ADAMAS <span>PROTOCOL</span></div>
+            <nav class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="lottery.html" class="active">Lottery</a>
+                <a href="wallet.html">Wallet</a>
+            </nav>
+            <div class="balance-pill">ABP: <span id="globalBalance">0</span></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="glass-card lottery-main">
+            <h1 class="neon-gold">ADAMAS JACKPOT</h1>
+            <p>Current Prize Pool: <span class="neon-blue">50,000 ABP</span></p>
+            
+            <div class="ticket-status">
+                <p>Tickets Owned: <span id="ticketCount">0</span></p>
+                <p>Ticket Price: <b>100 ABP</b></p>
+            </div>
+
+            <button id="buyTicketBtn" class="btn-main">BUY TICKET</button>
+            <button id="drawWinnerBtn" class="btn-sub">ROLL THE DICE</button>
+            
+            <div id="lotteryResult" class="result-box"></div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+        let tickets = parseInt(localStorage.getItem('lottery_tickets') || 0);
+        document.getElementById('ticketCount').innerText = tickets;
+
+        document.getElementById('buyTicketBtn').addEventListener('click', () => {
+            let balance = parseFloat(localStorage.getItem('adamas_abp_balance') || 0);
+            if(balance >= 100) {
+                window.addABP(-100); // 100 ABP deducted
+                tickets++;
+                localStorage.setItem('lottery_tickets', tickets);
+                document.getElementById('ticketCount').innerText = tickets;
+                alert("Ticket Purchased Successfully!");
+            } else {
+                alert("Insufficient ABP Balance!");
+            }
+        });
+
+        document.getElementById('drawWinnerBtn').addEventListener('click', () => {
+            if(tickets <= 0) return alert("Buy a ticket first!");
+            
+            const resultBox = document.getElementById('lotteryResult');
+            resultBox.innerText = "Drawing...";
+            
+            setTimeout(() => {
+                const win = Math.random() > 0.8; // 20% win chance
+                if(win) {
+                    const prize = 1000;
+                    window.addABP(prize);
+                    resultBox.innerHTML = `<span style="color:var(--gold)">JACKPOT! You won ${prize} ABP!</span>`;
+                } else {
+                    resultBox.innerHTML = `<span style="color:red">Better luck next time, Operative.</span>`;
+                }
+                tickets = 0;
+                localStorage.setItem('lottery_tickets', 0);
+                document.getElementById('ticketCount').innerText = 0;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
+
