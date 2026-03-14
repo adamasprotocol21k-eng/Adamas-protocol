@@ -3,45 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Refer & Earn | Adamas</title>
+    <title>Refer & Earn | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .invite-card {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .link-box {
+            background: #1e2026;
+            border: 1px solid var(--border-dim);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copy-btn {
+            background: var(--neon-blue);
+            color: black;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .copy-btn:active { transform: scale(0.95); opacity: 0.8; }
+
+        .milestone-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .milestone-item {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        
+        .milestone-item.active {
+            border-color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.05);
+        }
+    </style>
 </head>
-<body onload="initReferral()">
+<body onload="updateReferUI()">
 
-    <div class="header" style="padding: 20px; text-align: center;">
-        <h2 style="color: var(--neon-green);">REFER & EARN</h2>
-        <p style="font-size: 0.9rem;">Get 500 ABP per friend + 1% Daily</p>
+    <div class="header-pro">
+        <h2 style="color: var(--binance-yellow);">👥 INVITE FRIENDS</h2>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Earn massive ABP together</p>
     </div>
 
-    <div class="card">
-        <h4>Your Referral Link</h4>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <input type="text" id="referLink" readonly style="flex: 1; background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 5px; font-size: 0.8rem;">
-            <button class="btn-neon" style="padding: 5px 15px;" onclick="copyLink()">Copy</button>
+    <div style="padding: 0 15px;">
+        <div class="glass-card invite-card">
+            <div style="position: absolute; top: -30px; left: -30px; width: 100px; height: 100px; background: var(--neon-blue); filter: blur(60px); opacity: 0.2;"></div>
+            
+            <p style="font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 2px;">Your Unique Invite Link</p>
+            
+            <div class="link-box">
+                <span id="referLink" style="font-family: monospace; color: #fff; font-size: 0.8rem;">adamas.vercel/ref?id=0XF8...</span>
+                <button class="copy-btn" onclick="copyReferLink()">COPY</button>
+            </div>
+            
+            <p style="font-size: 0.7rem; color: var(--text-sub);">
+                You get <span class="text-neon-green">250 ABP</span> | Friend gets <span class="text-neon-yellow">100 ABP</span>
+            </p>
         </div>
-    </div>
 
-    <div class="refer-stats" style="display: flex; gap: 15px; padding: 0 15px;">
-        <div class="card" style="flex: 1; text-align: center;">
-            <span style="font-size: 0.8rem; color: #8b949e;">Total Invites</span>
-            <h2 id="inviteCount" style="margin: 5px 0; color: var(--neon-blue);">0</h2>
+        <div class="glass-card">
+            <h5 style="margin-bottom: 15px;">GROWTH MILESTONES</h5>
+            <div class="milestone-row">
+                <div class="milestone-item active">
+                    <small>Invites</small>
+                    <h4 style="margin: 5px 0;">5</h4>
+                    <span style="font-size: 0.6rem; color: var(--neon-green);">Unlocks Silver</span>
+                </div>
+                <div class="milestone-item">
+                    <small>Invites</small>
+                    <h4 style="margin: 5px 0;">25</h4>
+                    <span style="font-size: 0.6rem; color: var(--text-sub);">Unlocks Gold</span>
+                </div>
+                <div class="milestone-item">
+                    <small>Invites</small>
+                    <h4 style="margin: 5px 0;">100</h4>
+                    <span style="font-size: 0.6rem; color: var(--text-sub);">Unlocks Legend</span>
+                </div>
+            </div>
         </div>
-        <div class="card" style="flex: 1; text-align: center;">
-            <span style="font-size: 0.8rem; color: #8b949e;">Referral Earned</span>
-            <h2 id="referIncome" style="margin: 5px 0; color: var(--neon-green);">0</h2>
+
+        <div class="glass-card" style="text-align: center;">
+            <p style="font-size: 0.7rem; color: var(--text-sub); margin-bottom: 15px;">Share directly on social media</p>
+            <div style="display: flex; justify-content: center; gap: 20px;">
+                <button class="btn-neon" style="width: auto; border-color: #0088cc; color: #0088cc;" onclick="shareOn('tg')">Telegram</button>
+                <button class="btn-neon" style="width: auto; border-color: #fff; color: #fff;" onclick="shareOn('x')">X (Twitter)</button>
+            </div>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html">🏠<br>Home</a>
-        <a href="earn.html">⛏️<br>Earn</a>
-        <a href="stake.html">🔐<br>Stake</a>
-        <a href="refer.html" class="active">👥<br>Refer</a>
-        <a href="wallet.html">💰<br>Wallet</a>
+        <a href="dashboard.html" class="nav-item">🏠<br>Home</a>
+        <a href="earn.html" class="nav-item">⛏️<br>Earn</a>
+        <a href="stake.html" class="nav-item">🔐<br>Stake</a>
+        <a href="refer.html" class="nav-item active">👥<br>Refer</a>
+        <a href="wallet.html" class="nav-item">💰<br>Wallet</a>
     </nav>
 
     <script src="js/app.js"></script>
-    <script src="js/referral.js"></script>
+    <script>
+        function updateReferUI() {
+            updateUI();
+            
+            // Set dynamic link based on wallet
+            const shortWallet = userStats.wallet ? userStats.wallet.substring(0, 6) + "..." + userStats.wallet.substring(userStats.wallet.length - 4) : "NEW_USER";
+            document.getElementById('referLink').innerText = `adamas.vercel/ref?id=${shortWallet.toUpperCase()}`;
+        }
+
+        function copyReferLink() {
+            const link = document.getElementById('referLink').innerText;
+            navigator.clipboard.writeText(link).then(() => {
+                const btn = event.target;
+                btn.innerText = "COPIED!";
+                btn.style.background = "var(--neon-green)";
+                setTimeout(() => {
+                    btn.innerText = "COPY";
+                    btn.style.background = "var(--neon-blue)";
+                }, 2000);
+            });
+        }
+
+        function shareOn(platform) {
+            const link = document.getElementById('referLink').innerText;
+            const text = `Join the world's rarest Digital Asset Ecosystem! Mine ABP and get $ADS Airdrop. ${link}`;
+            let url = "";
+
+            if (platform === 'tg') {
+                url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+            } else if (platform === 'x') {
+                url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            }
+
+            window.open(url, '_blank');
+        }
+    </script>
 </body>
 </html>
-
