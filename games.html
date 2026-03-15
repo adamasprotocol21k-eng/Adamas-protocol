@@ -1,68 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade | ADAMAS Protocol</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games | ADAMAS</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .game-card {
-            background: linear-gradient(145deg, #1a2230, #000);
-            border: 1px solid var(--border-dim); border-radius: 25px;
-            padding: 15px; margin-bottom: 20px; display: flex; align-items: center;
-            position: relative; overflow: hidden;
-        }
-        .game-img { width: 80px; height: 80px; border-radius: 15px; margin-right: 15px; object-fit: cover; }
-        .badge-hot { 
-            position: absolute; top: 10px; right: -25px; background: var(--neon-red);
-            padding: 2px 30px; transform: rotate(45deg); font-size: 0.5rem; font-weight: bold;
-        }
-    </style>
 </head>
-<body onload="updateUI()">
+<body>
 
-    <div class="header-pro" style="padding: 20px 15px;">
-        <h2 style="color: var(--binance-yellow);">GAMES ARENA</h2>
-        <p style="color: var(--text-sub); font-size: 0.7rem;">MULTIPLY YOUR ASSETS IN REAL-TIME</p>
+    <div style="padding: 20px; text-align: center;">
+        <h2 style="color: var(--binance-yellow);">REWARD HUB</h2>
+        <p style="color: var(--text-sub); font-size: 0.8rem;">Play to extract ABP Tokens</p>
     </div>
 
-    <div style="padding: 0 15px;">
-        <div class="game-card" onclick="location.href='mines.html'">
-            <div class="badge-hot">POPULAR</div>
-            <img src="https://img.freepik.com/premium-photo/explosive-bomb-dark-background-generative-ai_1022461-1224.jpg" class="game-img">
-            <div>
-                <h3 style="margin: 0; color: var(--neon-blue);">CRYPTO MINES</h3>
-                <p style="font-size: 0.6rem; color: var(--text-sub);">Avoid bombs, find diamonds. Up to 100x!</p>
-            </div>
-        </div>
-
-        <div class="game-card" onclick="location.href='teenpatti.html'">
-            <img src="https://img.freepik.com/free-vector/playing-card-background-design_1212-325.jpg" class="game-img">
-            <div>
-                <h3 style="margin: 0; color: var(--binance-yellow);">TEEN PATTI</h3>
-                <p style="font-size: 0.6rem; color: var(--text-sub);">Pure luck and skill. Master the deck.</p>
-            </div>
-        </div>
-
-        <div class="game-card" onclick="location.href='lottery.html'">
-            <img src="https://img.freepik.com/free-vector/lucky-lottery-background-design_23-2148011244.jpg" class="game-img">
-            <div>
-                <h3 style="margin: 0; color: var(--neon-green);">GLOBAL JACKPOT</h3>
-                <p style="font-size: 0.6rem; color: var(--text-sub);">Buy tickets, win the protocol pool.</p>
-            </div>
-        </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px;">
+        <div class="glass-card" onclick="playScratch()" style="margin:0">🎰 Scratch Card</div>
+        <div class="glass-card" style="margin:0; opacity: 0.5;">🃏 Teen Patti</div>
+        <div class="glass-card" style="margin:0; opacity: 0.5;">💣 Mines</div>
+        <div class="glass-card" style="margin:0; opacity: 0.5;">🎡 Spin Wheel</div>
+        <div class="glass-card" style="margin:0; opacity: 0.5;">🎟️ Lottery</div>
+        <div class="glass-card" style="margin:0; opacity: 0.5;">❓ Quiz</div>
     </div>
 
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item"><span>🏠</span>Home</a>
         <a href="games.html" class="nav-item active"><span>🎮</span>Games</a>
         <a href="earn.html" class="nav-item"><span>⛏️</span>Earn</a>
+        <a href="invite.html" class="nav-item"><span>🔗</span>Invite</a>
         <a href="wallet.html" class="nav-item"><span>💰</span>Wallet</a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
+    <script>
+        function playScratch() {
+            const chance = Math.random() * 100;
+            let reward = 0;
+            
+            // 2-3% users get 1500-2000 ABP, others get 1000-1200
+            if(chance <= 3) {
+                reward = Math.floor(Math.random() * (2000 - 1500 + 1)) + 1500;
+                showNotification("JACKPOT! You found " + reward + " ABP");
+            } else {
+                reward = Math.floor(Math.random() * (1200 - 1000 + 1)) + 1000;
+                showNotification("You won " + reward + " ABP");
+            }
+            
+            userStats.balance += reward;
+            saveToFirebase();
+        }
+    </script>
 </body>
 </html>
-
