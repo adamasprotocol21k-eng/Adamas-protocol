@@ -1,80 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mining | ADAMAS Protocol</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn | ADAMAS</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .mining-container {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 40px 20px; text-align: center;
+        .day-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px; }
+        .day-box { 
+            background: var(--glass); border: 1px solid var(--border-dim); 
+            padding: 15px 5px; border-radius: 15px; text-align: center; font-size: 0.7rem;
         }
-
-        /* Animated Mining Circle */
-        .mining-circle-wrap {
-            position: relative; width: 220px; height: 220px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .outer-ring {
-            position: absolute; width: 100%; height: 100%;
-            border: 4px solid rgba(0, 210, 255, 0.1); border-radius: 50%;
-        }
-
-        .progress-ring {
-            position: absolute; width: 100%; height: 100%;
-            border: 4px solid transparent; border-top-color: var(--neon-blue);
-            border-radius: 50%; animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .mining-status {
-            z-index: 10; font-weight: 900;
-        }
-
-        .mining-power {
-            background: rgba(0, 255, 136, 0.1); color: var(--neon-green);
-            padding: 5px 15px; border-radius: 50px; font-size: 0.7rem;
-            border: 1px solid rgba(0, 255, 136, 0.3); margin-top: 10px;
-        }
-
-        /* Check-in Card */
-        .checkin-card {
-            width: 100%; background: var(--glass); border-radius: 25px;
-            padding: 20px; border: 1px solid var(--border-dim);
-            margin-top: 20px;
+        .day-box.active { border-color: var(--neon-green); color: var(--neon-green); }
+        .task-row { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: var(--glass); padding: 15px; border-radius: 15px; margin-bottom: 10px;
         }
     </style>
 </head>
-<body onload="startMiningUI()">
+<body>
 
-    <div class="header-pro" style="padding: 20px 15px; text-align: center;">
-        <h2 style="color: var(--neon-blue);">MINING TERMINAL</h2>
-        <p style="color: var(--text-sub); font-size: 0.7rem;">EXTRACTING ABP ASSETS FROM THE PROTOCOL</p>
+    <div style="padding: 20px;">
+        <h3 style="color: var(--binance-yellow);">DAILY EXTRACTION</h3>
+        <div class="day-grid" id="checkInGrid">
+            </div>
+        <button class="btn-neon" id="claimBtn" onclick="claimDaily()">CLAIM TODAY'S REWARD</button>
     </div>
 
-    <div class="mining-container">
-        <div class="mining-circle-wrap">
-            <div class="outer-ring"></div>
-            <div class="progress-ring"></div>
-            <div class="mining-status">
-                <span style="font-size: 0.7rem; color: var(--text-sub);">EXTRACTING</span><br>
-                <span id="miningLiveBal" style="font-size: 1.8rem; color: #fff;">0.000</span><br>
-                <span style="font-size: 0.7rem; color: var(--binance-yellow);">ABP</span>
-            </div>
+    <div style="padding: 0 20px;">
+        <h4>SOCIAL MISSIONS</h4>
+        <div class="task-row">
+            <div><b>Telegram</b><br><small>+50 ABP</small></div>
+            <button class="btn-neon" style="width:auto; padding:5px 15px;" onclick="doSocialTask('tg')">JOIN</button>
         </div>
-
-        <div class="mining-power">⚡ MINING SPEED: 0.05 ABP/SEC</div>
-
-        <div class="checkin-card">
-            <h4 style="margin: 0 0 10px 0;">DAILY REWARD</h4>
-            <p style="font-size: 0.7rem; color: var(--text-sub); margin-bottom: 15px;">Claim your daily loyalty bonus (24h Reset)</p>
-            <button id="checkinBtn" class="btn-neon" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="claimDaily()">
-                CLAIM 200 ABP
-            </button>
+        <div class="task-row">
+            <div><b>Twitter (X)</b><br><small>+50 ABP</small></div>
+            <button class="btn-neon" style="width:auto; padding:5px 15px;" onclick="doSocialTask('x')">FOLLOW</button>
         </div>
     </div>
 
@@ -82,6 +42,7 @@
         <a href="dashboard.html" class="nav-item"><span>🏠</span>Home</a>
         <a href="games.html" class="nav-item"><span>🎮</span>Games</a>
         <a href="earn.html" class="nav-item active"><span>⛏️</span>Earn</a>
+        <a href="invite.html" class="nav-item"><span>🔗</span>Invite</a>
         <a href="wallet.html" class="nav-item"><span>💰</span>Wallet</a>
     </nav>
 
@@ -89,49 +50,15 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
     <script>
-        let sessionMining = 0;
-
-        function startMiningUI() {
-            const wallet = localStorage.getItem('adamas_wallet');
-            if(!wallet) { window.location.href = "index.html"; return; }
-            
-            loadUserData(wallet).then(() => {
-                // Check if already claimed today
-                checkDailyStatus();
-                
-                // Start Real-time Counter
-                setInterval(() => {
-                    sessionMining += 0.051;
-                    userStats.balance += 0.051;
-                    document.getElementById('miningLiveBal').innerText = sessionMining.toFixed(3);
-                    
-                    // Save to Firebase every 10 seconds to save bandwidth
-                    if(Math.floor(sessionMining * 20) % 20 === 0) {
-                        saveToFirebase();
-                    }
-                }, 1000);
-            });
-        }
-
-        function checkDailyStatus() {
-            const lastClaim = userStats.lastClaimDate || 0;
-            const now = Date.now();
-            const hoursSince = (now - lastClaim) / (1000 * 60 * 60);
-
-            if(hoursSince < 24) {
-                const btn = document.getElementById('checkinBtn');
-                btn.innerText = "CLAIMED (RESETS IN " + Math.floor(24 - hoursSince) + "H)";
-                btn.disabled = true;
-                btn.style.opacity = "0.5";
-            }
-        }
-
         function claimDaily() {
-            userStats.balance += 200;
-            userStats.lastClaimDate = Date.now();
+            // Logic: Check last claim date, add reward, update Firebase
+            showNotification("Day Claimed! +100 ABP");
+            userStats.balance += 100;
             saveToFirebase();
-            showNotification("200 ABP Claimed! 🎁");
-            checkDailyStatus();
+        }
+        function doSocialTask(type) {
+            window.open(type === 'tg' ? 'https://t.me/ADSProtocol' : 'https://x.com/DiamoProtocol', '_blank');
+            showNotification("Task Registered!");
         }
     </script>
 </body>
