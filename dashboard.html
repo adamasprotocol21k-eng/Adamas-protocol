@@ -3,120 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dashboard | Adamas Protocol</title>
+    <title>Dashboard | Adamas</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body onload="initDashboard()">
+<body onload="updateAllUI()">
 
-    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0b0e11; border-bottom: 1px solid #1e2329;">
-        <div style="font-weight: 900; color: #F3BA2F; letter-spacing: 1px;">ADAMAS</div>
-        <div id="walletBadge" style="background: rgba(243, 186, 47, 0.1); color: #F3BA2F; padding: 5px 12px; border-radius: 50px; font-size: 0.7rem; border: 1px solid rgba(243, 186, 47, 0.3);">
-            0x...
+    <div style="position: sticky; top: 0; background: #181a20; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; z-index: 1000;">
+        <div style="font-weight: 900; color: #F3BA2F; font-size: 1.2rem;">ADAMAS</div>
+        <div style="background: #1e2329; padding: 8px 15px; border-radius: 50px; border: 1px solid #F3BA2F;">
+            <span id="balance" style="font-weight: bold; color: #fff;">0</span> <small style="color: #F3BA2F;">ABP</small>
         </div>
-    </nav>
+    </div>
 
-    <div class="main-container" style="padding: 20px;">
-        
-        <div class="balance-card" style="background: linear-gradient(135deg, #1e2329 0%, #0b0e11 100%); padding: 35px 20px; border-radius: 25px; text-align: center; border: 1px solid rgba(243, 186, 47, 0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.5); margin-bottom: 25px;">
-            <p style="color: #848e9c; font-size: 0.8rem; margin-bottom: 10px; letter-spacing: 1px;">TOTAL ABP BALANCE</p>
-            <h1 style="font-size: 3.5rem; margin: 0; color: #F3BA2F; font-weight: 900; text-shadow: 0 0 20px rgba(243, 186, 47, 0.3);">
-                <span id="balance">0</span>
-            </h1>
-            <div style="margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 255, 136, 0.1); padding: 4px 12px; border-radius: 50px;">
-                <span style="width: 8px; height: 8px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88;"></span>
-                <small style="color: #00ff88; font-weight: bold; font-size: 0.7rem;">Active Mining Pool</small>
-            </div>
+    <div style="padding: 20px; padding-bottom: 100px;">
+        <div class="glass-card" style="padding: 20px; margin-bottom: 20px; text-align: center;">
+            <p style="color: #848e9c; font-size: 0.8rem; margin: 0;">Total Assets</p>
+            <h1 style="margin: 10px 0; font-size: 2.5rem;">$ <span id="usdVal">0.00</span></h1>
+            <p id="userWalletAddr" style="font-size: 0.7rem; color: #555; word-break: break-all;">0x...</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
-            <div class="glass-card" onclick="location.href='games.html'" style="padding: 20px; text-align: center; border-radius: 20px; background: rgba(255,255,255,0.03);">
-                <div style="font-size: 1.8rem; margin-bottom: 8px;">🎮</div>
-                <b style="font-size: 0.85rem;">Play Games</b>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="glass-card" onclick="location.href='games.html'" style="padding: 20px; text-align: center; cursor: pointer;">
+                <div style="font-size: 1.5rem; margin-bottom: 10px;">🎮</div>
+                <div style="font-weight: bold; font-size: 0.9rem;">PLAY GAMES</div>
             </div>
-            <div class="glass-card" onclick="location.href='earn.html'" style="padding: 20px; text-align: center; border-radius: 20px; background: rgba(255,255,255,0.03);">
-                <div style="font-size: 1.8rem; margin-bottom: 8px;">⛏️</div>
-                <b style="font-size: 0.85rem;">Mining Tasks</b>
+            <div class="glass-card" onclick="location.href='earn.html'" style="padding: 20px; text-align: center; cursor: pointer;">
+                <div style="font-size: 1.5rem; margin-bottom: 10px;">⛏️</div>
+                <div style="font-weight: bold; font-size: 0.9rem;">MINING</div>
             </div>
         </div>
-
-        <div class="glass-card" style="padding: 20px; border-radius: 24px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h4 style="margin: 0; font-size: 0.95rem;">Extraction Streak</h4>
-                <span id="streakCount" style="color: #F3BA2F; font-weight: bold; font-size: 0.8rem;">Day 1</span>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;" id="streakGrid">
-                </div>
-
-            <button class="btn-neon-large" style="margin-top: 20px; width: 100%;" onclick="claimDailyReward()">CLAIM DAILY BONUS</button>
-        </div>
-
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active">
-            <div class="nav-icon">🏠</div>
-            <span>Home</span>
-        </a>
-        <a href="games.html" class="nav-item">
-            <div class="nav-icon">🎮</div>
-            <span>Games</span>
-        </a>
-        <a href="earn.html" class="nav-item">
-            <div class="nav-icon">⛏️</div>
-            <span>Earn</span>
-        </a>
-        <a href="invite.html" class="nav-item">
-            <div class="nav-icon">🔗</div>
-            <span>Invite</span>
-        </a>
-        <a href="wallet.html" class="nav-item">
-            <div class="nav-icon">💰</div>
-            <span>Wallet</span>
-        </a>
+        <a href="dashboard.html" class="nav-item active">🏠 Home</a>
+        <a href="games.html" class="nav-item">🎮 Games</a>
+        <a href="earn.html" class="nav-item">⛏️ Earn</a>
+        <a href="wallet.html" class="nav-item">💰 Wallet</a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
-
-    <script>
-        function initDashboard() {
-            // Dashboard specific UI updates
-            updateAllUI();
-            setupStreak();
-        }
-
-        function setupStreak() {
-            const grid = document.getElementById('streakGrid');
-            grid.innerHTML = '';
-            for(let i=1; i<=4; i++) {
-                grid.innerHTML += `
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px 5px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="font-size: 0.6rem; color: #848e9c; margin-bottom: 5px;">DAY ${i}</div>
-                        <div style="color: #F3BA2F; font-size: 0.8rem; font-weight: bold;">+${i*25}</div>
-                    </div>
-                `;
-            }
-        }
-
-        function claimDailyReward() {
-            const lastClaim = localStorage.getItem('adamas_last_claim');
-            const today = new Date().toDateString();
-
-            if (lastClaim === today) {
-                showNotification("Already claimed today!");
-                return;
-            }
-
-            // Professional Reward Flow
-            const reward = 50;
-            window.userStats.balance += reward;
-            saveToFirebase(); // This will sync everything
-            
-            localStorage.setItem('adamas_last_claim', today);
-            showNotification(`Success! Received ${reward} ABP`);
-        }
-    </script>
 </body>
 </html>
