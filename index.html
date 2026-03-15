@@ -3,103 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Access | ADAMAS Protocol</title>
+    <title>Adamas Protocol | Web3 Gaming Ecosystem</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #0b0e11; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Inter', sans-serif;
+        /* Landing Page Specific Animations */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1a2026 0%, #0b0e11 100%);
+            overflow: hidden;
+            position: relative;
         }
 
-        /* 3D Floating Particles */
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px 30px; border-radius: 30px;
-            text-align: center; width: 85%; max-width: 400px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            animation: fadeIn 1s ease-out;
+        .floating-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .hero-content { z-index: 10; padding: 20px; animation: fadeInUp 1s ease-out; }
 
-        .logo-glow {
-            font-size: 2.5rem; font-weight: 900; color: #00ff88;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-            margin-bottom: 10px; letter-spacing: 3px;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .desc { color: #848e9c; font-size: 0.85rem; margin-bottom: 30px; }
-
-        .btn-connect {
-            background: linear-gradient(90deg, #00ff88, #00bd70);
-            color: #000; border: none; padding: 16px;
-            width: 100%; border-radius: 12px; font-weight: bold;
-            font-size: 1rem; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.2);
-            position: relative; overflow: hidden;
+        .logo-main {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #F3BA2F;
+            text-shadow: 0 0 30px rgba(243, 186, 47, 0.4);
+            margin-bottom: 10px;
+            letter-spacing: 5px;
         }
 
-        .btn-connect:active { transform: scale(0.98); }
-
-        .floating-coins {
-            position: absolute; width: 50px; opacity: 0.3;
-            animation: float 6s infinite ease-in-out;
+        .tagline {
+            color: #848e9c;
+            font-size: 1rem;
+            max-width: 300px;
+            margin-bottom: 40px;
+            line-height: 1.6;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(20deg); }
+        /* Popup Styling */
+        .social-popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
         }
     </style>
 </head>
 <body>
 
-    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="floating-coins" style="top:10%; left:10%;">
-    <img src="https://cryptologos.cc/logos/polygon-matic-logo.png" class="floating-coins" style="bottom:15%; right:10%; animation-delay: 2s;">
-
-    <div class="login-card">
-        <div class="logo-glow">ADAMAS</div>
-        <p class="desc">Decentralized Gaming Ecosystem.<br>Connect your wallet to start mining ABP.</p>
+    <div class="hero-section">
+        <div class="floating-bg" id="particles-js"></div>
         
-        <div style="text-align: left; margin-bottom: 25px; font-size: 0.75rem; color: #00ff88;">
-            <div style="margin-bottom: 8px;">✔ Play 3D Games</div>
-            <div style="margin-bottom: 8px;">✔ Earn Daily Streak Rewards</div>
-            <div>✔ Polygon Amoy Integrated</div>
+        <div class="hero-content">
+            <div class="logo-main">ADAMAS</div>
+            <p class="tagline">Play Games, Complete Tasks, and Earn ABP Points on Polygon Amoy.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px; width: 280px; margin: 0 auto;">
+                <button class="btn-neon-large" id="connectBtn" onclick="connectWallet()">CONNECT WALLET</button>
+                <button class="btn-neon-large" style="background:transparent; border:1px solid #333; color:#848e9c;" onclick="showNotification('Connect Wallet First!')">LAUNCH APP</button>
+            </div>
+
+            <div style="margin-top: 50px; display: flex; gap: 20px; justify-content: center; opacity: 0.5;">
+                <img src="https://cryptologos.cc/logos/polygon-matic-logo.png" width="25">
+                <img src="https://cryptologos.cc/logos/metamask-dot-logo.png" width="25">
+                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" width="25">
+            </div>
         </div>
+    </div>
 
-        <button class="btn-connect" id="loginBtn" onclick="handleLogin()">LAUNCH APP</button>
-        
-        <p style="margin-top: 20px; font-size: 0.65rem; color: #5a636c;">
-            By connecting, you agree to the Protocol Terms.
-        </p>
+    <div id="taskPopup" class="social-popup">
+        <div class="glass-card" style="width: 90%; max-width: 350px; padding: 30px; text-align: center;">
+            <h3 style="color: #F3BA2F; margin-top: 0;">PRE-LAUNCH TASKS</h3>
+            <p style="font-size: 0.8rem; color: #848e9c; margin-bottom: 25px;">Complete these once to unlock Dashboard & earn 300 ABP.</p>
+            
+            <div id="taskList">
+                <div class="task-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#000; padding:10px; border-radius:10px;">
+                    <span style="font-size:0.8rem;">Follow Twitter</span>
+                    <button class="btn-neon" style="width:auto; padding:5px 15px;" onclick="doTask(this, 'https://twitter.com/diamondprotocol', 100)">GO</button>
+                </div>
+                <div class="task-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#000; padding:10px; border-radius:10px;">
+                    <span style="font-size:0.8rem;">Join Telegram</span>
+                    <button class="btn-neon" style="width:auto; padding:5px 15px;" onclick="doTask(this, 'https://t.me/diamondprotocol', 100)">GO</button>
+                </div>
+            </div>
+
+            <button class="btn-neon-large" id="claimAllBtn" style="margin-top:20px; opacity:0.3;" disabled onclick="enterApp()">GO TO DASHBOARD</button>
+            <p style="font-size:0.6rem; margin-top:15px; color:#555;" onclick="enterApp()">Skip for now (No Reward)</p>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
     <script src="js/app.js"></script>
 
     <script>
-        async function handleLogin() {
-            const btn = document.getElementById('loginBtn');
-            btn.innerText = "CONNECTING...";
-            
-            // Yahan hum dummy wallet address generate karte hain agar MetaMask nahi hai
-            // Real wallet connect logic app.js mein handle hoga
-            let walletAddr = "0x" + Math.random().toString(16).slice(2, 12) + "..." + Math.random().toString(16).slice(2, 6);
-            localStorage.setItem('adamas_wallet', walletAddr);
-            
-            // Vibration effect for mobile feedback
-            if(navigator.vibrate) navigator.vibrate(50);
+        let tasksDone = 0;
 
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const accounts = await provider.send("eth_requestAccounts", []);
+                    const wallet = accounts[0];
+                    
+                    localStorage.setItem('adamas_wallet', wallet);
+                    showNotification("Wallet Connected!");
+                    
+                    // Show Social Gate
+                    document.getElementById('taskPopup').style.display = 'flex';
+                } catch (err) {
+                    showNotification("Connection Rejected");
+                }
+            } else {
+                showNotification("Please install MetaMask!");
+            }
+        }
+
+        function doTask(btn, link, reward) {
+            window.open(link, '_blank');
+            btn.innerText = "⌛";
+            
             setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 1500);
+                btn.innerText = "✅";
+                btn.disabled = true;
+                btn.style.borderColor = "#00ff88";
+                tasksDone++;
+                
+                // Humne jo app.js banayi hai, uska global variable use karenge
+                window.userStats.balance += reward;
+                
+                if(tasksDone >= 2) {
+                    const claimBtn = document.getElementById('claimAllBtn');
+                    claimBtn.style.opacity = "1";
+                    claimBtn.disabled = false;
+                    saveToFirebase(); // Sync reward to Firebase immediately
+                }
+            }, 3000);
+        }
+
+        function enterApp() {
+            window.location.href = "dashboard.html";
         }
     </script>
 </body>
