@@ -1,101 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin Wheel | ADAMAS Protocol</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lucky Spin | Adamas Protocol</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         .wheel-container {
-            position: relative; width: 300px; height: 300px; margin: 30px auto;
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
         }
         #wheel {
-            width: 100%; height: 100%; border-radius: 50%; border: 5px solid var(--binance-yellow);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #1e2329;
+            box-shadow: 0 0 30px rgba(243, 186, 47, 0.2);
             transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
-            background: conic-gradient(
-                #f3ba2f 0deg 60deg, #1e2329 60deg 120deg, 
-                #00ff88 120deg 180deg, #1e2329 180deg 240deg, 
-                #00d4ff 240deg 300deg, #1e2329 300deg 360deg
-            );
         }
         .pointer {
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 15px solid transparent;
-            border-right: 15px solid transparent; border-top: 25px solid #ff4d4d; z-index: 10;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            z-index: 10;
         }
+        .spin-btn {
+            background: linear-gradient(135deg, #F3BA2F 0%, #b8860b 100%);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: #000;
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+        .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     </style>
 </head>
-<body>
+<body onload="updateAllUI()">
 
     <div style="padding: 20px; text-align: center;">
-        <h3 style="color: var(--binance-yellow);">QUANTUM SPIN</h3>
-        <p style="color: var(--text-sub);">Test your luck for ABP Multipliers</p>
-    </div>
+        <h2 style="color: #F3BA2F; margin-bottom: 10px;">LUCKY WHEEL</h2>
+        <div class="bal-badge" style="display: inline-block; background: #1e2329; color: #F3BA2F; padding: 8px 20px; border-radius: 50px; border: 1px solid #F3BA2F;">
+            <span id="balance">0</span> <small>ABP</small>
+        </div>
 
-    <div class="wheel-container">
-        <div class="pointer"></div>
-        <div id="wheel"></div>
-    </div>
+        <div class="wheel-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/8144/8144974.png" class="pointer" alt="pointer">
+            <canvas id="wheel" width="500" height="500"></canvas>
+        </div>
 
-    <div class="glass-card">
-        <input type="number" id="spinBet" class="btn-neon" style="text-align:center; background:#000;" placeholder="Bet (e.g. 100 ABP)">
-        <button id="spinBtn" class="btn-neon" style="background:var(--binance-yellow); color:#000;" onclick="spin()">SPIN ENGINE</button>
+        <button class="spin-btn" id="spinBtn" onclick="spinWheel()">SPIN (100 ABP)</button>
+        <p style="color: #848e9c; margin-top: 20px; font-size: 0.8rem;" onclick="location.href='games.html'">← BACK TO GAMES</p>
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item"><span>🏠</span>Home</a>
-        <a href="games.html" class="nav-item active"><span>🎮</span>Games</a>
-        <a href="earn.html" class="nav-item"><span>⛏️</span>Earn</a>
-        <a href="invite.html" class="nav-item"><span>🔗</span>Invite</a>
-        <a href="wallet.html" class="nav-item"><span>💰</span>Wallet</a>
+        <a href="dashboard.html" class="nav-item">🏠 Home</a>
+        <a href="games.html" class="nav-item active">🎮 Games</a>
+        <a href="earn.html" class="nav-item">⛏️ Earn</a>
+        <a href="invite.html" class="nav-item">🔗 Invite</a>
+        <a href="wallet.html" class="nav-item">💰 Wallet</a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
+
     <script>
-        let isSpinning = false;
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const sectors = [
+            { label: "0", color: "#1e2329", reward: 0 },
+            { label: "50", color: "#F3BA2F", reward: 50 },
+            { label: "150", color: "#1e2329", reward: 150 },
+            { label: "0", color: "#F3BA2F", reward: 0 },
+            { label: "500", color: "#00ff88", reward: 500 },
+            { label: "20", color: "#1e2329", reward: 20 },
+            { label: "1000", color: "#F3BA2F", reward: 1000 },
+            { label: "0", color: "#ff4d4d", reward: 0 }
+        ];
 
-        function spin() {
-            if (isSpinning) return;
-            const bet = parseInt(document.getElementById('spinBet').value);
+        const arc = 2 * Math.PI / sectors.length;
+        let angle = 0;
+
+        function drawWheel() {
+            sectors.forEach((sector, i) => {
+                const ang = arc * i;
+                ctx.beginPath();
+                ctx.fillStyle = sector.color;
+                ctx.moveTo(250, 250);
+                ctx.arc(250, 250, 250, ang, ang + arc);
+                ctx.lineTo(250, 250);
+                ctx.fill();
+                
+                ctx.save();
+                ctx.translate(250, 250);
+                ctx.rotate(ang + arc / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = sector.color === "#F3BA2F" ? "#000" : "#fff";
+                ctx.font = "bold 30px Inter";
+                ctx.fillText(sector.label, 230, 10);
+                ctx.restore();
+            });
+        }
+
+        function spinWheel() {
+            if (window.userStats.balance < 100) return showNotification("Min 100 ABP needed!");
             
-            if (isNaN(bet) || bet <= 0 || bet > userStats.balance) {
-                alert("Check your balance!"); return;
-            }
-
-            isSpinning = true;
-            userStats.balance -= bet;
+            window.userStats.balance -= 100;
             saveToFirebase();
+            
+            const btn = document.getElementById('spinBtn');
+            btn.disabled = true;
 
-            const randomDeg = Math.floor(Math.random() * 360) + 3600; // 10 full rotations
-            const wheel = document.getElementById('wheel');
-            wheel.style.transform = `rotate(${randomDeg}deg)`;
+            const rand = Math.floor(Math.random() * sectors.length);
+            const stopAngle = (2 * Math.PI) * 5 + (arc * (sectors.length - rand)) - (arc/2);
+            
+            canvas.style.transform = `rotate(${stopAngle}rad)`;
 
             setTimeout(() => {
-                isSpinning = false;
-                const actualDeg = randomDeg % 360;
-                calculateWin(actualDeg, bet);
+                const win = sectors[rand].reward;
+                window.userStats.balance += win;
+                saveToFirebase();
+                
+                showNotification(win > 0 ? `JACKPOT! +${win} ABP` : "Better luck next time!");
+                btn.disabled = false;
+                canvas.style.transition = "none";
+                canvas.style.transform = `rotate(${stopAngle % (2 * Math.PI)}rad)`;
+                setTimeout(() => canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)", 50);
             }, 4000);
         }
 
-        function calculateWin(deg, bet) {
-            let multiplier = 0;
-            // Simplified logic for 6 segments (60 degrees each)
-            if (deg >= 0 && deg < 60) multiplier = 2;
-            else if (deg >= 60 && deg < 120) multiplier = 0.5;
-            else if (deg >= 120 && deg < 180) multiplier = 5;
-            else if (deg >= 180 && deg < 240) multiplier = 0.2;
-            else if (deg >= 240 && deg < 300) multiplier = 1.5;
-            else multiplier = 0;
-
-            const win = Math.floor(bet * multiplier);
-            userStats.balance += win;
-            saveToFirebase();
-            
-            if(win > 0) showNotification(`Multiplied: ${win} ABP (${multiplier}x)!`);
-            else showNotification("Better luck next spin!");
-        }
+        drawWheel();
     </script>
 </body>
 </html>
-
