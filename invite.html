@@ -3,50 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invite & Earn | ADAMAS Protocol</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>ADAMAS | Invite & Earn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
+        }
+
+        /* 3D Background */
+        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .container { padding: 40px 20px 100px; max-width: 500px; margin: auto; text-align: center; }
+
+        /* Referral Card */
+        .invite-card {
+            background: var(--glass); border-radius: 30px; padding: 40px 25px;
+            border: 1px solid rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px);
+            box-shadow: 0 0 40px rgba(112, 0, 255, 0.2);
+            transform-style: preserve-3d; transition: 0.5s;
+        }
+
+        h1 { font-family: 'Orbitron'; font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; }
+        .bonus-text { font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px; }
+        .highlight { color: #ffcc00; font-weight: bold; }
+
+        /* Link Box */
+        .link-container {
+            background: rgba(0,0,0,0.4); border-radius: 15px; padding: 10px;
+            display: flex; align-items: center; gap: 10px;
+            border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;
+        }
+
+        .link-input {
+            background: transparent; border: none; color: white; width: 100%;
+            padding: 10px; font-size: 0.9rem; font-family: 'Rajdhani';
+        }
+
+        .copy-btn {
+            background: var(--primary); color: black; border: none;
+            padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron';
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 0 15px var(--primary);
+        }
+        .copy-btn:active { transform: scale(0.9); }
+
+        /* Social Buttons */
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        
+        .social-btn {
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; border-radius: 20px; text-decoration: none;
+            color: white; font-family: 'Orbitron'; font-size: 0.8rem;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            transition: 0.4s;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary); background: rgba(0, 242, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .icon-tg { color: #229ED9; font-size: 1.5rem; }
+        .icon-tw { color: #1DA1F2; font-size: 1.5rem; }
+
+        /* Floating Nav Dock */
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
+            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
+            border: 1px solid rgba(255,255,255,0.1); z-index: 100;
+        }
+        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; color: white; }
+        .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.2); }
+
+    </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
 
-    <div class="container" style="padding-top: 80px; text-align: center;">
-        <div class="glass-card" style="max-width: 450px; margin: auto;">
-            <h2 style="color: var(--primary-neon);">Invite Friends</h2>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Get 10% of their Lottery entries & 100 ABP per signup!</p>
+    <canvas id="canvas3d"></canvas>
 
-            <div style="margin: 30px 0;">
-                <label style="font-size: 0.7rem; display: block; text-align: left; margin-bottom: 5px; opacity: 0.5;">Your Referral Link</dt>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="refLink" readonly value="https://adamas.io/join?ref=0x..." style="flex:1; background: rgba(0,0,0,0.5); border: 1px solid var(--primary-neon); color: white; padding: 10px; border-radius: 5px; font-size: 0.8rem;">
-                    <button class="neon-btn" onclick="copyRef()" style="padding: 10px 15px;">Copy</button>
-                </div>
+    <div class="container">
+        <div class="invite-card">
+            <h1>INVITE FRIENDS</h1>
+            <p class="bonus-text">
+                Get <span class="highlight">10%</span> of their Lottery entries <br>
+                & <span class="highlight">100 ABP</span> per signup!
+            </p>
+
+            <div class="link-container">
+                <input type="text" class="link-input" id="referralLink" value="https://adamas.io/join?ref=0x..." readonly>
+                <button class="copy-btn" onclick="copyLink()">COPY</button>
             </div>
 
-            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                <h4>Join Our Community</h4>
-                <div style="display: flex; justify-content: center; gap: 20px; margin-top: 15px;">
-                    <a href="https://t.me/daimodmo" target="_blank" class="neon-btn" style="font-size: 0.7rem; border-color: #229ED9; color: #229ED9;">Telegram</a>
-                    <a href="https://twitter.com/DiamoProtocol" target="_blank" class="neon-btn" style="font-size: 0.7rem; border-color: #1DA1F2; color: #1DA1F2;">Twitter</a>
-                </div>
+            <div style="font-family: 'Orbitron'; font-size: 0.7rem; opacity: 0.5; margin-bottom: 10px;">JOIN OUR COMMUNITY</div>
+            
+            <div class="social-grid">
+                <a href="https://t.me/daimodmo" class="social-btn">
+                    <span class="icon-tg">✈️</span>
+                    TELEGRAM
+                </a>
+                <a href="https://twitter.com/DiamoProtocol" class="social-btn">
+                    <span class="icon-tw">🐦</span>
+                    TWITTER
+                </a>
             </div>
         </div>
     </div>
 
+    <div class="dock">
+        <a href="dashboard.html" class="dock-item">🏠</a>
+        <a href="wallet.html" class="dock-item">💰</a>
+        <a href="invite.html" class="dock-item active">👥</a>
+        <a href="profile.html" class="dock-item">👤</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="js/app.js"></script>
+
     <script>
-        function copyRef() {
-            const copyText = document.getElementById("refLink");
-            copyText.select();
-            document.execCommand("copy");
-            alert("Link copied to clipboard!");
+        // 1. THREE.JS Background (Cyan Particle Theme)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const posArray = new Float32Array(800 * 3);
+        for(let i=0; i < 2400; i++) posArray[i] = (Math.random() - 0.5) * 10;
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
+        const particlesMesh = new THREE.Points(particlesGeometry, material);
+        scene.add(particlesMesh);
+        camera.position.z = 3;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particlesMesh.rotation.y += 0.0015;
+            renderer.render(scene, camera);
         }
-        
-        // Auto-fill wallet in link
-        window.addEventListener('load', () => {
-            if(userWallet) {
-                document.getElementById('refLink').value = `https://adamas.io/join?ref=${userWallet}`;
+        animate();
+
+        // 2. Logic for Link
+        function copyLink() {
+            const copyText = document.getElementById("referralLink");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            
+            const btn = document.querySelector('.copy-btn');
+            btn.innerText = "COPIED!";
+            btn.style.background = "#00ff88";
+            setTimeout(() => { 
+                btn.innerText = "COPY"; 
+                btn.style.background = "#00f2ff";
+            }, 2000);
+        }
+
+        window.onload = function() {
+            const addr = localStorage.getItem('userWallet');
+            if(addr) {
+                const shortAddr = addr.substring(0, 6);
+                document.getElementById('referralLink').value = "https://adamas-protocol.vercel.app/index.html?ref=" + shortAddr;
             }
-        });
+        }
     </script>
 </body>
 </html>
