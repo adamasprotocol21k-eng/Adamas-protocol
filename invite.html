@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invite | ADAMAS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Invite | Adamas Protocol</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body onload="initInvite()">
 
-    <div style="padding: 40px 20px; text-align: center;">
-        <h2 style="color: var(--binance-yellow);">INVITE & EARN</h2>
-        <p style="color: var(--text-sub);">Get 10% of your friend's earnings</p>
-        
+    <div style="padding: 30px 20px; text-align: center;">
+        <h2 style="color: #F3BA2F; margin: 0;">EXPAND YOUR FLEET</h2>
+        <p style="color: #848e9c; font-size: 0.8rem;">Earn 200 ABP per friend + 1% Daily Share</p>
+
         <div class="glass-card" style="margin-top: 30px;">
-            <small style="color: var(--text-sub);">Your Referral Link</small>
-            <div id="refLink" style="font-size: 0.7rem; margin: 15px 0; word-break: break-all; color: var(--neon-blue);">
-                adamas.app/?ref=loading...
+            <small style="color: #848e9c;">Your Unique Invite Link</small>
+            <div id="refLinkDisplay" style="background: #000; padding: 12px; border-radius: 10px; font-size: 0.7rem; color: #00ff88; margin: 15px 0; word-break: break-all; border: 1px dashed #F3BA2F;">
+                Generating link...
             </div>
-            <button class="btn-neon" onclick="copyRef()">COPY LINK</button>
+            <button class="btn-neon" style="width: 100%;" onclick="copyInvite()">COPY LINK</button>
         </div>
 
-        <div class="glass-card" style="display: flex; justify-content: space-around;">
-            <div><small>Invited</small><h3 id="refCount">0</h3></div>
-            <div><small>Bonus Earned</small><h3>0 ABP</h3></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+            <div class="glass-card" style="margin: 0; padding: 15px;">
+                <small style="color: #848e9c;">Total Referrals</small>
+                <h3 id="refCount" style="margin: 5px 0;">0</h3>
+            </div>
+            <div class="glass-card" style="margin: 0; padding: 15px;">
+                <small style="color: #848e9c;">1% Comm. Earned</small>
+                <h3 id="refEarning" style="margin: 5px 0; color: #00ff88;">0 ABP</h3>
+            </div>
         </div>
     </div>
 
@@ -37,13 +44,21 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
     <script>
-        function copyRef() {
-            const link = document.getElementById('refLink').innerText;
-            navigator.clipboard.writeText(link);
-            showNotification("Link Copied to Clipboard!");
+        function initInvite() {
+            const wallet = localStorage.getItem('adamas_wallet') || "0xAddress";
+            const link = window.location.origin + "/index.html?ref=" + wallet;
+            document.getElementById('refLinkDisplay').innerText = link;
+            
+            // Show stats from userStats (loaded in app.js)
+            document.getElementById('refCount').innerText = userStats.referralCount || 0;
+            document.getElementById('refEarning').innerText = (userStats.referralEarnings || 0).toFixed(2) + " ABP";
         }
-        // Referral initialization logic in app.js will update the UI
+
+        function copyInvite() {
+            const link = document.getElementById('refLinkDisplay').innerText;
+            navigator.clipboard.writeText(link);
+            showNotification("Invite Link Copied!");
+        }
     </script>
 </body>
 </html>
-
