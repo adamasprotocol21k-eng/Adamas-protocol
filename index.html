@@ -4,177 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADAMAS PROTOCOL | The Future of Mining</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-neon: #00f2ff;
-            --secondary-neon: #7000ff;
-            --bg-black: #05060a;
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
             --glass: rgba(255, 255, 255, 0.05);
         }
 
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--bg-black);
-            color: #fff;
-            font-family: 'Rajdhani', sans-serif;
-            overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
+            margin: 0; padding: 0; background: var(--dark);
+            color: white; font-family: 'Rajdhani', sans-serif;
+            overflow: hidden; height: 100%;
         }
 
-        /* Particles Background */
-        .stars {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a1b26 0%, #05060a 100%);
-            z-index: -1;
+        /* 3D Background Engine */
+        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .hero-section {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            padding: 0 20px; position: relative;
         }
 
-        .container {
-            text-align: center;
-            z-index: 10;
-            width: 90%;
-            max-width: 450px;
-            animation: fadeIn 1.5s ease-out;
+        /* Animated Logo Portal */
+        .portal-container {
+            position: relative; width: 220px; height: 220px;
+            margin-bottom: 30px; display: flex; align-items: center;
+            justify-content: center;
         }
 
-        /* Bada aur Glowing Logo */
-        .logo-section {
-            margin-bottom: 2rem;
-            position: relative;
+        .portal-ring {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid var(--primary); border-radius: 50%;
+            border-top-color: transparent; border-bottom-color: transparent;
+            animation: rotate 3s linear infinite;
+            box-shadow: 0 0 30px var(--primary);
         }
+
         .main-logo {
-            width: 220px; /* Bada size jaisa aapne kaha */
-            height: auto;
-            filter: drop-shadow(0 0 20px var(--primary-neon));
+            width: 140px; height: 140px; border-radius: 50%;
+            z-index: 2; filter: drop-shadow(0 0 15px var(--primary));
             animation: float 4s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
-        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* Glassmorphism Panel */
-        .launch-card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 40px 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
-
+        /* Typography */
         h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.2rem;
-            margin: 0;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-        h1 span {
-            color: var(--primary-neon);
-            text-shadow: 0 0 15px var(--primary-neon);
-        }
-
-        .reward-info {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .badge {
-            background: rgba(0, 242, 255, 0.1);
-            border: 1px solid var(--primary-neon);
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            color: var(--primary-neon);
-            font-weight: bold;
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 2.8rem;
+            margin: 0; letter-spacing: 5px; text-transform: uppercase;
+            background: linear-gradient(to bottom, #fff, var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
         p {
-            font-size: 1.1rem;
-            opacity: 0.8;
-            line-height: 1.6;
-            margin-bottom: 30px;
+            font-size: 1.1rem; opacity: 0.7; max-width: 400px;
+            margin: 15px 0 40px; line-height: 1.6;
         }
 
-        /* Final Connect Button */
+        /* Connect Button */
         .connect-btn {
-            background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon));
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 18px;
-            border-radius: 100px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            font-family: 'Orbitron', sans-serif;
-            cursor: pointer;
-            transition: 0.4s;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: transparent; border: 2px solid var(--primary);
+            color: var(--primary); padding: 18px 50px; border-radius: 100px;
+            font-family: 'Orbitron'; font-weight: bold; font-size: 1rem;
+            text-transform: uppercase; cursor: pointer; transition: 0.5s;
+            position: relative; overflow: hidden; letter-spacing: 2px;
         }
 
         .connect-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px var(--primary-neon);
-            letter-spacing: 1px;
+            background: var(--primary); color: black;
+            box-shadow: 0 0 50px var(--primary); transform: scale(1.05);
         }
 
-        .connect-btn:active {
-            transform: scale(0.98);
+        .footer-note {
+            position: absolute; bottom: 30px; font-size: 0.8rem;
+            opacity: 0.4; letter-spacing: 2px;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Footer Links */
-        .footer-socials {
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            opacity: 0.6;
-        }
-        .footer-socials a { color: white; text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
-        .footer-socials a:hover { color: var(--primary-neon); opacity: 1; }
 
     </style>
 </head>
 <body>
-    <div class="stars"></div>
 
-    <div class="container">
-        <div class="logo-section">
-            <img src="assets/logo.png" class="main-logo" alt="ADAMAS LOGO">
+    <canvas id="canvas3d"></canvas>
+
+    <div class="hero-section">
+        <div class="portal-container">
+            <div class="portal-ring"></div>
+            <img src="38682.jpg" class="main-logo" alt="Adamas Logo">
         </div>
 
-        <div class="launch-card">
-            <h1>ADAMAS <span>PROTOCOL</span></h1>
-            
-            <div class="reward-info">
-                <span class="badge">💎 21,000 SUPPLY</span>
-                <span class="badge">🚀 AIRDROP READY</span>
-            </div>
+        <h1>ADAMAS</h1>
+        <div style="font-family: 'Orbitron'; color: var(--primary); letter-spacing: 8px; font-size: 1.2rem;">PROTOCOL</div>
 
-            <p>Bhai! Welcome to the Next-Gen Mining. Connect your wallet to claim your <b>Welcome ABP Points</b> and start your journey. 🌕</p>
-            
-            <button class="connect-btn" id="connectBtn">
-                🔗 CONNECT WALLET
-            </button>
-        </div>
+        <p>Unlock the future of Web3 mining. Connect your wallet to claim your ABP points and secure your Airdrop.</p>
 
-        <div class="footer-socials">
-            <a href="https://t.me/daimodmo" target="_blank">Telegram ✈️</a>
-            <a href="https://twitter.com/DiamoProtocol" target="_blank">Twitter 🐦</a>
-        </div>
+        <button class="connect-btn" onclick="connectWallet()">Connect Wallet</button>
+
+        <div class="footer-note">V2.0 | SECURE WEB3 ECOSYSTEM</div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="js/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // 1. THREE.JS Hyper-Drive Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const starsGeometry = new THREE.BufferGeometry();
+        const starsCount = 3000;
+        const posArray = new Float32Array(starsCount * 3);
+
+        for(let i=0; i < starsCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 15;
+        }
+        starsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({ size: 0.008, color: 0x00f2ff, transparent: true });
+        const starsMesh = new THREE.Points(starsGeometry, material);
+        scene.add(starsMesh);
+
+        camera.position.z = 2;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            starsMesh.rotation.z += 0.001;
+            starsMesh.position.z += 0.005; // Fast forward effect
+            if(starsMesh.position.z > 2) starsMesh.position.z = 0;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 2. Connection Logic
+        function connectWallet() {
+            // Simulated connection for now
+            const mockWallet = "0x997f" + Math.random().toString(16).slice(2, 6) + "..." + "3b29";
+            localStorage.setItem('userWallet', "0x997f267154823901723468192347612348123b29");
+            
+            const btn = document.querySelector('.connect-btn');
+            btn.innerText = "CONNECTING...";
+            btn.style.borderColor = "#7000ff";
+            
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        }
+    </script>
 </body>
 </html>
