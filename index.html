@@ -3,165 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Protocol | Web3 Ecosystem</title>
+    <title>Adamas Protocol | Web3</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .hero-section {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: radial-gradient(circle at center, #1a2026 0%, #0b0e11 100%);
-            position: relative;
-        }
-
-        .hero-content { z-index: 10; padding: 20px; animation: fadeInUp 1s ease-out; }
-
-        .logo-main {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #F3BA2F;
-            text-shadow: 0 0 30px rgba(243, 186, 47, 0.4);
-            margin-bottom: 10px;
-            letter-spacing: 5px;
-        }
-
-        /* Popups Styling */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            backdrop-filter: blur(5px);
-        }
-
+        .hero-section { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at center, #1a2026 0%, #0b0e11 100%); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(8px); }
+        
         .wallet-option {
-            background: #1e2329;
-            padding: 15px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            cursor: pointer;
-            border: 1px solid #333;
-            transition: 0.3s;
+            background: #1e2329; padding: 18px; border-radius: 16px; display: flex; align-items: center; 
+            margin-bottom: 15px; cursor: pointer; border: 1px solid #333; transition: 0.3s; width: 100%;
         }
-
-        .wallet-option:hover { border-color: #F3BA2F; background: #2b3139; }
+        .wallet-option:active { transform: scale(0.98); border-color: #F3BA2F; }
+        .wallet-option img { width: 35px; height: 35px; margin-right: 20px; object-fit: contain; }
+        .wallet-option span { font-weight: bold; color: #fff; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
-    <div class="hero-section" id="landingSection">
+    <div class="hero-section">
         <div class="hero-content">
-            <div class="logo-main">ADAMAS</div>
-            <p style="color: #848e9c; margin-bottom: 40px;">The 21,000 Scarcity Gamified Web3 Engagement Platform.</p>
-            
-            <div style="width: 280px; margin: 0 auto;">
-                <button class="btn-neon-large" onclick="openWalletModal()">LAUNCH APP</button>
-            </div>
-
-            <div style="margin-top: 50px; display: flex; gap: 20px; justify-content: center; opacity: 0.4;">
-                <img src="https://cryptologos.cc/logos/polygon-matic-logo.png" width="25">
-                <img src="https://cryptologos.cc/logos/metamask-dot-logo.png" width="25">
-                <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" width="25">
-            </div>
+            <h1 style="color: #F3BA2F; font-size: 3rem; margin-bottom: 10px;">ADAMAS</h1>
+            <p style="color: #848e9c; margin-bottom: 40px;">Next-Gen Web3 Gaming Ecosystem</p>
+            <button class="btn-neon-large" onclick="openWalletModal()">LAUNCH APP</button>
         </div>
     </div>
 
-    <    <div id="walletModal" class="modal-overlay">
+    <div id="walletModal" class="modal-overlay">
         <div class="glass-card" style="width: 90%; max-width: 360px; padding: 30px; text-align: center;">
-            <h3 style="color: #F3BA2F; margin-bottom: 25px;">Connect Your Wallet</h3>
+            <h3 style="color: #F3BA2F; margin-bottom: 25px;">Select Wallet</h3>
             
-            <div class="wallet-option" onclick="connectWallet('metamask')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" width="30" style="margin-right:15px;">
-                <span style="font-weight:bold; color: #fff;">MetaMask</span>
+            <div class="wallet-option" onclick="processConnect('MetaMask')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" alt="MetaMask">
+                <span>MetaMask</span>
             </div>
 
-            <div class="wallet-option" onclick="connectWallet('trust')">
-                <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" width="30" style="margin-right:15px;">
-                <span style="font-weight:bold; color: #fff;">Trust Wallet</span>
+            <div class="wallet-option" onclick="processConnect('TrustWallet')">
+                <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" alt="TrustWallet">
+                <span>Trust Wallet</span>
             </div>
 
-            <p style="color: #ff4d4d; margin-top: 20px; font-size: 0.8rem; cursor: pointer;" onclick="closeModals()">Cancel</p>
-        </div>
-    </div>
-
-
-    <div id="taskModal" class="modal-overlay">
-        <div class="glass-card" style="width: 90%; max-width: 360px; padding: 30px; text-align: center;">
-            <h3 style="color: #F3BA2F; margin-top: 0;">PRE-LAUNCH TASKS</h3>
-            <p style="font-size: 0.8rem; color: #848e9c; margin-bottom: 25px;">Complete tasks to unlock Dashboard & earn 300 ABP.</p>
-            
-            <div class="task-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#000; padding:12px; border-radius:12px; border: 1px solid #222;">
-                <span style="font-size:0.85rem;">Follow X (Twitter)</span>
-                <button class="btn-neon" style="width:auto; padding:5px 15px;" onclick="doTask(this, 'https://twitter.com/', 150)">GO</button>
-            </div>
-            <div class="task-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#000; padding:12px; border-radius:12px; border: 1px solid #222;">
-                <span style="font-size:0.85rem;">Join Telegram</span>
-                <button class="btn-neon" style="width:auto; padding:5px 15px;" onclick="doTask(this, 'https://t.me/', 150)">GO</button>
-            </div>
-
-            <button class="btn-neon-large" id="claimAllBtn" style="margin-top:20px; opacity:0.3;" disabled onclick="enterApp()">GO TO DASHBOARD</button>
-            <p style="font-size:0.7rem; margin-top:15px; color:#555; cursor: pointer;" onclick="enterApp()">Skip for now</p>
+            <p style="color: #ff4d4d; margin-top: 20px; cursor: pointer;" onclick="closeModal()">Close</p>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
     <script src="js/app.js"></script>
 
     <script>
-        let tasksDone = 0;
-
         function openWalletModal() { document.getElementById('walletModal').style.display = 'flex'; }
-        function closeModals() { 
-            document.getElementById('walletModal').style.display = 'none'; 
-            document.getElementById('taskModal').style.display = 'none'; 
-        }
+        function closeModal() { document.getElementById('walletModal').style.display = 'none'; }
 
-        async function connectWallet(type) {
-            if (window.ethereum) {
+        async function processConnect(type) {
+            if (typeof window.ethereum !== 'undefined') {
                 try {
-                    const provider = new ethers.providers.Web3Provider(window.ethereum);
-                    const accounts = await provider.send("eth_requestAccounts", []);
-                    localStorage.setItem('adamas_wallet', accounts[0]);
+                    // Yahan se connect trigger hoga
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const walletAddress = accounts[0];
                     
-                    document.getElementById('walletModal').style.display = 'none';
-                    document.getElementById('taskModal').style.display = 'flex';
-                    showNotification("Connected to " + type);
+                    localStorage.setItem('adamas_wallet', walletAddress);
+                    
+                    // Dashboard par bhejne se pehle notification
+                    alert("Connected: " + type + "\nAddress: " + walletAddress.substring(0,10) + "...");
+                    
+                    window.location.href = "dashboard.html";
                 } catch (err) {
-                    showNotification("Connection Rejected");
+                    alert("Connection Refused! Please try again.");
                 }
             } else {
-                showNotification("No Wallet Detected. Open in DApp Browser.");
+                alert("Wallet Not Found! Please open this site inside MetaMask or Trust Wallet DApp Browser.");
+                // Deep link for mobile
+                window.location.href = "https://metamask.app.link/dapp/" + window.location.hostname;
             }
-        }
-
-        function doTask(btn, link, reward) {
-            window.open(link, '_blank');
-            btn.innerText = "⌛";
-            setTimeout(() => {
-                btn.innerText = "✅";
-                btn.disabled = true;
-                tasksDone++;
-                window.userStats.balance += reward;
-                if(tasksDone >= 2) {
-                    document.getElementById('claimAllBtn').style.opacity = "1";
-                    document.getElementById('claimAllBtn').disabled = false;
-                }
-            }, 3000);
-        }
-
-        function enterApp() {
-            saveToFirebase();
-            window.location.href = "dashboard.html";
         }
     </script>
 </body>
