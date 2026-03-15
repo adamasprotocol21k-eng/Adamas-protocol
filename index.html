@@ -2,45 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Future of Gaming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Access | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* 3D Floating Animation */
-        .coin-float {
-            position: absolute; width: 100px; height: 100px;
-            background: url('https://cryptologos.cc/logos/bitcoin-btc-logo.png');
-            background-size: cover; filter: drop-shadow(0 0 20px #f3ba2f);
-            animation: float 6s infinite ease-in-out; z-index: -1;
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: #0b0e11; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Inter', sans-serif;
         }
+
+        /* 3D Floating Particles */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 30px; border-radius: 30px;
+            text-align: center; width: 85%; max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .logo-glow {
+            font-size: 2.5rem; font-weight: 900; color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            margin-bottom: 10px; letter-spacing: 3px;
+        }
+
+        .desc { color: #848e9c; font-size: 0.85rem; margin-bottom: 30px; }
+
+        .btn-connect {
+            background: linear-gradient(90deg, #00ff88, #00bd70);
+            color: #000; border: none; padding: 16px;
+            width: 100%; border-radius: 12px; font-weight: bold;
+            font-size: 1rem; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.2);
+            position: relative; overflow: hidden;
+        }
+
+        .btn-connect:active { transform: scale(0.98); }
+
+        .floating-coins {
+            position: absolute; width: 50px; opacity: 0.3;
+            animation: float 6s infinite ease-in-out;
+        }
+
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-50px) rotate(20deg); }
-        }
-        .hero-glow {
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-            background: linear-gradient(90deg, #fff, #00ff88);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            50% { transform: translateY(-30px) rotate(20deg); }
         }
     </style>
 </head>
-<body class="crypto-theme">
-    <div class="coin-float" style="top:10%; left:10%;"></div>
-    <div class="coin-float" style="top:60%; right:15%; animation-delay: 2s;"></div>
+<body>
 
-    <div class="landing-content" style="text-align: center; padding-top: 100px;">
-        <h1 class="hero-glow" style="font-size: 3rem; margin-bottom: 10px;">ADAMAS PROTOCOL</h1>
-        <p style="color: #848e9c; padding: 0 20px;">Decentralized Gaming & Reward Ecosystem.<br>Play. Earn. Evolve.</p>
+    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="floating-coins" style="top:10%; left:10%;">
+    <img src="https://cryptologos.cc/logos/polygon-matic-logo.png" class="floating-coins" style="bottom:15%; right:10%; animation-delay: 2s;">
+
+    <div class="login-card">
+        <div class="logo-glow">ADAMAS</div>
+        <p class="desc">Decentralized Gaming Ecosystem.<br>Connect your wallet to start mining ABP.</p>
         
-        <div class="features-list" style="margin: 40px 0; font-size: 0.8rem; color: #00ff88;">
-            <p>● 3D Gaming Hub ● Social Mining ● Referral Rewards</p>
+        <div style="text-align: left; margin-bottom: 25px; font-size: 0.75rem; color: #00ff88;">
+            <div style="margin-bottom: 8px;">✔ Play 3D Games</div>
+            <div style="margin-bottom: 8px;">✔ Earn Daily Streak Rewards</div>
+            <div>✔ Polygon Amoy Integrated</div>
         </div>
 
-        <button class="btn-neon-large" onclick="connectWallet()">LAUNCH APP / CONNECT</button>
+        <button class="btn-connect" id="loginBtn" onclick="handleLogin()">LAUNCH APP</button>
+        
+        <p style="margin-top: 20px; font-size: 0.65rem; color: #5a636c;">
+            By connecting, you agree to the Protocol Terms.
+        </p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
+
+    <script>
+        async function handleLogin() {
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = "CONNECTING...";
+            
+            // Yahan hum dummy wallet address generate karte hain agar MetaMask nahi hai
+            // Real wallet connect logic app.js mein handle hoga
+            let walletAddr = "0x" + Math.random().toString(16).slice(2, 12) + "..." + Math.random().toString(16).slice(2, 6);
+            localStorage.setItem('adamas_wallet', walletAddr);
+            
+            // Vibration effect for mobile feedback
+            if(navigator.vibrate) navigator.vibrate(50);
+
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1500);
+        }
+    </script>
 </body>
 </html>
