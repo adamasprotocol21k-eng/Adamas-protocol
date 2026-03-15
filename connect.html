@@ -1,62 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect | ADAMAS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div class="header-pro" style="text-align: center; padding: 40px 20px;">
         <h2 style="color: var(--binance-yellow);">SOCIAL VERIFICATION</h2>
-        <p style="font-size: 0.7rem; color: var(--text-sub);">Complete tasks to unlock Dashboard.</p>
+        <p style="font-size: 0.7rem; color: var(--text-sub);">Complete tasks to unlock Protocol Terminal.</p>
     </div>
 
     <div style="padding: 0 20px;">
-        <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <div><h4>TELEGRAM</h4><small>Join Community</small></div>
-            <button class="btn-neon" style="width:auto; padding:10px 20px;" onclick="doTask('tg', 'https://t.me/ADSProtocol')">JOIN</button>
+        <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border: 1px solid rgba(255,255,255,0.1);">
+            <div>
+                <h4 style="margin:0;">TELEGRAM</h4>
+                <small style="color: var(--text-sub);">Join Official Group</small>
+            </div>
+            <button class="btn-neon" style="width:auto; padding:10px 20px; font-size: 0.7rem;" onclick="doTask('tg', 'https://t.me/ADSProtocol')">JOIN NOW</button>
         </div>
 
-        <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <div><h4>X (TWITTER)</h4><small>Follow Updates</small></div>
-            <button class="btn-neon" style="width:auto; padding:10px 20px;" onclick="doTask('x', 'https://x.com/DiamoProtocol')">FOLLOW</button>
+        <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border: 1px solid rgba(255,255,255,0.1);">
+            <div>
+                <h4 style="margin:0;">X (TWITTER)</h4>
+                <small style="color: var(--text-sub);">Follow Core Updates</small>
+            </div>
+            <button class="btn-neon" style="width:auto; padding:10px 20px; font-size: 0.7rem;" onclick="doTask('x', 'https://x.com/DiamoProtocol')">FOLLOW</button>
         </div>
 
-        <button id="finalEnterBtn" class="btn-neon" style="margin-top:30px; background:rgba(0,255,136,0.1); border-color:var(--neon-green); color:var(--neon-green);" onclick="forceEnter()">ENTER DASHBOARD</button>
+        <button id="finalEnterBtn" class="btn-neon" style="margin-top:30px; background:rgba(0,255,136,0.1); border-color:var(--neon-green); color:var(--neon-green); box-shadow: 0 0 15px rgba(0,255,136,0.2);" onclick="forceEnter()">ENTER DASHBOARD</button>
         
-        <p style="text-align:center; font-size:0.6rem; color:var(--text-sub); margin-top:20px;">
-            Click 'Enter' after completing at least one task.
+        <p style="text-align:center; font-size:0.6rem; color:var(--text-sub); margin-top:25px; line-height: 1.5;">
+            After following, click 'Enter Dashboard' <br> to initialize your mining session.
         </p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
+
     <script>
         function doTask(type, link) {
             window.open(link, '_blank');
             localStorage.setItem('task_' + type, 'done');
-            showNotification("Task Registered!");
+            showNotification("Task Registered Successfully!");
         }
 
-        function forceEnter() {
-            // Force verification in LocalStorage
+        async function forceEnter() {
+            // 1. सबसे पहले LocalStorage सेट करें (यही डैशबोर्ड खोलता है)
             localStorage.setItem('adamas_social_verified', 'true');
             
-            // Sync with Firebase if wallet exists
-            if(userStats.wallet) {
-                db.ref('users/' + userStats.wallet).update({
-                    isSocialVerified: true
-                }).then(() => {
-                    window.location.href = "dashboard.html";
-                }).catch(() => {
-                    // Fallback agar Firebase slow ho
-                    window.location.href = "dashboard.html";
-                });
-            } else {
-                window.location.href = "dashboard.html";
+            showNotification("Verifying Access...");
+
+            const wallet = localStorage.getItem('adamas_wallet');
+
+            // 2. अगर वॉलेट है, तो Firebase में सिंक करें लेकिन पेज रिडायरेक्ट न रोकें
+            if(wallet && typeof db !== 'undefined') {
+                try {
+                    await db.ref('users/' + wallet).update({
+                        isSocialVerified: true
+                    });
+                } catch (e) {
+                    console.log("Firebase Sync Delayed, using Local Access");
+                }
             }
+
+            // 3. Final Redirect (window.location.replace लूप को तोड़ता है)
+            setTimeout(() => {
+                window.location.replace("dashboard.html");
+            }, 800);
         }
     </script>
 </body>
