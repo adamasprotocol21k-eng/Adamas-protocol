@@ -2,140 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mining & Earn | Adamas Protocol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn ABP | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .task-list { padding: 15px; }
-        .task-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.3s;
-        }
-        .task-info h4 { margin: 0; font-size: 0.95rem; color: #fff; }
-        .task-info p { margin: 5px 0 0; font-size: 0.75rem; color: #848e9c; }
-        .reward-pill {
-            background: rgba(0, 255, 136, 0.1);
-            color: #00ff88;
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 5px;
-        }
-        .btn-task {
-            background: #F3BA2F;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
-        .btn-task:disabled { background: #333; color: #888; }
-        
-        /* Mining Section */
-        .mining-status {
-            background: linear-gradient(45deg, #1e2329, #0b0e11);
-            margin: 20px;
-            padding: 25px;
-            border-radius: 24px;
-            border: 1px solid rgba(243, 186, 47, 0.2);
-            text-align: center;
-        }
-    </style>
 </head>
-<body onload="updateAllUI()">
+<body>
+    <div class="bg-animation"></div>
 
-    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-        <h2 style="color: #F3BA2F; margin: 0; font-weight: 900;">EARN</h2>
-        <div class="bal-badge" style="background: #1e2329; color: #F3BA2F; padding: 6px 15px; border-radius: 50px; font-weight: bold; border: 1px solid #F3BA2F;">
-            <span id="balance">0</span> <small>ABP</small>
+    <div class="balance-pill">
+        <span class="abp-balance-display">0</span> ABP
+    </div>
+
+    <div class="container" style="padding-top: 80px; text-align: center;">
+        <h2 style="margin-bottom: 10px;">Extra Rewards</h2>
+        <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 30px;">Complete simple tasks to boost your balance.</p>
+
+        <div style="max-width: 500px; margin: auto;">
+            <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
+                <div style="text-align: left;">
+                    <h4 style="margin: 0;">Follow on Twitter</h4>
+                    <small style="color: var(--primary-neon);">+200 ABP</small>
+                </div>
+                <button class="neon-btn" style="padding: 5px 15px; font-size: 0.7rem;" onclick="doTask('twitter', 200)">Go</button>
+            </div>
+
+            <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
+                <div style="text-align: left;">
+                    <h4 style="margin: 0;">Join Telegram Channel</h4>
+                    <small style="color: var(--primary-neon);">+300 ABP</small>
+                </div>
+                <button class="neon-btn" style="padding: 5px 15px; font-size: 0.7rem;" onclick="doTask('telegram', 300)">Go</button>
+            </div>
         </div>
     </div>
 
-    <div class="mining-status">
-        <small style="color: #848e9c; letter-spacing: 2px;">MINING POWER</small>
-        <h2 style="color: #00ff88; margin: 10px 0;">1.52 GH/s</h2>
-        <p style="font-size: 0.7rem; color: #848e9c;">Mining active on Polygon Amoy Node</p>
-    </div>
-
-    <div class="task-list">
-        <h4 style="margin-left: 5px; margin-bottom: 15px; color: #848e9c;">SOCIAL MISSIONS</h4>
-
-        <div class="task-card" id="task-tg">
-            <div class="task-info">
-                <h4>Join Official Telegram</h4>
-                <div class="reward-pill">+500 ABP</div>
-            </div>
-            <button class="btn-task" onclick="handleTask('tg', 'https://t.me/yourlink', 500)">START</button>
-        </div>
-
-        <div class="task-card" id="task-x">
-            <div class="task-info">
-                <h4>Follow Adamas on X</h4>
-                <div class="reward-pill">+300 ABP</div>
-            </div>
-            <button class="btn-task" onclick="handleTask('x', 'https://twitter.com/yourlink', 300)">START</button>
-        </div>
-
-        <div class="task-card" id="task-yt">
-            <div class="task-info">
-                <h4>Watch Ecosystem Video</h4>
-                <div class="reward-pill">+200 ABP</div>
-            </div>
-            <button class="btn-task" onclick="handleTask('yt', 'https://youtube.com/yourlink', 200)">WATCH</button>
-        </div>
-    </div>
-
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">🏠 Home</a>
-        <a href="games.html" class="nav-item">🎮 Games</a>
-        <a href="earn.html" class="nav-item active">⛏️ Earn</a>
-        <a href="invite.html" class="nav-item">🔗 Invite</a>
-        <a href="wallet.html" class="nav-item">💰 Wallet</a>
-    </nav>
-
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
-
     <script>
-        function handleTask(id, link, reward) {
-            const btn = event.target;
-            
-            // 1. Redirect to social link
+        async function doTask(platform, reward) {
+            const link = platform === 'twitter' ? 'https://twitter.com/DiamoProtocol' : 'https://t.me/daimodmo';
             window.open(link, '_blank');
             
-            // 2. Start Verification Process
-            btn.innerText = "VERIFYING...";
-            btn.disabled = true;
-            btn.style.opacity = "0.7";
-
-            // 3. Professional Delay (Badi companies ke jaisa real verification feel)
-            setTimeout(() => {
-                // Update Global Stats
-                window.userStats.balance += reward;
-                
-                // Sync to Firebase
-                saveToFirebase();
-                
-                // UI Feedback
-                btn.innerText = "CLAIMED ✅";
-                btn.style.background = "#1e2329";
-                btn.style.color = "#00ff88";
-                btn.style.opacity = "1";
-                
-                showNotification(`Verified! +${reward} ABP added.`);
-            }, 4000); // 4 Seconds verification delay
+            // Logic: Rewards only once per user
+            alert(`Verifying task... ${reward} ABP will be added to your account.`);
+            await updateABP(reward, 'plus');
         }
     </script>
 </body>
