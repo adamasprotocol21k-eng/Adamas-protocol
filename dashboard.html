@@ -1,80 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal | ADAMAS Protocol</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal | ADAMAS</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* KYC Overlay */
-        #kycOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(10px);
-        }
-        .kyc-card {
-            background: #121212; border: 1px solid var(--binance-yellow);
-            padding: 30px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center;
-        }
-        .kyc-input {
-            width: 100%; padding: 15px; background: #000; border: 1px solid var(--border-dim);
-            border-radius: 12px; color: #fff; margin: 20px 0; text-align: center; font-size: 1rem;
-        }
-        .warning-label { color: var(--neon-red); font-size: 0.6rem; font-weight: bold; text-transform: uppercase; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .mini-card { background: var(--glass); padding: 15px; border-radius: 20px; border: 1px solid var(--border-dim); }
-    </style>
 </head>
 <body onload="initDashboard()">
 
-    <div id="kycOverlay" style="display: none;">
-        <div class="kyc-card">
-            <h2 style="color: var(--binance-yellow);">IDENTITY CHECK</h2>
-            <p style="font-size: 0.75rem; color: var(--text-sub);">Enter your <b>Full Legal Name</b> for reward matching.</p>
-            <input type="text" id="kycName" class="kyc-input" placeholder="Rahul Kumar">
-            <p class="warning-label">⚠️ Name must match your Government ID.</p>
-            <button class="btn-neon" style="margin-top: 20px;" onclick="verifyKYC()">CONFIRM IDENTITY</button>
-        </div>
+    <div class="header-pro" style="padding: 25px 20px; display: flex; justify-content: space-between;">
+        <div><small style="color:var(--text-sub)">Protocol Active</small><h3 id="userNameDisplay" style="margin:0">Miner</h3></div>
+        <div id="walletBadge" style="background:var(--glass); padding:5px 12px; border-radius:10px; border:1px solid var(--binance-yellow); font-size:0.7rem; color:var(--binance-yellow)">0x...</div>
     </div>
 
-    <div class="news-ticker">
-        <div class="ticker-content" id="globalTicker">ADAMAS PROTOCOL v2.0 ACTIVE... MINING POOL LIVE...</div>
-    </div>
-
-    <div class="header-pro" style="padding: 20px 15px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <small style="color: var(--text-sub);">Miner ID:</small>
-            <h3 id="userNameDisplay" style="margin:0; text-transform: capitalize; color: var(--binance-yellow);">Miner</h3>
-        </div>
-        <div id="walletBadge" style="background: var(--glass); padding: 5px 10px; border-radius: 10px; border: 1px solid var(--binance-yellow); color: var(--binance-yellow); font-size: 0.7rem;">0x...</div>
+    <div class="glass-card" style="text-align: center; background: linear-gradient(135deg, #1e2329 0%, #000 100%);">
+        <small style="color:var(--text-sub)">Available Assets</small>
+        <h1 style="font-size: 3rem; margin: 10px 0; color:var(--binance-yellow)"><span id="balance">0</span> <small style="font-size:1rem">ABP</small></h1>
+        <button class="btn-neon" onclick="location.href='earn.html'">Start Mining</button>
     </div>
 
     <div style="padding: 0 15px;">
-        <div class="glass-card" style="background: linear-gradient(135deg, #0d1117 0%, #000 100%); text-align: center; border: 1px solid var(--neon-blue); padding: 30px 15px;">
-            <small style="color: var(--text-sub);">Total Extracted Assets</small>
-            <h1 style="font-size: 3rem; margin: 10px 0;"><span id="balance">0</span> <small style="font-size: 1rem; color: var(--binance-yellow);">ABP</small></h1>
-            <button class="btn-neon" style="width: auto; padding: 12px 40px; border-radius: 50px;" onclick="location.href='earn.html'">START MINING</button>
-        </div>
-    </div>
-
-    <div class="stats-grid">
-        <div class="mini-card">
-            <small style="color: var(--neon-green);">🔐 STAKED</small>
-            <h3 id="stakedBalance" style="margin: 5px 0;">0.00</h3>
-            <small style="font-size: 0.5rem; color: var(--text-sub);">Interest: 0.5% Daily</small>
-        </div>
-        <div class="mini-card">
-            <small style="color: var(--binance-yellow);">👥 REFERRALS</small>
-            <h3 id="refCount" style="margin: 5px 0;">0</h3>
-            <small style="font-size: 0.5rem; color: var(--text-sub);">Earn 10% Bonus</small>
-        </div>
-    </div>
-
-    <div style="padding: 0 15px;">
-        <div class="glass-card" style="margin-top: 0; display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;">
-            <div style="font-size: 0.6rem; color: var(--text-sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 70%;" id="refLink">adamas.protocol/?ref=...</div>
-            <button onclick="copyRefLink()" style="background: var(--binance-yellow); border: none; padding: 6px 15px; border-radius: 8px; font-weight: bold; font-size: 0.65rem; color:#000;">COPY</button>
+        <h4 style="margin-left: 10px;">Protocol Ecosystem</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="glass-card" onclick="location.href='games.html'" style="margin:0; text-align:center"><span>🎮</span><p>Games</p></div>
+            <div class="glass-card" onclick="location.href='invite.html'" style="margin:0; text-align:center"><span>👥</span><p>Invite</p></div>
         </div>
     </div>
 
@@ -82,62 +30,12 @@
         <a href="dashboard.html" class="nav-item active"><span>🏠</span>Home</a>
         <a href="games.html" class="nav-item"><span>🎮</span>Games</a>
         <a href="earn.html" class="nav-item"><span>⛏️</span>Earn</a>
+        <a href="invite.html" class="nav-item"><span>🔗</span>Invite</a>
         <a href="wallet.html" class="nav-item"><span>💰</span>Wallet</a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
-    <script>
-        function initDashboard() {
-            const wallet = localStorage.getItem('adamas_wallet');
-            const isVerified = localStorage.getItem('adamas_social_verified');
-
-            // 1. अगर वॉलेट ही नहीं है, तो लॉगिन पर भेजें
-            if(!wallet) { window.location.replace("index.html"); return; }
-
-            // 2. SOCIAL VERIFICATION CHECK (RELAXED FOR TESTING)
-            if(isVerified !== 'true') {
-                console.log("Not verified, checking bypass...");
-                // अगर आपके पास वॉलेट है तो हम 1 सेकंड के लिए रुकेंगे देखने के लिए कि क्या डेटाबेस उसे वेरिफाई करता है
-                setTimeout(() => {
-                   if(localStorage.getItem('adamas_social_verified') !== 'true') {
-                       window.location.replace("connect.html");
-                   }
-                }, 2000);
-            }
-            
-            // 3. LOAD DATA
-            loadUserData(wallet).then(() => {
-                updateUI();
-                db.ref('users/' + wallet).once('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if(!data || !data.realName) {
-                        document.getElementById('kycOverlay').style.display = 'flex';
-                    } else {
-                        document.getElementById('userNameDisplay').innerText = data.realName;
-                        document.getElementById('kycOverlay').style.display = 'none';
-                    }
-                });
-                document.getElementById('refLink').innerText = "adamas.app/?ref=" + wallet.substring(0, 10);
-            });
-        }
-
-        function verifyKYC() {
-            const name = document.getElementById('kycName').value.trim();
-            if(name.length < 3) { alert("Enter Full Name"); return; }
-            userStats.realName = name;
-            saveToFirebase();
-            document.getElementById('kycOverlay').style.display = 'none';
-            document.getElementById('userNameDisplay').innerText = name;
-            showNotification("Identity Verified!");
-        }
-
-        function copyRefLink() {
-            const link = document.getElementById('refLink').innerText;
-            navigator.clipboard.writeText(link);
-            showNotification("Copied!");
-        }
-    </script>
 </body>
 </html>
