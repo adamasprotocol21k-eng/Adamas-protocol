@@ -2,126 +2,136 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mines Arena | Adamas Protocol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mines Game | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .mines-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
-        .tile { 
-            width: 100%; aspect-ratio: 1/1; background: #2b3139; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; 
-            cursor: pointer; transition: 0.3s var(--ease); border: 2px solid transparent;
+        .mines-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 20px auto;
         }
-        .tile:hover { background: rgba(255,255,255,0.05); }
-        .tile.revealed { background: #181a20; border-color: rgba(255,255,255,0.1); }
-        .tile.diamond { color: #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.2); }
-        .tile.bomb { color: #ff4d4d; background: #3c1212; animation: boomShake 0.4s; }
-
-        @keyframes boomShake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(0, 0); } }
-        .multiplier-bar { text-align: center; color: #848e9c; margin-bottom: 10px; font-size: 0.8rem; }
-        .multiplier { color: #F3BA2F; font-weight: bold; font-size: 1.1rem; margin-right: 5px;}
+        .mine-cell {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .mine-cell:hover { background: rgba(0, 242, 255, 0.2); }
+        .mine-cell.revealed { background: #1a1b26; cursor: default; }
+        .mine-cell.diamond { color: var(--primary-neon); text-shadow: 0 0 10px var(--primary-neon); }
+        .mine-cell.bomb { color: #ff4444; text-shadow: 0 0 10px #ff4444; }
     </style>
 </head>
-<body onload="initMines()">
+<body>
+    <div class="bg-animation"></div>
 
-    <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e2329;">
-        <h3 style="color: #F3BA2F; margin: 0; font-weight: 900;">MINES ARENA</h3>
-        <div class="bal-badge" style="background: #1e2329; color: #F3BA2F; padding: 6px 15px; border-radius: 50px; font-weight: bold; border: 1px solid rgba(243, 186, 47, 0.2);">
-            <span id="balance">0</span> <small>ABP</small>
-        </div>
+    <div class="balance-pill">
+        <span class="abp-balance-display">0</span> ABP
     </div>
 
-    <div class="main-container" style="padding: 20px;">
-        <div class="glass-card" style="padding: 20px;">
-            <div class="multiplier-bar">Next Multiplier: <span class="multiplier" id="minesMult">1.25x</span></div>
-            <div class="mines-board" id="minesBoard"></div>
+    <div class="container" style="padding-top: 80px; text-align: center;">
+        <div class="glass-card" style="max-width: 500px; margin: auto;">
+            <h2>Mines Jackpot</h2>
             
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <input type="number" id="minesBet" placeholder="Bet Amount" value="100" style="flex: 1;">
-                <button class="btn-neon-large" id="playBtn" style="width: auto; padding: 15px 30px;" onclick="startGame()">START</button>
-                <button class="btn-neon-large" id="cashoutBtn" style="display: none; width: auto; background: #00ff8822; color: #00ff88; padding: 15px 30px; border: 1px solid #00ff8844;" onclick="cashout()">CASHOUT</button>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <div>
+                    <label style="font-size: 0.7rem; opacity: 0.6;">Bet Amount</label>
+                    <input type="number" id="betAmount" value="50" style="width: 80px; background: #000; border: 1px solid var(--primary-neon); color: white; padding: 5px; border-radius: 5px;">
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; opacity: 0.6;">Mines (1-24)</label>
+                    <input type="number" id="minesCount" value="3" style="width: 60px; background: #000; border: 1px solid var(--primary-neon); color: white; padding: 5px; border-radius: 5px;">
+                </div>
             </div>
-            <p style="color: #ff4d4d; font-size: 0.7rem; text-align: center; margin-top: 15px;" onclick="location.href='dashboard.html'">EXIT GAME</p>
+
+            <div class="mines-grid" id="grid"></div>
+
+            <div style="margin-top: 20px;">
+                <button class="neon-btn" id="startBtn" onclick="startGame()">Start Game</button>
+                <button class="neon-btn" id="cashoutBtn" onclick="cashout()" style="display:none; border-color: #00ff00; color: #00ff00;">Cashout (1.0x)</button>
+            </div>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">🏠 Home</a>
-        <a href="games.html" class="nav-item">🎮 Games</a>
-        <a href="earn.html" class="nav-item">⛏️ Earn</a>
-        <a href="invite.html" class="nav-item">🔗 Invite</a>
-        <a href="wallet.html" class="nav-item">💰 Wallet</a>
-    </nav>
-
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
-
     <script>
-        let mines = [], bet = 100, isGameActive = false, revealedCount = 0, currentMultiplier = 1.0;
-        const MULTIPLIERS = [1.25, 1.5, 1.8, 2.2, 2.7, 3.4, 4.3, 5.5, 7.1]; // Exponential increase
+        let mines = [];
+        let gameActive = false;
+        let multiplier = 1.0;
+        let revealedCount = 0;
 
-        function initMines() {
-            updateAllUI();
-            const board = document.getElementById('minesBoard');
-            board.innerHTML = '';
-            for(let i=0; i<25; i++) {
-                const t = document.createElement('div'); t.className = 'tile';
-                t.onclick = () => revealTile(i, t);
-                board.appendChild(t);
+        function createGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'mine-cell';
+                cell.dataset.index = i;
+                cell.onclick = () => revealCell(i);
+                grid.appendChild(cell);
             }
         }
 
-        function startGame() {
-            if(isGameActive) return; bet = parseInt(document.getElementById('minesBet').value);
-            if(window.userStats.balance < bet || bet <= 0) return showNotification("Insufficient Balance!");
+        async function startGame() {
+            const bet = parseInt(document.getElementById('betAmount').value);
+            if (userData.abp_balance < bet) return alert("Not enough ABP!");
+
+            await updateABP(bet, 'minus');
             
-            window.userStats.balance -= bet; saveToFirebase();
-            
-            // Randomly place 3 mines
-            mines = []; while(mines.length < 3) { let m = Math.floor(Math.random() * 25); if(!mines.includes(m)) mines.push(m); }
-            revealedCount = 0; currentMultiplier = 1.0; isGameActive = true;
-            
-            // UI Update
-            document.getElementById('playBtn').style.display = 'none';
-            document.getElementById('cashoutBtn').style.display = 'block';
-            document.getElementById('minesMult').innerText = MULTIPLIERS[0] + "x";
-            initMines(); showNotification(`Bet: ${bet} ABP | Game Started!`);
+            const count = parseInt(document.getElementById('minesCount').value);
+            mines = [];
+            while(mines.length < count) {
+                let r = Math.floor(Math.random() * 25);
+                if(!mines.includes(r)) mines.push(r);
+            }
+
+            gameActive = true;
+            revealedCount = 0;
+            multiplier = 1.0;
+            createGrid();
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('cashoutBtn').style.display = 'inline-block';
+            document.getElementById('cashoutBtn').innerText = `Cashout (${multiplier}x)`;
         }
 
-        function revealTile(idx, el) {
-            if(!isGameActive || el.classList.contains('revealed')) return;
-            el.classList.add('revealed');
-            
-            if(mines.includes(idx)) {
-                // Game Over
-                el.innerHTML = '💣'; el.classList.add('bomb');
-                isGameActive = false; showNotification("BOOM! Game Over.");
-                setTimeout(endMinesGame, 1500);
+        function revealCell(index) {
+            if (!gameActive) return;
+            const cell = document.querySelector(`[data-index="${index}"]`);
+            if (cell.classList.contains('revealed')) return;
+
+            cell.classList.add('revealed');
+            if (mines.includes(index)) {
+                cell.innerHTML = '💣';
+                cell.classList.add('bomb');
+                gameActive = false;
+                setTimeout(() => { alert("Game Over! Better luck next time."); location.reload(); }, 500);
             } else {
-                // Diamond
-                el.innerHTML = '💎'; el.classList.add('diamond');
-                revealedCount++; currentMultiplier = MULTIPLIERS[revealedCount-1];
-                document.getElementById('minesMult').innerText = (revealedCount < MULTIPLIERS.length ? MULTIPLIERS[revealedCount] : currentMultiplier) + "x";
-                
-                if(revealedCount >= 9) cashout(); // Auto-cashout at 9 diamonds (Very hard)
+                cell.innerHTML = '💎';
+                cell.classList.add('diamond');
+                revealedCount++;
+                multiplier += (mines.length * 0.15);
+                document.getElementById('cashoutBtn').innerText = `Cashout (${multiplier.toFixed(2)}x)`;
             }
         }
 
-        function cashout() {
-            if(!isGameActive) return;
-            const winning = Math.floor(bet * currentMultiplier);
-            window.userStats.balance += winning; saveToFirebase();
-            showNotification(`CASHOUT! Winnings: ${winning} ABP`);
-            endMinesGame();
+        async function cashout() {
+            if (!gameActive) return;
+            let win = Math.floor(document.getElementById('betAmount').value * multiplier);
+            await updateABP(win, 'plus');
+            alert(`You won ${win} ABP!`);
+            location.reload();
         }
 
-        function endMinesGame() {
-            isGameActive = false;
-            document.getElementById('playBtn').style.display = 'block';
-            document.getElementById('cashoutBtn').style.display = 'none';
-            document.getElementById('minesMult').innerText = "1.25x";
-        }
+        createGrid();
     </script>
 </body>
 </html>
