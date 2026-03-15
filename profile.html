@@ -2,56 +2,95 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>User Profile | Adamas Protocol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .profile-field {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .profile-field label {
+            display: block;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-bottom: 5px;
+        }
+        .profile-field input {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+        .profile-field input:focus {
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+        }
+    </style>
 </head>
-<body onload="updateAllUI()">
+<body>
+    <div class="bg-animation"></div>
 
-    <div style="padding: 40px 20px; text-align: center;">
-        <div style="width: 100px; height: 100px; background: #1e2329; border: 2px solid #F3BA2F; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">👤</div>
-        
-        <h3 id="userWalletAddr" style="color: #F3BA2F; margin: 0; font-size: 0.9rem;">0x...</h3>
-        <p style="color: #848e9c; font-size: 0.7rem; margin-top: 5px;">Elite Member</p>
+    <a href="dashboard.html" style="position: fixed; top: 20px; left: 20px; color: var(--primary-neon); text-decoration: none; font-size: 0.9rem;">← Back</a>
 
-        <div class="glass-card" style="margin-top: 30px; padding: 25px; text-align: left;">
-            <label style="color: #848e9c; font-size: 0.7rem;">DISPLAY NAME</label>
-            <input type="text" id="userName" placeholder="Enter Name" style="width:100%; background:#000; border:1px solid #333; padding:12px; border-radius:10px; color:#fff; margin:10px 0 20px;">
+    <div class="container" style="padding-top: 80px; text-align: center;">
+        <div class="glass-card" style="max-width: 450px; margin: auto;">
+            <div style="width: 80px; height: 80px; background: var(--primary-neon); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: black; font-weight: bold;" id="profile-initial">
+                ?
+            </div>
+            <h2 style="margin-bottom: 5px;">User Identity</h2>
+            <p id="user-wallet-short" style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 30px;">0x...1234</p>
 
-            <label style="color: #848e9c; font-size: 0.7rem;">EMAIL ADDRESS</label>
-            <input type="email" id="userEmail" placeholder="name@example.com" style="width:100%; background:#000; border:1px solid #333; padding:12px; border-radius:10px; color:#fff; margin:10px 0;">
-            
-            <button class="btn-neon-large" style="margin-top: 20px; width: 100%;" onclick="saveProfile()">SAVE PROFILE</button>
-            <button class="btn-neon-large" style="margin-top: 10px; width: 100%; background: transparent; border: 1px solid #333; color: #848e9c;" onclick="location.href='dashboard.html'">SKIP FOR NOW</button>
+            <form id="profile-form">
+                <div class="profile-field">
+                    <label>Full Name</label>
+                    <input type="text" id="prof-name" placeholder="Enter your real name">
+                </div>
+                <div class="profile-field">
+                    <label>Email Address</label>
+                    <input type="email" id="prof-email" placeholder="name@example.com">
+                </div>
+                
+                <div style="background: rgba(255, 204, 0, 0.1); border-radius: 10px; padding: 15px; margin-bottom: 25px; border-left: 4px solid #ffcc00;">
+                    <p style="font-size: 0.75rem; color: #ffcc00; margin: 0; text-align: left;">
+                        <b>Note:</b> Make sure your name matches your ID for future ADS Token Airdrop verification.
+                    </p>
+                </div>
+
+                <button type="button" class="neon-btn" style="width: 100%;" onclick="saveProfile()">Save Profile</button>
+            </form>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">🏠 Home</a>
-        <a href="games.html" class="nav-item">🎮 Games</a>
-        <a href="earn.html" class="nav-item">⛏️ Earn</a>
-        <a href="invite.html" class="nav-item">🔗 Invite</a>
-        <a href="wallet.html" class="nav-item">💰 Wallet</a>
-    </nav>
-
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
     <script>
-        function saveProfile() {
-            const name = document.getElementById('userName').value;
-            const email = document.getElementById('userEmail').value;
-            const wallet = window.userStats.wallet;
+        // Load existing data
+        window.addEventListener('DOMContentLoaded', () => {
+            if(userData) {
+                document.getElementById('prof-name').value = userData.name || "";
+                document.getElementById('prof-email').value = userData.email || "";
+                document.getElementById('user-wallet-short').innerText = userWallet;
+                document.getElementById('profile-initial').innerText = (userData.name || "?")[0].toUpperCase();
+            }
+        });
 
-            if(!name || !email) return showNotification("Please fill all fields");
+        async function saveProfile() {
+            const name = document.getElementById('prof-name').value;
+            const email = document.getElementById('prof-email').value;
 
-            firebase.database().ref('users/' + wallet).update({
+            if(!name || !email) return alert("Please fill all fields!");
+
+            // Update Firebase
+            await db.collection("users").doc(userWallet).update({
                 name: name,
                 email: email
-            }).then(() => {
-                showNotification("Profile Updated!");
-                setTimeout(() => location.href = 'dashboard.html', 1500);
             });
+
+            alert("Profile Secured! Eligibility Updated.");
+            window.location.href = 'dashboard.html';
         }
     </script>
 </body>
