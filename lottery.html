@@ -2,140 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lottery Jackpot | Adamas Protocol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Lottery | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .lottery-hero {
-            background: linear-gradient(135deg, #1e2329 0%, #000 100%);
-            padding: 40px 20px;
-            text-align: center;
-            border-bottom: 2px solid #F3BA2F;
-            border-radius: 0 0 30px 30px;
+        .timer-box {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
         }
-        .prize-pool { font-size: 2.8rem; font-weight: 900; color: #F3BA2F; text-shadow: 0 0 20px rgba(243,186,47,0.4); margin: 10px 0; }
-        .timer-box { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
-        .time-unit { background: #1e2329; padding: 10px; border-radius: 12px; min-width: 60px; border: 1px solid #333; }
-        .time-unit span { display: block; font-size: 1.2rem; font-weight: bold; color: #F3BA2F; }
-        .time-unit small { font-size: 0.6rem; color: #848e9c; }
-        
-        .ticket-list { padding: 20px; }
-        .ticket {
-            background: rgba(255,255,255,0.03);
-            border: 1px dashed #555;
+        .time-unit {
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid var(--primary-neon);
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 60px;
+        }
+        .ticket-card {
+            background: linear-gradient(45deg, #1a1b26, #2a2b36);
+            border-left: 5px solid var(--primary-neon);
             padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 10px;
+            margin: 10px 0;
             display: flex;
             justify-content: space-between;
-            font-family: monospace;
-            color: #00ff88;
+            align-items: center;
+            border-radius: 5px;
+        }
+        .prize-distribution {
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            opacity: 0.7;
         }
     </style>
 </head>
-<body onload="initLottery()">
+<body>
+    <div class="bg-animation"></div>
 
-    <div class="lottery-hero">
-        <small style="color: #F3BA2F; letter-spacing: 2px;">MEGA JACKPOT POOL</small>
-        <div class="prize-pool" id="displayPool">500,000</div>
-        <small style="color: #848e9c;">ABP POINTS</small>
-
-        <div class="timer-box">
-            <div class="time-unit"><span id="days">14</span><small>DAYS</small></div>
-            <div class="time-unit"><span id="hours">23</span><small>HRS</small></div>
-            <div class="time-unit"><span id="mins">59</span><small>MINS</small></div>
-        </div>
-
-        <button class="btn-neon-large" style="width: 80%;" onclick="buyTicket()">BUY TICKET (500 ABP)</button>
+    <div class="balance-pill">
+        <span class="abp-balance-display">0</span> ABP
     </div>
 
-    <div class="ticket-list">
-        <h4 style="color: #848e9c; margin-bottom: 15px;">YOUR TICKETS</h4>
-        <div id="userTickets">
-            <p style="color: #555; font-size: 0.8rem; text-align: center;">No tickets purchased yet.</p>
+    <div class="container" style="padding-top: 80px; text-align: center;">
+        <div class="glass-card" style="max-width: 600px; margin: auto;">
+            <h1 style="color: var(--primary-neon);">GRAND LOTTERY</h1>
+            <p>Next Draw In:</p>
+            
+            <div class="timer-box" id="lottery-timer">
+                <div class="time-unit"><div id="days">14</div><small>Days</small></div>
+                <div class="time-unit"><div id="hours">23</div><small>Hrs</small></div>
+                <div class="time-unit"><div id="mins">59</div><small>Mins</small></div>
+            </div>
+
+            <div style="margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px;">
+                <h3>Current Prize Pool: <span id="prize-pool" style="color: #00ff00;">500,000</span> ABP</h3>
+                <div class="prize-distribution">
+                    <span>🏆 Winners: 90%</span>
+                    <span>🏢 Platform Fee: 10%</span>
+                </div>
+            </div>
+
+            <button class="neon-btn" onclick="buyTicket()" style="width: 100%; margin-bottom: 20px;">Buy Ticket (500 ABP)</button>
+            
+            <div style="text-align: left;">
+                <h4 style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">Your Tickets</h4>
+                <div id="my-tickets-list">
+                    <p id="no-tickets" style="opacity: 0.5; font-size: 0.8rem;">You haven't bought any tickets yet.</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div style="padding: 20px; margin-bottom: 100px;">
-        <div class="glass-card" style="padding: 15px; font-size: 0.75rem; color: #848e9c;">
-            <b>Rules:</b> 10-digit match wins 1st prize. 9-digit match wins 2nd prize. Results every 15 days.
-        </div>
-    </div>
-
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">🏠 Home</a>
-        <a href="games.html" class="nav-item">🎮 Games</a>
-        <a href="earn.html" class="nav-item">⛏️ Earn</a>
-        <a href="invite.html" class="nav-item">🔗 Invite</a>
-        <a href="wallet.html" class="nav-item">💰 Wallet</a>
-    </nav>
-
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
-
     <script>
-        let currentPool = 500000;
-
-        function initLottery() {
-            updateAllUI();
-            loadTickets();
-            // Real-time pool sync from Firebase
-            firebase.database().ref('lottery/pool').on('value', (snap) => {
-                if(snap.val()) {
-                    currentPool = snap.val();
-                    document.getElementById('displayPool').innerText = currentPool.toLocaleString();
-                }
-            });
-        }
-
-        function buyTicket() {
-            if(window.userStats.balance < 500) {
-                return showNotification("Need 500 ABP to buy ticket!");
-            }
-
-            // Generate 10-digit Ticket
-            const ticketNum = Math.floor(Math.random() * 9000000000) + 1000000000;
+        // 1. Countdown Timer Logic
+        function updateTimer() {
+            // Static example for now, can be synced with Firebase Timestamp
+            let d = document.getElementById('days');
+            let h = document.getElementById('hours');
+            let m = document.getElementById('mins');
             
-            // Deduct Balance
-            window.userStats.balance -= 500;
-            saveToFirebase();
-
-            // Save Ticket to Firebase
-            const wallet = window.userStats.wallet;
-            const ticketRef = firebase.database().ref(`lottery/tickets/${wallet}`).push();
-            ticketRef.set({
-                number: ticketNum,
-                timestamp: Date.now()
-            });
-
-            // Update Global Pool (Increase by 450, 50 goes to Platform)
-            firebase.database().ref('lottery/pool').set(currentPool + 450);
-
-            showNotification(`Ticket Purchased: ${ticketNum}`);
-            loadTickets();
+            // Basic decrement logic
+            if(parseInt(m.innerText) > 0) m.innerText = parseInt(m.innerText) - 1;
         }
+        setInterval(updateTimer, 60000);
 
-        function loadTickets() {
-            const wallet = window.userStats.wallet;
-            const container = document.getElementById('userTickets');
+        // 2. Buy Ticket Logic
+        async function buyTicket() {
+            const ticketPrice = 500;
+            if(userData.abp_balance < ticketPrice) return alert("Not enough ABP for a ticket!");
+
+            await updateABP(ticketPrice, 'minus');
+
+            // Generate 10-digit random ticket number
+            const ticketNum = Math.floor(1000000000 + Math.random() * 9000000000);
             
-            firebase.database().ref(`lottery/tickets/${wallet}`).on('value', (snap) => {
-                const tickets = snap.val();
-                if(tickets) {
-                    container.innerHTML = "";
-                    for(let id in tickets) {
-                        container.innerHTML += `
-                            <div class="ticket">
-                                <span># ${tickets[id].number}</span>
-                                <small style="color:#555">Active</small>
-                            </div>
-                        `;
-                    }
-                }
-            });
+            // Add to UI
+            const list = document.getElementById('my-tickets-list');
+            const noTick = document.getElementById('no-tickets');
+            if(noTick) noTick.remove();
+
+            const div = document.createElement('div');
+            div.className = 'ticket-card';
+            div.innerHTML = `
+                <span style="letter-spacing: 2px; font-family: monospace;">#${ticketNum}</span>
+                <span style="font-size: 0.7rem; color: var(--primary-neon);">ACTIVE</span>
+            `;
+            list.appendChild(div);
+
+            // Update Prize Pool (Add 90% of ticket price to pool)
+            const poolEl = document.getElementById('prize-pool');
+            let currentPool = parseInt(poolEl.innerText.replace(/,/g, ''));
+            poolEl.innerText = (currentPool + (ticketPrice * 0.9)).toLocaleString();
+
+            alert("Ticket Purchased! Good luck for the draw.");
         }
     </script>
 </body>
 </html>
-
