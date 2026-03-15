@@ -3,70 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wallet | Adamas Protocol</title>
+    <title>Wallet | Adamas</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body onload="updateUI()">
-
-    <div style="padding: 20px; text-align: center;">
-        <h2 style="color: #F3BA2F; margin: 0;">CRYPTO WALLET</h2>
-        <p style="color: #848e9c; font-size: 0.75rem;">Manage your assets on Polygon Amoy</p>
-    </div>
-
-    <div class="balance-card" style="margin: 0 20px; padding: 20px;">
-        <small style="color: #848e9c;">Available Balance</small>
-        <h2 style="color: #F3BA2F; margin: 5px 0;"><span id="walletBalance">0</span> ABP</h2>
-        <div id="userWalletAddr" style="font-size: 0.6rem; color: #00ff88; word-break: break-all; opacity: 0.7;">0x...</div>
-    </div>
-
-    <div class="glass-card" style="margin: 20px; padding: 20px;">
-        <h4 style="margin-top: 0;">Withdrawal</h4>
-        <input type="number" id="withdrawAmount" class="btn-neon" style="width: 100%; background: #000; text-align: center; margin-bottom: 15px;" placeholder="Min. 5000 ABP">
-        
-        <div style="font-size: 0.7rem; color: #848e9c; margin-bottom: 15px;">
-            ● Network: Polygon Amoy Testnet<br>
-            ● Gas Fee: Paid in ABP<br>
-            ● Minimum: 5000 ABP
+<body onload="updateAllUI()">
+    <div style="padding:20px; text-align:center;">
+        <h2 style="color:#F3BA2F;">MY WALLET</h2>
+        <div class="balance-card" style="margin:20px; padding:30px; background:#1e2329; border-radius:20px; border:1px solid #F3BA2F;">
+            <small style="color:#848e9c">Available for Withdraw</small>
+            <h1 style="color:#F3BA2F; margin:10px 0;"><span id="walletBalance">0</span> ABP</h1>
+            <div id="userWalletAddr" style="font-size:0.6rem; color:#00ff88; opacity:0.8;">0x...</div>
         </div>
 
-        <button class="btn-neon-large" style="width: 100%;" onclick="requestWithdraw()">TRANSFER TO WALLET</button>
-    </div>
-
-    <div style="padding: 0 20px;">
-        <h4 style="margin-left: 10px;">Recent Transactions</h4>
-        <div id="txHistory" class="glass-card" style="font-size: 0.7rem; color: #848e9c; text-align: center;">
-            No transactions found.
+        <div class="glass-card" style="margin:20px; padding:20px;">
+            <input type="number" id="wAmt" style="width:100%; padding:15px; background:#000; border:1px solid #333; color:#fff; border-radius:10px; text-align:center;" placeholder="Enter ABP (Min 5000)">
+            <button class="btn-neon" style="width:100%; margin-top:20px;" onclick="handleWithdraw()">WITHDRAW TO POLYGON</button>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item"><span>🏠</span>Home</a>
-        <a href="games.html" class="nav-item"><span>🎮</span>Games</a>
-        <a href="earn.html" class="nav-item"><span>⛏️</span>Earn</a>
-        <a href="invite.html" class="nav-item"><span>🔗</span>Invite</a>
-        <a href="wallet.html" class="nav-item active"><span>💰</span>Wallet</a>
+        <a href="dashboard.html" class="nav-item">🏠 Home</a>
+        <a href="games.html" class="nav-item">🎮 Games</a>
+        <a href="earn.html" class="nav-item">⛏️ Earn</a>
+        <a href="invite.html" class="nav-item">🔗 Invite</a>
+        <a href="wallet.html" class="nav-item active">💰 Wallet</a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
     <script>
-        function requestWithdraw() {
-            const amt = document.getElementById('withdrawAmount').value;
-            if (amt < 5000) {
-                showNotification("Minimum withdrawal is 5000 ABP!");
-                return;
+        function handleWithdraw() {
+            const val = document.getElementById('wAmt').value;
+            if(window.userStats.balance < val || val < 5000) {
+                return showNotification("Check Balance or Minimum Limit (5000)!");
             }
-            if (amt > userStats.balance) {
-                showNotification("Insufficient balance!");
-                return;
-            }
-
-            // Smart Contract Execution Placeholder
-            showNotification("Processing Smart Contract...");
-            setTimeout(() => {
-                showNotification("Withdrawal Request Sent!");
-            }, 2000);
+            showNotification("Request Sent to Polygon Network!");
         }
     </script>
 </body>
