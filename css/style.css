@@ -1,49 +1,48 @@
 :root {
-    --bg: #0d1117;
-    --card: #161b22;
-    --primary: #f3ba2f; /* Binance Yellow */
-    --accent: #00ff88; /* Neon Green */
-    --text: #ffffff;
-    --text-dim: #848d97;
+    --bg: #0b0e11;
+    --card: #1e2329;
+    --binance-yellow: #F3BA2F;
+    --neon-green: #00ff88;
+    --neon-blue: #00d4ff;
+    --text-main: #eaecef;
+    --text-sub: #848e9c;
+    --glass: rgba(255, 255, 255, 0.05);
+    --border-dim: rgba(255, 255, 255, 0.1);
 }
 
 body {
-    margin: 0; font-family: 'Inter', sans-serif;
-    background-color: var(--bg); color: var(--text);
-    padding-bottom: 80px; /* Space for Nav */
+    margin: 0; font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg); color: var(--text-main);
+    padding-bottom: 90px; overflow-x: hidden;
 }
 
-/* Bottom Navigation */
-.bottom-nav {
-    position: fixed; bottom: 0; width: 100%;
-    background: rgba(22, 27, 34, 0.95);
+/* Glass Card Effect */
+.glass-card {
+    background: var(--glass); border: 1px solid var(--border-dim);
+    border-radius: 20px; padding: 20px; margin: 15px;
     backdrop-filter: blur(10px);
-    display: flex; justify-content: space-around;
-    padding: 12px 0; border-top: 1px solid #30363d;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    position: fixed; bottom: 0; width: 100%; height: 75px;
+    background: #181a20; border-top: 1px solid var(--border-dim);
+    display: flex; justify-content: space-around; align-items: center; z-index: 1000;
 }
 
 .nav-item {
-    text-align: center; color: var(--text-dim);
-    text-decoration: none; font-size: 0.7rem;
+    text-decoration: none; color: var(--text-sub);
+    display: flex; flex-direction: column; align-items: center; font-size: 0.65rem;
 }
 
-.nav-item.active { color: var(--primary); }
-.nav-item i { display: block; font-size: 1.2rem; margin-bottom: 4px; }
+.nav-item span { font-size: 1.4rem; margin-bottom: 4px; }
+.nav-item.active { color: var(--binance-yellow); }
 
-/* Grid Layout for Games */
-.grid-container {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 15px; padding: 20px;
+/* Buttons */
+.btn-neon {
+    background: transparent; border: 1px solid var(--binance-yellow);
+    color: var(--binance-yellow); padding: 12px; border-radius: 12px;
+    width: 100%; font-weight: bold; text-transform: uppercase; margin: 10px 0;
 }
 
-.card {
-    background: var(--card); border-radius: 15px;
-    padding: 20px; text-align: center;
-    border: 1px solid #30363d;
-}
-
-.btn-main {
-    background: var(--primary); color: #000;
-    border: none; padding: 12px 25px;
-    border-radius: 10px; font-weight: bold; width: 100%;
-}
+.btn-neon:active { background: var(--binance-yellow); color: #000; }
