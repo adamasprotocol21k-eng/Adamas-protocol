@@ -2,30 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet | Adamas</title><link rel="stylesheet" href="css/style.css">
+    <title>Wallet | ADAMAS</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body onload="updateUI()">
-    <div class="header-pro" style="padding: 20px; text-align: center;">
-        <h2 style="color: var(--binance-yellow);">WALLET</h2>
-        <div class="glass-card">
-            <small>Available Balance</small>
-            <h1 id="balance">0</h1>
-        </div>
+<body>
+
+    <div class="glass-card" style="margin-top: 40px; text-align: center;">
+        <p style="color:var(--text-sub)">Network: Polygon Amoy</p>
+        <h2 id="balance">0</h2>
+        <small>ABP Tokens Available</small>
     </div>
 
-    <div class="glass-card" style="margin: 15px;">
-        <select id="net" class="btn-neon" style="background:#000; margin-bottom:15px; color:#fff;">
-            <option>BNB Smart Chain (Active)</option>
-            <option>Polygon Mainnet (Active)</option>
-        </select>
-        <input type="number" id="amt" placeholder="Min. 5000 ABP" class="btn-neon" style="background:#000; margin-bottom:15px; text-align:center; color:#fff;">
-        <button class="btn-neon" onclick="wd()" style="color:var(--neon-green); border-color:var(--neon-green);">WITHDRAW NOW</button>
+    <div class="glass-card">
+        <h4>WITHDRAW ASSETS</h4>
+        <input type="text" placeholder="Wallet Address" id="withdrawAddr" class="btn-neon" style="text-align:left; background:#000; color:#fff">
+        <p style="font-size:0.6rem; color:var(--text-sub)">Min. Withdraw: 5000 ABP</p>
+        <button class="btn-neon" style="background:var(--binance-yellow); color:#000" onclick="handleWithdraw()">PROCESS WITHDRAWAL</button>
     </div>
 
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item"><span>🏠</span>Home</a>
         <a href="games.html" class="nav-item"><span>🎮</span>Games</a>
         <a href="earn.html" class="nav-item"><span>⛏️</span>Earn</a>
+        <a href="invite.html" class="nav-item"><span>🔗</span>Invite</a>
         <a href="wallet.html" class="nav-item active"><span>💰</span>Wallet</a>
     </nav>
 
@@ -33,15 +32,13 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
     <script>
-        function wd() {
-            let a = parseInt(document.getElementById('amt').value);
-            if(a < 5000) { alert("Min 5000!"); return; }
-            if(userStats.balance < a) { alert("Insufficient!"); return; }
-            
-            db.ref('withdrawals').push({ wallet: userStats.wallet, amount: a, status: 'pending', date: Date.now() });
-            userStats.balance -= a;
-            saveToFirebase();
-            showNotification("Request Sent!");
+        function handleWithdraw() {
+            if(userStats.balance < 5000) {
+                alert("Insufficient Balance. You need at least 5000 ABP.");
+                return;
+            }
+            showNotification("Processing on Polygon Amoy...");
+            // Yahan par Polygon Transaction ka code aayega
         }
     </script>
 </body>
