@@ -2,202 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Games Arena | Adamas Protocol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Zone | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .game-card { 
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 20px; padding: 25px 15px; text-align: center; transition: 0.3s;
-        }
-        .game-card:active { transform: scale(0.95); background: rgba(243, 186, 47, 0.1); }
-        .game-card .emoji { font-size: 2.5rem; display: block; margin-bottom: 10px; }
-
-        /* Modern Modal Layout */
-        .game-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; padding: 20px;
-        }
-
-        /* Mines Logic UI */
-        .mines-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
-        .tile { 
-            width: 55px; height: 55px; background: #2b3139; border-radius: 10px; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer;
-        }
-        .tile.revealed { background: #1e2329; border: 1px solid #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.2); }
-    </style>
 </head>
-<body onload="updateAllUI()">
+<body>
+    <div class="bg-animation"></div>
 
-    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e2329;">
-        <h2 style="color: #F3BA2F; margin: 0; font-weight: 900;">ARCADE</h2>
-        <div class="bal-badge" style="background: #1e2329; color: #F3BA2F; padding: 6px 15px; border-radius: 50px; font-weight: bold; border: 1px solid #F3BA2F;">
-            <span id="balance">0</span> <small>ABP</small>
-        </div>
+    <div class="balance-pill">
+        <span class="abp-balance-display">0</span> ABP
     </div>
 
-    <div class="game-grid">
-        <div class="game-card" onclick="openGame('scratchBox')">
-            <span class="emoji">🧧</span>
-            <b>Scratch & Win</b>
-            <div style="color: #00ff88; font-size: 0.7rem; margin-top: 5px;">Win upto 2000</div>
-        </div>
+    <div class="container" style="padding-top: 80px; text-align: center;">
+        <h1 style="margin-bottom: 30px;">Choose Your <span style="color: var(--primary-neon);">Game</span></h1>
+        
+        <div style="display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 400px; margin: auto;">
+            <div class="glass-card" onclick="window.location.href='mines.html'" style="cursor: pointer; transition: 0.3s; border-left: 5px solid #00f2ff;">
+                <h3 style="margin:0;">💣 Mines Jackpot</h3>
+                <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 5px;">High Risk • Up to 25x Multiplier</p>
+            </div>
 
-        <div class="game-card" onclick="openGame('minesBox')">
-            <span class="emoji">💣</span>
-            <b>Mines</b>
-            <div style="color: #00ff88; font-size: 0.7rem; margin-top: 5px;">Multipliers 2x-50x</div>
-        </div>
+            <div class="glass-card" onclick="window.location.href='teenpatti.html'" style="cursor: pointer; transition: 0.3s; border-left: 5px solid #ff0055;">
+                <h3 style="margin:0;">🃏 Teen Patti Royale</h3>
+                <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 5px;">Skill & Luck • Classic 3-Card Poker</p>
+            </div>
 
-        <div class="game-card" onclick="openGame('cardBox')">
-            <span class="emoji">🃏</span>
-            <b>Teen Patti</b>
-            <div style="color: #00ff88; font-size: 0.7rem; margin-top: 5px;">High Roller Game</div>
+            <div class="glass-card" onclick="window.location.href='spin.html'" style="cursor: pointer; transition: 0.3s; border-left: 5px solid #ffcc00;">
+                <h3 style="margin:0;">✨ Lucky Scratch</h3>
+                <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 5px;">Daily Free • Win up to 500 ABP</p>
+            </div>
         </div>
-
-        <div class="game-card" onclick="location.href='lottery.html'">
-            <span class="emoji">🎡</span>
-            <b>Jackpot</b>
-            <div style="color: #00ff88; font-size: 0.7rem; margin-top: 5px;">Next Draw: 15 Days</div>
-        </div>
+        
+        <button class="neon-btn" onclick="window.location.href='dashboard.html'" style="margin-top: 40px; font-size: 0.7rem;">Back to Dashboard</button>
     </div>
 
-    <div id="minesBox" class="game-modal">
-        <h3 style="color: #F3BA2F;">MINES (Bet: 100 ABP)</h3>
-        <div class="mines-board" id="minesBoard"></div>
-        <div id="minesStatus" style="color: #848e9c; margin-bottom: 20px;">Avoid 3 Bombs to multiply!</div>
-        <button class="btn-neon-large" style="width: 200px;" onclick="startMines()">START NEW GAME</button>
-        <p style="color: #ff4d4d; margin-top: 20px;" onclick="closeModal('minesBox')">EXIT GAME</p>
-    </div>
-
-    <div id="scratchBox" class="game-modal">
-    <div id="scratchArea" class="glass-card" style="padding: 25px; text-align: center;">
-    <h3 style="color: #F3BA2F;">LUCKY SCRATCH</h3>
-    <div id="scratchCard" style="width: 100%; height: 150px; background: #333; border-radius: 15px; margin: 20px 0; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px dashed #F3BA2F;">
-        <span id="scratchText" style="font-size: 1.2rem; color: #848e9c;">Scratch Here...</span>
-        <div id="prizeValue" style="display: none; font-size: 2rem; font-weight: 900; color: #00ff88;">+50 ABP</div>
-    </div>
-    
-    <button class="btn-neon-large" id="scratchBtn" onclick="startScratch()">SCRATCH NOW</button>
-    <button class="btn-neon-large" id="collectBtn" style="display: none; background: #00ff88; color: #000;" onclick="collectPrize()">COLLECT REWARD</button>
-</div>
-
-<script>
-    let currentPrize = 0;
-
-    function startScratch() {
-        document.getElementById('scratchText').style.display = 'none';
-        const prize = Math.floor(Math.random() * 100) + 10; // Random 10-110 points
-        currentPrize = prize;
-        
-        const prizeEl = document.getElementById('prizeValue');
-        prizeEl.innerText = "+" + prize + " ABP";
-        prizeEl.style.display = 'block';
-        
-        document.getElementById('scratchBtn').style.display = 'none';
-        document.getElementById('collectBtn').style.display = 'block';
-        
-        // Vibration effect (if supported)
-        if(navigator.vibrate) navigator.vibrate(50);
-    }
-
-    function collectPrize() {
-        // Global variables from app.js
-        window.userStats.balance += currentPrize;
-        saveToFirebase(); // This will update the database
-        
-        showNotification("Collected " + currentPrize + " ABP!");
-        
-        // Reset UI
-        document.getElementById('collectBtn').style.display = 'none';
-        document.getElementById('scratchBtn').style.display = 'block';
-        document.getElementById('prizeValue').style.display = 'none';
-        document.getElementById('scratchText').style.display = 'block';
-        
-        // Sync header balance
-        updateAllUI();
-    }
-</script>
-
-        function openGame(id) {
-            document.getElementById(id).style.display = 'flex';
-            if(id === 'scratchBox') initScratch();
-            if(id === 'minesBox') initMines();
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        // --- MINES LOGIC (Betting) ---
-        let mines = [];
-        let gameActive = false;
-        function initMines() {
-            const board = document.getElementById('minesBoard');
-            board.innerHTML = '';
-            for(let i=0; i<25; i++) {
-                const t = document.createElement('div');
-                t.className = 'tile';
-                t.onclick = () => revealTile(i, t);
-                board.appendChild(t);
-            }
-        }
-
-        function startMines() {
-            if(window.userStats.balance < 100) return showNotification("Min Bet 100 ABP Required!");
-            window.userStats.balance -= 100;
-            saveToFirebase();
-            mines = Array.from({length: 3}, () => Math.floor(Math.random() * 25));
-            gameActive = true;
-            initMines();
-            showNotification("Game Started! 100 ABP Bet.");
-        }
-
-        function revealTile(idx, el) {
-            if(!gameActive || el.classList.contains('revealed')) return;
-            el.classList.add('revealed');
-            if(mines.includes(idx)) {
-                el.innerHTML = '💣'; el.style.background = 'red';
-                gameActive = false;
-                showNotification("BOOM! You lost the bet.");
-                setTimeout(() => closeModal('minesBox'), 1500);
-            } else {
-                el.innerHTML = '💎';
-                window.userStats.balance += 150; // Win logic
-                saveToFirebase();
-            }
-        }
-
-        // --- SCRATCH LOGIC ---
-        let scratchVal = 0;
-        function initScratch() {
-            const canvas = document.getElementById('scratchCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = '#888'; ctx.fillRect(0,0,300,150);
-            scratchVal = Math.floor(Math.random()*500)+50;
-            document.getElementById('scratchReward').innerText = scratchVal + " ABP";
-
-            canvas.ontouchmove = (e) => {
-                const rect = canvas.getBoundingClientRect();
-                const x = e.touches[0].clientX - rect.left;
-                const y = e.touches[0].clientY - rect.top;
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath(); ctx.arc(x,y,25,0,Math.PI*2); ctx.fill();
-            }
-        }
-
-        function collectScratchReward() {
-            if(scratchVal > 0) {
-                window.userStats.balance += scratchVal;
-                saveToFirebase();
-                showNotification(`Added ${scratchVal} ABP!`);
-                scratchVal = 0;
-            }
-            closeModal('scratchBox');
-        }
-    </script>
+    <script src="js/app.js"></script>
 </body>
 </html>
