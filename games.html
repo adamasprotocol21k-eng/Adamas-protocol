@@ -73,27 +73,54 @@
     </div>
 
     <div id="scratchBox" class="game-modal">
-        <h3 style="color: #F3BA2F;">MAGIC SCRATCH</h3>
-        <div style="position: relative; width: 300px; height: 150px; background: #fff; border-radius: 15px; overflow: hidden;">
-            <div id="scratchReward" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #000; font-size: 2rem; font-weight: 900;">0 ABP</div>
-            <canvas id="scratchCanvas" width="300" height="150" style="position: absolute; inset: 0; touch-action: none; cursor: crosshair;"></canvas>
-        </div>
-        <button class="btn-neon-large" style="margin-top: 30px; width: 220px;" onclick="collectScratchReward()">COLLECT & EXIT</button>
+    <div id="scratchArea" class="glass-card" style="padding: 25px; text-align: center;">
+    <h3 style="color: #F3BA2F;">LUCKY SCRATCH</h3>
+    <div id="scratchCard" style="width: 100%; height: 150px; background: #333; border-radius: 15px; margin: 20px 0; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px dashed #F3BA2F;">
+        <span id="scratchText" style="font-size: 1.2rem; color: #848e9c;">Scratch Here...</span>
+        <div id="prizeValue" style="display: none; font-size: 2rem; font-weight: 900; color: #00ff88;">+50 ABP</div>
     </div>
+    
+    <button class="btn-neon-large" id="scratchBtn" onclick="startScratch()">SCRATCH NOW</button>
+    <button class="btn-neon-large" id="collectBtn" style="display: none; background: #00ff88; color: #000;" onclick="collectPrize()">COLLECT REWARD</button>
+</div>
 
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">🏠 Home</a>
-        <a href="games.html" class="nav-item active">🎮 Games</a>
-        <a href="earn.html" class="nav-item">⛏️ Earn</a>
-        <a href="invite.html" class="nav-item">🔗 Invite</a>
-        <a href="wallet.html" class="nav-item">💰 Wallet</a>
-    </nav>
+<script>
+    let currentPrize = 0;
 
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <script src="js/app.js"></script>
+    function startScratch() {
+        document.getElementById('scratchText').style.display = 'none';
+        const prize = Math.floor(Math.random() * 100) + 10; // Random 10-110 points
+        currentPrize = prize;
+        
+        const prizeEl = document.getElementById('prizeValue');
+        prizeEl.innerText = "+" + prize + " ABP";
+        prizeEl.style.display = 'block';
+        
+        document.getElementById('scratchBtn').style.display = 'none';
+        document.getElementById('collectBtn').style.display = 'block';
+        
+        // Vibration effect (if supported)
+        if(navigator.vibrate) navigator.vibrate(50);
+    }
 
-    <script>
+    function collectPrize() {
+        // Global variables from app.js
+        window.userStats.balance += currentPrize;
+        saveToFirebase(); // This will update the database
+        
+        showNotification("Collected " + currentPrize + " ABP!");
+        
+        // Reset UI
+        document.getElementById('collectBtn').style.display = 'none';
+        document.getElementById('scratchBtn').style.display = 'block';
+        document.getElementById('prizeValue').style.display = 'none';
+        document.getElementById('scratchText').style.display = 'block';
+        
+        // Sync header balance
+        updateAllUI();
+    }
+</script>
+
         function openGame(id) {
             document.getElementById(id).style.display = 'flex';
             if(id === 'scratchBox') initScratch();
