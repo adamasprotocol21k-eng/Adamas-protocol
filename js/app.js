@@ -1,4 +1,4 @@
-// --- FIREBASE CONFIGURATION (Verified) ---
+// --- FIREBASE INITIALIZATION ---
 const firebaseConfig = {
     apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
     authDomain: "adamas-protocol.firebaseapp.com",
@@ -12,38 +12,51 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// --- STATE MANAGEMENT ---
+// --- GLOBAL USER STATE ---
 let userStats = {
-    wallet: localStorage.getItem('adamas_wallet') || "",
+    wallet: localStorage.getItem('adamas_wallet') || "0xGuest",
     balance: 0,
     referralCount: 0,
-    lastCheckIn: ""
+    referralEarnings: 0
 };
 
-// --- SCRATCH CARD LOGIC (AS PER YOUR PERCENTAGE) ---
-function calculateScratchReward() {
-    const r = Math.random() * 100;
-    if (r <= 2) return Math.floor(Math.random() * 1001) + 1000; // 2% Jackpot
-    if (r <= 5) return Math.floor(Math.random() * 401) + 600;   // 3% High
-    if (r <= 30) return Math.floor(Math.random() * 201) + 400;  // 25% Medium
-    return Math.floor(Math.random() * 301) + 100;              // 70% Base
+// --- DATA SYNC FUNCTIONS ---
+function saveToFirebase() {
+    if (userStats.wallet !== "0xGuest") {
+        db.ref('users/' + userStats.wallet).set(userStats);
+    }
 }
 
-// --- TEEN PATTI ENGINE ---
-function rollPatti() {
-    const cards = ["A", "K", "Q", "J", "10"];
-    const p1 = cards[Math.floor(Math.random() * cards.length)];
-    const p2 = cards[Math.floor(Math.random() * cards.length)];
-    const p3 = cards[Math.floor(Math.random() * cards.length)];
+function loadUserData() {
+    const wallet = localStorage.getItem('adamas_wallet');
+    if (wallet) {
+        db.ref('users/' + wallet).on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                userStats = data;
+                updateUI();
+            }
+        });
+    }
+}
+
+// --- UI UPDATER ---
+function updateUI() {
+    const balEl = document.getElementById('balance') || document.getElementById('walletBalance');
+    if (balEl) balEl.innerText = Math.floor(userStats.balance);
     
-    if (p1 === p2 && p2 === p3) return { win: true, amount: 2500, type: 'TRIO' };
-    if (p1 === p2 || p2 === p3 || p1 === p3) return { win: true, amount: 15, type: 'PAIR' };
-    return { win: false, amount: 0 };
+    const walletEl = document.getElementById('userWalletAddr');
+    if (walletEl) walletEl.innerText = userStats.wallet;
 }
 
-// --- MINES COOLDOWN LOGIC ---
-function triggerMinesBomb() {
-    // 30 Seconds Cooldown implementation
-    localStorage.setItem('mines_lock', Date.now() + 30000);
-    alert("System Overload! 30s Cooldown Active.");
+// --- NOTIFICATION SYSTEM ---
+function showNotification(msg) {
+    const div = document.createElement('div');
+    div.style = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#F3BA2F; color:#000; padding:10px 20px; border-radius:10px; z-index:99999; font-weight:bold; font-size:0.8rem;";
+    div.innerText = msg;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 3000);
 }
+
+// Auto-load on script start
+loadUserData();
