@@ -1,3 +1,18 @@
+// 1. DATABASE CONFIGURATION
+const firebaseConfig = {
+    apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+    authDomain: "adamas-protocol.firebaseapp.com",
+    databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+    projectId: "adamas-protocol",
+    storageBucket: "adamas-protocol.firebasestorage.app",
+    messagingSenderId: "207788425238",
+    appId: "1:207788425238:web:025b8544f085dde60af537"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 // ==========================================
 // ADAMAS PROTOCOL - MASTER LOGIC (app.js)
 // ==========================================
