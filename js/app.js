@@ -9,54 +9,63 @@ const firebaseConfig = {
     appId: "1:207788425238:web:025b8544f085dde60af537"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const db = firebase.database();
 
-// --- GLOBAL USER STATE ---
+// Global State
 let userStats = {
     wallet: localStorage.getItem('adamas_wallet') || "0xGuest",
-    balance: 0,
-    referralCount: 0,
-    referralEarnings: 0
+    balance: parseInt(localStorage.getItem('adamas_balance')) || 0,
+    referralCount: 0
 };
 
-// --- DATA SYNC FUNCTIONS ---
+// --- DATA SYNC ENGINE ---
 function saveToFirebase() {
     if (userStats.wallet !== "0xGuest") {
-        db.ref('users/' + userStats.wallet).set(userStats);
+        // Local storage update for instant UI feedback
+        localStorage.setItem('adamas_balance', userStats.balance);
+        
+        // Firebase update
+        db.ref('users/' + userStats.wallet).update({
+            balance: userStats.balance,
+            wallet: userStats.wallet
+        });
     }
 }
 
 function loadUserData() {
     const wallet = localStorage.getItem('adamas_wallet');
-    if (wallet) {
+    if (wallet && wallet !== "0xGuest") {
         db.ref('users/' + wallet).on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                userStats = data;
+                userStats.balance = data.balance || 0;
+                localStorage.setItem('adamas_balance', userStats.balance);
                 updateUI();
             }
         });
     }
 }
 
-// --- UI UPDATER ---
 function updateUI() {
-    const balEl = document.getElementById('balance') || document.getElementById('walletBalance');
-    if (balEl) balEl.innerText = Math.floor(userStats.balance);
+    const balEl = document.getElementById('balance');
+    const walletEl = document.getElementById('walletBadge');
     
-    const walletEl = document.getElementById('userWalletAddr');
-    if (walletEl) walletEl.innerText = userStats.wallet;
+    if (balEl) balEl.innerText = Math.floor(userStats.balance);
+    if (walletEl) walletEl.innerText = userStats.wallet.substring(0, 6) + "...";
 }
 
-// --- NOTIFICATION SYSTEM ---
+// Notification Helper
 function showNotification(msg) {
-    const div = document.createElement('div');
-    div.style = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#F3BA2F; color:#000; padding:10px 20px; border-radius:10px; z-index:99999; font-weight:bold; font-size:0.8rem;";
-    div.innerText = msg;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 3000);
+    const n = document.createElement('div');
+    n.style = "position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#F3BA2F;color:#000;padding:12px 20px;border-radius:10px;z-index:100000;font-weight:bold;box-shadow:0 0 20px rgba(0,0,0,0.5);";
+    n.innerText = msg;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 3000);
 }
 
-// Auto-load on script start
+// Auto Load
 loadUserData();
+setInterval(updateUI, 1000); // Check for updates every second
