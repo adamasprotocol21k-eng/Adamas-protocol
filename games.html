@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Zone | ADAMAS Protocol</title>
+    <title>ADAMAS | Gaming Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,141 +12,161 @@
             --secondary: #7000ff;
             --dark: #05060a;
             --glass: rgba(255, 255, 255, 0.05);
-            --nav-bg: rgba(10, 11, 16, 0.8);
             --gold: #ffcc00;
+            --danger: #ff4444;
         }
 
         body {
             margin: 0; background: var(--dark); color: white;
             font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
-            background-image: radial-gradient(circle at top right, rgba(112, 0, 255, 0.1), transparent);
+            background: radial-gradient(circle at top right, #0a0b14, #05060a);
+            min-height: 100vh;
         }
 
-        .container { padding: 80px 20px 120px; max-width: 450px; margin: auto; text-align: center; }
+        .container { padding: 20px; max-width: 500px; margin: auto; padding-bottom: 100px; }
 
-        /* Balance Display */
+        /* --- Top Bar --- */
+        .top-bar {
+            display: flex; justify-content: flex-end; padding: 10px 0;
+            margin-bottom: 20px;
+        }
         .balance-pill {
-            position: fixed; top: 20px; right: 20px;
             background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary);
-            padding: 8px 15px; border-radius: 50px; font-family: 'Orbitron';
-            font-size: 0.8rem; backdrop-filter: blur(10px); z-index: 1000;
+            padding: 5px 15px; border-radius: 50px; font-family: 'Orbitron';
+            font-size: 0.8rem; color: var(--primary); box-shadow: 0 0 10px rgba(0,242,255,0.2);
         }
 
-        h1 { font-family: 'Orbitron'; font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 30px; }
+        .hub-title {
+            text-align: center; font-family: 'Orbitron'; font-size: 1.8rem;
+            letter-spacing: 4px; margin-bottom: 30px; text-transform: uppercase;
+        }
+        .hub-title span { color: var(--primary); text-shadow: 0 0 15px var(--primary); }
 
-        /* Game Cards */
-        .game-list { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        /* --- Game Card Styling --- */
+        .game-list { display: flex; flex-direction: column; gap: 20px; }
 
-        .glass-card {
-            background: var(--glass); padding: 20px; border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1); text-align: left;
-            text-decoration: none; color: white; transition: 0.3s;
+        .game-card {
+            background: var(--glass); border-radius: 20px; padding: 20px;
             display: flex; align-items: center; gap: 20px;
+            text-decoration: none; color: white; border: 1px solid rgba(255,255,255,0.05);
+            position: relative; overflow: hidden; transition: 0.3s;
             backdrop-filter: blur(10px);
         }
 
-        .glass-card:hover { transform: scale(1.02); border-color: var(--primary); background: rgba(0, 242, 255, 0.05); }
-
-        .icon-box { font-size: 2rem; min-width: 50px; text-align: center; }
-
-        .game-info h3 { margin: 0; font-family: 'Orbitron'; font-size: 0.95rem; color: var(--primary); }
-        .game-info p { margin: 5px 0 0; font-size: 0.75rem; opacity: 0.6; }
-
-        /* Navigation Dock */
-        .dock {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--nav-bg); backdrop-filter: blur(25px);
-            padding: 12px 25px; border-radius: 35px; display: flex; gap: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); z-index: 9999;
+        .game-card::before {
+            content: ''; position: absolute; left: 0; top: 0; width: 5px; height: 100%;
         }
-        .dock-item {
-            text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 1.25rem;
-            position: relative; transition: 0.4s; display: flex; flex-direction: column; align-items: center;
+
+        /* Border Colors based on Screenshot */
+        .card-mines::before { background: var(--danger); box-shadow: 2px 0 10px var(--danger); }
+        .card-scratch::before { background: var(--primary); box-shadow: 2px 0 10px var(--primary); }
+        .card-spin::before { background: var(--gold); box-shadow: 2px 0 10px var(--gold); }
+        .card-patti::before { background: var(--secondary); box-shadow: 2px 0 10px var(--secondary); }
+
+        .game-card:hover {
+            background: rgba(255,255,255,0.08); transform: scale(1.02);
+            border-color: rgba(255,255,255,0.2);
         }
-        .dock-item span { font-size: 0.55rem; font-family: 'Orbitron'; position: absolute; bottom: -15px; opacity: 0; transition: 0.3s; color: var(--primary); letter-spacing: 1px; }
-        .dock-item.active { color: var(--primary); transform: translateY(-5px); }
-        .dock-item.active span { opacity: 1; transform: translateY(-3px); }
-        .dock-item.active i { filter: drop-shadow(0 0 8px var(--primary)); }
+
+        .game-icon {
+            width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+        }
+
+        .game-info { flex: 1; }
+        .game-name { font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 4px; }
+        .game-desc { font-size: 0.75rem; opacity: 0.6; font-weight: 500; }
+
+        /* --- Navigation Bar --- */
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px); border-radius: 25px; padding: 12px;
+            display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+        }
+        .nav-link { color: rgba(255,255,255,0.4); text-decoration: none; text-align: center; transition: 0.3s; }
+        .nav-link.active { color: var(--primary); filter: drop-shadow(0 0 8px var(--primary)); }
+        .nav-link i { font-size: 1.2rem; }
+        .nav-link span { display: block; font-size: 0.55rem; font-family: 'Orbitron'; margin-top: 5px; }
 
     </style>
 </head>
 <body>
 
-    <div class="balance-pill">
-        <span id="gameBalance">0.00</span> <span style="color: var(--gold);">ABP</span>
-    </div>
-
     <div class="container">
-        <h1>GAMING <span style="color: var(--primary);">HUB</span></h1>
-        
+        <div class="top-bar">
+            <div class="balance-pill"><span id="liveBal">0.00</span> ABP</div>
+        </div>
+
+        <h2 class="hub-title">GAMING <span>HUB</span></h2>
+
         <div class="game-list">
-            <a href="mines.html" class="glass-card" style="border-left: 4px solid #ff0055;">
-                <div class="icon-box">💣</div>
+            <a href="mines.html" class="game-card card-mines">
+                <div class="game-icon">💣</div>
                 <div class="game-info">
-                    <h3>Mines Jackpot</h3>
-                    <p>High Risk • Up to 25x Multiplier</p>
+                    <div class="game-name" style="color: var(--danger);">Mines Jackpot</div>
+                    <div class="game-desc">High Risk • Up to 25x Multiplier</div>
                 </div>
             </a>
 
-            <a href="scratch.html" class="glass-card" style="border-left: 4px solid var(--primary);">
-                <div class="icon-box">✨</div>
+            <a href="scratch.html" class="game-card card-scratch">
+                <div class="game-icon">✨</div>
                 <div class="game-info">
-                    <h3>Lucky Scratch</h3>
-                    <p>Daily Free • Win up to 500 ABP</p>
+                    <div class="game-name" style="color: var(--primary);">Lucky Scratch</div>
+                    <div class="game-desc">Daily Free • Win up to 2000 ABP</div>
                 </div>
             </a>
 
-            <a href="lottery.html" class="glass-card" style="border-left: 4px solid var(--gold);">
-                <div class="icon-box">🎟️</div>
+            <a href="spin.html" class="game-card card-spin">
+                <div class="game-icon">🎡</div>
                 <div class="game-info">
-                    <h3>Mega Lottery</h3>
-                    <p>Next Draw: 50,000 ABP Pool</p>
+                    <div class="game-name" style="color: var(--gold);">Mega Spin</div>
+                    <div class="game-desc">Wheel of Fortune • 50,000 ABP Pool</div>
                 </div>
             </a>
 
-            <a href="teenpatti.html" class="glass-card" style="border-left: 4px solid #7000ff;">
-                <div class="icon-box">🃏</div>
+            <a href="teenpatti.html" class="game-card card-patti">
+                <div class="game-icon">🃏</div>
                 <div class="game-info">
-                    <h3>Teen Patti Royale</h3>
-                    <p>Skill & Luck • Classic 3-Card Poker</p>
+                    <div class="game-name" style="color: var(--secondary);">Teen Patti Royale</div>
+                    <div class="game-desc">Skill & Luck • Classic 3-Card Poker</div>
                 </div>
             </a>
         </div>
     </div>
 
-    <div class="dock">
-        <a href="dashboard.html" class="dock-item">
-            <i class="fas fa-th-large"></i>
-            <span>HOME</span>
-        </a>
-        <a href="games.html" class="dock-item active">
-            <i class="fas fa-gamepad"></i>
-            <span>GAMES</span>
-        </a>
-        <a href="wallet.html" class="dock-item">
-            <i class="fas fa-wallet"></i>
-            <span>WALLET</span>
-        </a>
-        <a href="invite.html" class="dock-item">
-            <i class="fas fa-users"></i>
-            <span>FRIENDS</span>
-        </a>
-        <a href="profile.html" class="dock-item">
-            <i class="fas fa-user-astronaut"></i>
-            <span>USER</span>
-        </a>
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-link"><i class="fas fa-th-large"></i><span>HOME</span></a>
+        <a href="games.html" class="nav-link active"><i class="fas fa-gamepad"></i><span>GAMES</span></a>
+        <a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i><span>WALLET</span></a>
+        <a href="profile.html" class="nav-link"><i class="fas fa-user-astronaut"></i><span>USER</span></a>
     </div>
 
-    <script>
-        // Update Balance Logic
-        function updateBalance() {
-            const balance = localStorage.getItem('lastBalance') || "0.00";
-            document.getElementById('gameBalance').innerText = parseFloat(balance).toFixed(2);
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-        window.onload = updateBalance;
-        // Refresh balance if user wins something
-        setInterval(updateBalance, 2000);
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+            databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol",
+            appId: "1:207788425238:web:025b8544f085dde60af537"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+        const userPath = 'users/' + wallet.substring(0, 10);
+
+        // Live Balance Fetch
+        onValue(ref(db, userPath), (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                const bal = data.currentBalance || 0;
+                document.getElementById('liveBal').innerText = parseFloat(bal).toLocaleString();
+            }
+        });
     </script>
 </body>
 </html>
