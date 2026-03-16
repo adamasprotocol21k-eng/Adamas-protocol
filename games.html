@@ -4,161 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gaming Zone | ADAMAS Protocol</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --nav-bg: rgba(10, 11, 16, 0.8);
+            --gold: #ffcc00;
+        }
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
+            background-image: radial-gradient(circle at top right, rgba(112, 0, 255, 0.1), transparent);
+        }
+
+        .container { padding: 80px 20px 120px; max-width: 450px; margin: auto; text-align: center; }
+
+        /* Balance Display */
+        .balance-pill {
+            position: fixed; top: 20px; right: 20px;
+            background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary);
+            padding: 8px 15px; border-radius: 50px; font-family: 'Orbitron';
+            font-size: 0.8rem; backdrop-filter: blur(10px); z-index: 1000;
+        }
+
+        h1 { font-family: 'Orbitron'; font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 30px; }
+
+        /* Game Cards */
+        .game-list { display: grid; grid-template-columns: 1fr; gap: 15px; }
+
+        .glass-card {
+            background: var(--glass); padding: 20px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1); text-align: left;
+            text-decoration: none; color: white; transition: 0.3s;
+            display: flex; align-items: center; gap: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .glass-card:hover { transform: scale(1.02); border-color: var(--primary); background: rgba(0, 242, 255, 0.05); }
+
+        .icon-box { font-size: 2rem; min-width: 50px; text-align: center; }
+
+        .game-info h3 { margin: 0; font-family: 'Orbitron'; font-size: 0.95rem; color: var(--primary); }
+        .game-info p { margin: 5px 0 0; font-size: 0.75rem; opacity: 0.6; }
+
+        /* Navigation Dock */
+        .dock {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--nav-bg); backdrop-filter: blur(25px);
+            padding: 12px 25px; border-radius: 35px; display: flex; gap: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); z-index: 9999;
+        }
+        .dock-item {
+            text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 1.25rem;
+            position: relative; transition: 0.4s; display: flex; flex-direction: column; align-items: center;
+        }
+        .dock-item span { font-size: 0.55rem; font-family: 'Orbitron'; position: absolute; bottom: -15px; opacity: 0; transition: 0.3s; color: var(--primary); letter-spacing: 1px; }
+        .dock-item.active { color: var(--primary); transform: translateY(-5px); }
+        .dock-item.active span { opacity: 1; transform: translateY(-3px); }
+        .dock-item.active i { filter: drop-shadow(0 0 8px var(--primary)); }
+
+    </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
 
     <div class="balance-pill">
-        <span class="abp-balance-display">0</span> ABP
+        <span id="gameBalance">0.00</span> <span style="color: var(--gold);">ABP</span>
     </div>
 
-    <div class="container" style="padding-top: 80px; text-align: center;">
-        <h1 style="margin-bottom: 30px;">Choose Your <span style="color: var(--primary-neon);">Game</span></h1>
+    <div class="container">
+        <h1>GAMING <span style="color: var(--primary);">HUB</span></h1>
         
-        <div style="display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 400px; margin: auto;">
-            <div class="glass-card" onclick="window.location.href='mines.html'" style="cursor: pointer; transition: 0.3s; border-left: 5px solid #00f2ff;">
-                <h3 style="margin:0;">💣 Mines Jackpot</h3>
-                <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 5px;">High Risk • Up to 25x Multiplier</p>
-            </div>
+        <div class="game-list">
+            <a href="mines.html" class="glass-card" style="border-left: 4px solid #ff0055;">
+                <div class="icon-box">💣</div>
+                <div class="game-info">
+                    <h3>Mines Jackpot</h3>
+                    <p>High Risk • Up to 25x Multiplier</p>
+                </div>
+            </a>
 
-            <div class="glass-card" onclick="window.location.href='teenpatti.html'" style="cursor: pointer; transition: 0.3s; border-left: 5px solid #ff0055;">
-                <h3 style="margin:0;">🃏 Teen Patti Royale</h3>
-                <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 5px;">Skill & Luck • Classic 3-Card Poker</p>
-            </div>
+            <a href="scratch.html" class="glass-card" style="border-left: 4px solid var(--primary);">
+                <div class="icon-box">✨</div>
+                <div class="game-info">
+                    <h3>Lucky Scratch</h3>
+                    <p>Daily Free • Win up to 500 ABP</p>
+                </div>
+            </a>
 
-            <div class="glass-card" onclick="window.location.href='spin.html'" style="cursor: pointer; transition: 0.3s; border-left: 5px solid #ffcc00;">
-                <h3 style="margin:0;">✨ Lucky Scratch</h3>
-                <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 5px;">Daily Free • Win up to 500 ABP</p>
-            </div>
+            <a href="lottery.html" class="glass-card" style="border-left: 4px solid var(--gold);">
+                <div class="icon-box">🎟️</div>
+                <div class="game-info">
+                    <h3>Mega Lottery</h3>
+                    <p>Next Draw: 50,000 ABP Pool</p>
+                </div>
+            </a>
+
+            <a href="teenpatti.html" class="glass-card" style="border-left: 4px solid #7000ff;">
+                <div class="icon-box">🃏</div>
+                <div class="game-info">
+                    <h3>Teen Patti Royale</h3>
+                    <p>Skill & Luck • Classic 3-Card Poker</p>
+                </div>
+            </a>
         </div>
-        
-        <button class="neon-btn" onclick="window.location.href='dashboard.html'" style="margin-top: 40px; font-size: 0.7rem;">Back to Dashboard</button>
     </div>
 
-    <script src="js/app.js"></script>
+    <div class="dock">
+        <a href="dashboard.html" class="dock-item">
+            <i class="fas fa-th-large"></i>
+            <span>HOME</span>
+        </a>
+        <a href="games.html" class="dock-item active">
+            <i class="fas fa-gamepad"></i>
+            <span>GAMES</span>
+        </a>
+        <a href="wallet.html" class="dock-item">
+            <i class="fas fa-wallet"></i>
+            <span>WALLET</span>
+        </a>
+        <a href="invite.html" class="dock-item">
+            <i class="fas fa-users"></i>
+            <span>FRIENDS</span>
+        </a>
+        <a href="profile.html" class="dock-item">
+            <i class="fas fa-user-astronaut"></i>
+            <span>USER</span>
+        </a>
+    </div>
+
+    <script>
+        // Update Balance Logic
+        function updateBalance() {
+            const balance = localStorage.getItem('lastBalance') || "0.00";
+            document.getElementById('gameBalance').innerText = parseFloat(balance).toFixed(2);
+        }
+
+        window.onload = updateBalance;
+        // Refresh balance if user wins something
+        setInterval(updateBalance, 2000);
+    </script>
 </body>
 </html>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-<style>
-    :root {
-        --primary: #00f2ff;
-        --secondary: #7000ff;
-        --nav-bg: rgba(10, 11, 16, 0.7);
-    }
-
-    /* Premium Navigation Dock */
-    .dock {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--nav-bg);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        padding: 12px 25px;
-        border-radius: 30px;
-        display: flex;
-        gap: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 
-                    inset 0 0 10px rgba(0, 242, 255, 0.05);
-        z-index: 9999;
-    }
-
-    .dock-item {
-        text-decoration: none;
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 1.3rem;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Icon Animation */
-    .dock-item i {
-        transition: transform 0.3s ease;
-    }
-
-    /* Label - initially hidden */
-    .dock-item span {
-        font-size: 0.6rem;
-        font-family: 'Orbitron', sans-serif;
-        position: absolute;
-        bottom: -18px;
-        opacity: 0;
-        transition: 0.3s;
-        color: var(--primary);
-        letter-spacing: 1px;
-    }
-
-    /* Active & Hover States */
-    .dock-item:hover, .dock-item.active {
-        color: var(--primary);
-    }
-
-    .dock-item.active i {
-        transform: translateY(-12px) scale(1.2);
-        filter: drop-shadow(0 0 10px var(--primary));
-    }
-
-    .dock-item.active span {
-        opacity: 1;
-        transform: translateY(-8px);
-    }
-
-    /* The "Pulse" Indicator for Active Item */
-    .dock-item.active::before {
-        content: '';
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        background: var(--primary);
-        border-radius: 50%;
-        bottom: -5px;
-        box-shadow: 0 0 10px var(--primary);
-    }
-
-    /* Responsive adjustment */
-    @media (max-width: 400px) {
-        .dock { gap: 20px; padding: 10px 20px; }
-        .dock-item { font-size: 1.1rem; }
-    }
-</style>
-
-<div class="dock">
-    <a href="dashboard.html" class="dock-item" id="nav-home">
-        <i class="fas fa-th-large"></i>
-        <span>HOME</span>
-    </a>
-    <a href="games.html" class="dock-item" id="nav-games">
-        <i class="fas fa-gamepad"></i>
-        <span>GAMES</span>
-    </a>
-    <a href="wallet.html" class="dock-item active" id="nav-wallet"> <i class="fas fa-wallet"></i>
-        <span>WALLET</span>
-    </a>
-    <a href="invite.html" class="dock-item" id="nav-invite">
-        <i class="fas fa-users"></i>
-        <span>FRIENDS</span>
-    </a>
-    <a href="profile.html" class="dock-item" id="nav-profile">
-        <i class="fas fa-user-astronaut"></i>
-        <span>USER</span>
-    </a>
-</div>
-
-<script>
-    // JS to automatically handle active state if you want, 
-    // though hardcoding "active" class on each page is more reliable.
-    document.querySelectorAll('.dock-item').forEach(item => {
-        item.addEventListener('click', () => {
-            document.querySelectorAll('.dock-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-        });
-    });
-</script>
