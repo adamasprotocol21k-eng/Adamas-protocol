@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADAMAS WALLET | Secure Assets</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #00f2ff;
@@ -12,6 +13,7 @@
             --dark: #05060a;
             --glass: rgba(255, 255, 255, 0.05);
             --gold: #ffcc00;
+            --nav-bg: rgba(10, 11, 16, 0.7);
         }
 
         body {
@@ -24,57 +26,70 @@
         .header {
             padding: 20px; display: flex; justify-content: space-between; align-items: center;
             backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .container { padding: 30px 20px 100px; max-width: 500px; margin: auto; }
+        .container { padding: 30px 20px 150px; max-width: 500px; margin: auto; }
 
+        /* Premium Wallet Card */
         .wallet-card {
-            background: linear-gradient(135deg, rgba(112, 0, 255, 0.2), rgba(0, 242, 255, 0.1));
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.15), rgba(0, 242, 255, 0.05));
             border-radius: 30px; padding: 40px 20px; text-align: center;
             border: 1px solid rgba(255,255,255,0.1); position: relative;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
-            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px; backdrop-filter: blur(10px);
         }
 
-        .balance-label { font-size: 0.8rem; letter-spacing: 3px; opacity: 0.6; margin-bottom: 10px; }
+        .balance-label { font-family: 'Orbitron'; font-size: 0.7rem; letter-spacing: 3px; opacity: 0.6; margin-bottom: 10px; color: var(--primary); }
         .balance-amount {
-            font-family: 'Orbitron', sans-serif; font-size: 3.5rem;
-            color: var(--gold); text-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+            font-family: 'Orbitron', sans-serif; font-size: 3rem;
+            color: var(--gold); text-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
         }
 
-        .btn-group { display: flex; gap: 15px; margin-top: 25px; }
+        .btn-group { display: flex; gap: 12px; margin-top: 25px; }
         .action-btn {
-            flex: 1; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
-            background: var(--glass); color: white; font-family: 'Orbitron'; font-size: 0.9rem;
-            cursor: pointer; transition: 0.3s;
+            flex: 1; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+            background: var(--glass); color: white; font-family: 'Orbitron'; font-size: 0.75rem;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .action-btn:hover:not(:disabled) { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
-        .action-btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: #444; }
+        .action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        .section-title { font-family: 'Orbitron'; font-size: 1rem; margin-bottom: 15px; opacity: 0.8; }
-        .transaction-list { display: flex; flex-direction: column; gap: 12px; }
+        .section-title { font-family: 'Orbitron'; font-size: 0.8rem; margin-bottom: 20px; opacity: 0.8; letter-spacing: 1px; color: var(--primary); }
         
+        .transaction-list { display: flex; flex-direction: column; gap: 12px; }
         .tx-item {
-            background: var(--glass); border-radius: 20px; padding: 20px;
+            background: var(--glass); border-radius: 18px; padding: 18px;
             display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
         }
+        .tx-item:hover { background: rgba(255,255,255,0.08); }
 
-        .tx-info h4 { margin: 0; font-size: 1.1rem; }
-        .tx-info p { margin: 0; font-size: 0.8rem; opacity: 0.5; }
-        .tx-amount { font-family: 'Orbitron'; font-weight: bold; color: #00ff88; }
+        .tx-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 242, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); }
+        .tx-info { flex: 1; margin-left: 15px; }
+        .tx-info h4 { margin: 0; font-size: 1rem; font-family: 'Rajdhani'; font-weight: 700; }
+        .tx-info p { margin: 0; font-size: 0.75rem; opacity: 0.5; }
+        .tx-amount { font-family: 'Orbitron'; font-weight: bold; color: #00ff88; font-size: 0.9rem; }
 
+        /* Premium Navigation Dock */
         .dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
-            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
-            border: 1px solid rgba(255,255,255,0.1); z-index: 100;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--nav-bg); backdrop-filter: blur(20px) saturate(180%);
+            padding: 12px 25px; border-radius: 30px; display: flex; gap: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); z-index: 9999;
         }
-        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
-        .dock-item.active { opacity: 1; color: var(--primary); }
+        .dock-item {
+            text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 1.3rem;
+            position: relative; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .dock-item span { font-size: 0.6rem; font-family: 'Orbitron', sans-serif; position: absolute; bottom: -18px; opacity: 0; transition: 0.3s; color: var(--primary); letter-spacing: 1px; }
+        .dock-item:hover, .dock-item.active { color: var(--primary); }
+        .dock-item.active i { transform: translateY(-12px) scale(1.2); filter: drop-shadow(0 0 10px var(--primary)); }
+        .dock-item.active span { opacity: 1; transform: translateY(-8px); }
+        .dock-item.active::before { content: ''; position: absolute; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; bottom: -5px; box-shadow: 0 0 10px var(--primary); }
 
-        /* Status Label */
-        #withdrawStatus { font-size: 0.7rem; color: #ff4444; margin-top: 10px; display: block; }
+        #withdrawStatus { font-size: 0.7rem; color: #ff4444; margin-top: 15px; display: block; font-family: 'Orbitron'; }
     </style>
 </head>
 <body>
@@ -82,214 +97,112 @@
     <canvas id="canvas3d"></canvas>
 
     <div class="header">
-        <div style="font-family: 'Orbitron'; font-weight: bold; letter-spacing: 2px;">ADAMAS <span style="color: var(--primary);">WALLET</span></div>
-        <div style="font-size: 0.8rem; opacity: 0.5;" id="userAddress">Connect Wallet</div>
+        <div style="font-family: 'Orbitron'; font-weight: bold; letter-spacing: 2px; font-size: 0.9rem;">ADAMAS <span style="color: var(--primary);">WALLET</span></div>
+        <div style="font-size: 0.7rem; opacity: 0.6; font-family: 'Orbitron';" id="userAddress">0x...</div>
     </div>
 
     <div class="container">
         <div class="wallet-card">
-            <div class="balance-label">AVAILABLE BALANCE</div>
+            <div class="balance-label">AVAILABLE ASSETS</div>
             <div class="balance-amount" id="walletBalance">0.00</div>
-            <div style="font-size: 0.9rem; opacity: 0.6; margin-top: 5px;">ABP TOKENS</div>
+            <div style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px; font-family: 'Orbitron'; letter-spacing: 1px;">ABP TOKENS</div>
             
             <div class="btn-group">
-                <button class="action-btn" id="withdrawBtn" onclick="handleWithdraw()">WITHDRAW</button>
-                <button class="action-btn">SWAP</button>
+                <button class="action-btn" id="withdrawBtn" onclick="handleWithdraw()">
+                    <i class="fas fa-paper-plane"></i> SEND
+                </button>
+                <button class="action-btn">
+                    <i class="fas fa-sync"></i> SWAP
+                </button>
             </div>
-            <span id="withdrawStatus">Loading...</span>
+            <span id="withdrawStatus">Checking eligibility...</span>
         </div>
 
-        <div class="section-title">RECENT TRANSACTIONS</div>
+        <div class="section-title">TRANSACTION HISTORY</div>
         <div class="transaction-list" id="txHistory">
             <div class="tx-item">
+                <div class="tx-icon"><i class="fas fa-hammer"></i></div>
                 <div class="tx-info">
-                    <h4>Mining Reward</h4>
-                    <p>Daily Session</p>
+                    <h4>Cloud Mining Reward</h4>
+                    <p id="txDate">Processing...</p>
                 </div>
-                <div class="tx-amount" id="lastTx">+0.00 ABP</div>
+                <div class="tx-amount" id="lastTx">+0.00</div>
             </div>
         </div>
     </div>
 
     <div class="dock">
-        <a href="dashboard.html" class="dock-item">🏠</a>
-        <a href="wallet.html" class="dock-item active">💰</a>
-        <a href="invite.html" class="dock-item">👥</a>
-        <a href="profile.html" class="dock-item">👤</a>
+        <a href="dashboard.html" class="dock-item" id="nav-home">
+            <i class="fas fa-th-large"></i>
+            <span>HOME</span>
+        </a>
+        <a href="games.html" class="dock-item" id="nav-games">
+            <i class="fas fa-gamepad"></i>
+            <span>GAMES</span>
+        </a>
+        <a href="wallet.html" class="dock-item active" id="nav-wallet">
+            <i class="fas fa-wallet"></i>
+            <span>WALLET</span>
+        </a>
+        <a href="invite.html" class="dock-item" id="nav-invite">
+            <i class="fas fa-users"></i>
+            <span>FRIENDS</span>
+        </a>
+        <a href="profile.html" class="dock-item" id="nav-profile">
+            <i class="fas fa-user-astronaut"></i>
+            <span>USER</span>
+        </a>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. Particle Background Logic
+        // 1. Particle Background
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        const posArray = new Float32Array(1000 * 3);
-        for(let i=0; i < 3000; i++) posArray[i] = (Math.random() - 0.5) * 10;
+        const posArray = new Float32Array(800 * 3);
+        for(let i=0; i < 2400; i++) posArray[i] = (Math.random() - 0.5) * 10;
         const particlesGeometry = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x7000ff });
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
         const particlesMesh = new THREE.Points(particlesGeometry, material);
         scene.add(particlesMesh); camera.position.z = 3;
         function animate() { requestAnimationFrame(animate); particlesMesh.rotation.y += 0.001; renderer.render(scene, camera); } animate();
 
-        // 2. Withdrawal & Balance Logic
-        const CONTRACT_ADDR = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+        // 2. Wallet Logic
         const MIN_WITHDRAW = 5000;
 
         function updateWalletUI() {
             const currentBal = parseFloat(localStorage.getItem('lastBalance') || "0");
             document.getElementById('walletBalance').innerText = currentBal.toFixed(2);
-            document.getElementById('lastTx').innerText = "+" + currentBal.toFixed(2) + " ABP";
+            document.getElementById('lastTx').innerText = "+" + currentBal.toFixed(2);
+            document.getElementById('txDate').innerText = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 
             const btn = document.getElementById('withdrawBtn');
             const status = document.getElementById('withdrawStatus');
 
             if(currentBal >= MIN_WITHDRAW) {
                 btn.disabled = false;
-                status.innerText = "Polygon Mainnet Bridge Ready! 🚀";
+                status.innerText = "Polygon Bridge Active! 🚀";
                 status.style.color = "#00ff88";
             } else {
                 btn.disabled = true;
-                status.innerText = `Need ${Math.ceil(MIN_WITHDRAW - currentBal)} more ABP to withdraw`;
+                status.innerText = `Minimum withdrawal: ${MIN_WITHDRAW} ABP`;
                 status.style.color = "#ff4444";
             }
         }
 
         function handleWithdraw() {
             const currentBal = localStorage.getItem('lastBalance');
-            alert(`Initiating Bridge to Polygon Testnet...\n\nContract: ${CONTRACT_ADDR}\nAmount: ${currentBal} ABP\n\nStatus: Waiting for MetaMask confirmation.`);
-            // Yahan par hum actual Web3 sendTransaction call karenge jab aap ABI doge.
+            alert(`Bridging ${currentBal} ABP to Mainnet...\n\nPlease ensure your Polygon Wallet is connected.`);
         }
 
         window.onload = function() {
-            // Fake user address for UI
-            document.getElementById('userAddress').innerText = "0x71C...3902";
+            // Fetching saved name or using default
+            const addr = localStorage.getItem('userWallet') || "0x1E12...dADB";
+            document.getElementById('userAddress').innerText = addr;
             updateWalletUI();
         }
     </script>
 </body>
 </html>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-<style>
-    :root {
-        --primary: #00f2ff;
-        --secondary: #7000ff;
-        --nav-bg: rgba(10, 11, 16, 0.7);
-    }
-
-    /* Premium Navigation Dock */
-    .dock {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--nav-bg);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        padding: 12px 25px;
-        border-radius: 30px;
-        display: flex;
-        gap: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 
-                    inset 0 0 10px rgba(0, 242, 255, 0.05);
-        z-index: 9999;
-    }
-
-    .dock-item {
-        text-decoration: none;
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 1.3rem;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Icon Animation */
-    .dock-item i {
-        transition: transform 0.3s ease;
-    }
-
-    /* Label - initially hidden */
-    .dock-item span {
-        font-size: 0.6rem;
-        font-family: 'Orbitron', sans-serif;
-        position: absolute;
-        bottom: -18px;
-        opacity: 0;
-        transition: 0.3s;
-        color: var(--primary);
-        letter-spacing: 1px;
-    }
-
-    /* Active & Hover States */
-    .dock-item:hover, .dock-item.active {
-        color: var(--primary);
-    }
-
-    .dock-item.active i {
-        transform: translateY(-12px) scale(1.2);
-        filter: drop-shadow(0 0 10px var(--primary));
-    }
-
-    .dock-item.active span {
-        opacity: 1;
-        transform: translateY(-8px);
-    }
-
-    /* The "Pulse" Indicator for Active Item */
-    .dock-item.active::before {
-        content: '';
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        background: var(--primary);
-        border-radius: 50%;
-        bottom: -5px;
-        box-shadow: 0 0 10px var(--primary);
-    }
-
-    /* Responsive adjustment */
-    @media (max-width: 400px) {
-        .dock { gap: 20px; padding: 10px 20px; }
-        .dock-item { font-size: 1.1rem; }
-    }
-</style>
-
-<div class="dock">
-    <a href="dashboard.html" class="dock-item" id="nav-home">
-        <i class="fas fa-th-large"></i>
-        <span>HOME</span>
-    </a>
-    <a href="games.html" class="dock-item" id="nav-games">
-        <i class="fas fa-gamepad"></i>
-        <span>GAMES</span>
-    </a>
-    <a href="wallet.html" class="dock-item active" id="nav-wallet"> <i class="fas fa-wallet"></i>
-        <span>WALLET</span>
-    </a>
-    <a href="invite.html" class="dock-item" id="nav-invite">
-        <i class="fas fa-users"></i>
-        <span>FRIENDS</span>
-    </a>
-    <a href="profile.html" class="dock-item" id="nav-profile">
-        <i class="fas fa-user-astronaut"></i>
-        <span>USER</span>
-    </a>
-</div>
-
-<script>
-    // JS to automatically handle active state if you want, 
-    // though hardcoding "active" class on each page is more reliable.
-    document.querySelectorAll('.dock-item').forEach(item => {
-        item.addEventListener('click', () => {
-            document.querySelectorAll('.dock-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-        });
-    });
-</script>
