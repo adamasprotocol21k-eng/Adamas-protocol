@@ -3,122 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grand Lottery | ADAMAS Protocol</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>ADAMAS LOTTERY | Win Big</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        .timer-box {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 20px 0;
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --gold: #ffcc00;
         }
-        .time-unit {
-            background: rgba(0, 242, 255, 0.1);
-            border: 1px solid var(--primary-neon);
-            padding: 10px;
-            border-radius: 10px;
-            min-width: 60px;
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
         }
-        .ticket-card {
-            background: linear-gradient(45deg, #1a1b26, #2a2b36);
-            border-left: 5px solid var(--primary-neon);
-            padding: 15px;
-            margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 5px;
+
+        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .header {
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
         }
-        .prize-distribution {
-            font-size: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            opacity: 0.7;
+
+        .container { padding: 30px 20px 100px; max-width: 450px; margin: auto; text-align: center; }
+
+        /* Jackpot Timer Card */
+        .jackpot-card {
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.1), rgba(0, 242, 255, 0.1));
+            border-radius: 30px; padding: 40px 20px; border: 1px solid var(--primary);
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.2);
+            margin-bottom: 30px; position: relative; overflow: hidden;
         }
+
+        .jackpot-card::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, var(--gold), transparent);
+            animation: rotate 6s linear infinite; z-index: -1; opacity: 0.3;
+        }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .timer {
+            font-family: 'Orbitron'; font-size: 2.5rem; color: #fff;
+            text-shadow: 0 0 20px var(--primary); margin: 15px 0;
+        }
+
+        .prize-pool {
+            font-family: 'Orbitron'; font-size: 1.2rem; color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        /* Ticket Section */
+        .ticket-box {
+            background: var(--glass); border-radius: 20px; padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .ticket-input {
+            width: 80%; background: rgba(0,0,0,0.5); border: 1px solid var(--primary);
+            padding: 12px; border-radius: 10px; color: white; font-family: 'Orbitron';
+            text-align: center; font-size: 1.2rem; margin-bottom: 20px;
+        }
+
+        .buy-btn {
+            width: 100%; padding: 18px; border-radius: 100px; border: none;
+            background: var(--primary); color: black; font-family: 'Orbitron';
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 0 20px var(--primary);
+        }
+        .buy-btn:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+        /* Recent Winners */
+        .winners-list {
+            text-align: left; background: var(--glass); border-radius: 20px;
+            padding: 20px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .winner-item {
+            display: flex; justify-content: space-between; padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem;
+        }
+
+        /* Nav Dock */
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
+            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
+
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
 
-    <div class="balance-pill">
-        <span class="abp-balance-display">0</span> ABP
+    <canvas id="canvas3d"></canvas>
+
+    <div class="header">
+        <a href="dashboard.html" style="text-decoration:none; color:var(--primary);">← BACK</a>
+        <div style="font-family: 'Orbitron';">ADAMAS <span style="color:var(--gold)">LOTTERY</span></div>
     </div>
 
-    <div class="container" style="padding-top: 80px; text-align: center;">
-        <div class="glass-card" style="max-width: 600px; margin: auto;">
-            <h1 style="color: var(--primary-neon);">GRAND LOTTERY</h1>
-            <p>Next Draw In:</p>
-            
-            <div class="timer-box" id="lottery-timer">
-                <div class="time-unit"><div id="days">14</div><small>Days</small></div>
-                <div class="time-unit"><div id="hours">23</div><small>Hrs</small></div>
-                <div class="time-unit"><div id="mins">59</div><small>Mins</small></div>
-            </div>
+    <div class="container">
+        <div class="jackpot-card">
+            <div style="font-size: 0.8rem; letter-spacing: 3px; opacity: 0.7;">NEXT DRAW IN</div>
+            <div class="timer" id="timer">14:25:09</div>
+            <div class="prize-pool">POOL: 50,000 ABP ✨</div>
+        </div>
 
-            <div style="margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px;">
-                <h3>Current Prize Pool: <span id="prize-pool" style="color: #00ff00;">500,000</span> ABP</h3>
-                <div class="prize-distribution">
-                    <span>🏆 Winners: 90%</span>
-                    <span>🏢 Platform Fee: 10%</span>
-                </div>
-            </div>
+        <div class="ticket-box">
+            <div style="font-family: 'Orbitron'; font-size: 0.7rem; margin-bottom: 15px; opacity: 0.6;">ENTER QUANTITY</div>
+            <input type="number" class="ticket-input" id="ticketQty" value="1" min="1">
+            <div style="font-size: 0.9rem; margin-bottom: 20px; opacity: 0.8;">Total: <span id="totalCost" style="color:var(--primary)">100</span> ABP</div>
+            <button class="buy-btn" onclick="buyTickets()">BUY TICKETS</button>
+        </div>
 
-            <button class="neon-btn" onclick="buyTicket()" style="width: 100%; margin-bottom: 20px;">Buy Ticket (500 ABP)</button>
-            
-            <div style="text-align: left;">
-                <h4 style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">Your Tickets</h4>
-                <div id="my-tickets-list">
-                    <p id="no-tickets" style="opacity: 0.5; font-size: 0.8rem;">You haven't bought any tickets yet.</p>
-                </div>
-            </div>
+        <div style="font-family: 'Orbitron'; font-size: 0.8rem; margin: 20px 0 10px; text-align: left; opacity: 0.6;">LATEST WINNERS</div>
+        <div class="winners-list">
+            <div class="winner-item"><span>0x72...1a2b</span> <span style="color:var(--gold)">+5,000 ABP</span></div>
+            <div class="winner-item"><span>0x14...99cf</span> <span style="color:var(--gold)">+2,500 ABP</span></div>
+            <div class="winner-item"><span>0x88...ee12</span> <span style="color:var(--gold)">+2,500 ABP</span></div>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <div class="dock">
+        <a href="dashboard.html" class="dock-item">🏠</a>
+        <a href="wallet.html" class="dock-item">💰</a>
+        <a href="invite.html" class="dock-item">👥</a>
+        <a href="profile.html" class="dock-item">👤</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. Countdown Timer Logic
+        // 1. THREE.JS Background (Gold & Blue Particles)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const geometry = new THREE.BufferGeometry();
+        const posArray = new Float32Array(500 * 3);
+        for(let i=0; i<1500; i++) posArray[i] = (Math.random()-0.5)*10;
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0xffcc00 }); // Gold theme
+        const mesh = new THREE.Points(geometry, material);
+        scene.add(mesh);
+        camera.position.z = 3;
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.0015; renderer.render(scene, camera); }
+        animate();
+
+        // 2. Logic for Tickets
+        const input = document.getElementById('ticketQty');
+        const costText = document.getElementById('totalCost');
+        input.addEventListener('input', () => {
+            costText.innerText = input.value * 100;
+        });
+
+        function buyTickets() {
+            const qty = input.value;
+            const total = qty * 100;
+            const balance = parseFloat(localStorage.getItem('lastBalance') || "0");
+            
+            if(total > balance) {
+                alert("Bhai, balance kam hai! Pehle mine karo ya earn karo.");
+                return;
+            }
+            
+            alert(`Mubarak ho! Aapne ${qty} Tickets khareed liye hain. Good luck! 🚀`);
+        }
+
+        // 3. Simple Timer
         function updateTimer() {
-            // Static example for now, can be synced with Firebase Timestamp
-            let d = document.getElementById('days');
-            let h = document.getElementById('hours');
-            let m = document.getElementById('mins');
-            
-            // Basic decrement logic
-            if(parseInt(m.innerText) > 0) m.innerText = parseInt(m.innerText) - 1;
+            let now = new Date();
+            let hours = 23 - now.getHours();
+            let mins = 59 - now.getMinutes();
+            let secs = 59 - now.getSeconds();
+            document.getElementById('timer').innerText = 
+                `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
-        setInterval(updateTimer, 60000);
-
-        // 2. Buy Ticket Logic
-        async function buyTicket() {
-            const ticketPrice = 500;
-            if(userData.abp_balance < ticketPrice) return alert("Not enough ABP for a ticket!");
-
-            await updateABP(ticketPrice, 'minus');
-
-            // Generate 10-digit random ticket number
-            const ticketNum = Math.floor(1000000000 + Math.random() * 9000000000);
-            
-            // Add to UI
-            const list = document.getElementById('my-tickets-list');
-            const noTick = document.getElementById('no-tickets');
-            if(noTick) noTick.remove();
-
-            const div = document.createElement('div');
-            div.className = 'ticket-card';
-            div.innerHTML = `
-                <span style="letter-spacing: 2px; font-family: monospace;">#${ticketNum}</span>
-                <span style="font-size: 0.7rem; color: var(--primary-neon);">ACTIVE</span>
-            `;
-            list.appendChild(div);
-
-            // Update Prize Pool (Add 90% of ticket price to pool)
-            const poolEl = document.getElementById('prize-pool');
-            let currentPool = parseInt(poolEl.innerText.replace(/,/g, ''));
-            poolEl.innerText = (currentPool + (ticketPrice * 0.9)).toLocaleString();
-
-            alert("Ticket Purchased! Good luck for the draw.");
-        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
     </script>
 </body>
 </html>
