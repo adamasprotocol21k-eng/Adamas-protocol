@@ -26,7 +26,7 @@
             backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
         }
 
-        .container { padding: 30px 20px 100px; max-width: 450px; margin: auto; text-align: center; }
+        .container { padding: 30px 20px 120px; max-width: 450px; margin: auto; text-align: center; }
 
         /* Jackpot Timer Card */
         .jackpot-card {
@@ -35,14 +35,6 @@
             box-shadow: 0 0 50px rgba(0, 242, 255, 0.2);
             margin-bottom: 30px; position: relative; overflow: hidden;
         }
-
-        .jackpot-card::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(transparent, transparent, var(--gold), transparent);
-            animation: rotate 6s linear infinite; z-index: -1; opacity: 0.3;
-        }
-
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .timer {
             font-family: 'Orbitron'; font-size: 2.5rem; color: #fff;
@@ -54,7 +46,7 @@
             letter-spacing: 2px;
         }
 
-        /* Ticket Section */
+        /* Ticket Buy Section */
         .ticket-box {
             background: var(--glass); border-radius: 20px; padding: 25px;
             border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
@@ -64,7 +56,7 @@
         .ticket-input {
             width: 80%; background: rgba(0,0,0,0.5); border: 1px solid var(--primary);
             padding: 12px; border-radius: 10px; color: white; font-family: 'Orbitron';
-            text-align: center; font-size: 1.2rem; margin-bottom: 20px;
+            text-align: center; font-size: 1.2rem; margin-bottom: 20px; outline: none;
         }
 
         .buy-btn {
@@ -73,26 +65,28 @@
             font-weight: bold; cursor: pointer; transition: 0.3s;
             box-shadow: 0 0 20px var(--primary);
         }
-        .buy-btn:hover { transform: scale(1.05); filter: brightness(1.2); }
 
-        /* Recent Winners */
-        .winners-list {
-            text-align: left; background: var(--glass); border-radius: 20px;
-            padding: 20px; border: 1px solid rgba(255,255,255,0.05);
+        /* --- NEW: TICKET HISTORY SECTION --- */
+        .my-tickets-section { text-align: left; margin-top: 30px; }
+        .section-label { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--primary); margin-bottom: 15px; display: block; }
+        
+        .ticket-list { display: flex; flex-direction: column; gap: 10px; }
+        .ticket-item {
+            background: rgba(255,255,255,0.03); border: 1px dashed rgba(0, 242, 255, 0.3);
+            padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center;
         }
-        .winner-item {
-            display: flex; justify-content: space-between; padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem;
-        }
+        .t-no { font-family: 'Orbitron'; color: var(--gold); font-size: 1.1rem; }
+        .t-info { font-size: 0.7rem; opacity: 0.5; }
 
-        /* Nav Dock */
+        /* Nav Dock (Corrected with Gaming Section) */
         .dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
-            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 11, 16, 0.85); backdrop-filter: blur(25px);
+            padding: 12px 30px; border-radius: 100px; display: flex; gap: 25px;
+            border: 1px solid rgba(0, 242, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000;
         }
-        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
+        .dock-item { text-decoration: none; font-size: 1.4rem; opacity: 0.4; transition: 0.4s; color: white; }
+        .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.3) translateY(-5px); }
 
     </style>
 </head>
@@ -101,14 +95,14 @@
     <canvas id="canvas3d"></canvas>
 
     <div class="header">
-        <a href="dashboard.html" style="text-decoration:none; color:var(--primary);">← BACK</a>
-        <div style="font-family: 'Orbitron';">ADAMAS <span style="color:var(--gold)">LOTTERY</span></div>
+        <a href="games.html" style="text-decoration:none; color:var(--primary);">← GAMES</a>
+        <div style="font-family: 'Orbitron'; letter-spacing: 1px;">ADS <span style="color:var(--gold)">LOTTERY</span></div>
     </div>
 
     <div class="container">
         <div class="jackpot-card">
             <div style="font-size: 0.8rem; letter-spacing: 3px; opacity: 0.7;">NEXT DRAW IN</div>
-            <div class="timer" id="timer">14:25:09</div>
+            <div class="timer" id="timer">00:00:00</div>
             <div class="prize-pool">POOL: 50,000 ABP ✨</div>
         </div>
 
@@ -119,16 +113,17 @@
             <button class="buy-btn" onclick="buyTickets()">BUY TICKETS</button>
         </div>
 
-        <div style="font-family: 'Orbitron'; font-size: 0.8rem; margin: 20px 0 10px; text-align: left; opacity: 0.6;">LATEST WINNERS</div>
-        <div class="winners-list">
-            <div class="winner-item"><span>0x72...1a2b</span> <span style="color:var(--gold)">+5,000 ABP</span></div>
-            <div class="winner-item"><span>0x14...99cf</span> <span style="color:var(--gold)">+2,500 ABP</span></div>
-            <div class="winner-item"><span>0x88...ee12</span> <span style="color:var(--gold)">+2,500 ABP</span></div>
+        <div class="my-tickets-section">
+            <span class="section-label">YOUR TICKETS</span>
+            <div id="ticketContainer" class="ticket-list">
+                <div style="text-align: center; opacity: 0.3; font-size: 0.9rem;">No tickets found.</div>
+            </div>
         </div>
     </div>
 
     <div class="dock">
         <a href="dashboard.html" class="dock-item">🏠</a>
+        <a href="games.html" class="dock-item active">🎮</a>
         <a href="wallet.html" class="dock-item">💰</a>
         <a href="invite.html" class="dock-item">👥</a>
         <a href="profile.html" class="dock-item">👤</a>
@@ -136,7 +131,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. THREE.JS Background (Gold & Blue Particles)
+        // 1. Gold Particle Background
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
@@ -145,34 +140,63 @@
         const posArray = new Float32Array(500 * 3);
         for(let i=0; i<1500; i++) posArray[i] = (Math.random()-0.5)*10;
         geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const material = new THREE.PointsMaterial({ size: 0.005, color: 0xffcc00 }); // Gold theme
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0xffcc00 });
         const mesh = new THREE.Points(geometry, material);
-        scene.add(mesh);
-        camera.position.z = 3;
-        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.0015; renderer.render(scene, camera); }
-        animate();
+        scene.add(mesh); camera.position.z = 3;
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.0015; renderer.render(scene, camera); } animate();
 
-        // 2. Logic for Tickets
+        // 2. Ticket Purchase & Display Logic
         const input = document.getElementById('ticketQty');
         const costText = document.getElementById('totalCost');
-        input.addEventListener('input', () => {
-            costText.innerText = input.value * 100;
-        });
+        
+        input.addEventListener('input', () => { costText.innerText = input.value * 100; });
 
-        function buyTickets() {
-            const qty = input.value;
-            const total = qty * 100;
-            const balance = parseFloat(localStorage.getItem('lastBalance') || "0");
+        function loadTickets() {
+            const container = document.getElementById('ticketContainer');
+            const tickets = JSON.parse(localStorage.getItem('myLotteryTickets') || "[]");
             
-            if(total > balance) {
-                alert("Bhai, balance kam hai! Pehle mine karo ya earn karo.");
-                return;
+            if(tickets.length > 0) {
+                container.innerHTML = tickets.map(t => `
+                    <div class="ticket-item">
+                        <div>
+                            <div class="t-no">#${t.id}</div>
+                            <div class="t-info">Purchased: ${t.date}</div>
+                        </div>
+                        <div style="color: #00ff88; font-size: 0.7rem; font-weight: bold;">ACTIVE</div>
+                    </div>
+                `).join('');
             }
-            
-            alert(`Mubarak ho! Aapne ${qty} Tickets khareed liye hain. Good luck! 🚀`);
         }
 
-        // 3. Simple Timer
+        function buyTickets() {
+            const qty = parseInt(input.value);
+            const total = qty * 100;
+            let balance = parseFloat(localStorage.getItem('lastBalance') || "0");
+
+            if(total > balance) {
+                alert("Insufficient Balance! Mine more ABP.");
+                return;
+            }
+
+            // Deduct Balance
+            balance -= total;
+            localStorage.setItem('lastBalance', balance);
+
+            // Generate & Save Tickets
+            const tickets = JSON.parse(localStorage.getItem('myLotteryTickets') || "[]");
+            for(let i=0; i < qty; i++) {
+                tickets.unshift({
+                    id: Math.floor(100000 + Math.random() * 900000),
+                    date: new Date().toLocaleDateString()
+                });
+            }
+            localStorage.setItem('myLotteryTickets', JSON.stringify(tickets));
+
+            alert(`Success! ${qty} Tickets added to your wallet. 🚀`);
+            loadTickets();
+        }
+
+        // 3. Timer
         function updateTimer() {
             let now = new Date();
             let hours = 23 - now.getHours();
@@ -182,7 +206,8 @@
                 `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         setInterval(updateTimer, 1000);
-        updateTimer();
+        
+        window.onload = () => { updateTimer(); loadTickets(); };
     </script>
 </body>
 </html>
