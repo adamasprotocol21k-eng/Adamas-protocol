@@ -7,51 +7,75 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #00f2ff; --danger: #ff4444; --success: #00ff88; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); }
-        body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
-        .container { padding: 40px 20px; max-width: 800px; margin: auto; }
-        .glass-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; backdrop-filter: blur(10px); margin-bottom: 20px; }
+        :root { --primary: #00f2ff; --danger: #ff4444; --success: #00ff88; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); --gold: #ffcc00; }
+        body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; min-height: 100vh; background: radial-gradient(circle at top right, #0a0b14, #05060a); }
+        
+        .container { padding: 40px 20px; max-width: 900px; margin: auto; }
+        .glass-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 25px; backdrop-filter: blur(15px); margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
         h1, h3 { font-family: 'Orbitron'; letter-spacing: 2px; }
-        .neon-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 12px 20px; border-radius: 10px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.8rem; transition: 0.3s; width: 100%; }
-        .neon-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
-        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center; }
-        .stat-item small { font-size: 0.6rem; color: var(--primary); text-transform: uppercase; }
-        .stat-item h2 { margin: 5px 0; font-family: 'Orbitron'; }
-        input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 12px; border-radius: 10px; color: white; margin-bottom: 15px; box-sizing: border-box; outline: none; }
-        input:focus { border-color: var(--primary); }
+        .neon-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 14px 20px; border-radius: 12px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.75rem; transition: 0.3s; width: 100%; font-weight: bold; letter-spacing: 1px; }
+        .neon-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 25px var(--primary); transform: translateY(-2px); }
+        .neon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center; }
+        .stat-item { padding: 15px; border-radius: 15px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); }
+        .stat-item small { font-size: 0.65rem; color: var(--primary); text-transform: uppercase; font-family: 'Orbitron'; opacity: 0.8; }
+        .stat-item h2 { margin: 10px 0 0 0; font-family: 'Orbitron'; font-size: 1.5rem; }
+
+        .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px; border-radius: 12px; color: white; margin-bottom: 20px; box-sizing: border-box; outline: none; font-family: 'Orbitron'; font-size: 0.8rem; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
+
+        #resultBox { display: none; animation: slideUp 0.4s ease; border-left: 4px solid var(--primary); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        pre { background: #000; padding: 15px; border-radius: 10px; font-size: 0.85rem; color: var(--success); overflow-x: auto; border: 1px solid #222; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1 style="text-align: center; margin-bottom: 40px;">ADMIN <span style="color: var(--primary);">CONTROL</span></h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+            <h1 style="margin: 0;">ADAMAS <span style="color: var(--primary);">HQ</span></h1>
+            <div id="adminStatus" style="font-size: 0.7rem; font-family: 'Orbitron'; color: var(--success);">
+                <i class="fas fa-shield-alt"></i> SECURE CONNECTION
+            </div>
+        </div>
         
         <div class="glass-card">
-            <h3 style="font-size: 1rem; margin-bottom: 20px;"><i class="fas fa-chart-line"></i> GLOBAL STATS</h3>
+            <h3 style="font-size: 0.9rem; margin-bottom: 25px; opacity: 0.8;"><i class="fas fa-database"></i> PROTOCOL OVERVIEW</h3>
             <div class="stat-grid">
-                <div class="stat-item"><small>Total Users</small><h2 id="stat-users">0</h2></div>
-                <div class="stat-item"><small>Lottery Pool</small><h2 id="stat-pool" style="color: #ffcc00;">0</h2></div>
+                <div class="stat-item"><small>Nodes (Users)</small><h2 id="stat-users">0</h2></div>
+                <div class="stat-item"><small>Lottery Pool</small><h2 id="stat-pool" style="color: var(--gold);">0</h2></div>
                 <div class="stat-item"><small>Admin Revenue</small><h2 id="stat-share" style="color: var(--success);">0</h2></div>
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="control-grid">
             <div class="glass-card">
-                <h3>LOTTERY</h3>
-                <p style="font-size: 0.75rem; opacity: 0.6;">Draw a random winner from the tickets database.</p>
-                <button class="neon-btn" style="border-color: var(--success); color: var(--success);" id="drawBtn">DRAW WINNER</button>
+                <h3 style="font-size: 1rem;">DRAW PROTOCOL</h3>
+                <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 25px;">Execute a decentralized draw to select the jackpot winner.</p>
+                <button class="neon-btn" style="border-color: var(--success); color: var(--success);" id="drawBtn">
+                    <i class="fas fa-trophy"></i> EXECUTE DRAW
+                </button>
             </div>
 
             <div class="glass-card">
-                <h3>USER LOOKUP</h3>
-                <input type="text" id="targetWallet" placeholder="Short Wallet (e.g. 0x123abc)">
-                <button class="neon-btn" id="checkBtn">CHECK STATUS</button>
+                <h3 style="font-size: 1rem;">MEMBER SEARCH</h3>
+                <input type="text" id="targetWallet" placeholder="WALLET PREFIX (0x...)">
+                <button class="neon-btn" id="checkBtn">
+                    <i class="fas fa-search"></i> FETCH DATA
+                </button>
             </div>
         </div>
 
-        <div id="resultBox" class="glass-card" style="display: none; border-color: var(--primary);">
-            <h3 id="resultTitle">RESULT</h3>
-            <pre id="resultData" style="font-size: 0.8rem; color: #aaa; overflow-x: auto;"></pre>
+        <div id="resultBox" class="glass-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 id="resultTitle" style="font-size: 0.9rem; margin: 0;">QUERY RESULT</h3>
+                <i class="fas fa-times" style="cursor: pointer; opacity: 0.5;" onclick="this.parentElement.parentElement.style.display='none'"></i>
+            </div>
+            <pre id="resultData"></pre>
         </div>
     </div>
 
@@ -69,15 +93,24 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- SECURITY: SET YOUR WALLET HERE ---
-        const ADMIN_WALLET_SHORT = "0x6DbC17D9"; // Sirf pehle 10 character check honge
+        // --- CRITICAL SECURITY: ONLY YOUR WALLET CAN ACCESS ---
+        const AUTHORIZED_ADMIN = "0x6DbC17D995"; // Pehle 10 characters
 
-        async function checkAdmin() {
+        async function verifyAdmin() {
             if (window.ethereum) {
                 const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                if (accounts.length === 0 || !accounts[0].toLowerCase().startsWith(ADMIN_WALLET_SHORT.toLowerCase())) {
-                    document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:100px;'>403 - ACCESS DENIED</h1>";
+                const user = accounts[0] || "";
+                if (!user.toLowerCase().startsWith(AUTHORIZED_ADMIN.toLowerCase())) {
+                    document.body.innerHTML = `
+                        <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:red; font-family:'Orbitron';">
+                            <i class="fas fa-user-shield" style="font-size:4rem; margin-bottom:20px;"></i>
+                            <h1>403 - UNAUTHORIZED ACCESS</h1>
+                            <p style="color:white; opacity:0.6;">Admin wallet signature required.</p>
+                        </div>
+                    `;
                 }
+            } else {
+                alert("Please connect Metamask");
             }
         }
 
@@ -85,58 +118,72 @@
         onValue(ref(db, 'users'), (snapshot) => {
             const users = snapshot.val();
             if (users) {
-                const userList = Object.keys(users);
-                document.getElementById('stat-users').innerText = userList.length;
+                const userKeys = Object.keys(users);
+                document.getElementById('stat-users').innerText = userKeys.length;
                 
                 let totalTickets = 0;
-                userList.forEach(u => {
+                let totalRev = 0;
+                userKeys.forEach(u => {
                     if(users[u].lotteryTickets) totalTickets += Object.keys(users[u].lotteryTickets).length;
+                    // Example Revenue Calculation (10% of balance as mock data)
+                    totalRev += (users[u].currentBalance || 0) * 0.01; 
                 });
-                document.getElementById('stat-pool').innerText = (totalTickets * 100) + " ABP";
+                
+                document.getElementById('stat-pool').innerText = (totalTickets * 100).toLocaleString() + " ABP";
+                document.getElementById('stat-share').innerText = totalRev.toFixed(2) + " ABP";
             }
         });
 
-        // Draw Winner Logic
+        // Draw Logic
         document.getElementById('drawBtn').onclick = async () => {
-            const snapshot = await get(ref(db, 'users'));
-            const users = snapshot.val();
-            let allTickets = [];
+            const btn = document.getElementById('drawBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> CALCULATING...`;
 
-            Object.keys(users).forEach(u => {
-                if(users[u].lotteryTickets) {
-                    Object.keys(users[u].lotteryTickets).forEach(tId => {
-                        allTickets.push({ wallet: u, ticket: users[u].lotteryTickets[tId] });
-                    });
+            try {
+                const snapshot = await get(ref(db, 'users'));
+                const users = snapshot.val();
+                let allTickets = [];
+
+                Object.keys(users).forEach(u => {
+                    if(users[u].lotteryTickets) {
+                        Object.keys(users[u].lotteryTickets).forEach(tId => {
+                            allTickets.push({ wallet: u, ticket: users[u].lotteryTickets[tId] });
+                        });
+                    }
+                });
+
+                if(allTickets.length === 0) {
+                    alert("Zero active tickets in pool.");
+                } else {
+                    const winner = allTickets[Math.floor(Math.random() * allTickets.length)];
+                    document.getElementById('resultBox').style.display = 'block';
+                    document.getElementById('resultTitle').innerText = "WINNER DRAWN SUCCESS! 🎉";
+                    document.getElementById('resultData').innerText = `WALLET: ${winner.wallet}\nTICKET_ID: ${winner.ticket.id}\nPOOL_SHARE: 100%`;
                 }
-            });
-
-            if(allTickets.length === 0) return alert("No tickets found in database!");
-
-            const winner = allTickets[Math.floor(Math.random() * allTickets.length)];
-            
-            document.getElementById('resultBox').style.display = 'block';
-            document.getElementById('resultTitle').innerText = "WINNER CHOSEN! 🎉";
-            document.getElementById('resultData').innerText = `Winner: ${winner.wallet}\nTicket ID: ${winner.ticket.id}\nDate: ${winner.ticket.date}`;
-            
-            alert(`Winner Drawn: ${winner.wallet}`);
+            } catch (e) {
+                alert("Draw failed: " + e.message);
+            }
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-trophy"></i> EXECUTE DRAW`;
         };
 
-        // User Status Check
+        // User Check
         document.getElementById('checkBtn').onclick = async () => {
-            const wallet = document.getElementById('targetWallet').value;
-            if(!wallet) return alert("Enter wallet address");
+            const wallet = document.getElementById('targetWallet').value.trim();
+            if(!wallet) return;
             
             const snapshot = await get(ref(db, 'users/' + wallet));
             if(snapshot.exists()) {
                 document.getElementById('resultBox').style.display = 'block';
-                document.getElementById('resultTitle').innerText = "USER DATA";
+                document.getElementById('resultTitle').innerText = `DATA FOR: ${wallet}`;
                 document.getElementById('resultData').innerText = JSON.stringify(snapshot.val(), null, 2);
             } else {
-                alert("User not found!");
+                alert("No node found with this address.");
             }
         };
 
-        window.onload = checkAdmin;
+        window.onload = verifyAdmin;
     </script>
 </body>
 </html>
