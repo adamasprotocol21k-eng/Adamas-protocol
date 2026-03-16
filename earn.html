@@ -4,47 +4,191 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earn ABP | ADAMAS Protocol</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --success: #00ff88;
+        }
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Rajdhani', sans-serif; min-height: 100vh;
+            background: radial-gradient(circle at top right, #0a0b14, #05060a);
+        }
+
+        .container { padding: 20px; max-width: 480px; margin: auto; padding-bottom: 100px; text-align: center; }
+
+        /* --- Balance Pill --- */
+        .balance-pill {
+            position: fixed; top: 20px; right: 20px;
+            background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary);
+            padding: 8px 20px; border-radius: 50px; font-family: 'Orbitron';
+            font-size: 0.8rem; color: var(--primary); z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-section { margin-top: 60px; margin-bottom: 40px; }
+        .header-section h2 { font-family: 'Orbitron'; letter-spacing: 2px; margin-bottom: 5px; }
+        .header-section p { opacity: 0.6; font-size: 0.85rem; }
+
+        /* --- Task Cards --- */
+        .task-card {
+            background: var(--glass); border-radius: 20px; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s; backdrop-filter: blur(10px);
+        }
+        .task-card:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.03); }
+
+        .task-info { text-align: left; display: flex; align-items: center; gap: 15px; }
+        .task-icon { 
+            width: 45px; height: 45px; background: rgba(255,255,255,0.05); 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: var(--primary);
+        }
+        .task-text h4 { margin: 0; font-family: 'Orbitron'; font-size: 0.85rem; }
+        .task-text span { color: var(--success); font-size: 0.75rem; font-weight: bold; }
+
+        .go-btn {
+            background: var(--primary); color: black; border: none;
+            padding: 8px 20px; border-radius: 50px; font-family: 'Orbitron';
+            font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .go-btn.completed { background: #333; color: #666; cursor: default; }
+
+        /* --- Bottom Nav --- */
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px); border-radius: 25px; padding: 12px;
+            display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-link { color: rgba(255,255,255,0.4); text-decoration: none; text-align: center; }
+        .nav-link.active { color: var(--primary); }
+    </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
 
     <div class="balance-pill">
-        <span class="abp-balance-display">0</span> ABP
+        <span id="userBal">0</span> ABP
     </div>
 
-    <div class="container" style="padding-top: 80px; text-align: center;">
-        <h2 style="margin-bottom: 10px;">Extra Rewards</h2>
-        <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 30px;">Complete simple tasks to boost your balance.</p>
+    <div class="container">
+        <div class="header-section">
+            <h2>EARN <span style="color: var(--primary);">REWARDS</span></h2>
+            <p>Complete social tasks to stack your ABP tokens.</p>
+        </div>
 
-        <div style="max-width: 500px; margin: auto;">
-            <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
-                <div style="text-align: left;">
-                    <h4 style="margin: 0;">Follow on Twitter</h4>
-                    <small style="color: var(--primary-neon);">+200 ABP</small>
+        <div class="task-card">
+            <div class="task-info">
+                <div class="task-icon"><i class="fab fa-twitter"></i></div>
+                <div class="task-text">
+                    <h4>Follow Twitter</h4>
+                    <span>+200 ABP</span>
                 </div>
-                <button class="neon-btn" style="padding: 5px 15px; font-size: 0.7rem;" onclick="doTask('twitter', 200)">Go</button>
             </div>
+            <button id="btn-twitter" class="go-btn" onclick="doTask('twitter', 200)">GO</button>
+        </div>
 
-            <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
-                <div style="text-align: left;">
-                    <h4 style="margin: 0;">Join Telegram Channel</h4>
-                    <small style="color: var(--primary-neon);">+300 ABP</small>
+        <div class="task-card">
+            <div class="task-info">
+                <div class="task-icon"><i class="fab fa-telegram-plane"></i></div>
+                <div class="task-text">
+                    <h4>Join Telegram</h4>
+                    <span>+300 ABP</span>
                 </div>
-                <button class="neon-btn" style="padding: 5px 15px; font-size: 0.7rem;" onclick="doTask('telegram', 300)">Go</button>
             </div>
+            <button id="btn-telegram" class="go-btn" onclick="doTask('telegram', 300)">GO</button>
+        </div>
+
+        <div class="task-card">
+            <div class="task-info">
+                <div class="task-icon"><i class="fab fa-youtube"></i></div>
+                <div class="task-text">
+                    <h4>Subscribe Channel</h4>
+                    <span>+150 ABP</span>
+                </div>
+            </div>
+            <button id="btn-youtube" class="go-btn" onclick="doTask('youtube', 150)">GO</button>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
-    <script>
-        async function doTask(platform, reward) {
-            const link = platform === 'twitter' ? 'https://twitter.com/DiamoProtocol' : 'https://t.me/daimodmo';
-            window.open(link, '_blank');
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-link"><i class="fas fa-th-large"></i></a>
+        <a href="earn.html" class="nav-link active"><i class="fas fa-coins"></i></a>
+        <a href="games.html" class="nav-link"><i class="fas fa-gamepad"></i></a>
+        <a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+            databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol",
+            appId: "1:207788425238:web:025b8544f085dde60af537"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+        const userPath = 'users/' + wallet.substring(0, 10);
+
+        let currentBalance = 0;
+
+        // Fetch user data and task status
+        onValue(ref(db, userPath), (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                currentBalance = data.currentBalance || 0;
+                document.getElementById('userBal').innerText = Math.floor(currentBalance).toLocaleString();
+                
+                // Update button states if tasks already done
+                if(data.tasks) {
+                    if(data.tasks.twitter) setCompleted('btn-twitter');
+                    if(data.tasks.telegram) setCompleted('btn-telegram');
+                    if(data.tasks.youtube) setCompleted('btn-youtube');
+                }
+            }
+        });
+
+        window.doTask = async (platform, reward) => {
+            const btn = document.getElementById(`btn-${platform}`);
+            if(btn.classList.contains('completed')) return;
+
+            const links = {
+                twitter: 'https://twitter.com/DiamoProtocol',
+                telegram: 'https://t.me/daimodmo',
+                youtube: '#' // Add your link here
+            };
+
+            window.open(links[platform], '_blank');
             
-            // Logic: Rewards only once per user
-            alert(`Verifying task... ${reward} ABP will be added to your account.`);
-            await updateABP(reward, 'plus');
+            btn.innerText = "VERIFYING...";
+            
+            // Simulating a verification delay
+            setTimeout(async () => {
+                const updates = {};
+                updates[`currentBalance`] = currentBalance + reward;
+                updates[`tasks/${platform}`] = true;
+
+                await update(ref(db, userPath), updates);
+                alert(`${reward} ABP Added!`);
+            }, 3000);
+        };
+
+        function setCompleted(id) {
+            const btn = document.getElementById(id);
+            btn.innerText = "DONE";
+            btn.classList.add('completed');
+            btn.disabled = true;
         }
     </script>
 </body>
