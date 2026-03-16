@@ -3,118 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS HUB | 3D Mining Dashboard</title>
+    <title>ADAMAS | Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00f2ff;
             --secondary: #7000ff;
             --dark: #05060a;
-            --glass: rgba(255, 255, 255, 0.03);
+            --glass: rgba(255, 255, 255, 0.05);
+            --gold: #ffcc00;
         }
 
         body {
             margin: 0; background: var(--dark); color: white;
             font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
-            perspective: 1000px; /* For 3D depth */
         }
 
-        /* Animated 3D Background */
-        canvas#canvas3d {
-            position: fixed; top: 0; left: 0; z-index: -1;
+        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .container { padding: 20px; max-width: 500px; margin: auto; text-align: center; }
+
+        /* Profile Header */
+        .profile-header {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
+            padding: 10px; background: var(--glass); border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
+        .mini-avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); }
 
-        .header {
-            padding: 20px; display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
-            position: sticky; top: 0; z-index: 100;
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, rgba(0, 242, 255, 0.1), rgba(112, 0, 255, 0.2));
+            border-radius: 25px; padding: 30px 20px; text-align: center;
+            border: 1px solid rgba(0, 242, 255, 0.3); margin-bottom: 25px;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
         }
+        .balance-label { font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 2px; opacity: 0.6; }
+        .balance-main { font-family: 'Orbitron'; font-size: 2.8rem; color: var(--gold); text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); margin: 10px 0; }
 
-        .user-info {
-            background: linear-gradient(90deg, var(--secondary), transparent);
-            padding: 8px 20px; border-radius: 50px; border-left: 3px solid var(--primary);
-            font-family: 'Orbitron', sans-serif; font-size: 0.8rem;
+        /* Daily Check-in Section */
+        .section-title { font-family: 'Orbitron'; font-size: 0.85rem; text-align: left; margin-bottom: 12px; color: var(--primary); }
+        .daily-container {
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 25px;
+            scrollbar-width: none;
         }
+        .daily-container::-webkit-scrollbar { display: none; }
 
-        .main-container {
-            padding: 30px 20px 100px; max-width: 500px; margin: auto;
-            animation: sceneEnter 1s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        .day-box {
+            min-width: 65px; height: 80px; background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: 0.3s; cursor: pointer; flex-shrink: 0;
         }
+        .day-box.claimed { border-color: #00ff88; background: rgba(0, 255, 136, 0.1); opacity: 0.6; }
+        .day-box.active { border-color: var(--primary); background: rgba(0, 242, 255, 0.1); box-shadow: 0 0 10px var(--primary); }
+        .day-num { font-size: 0.65rem; opacity: 0.5; }
+        .day-reward { font-family: 'Orbitron'; font-size: 0.85rem; font-weight: bold; margin-top: 5px; }
 
-        @keyframes sceneEnter {
-            from { opacity: 0; transform: translateZ(-200px) translateY(50px); }
-            to { opacity: 1; transform: translateZ(0) translateY(0); }
+        /* Games Grid */
+        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 100px; }
+        .game-item {
+            background: var(--glass); border-radius: 20px; padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1); text-decoration: none; color: white;
+            transition: 0.3s; display: flex; flex-direction: column; align-items: center;
         }
+        .game-item:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .game-icon { font-size: 2rem; margin-bottom: 10px; }
 
-        /* Central Mining Unit */
-        .mining-core {
-            background: var(--glass); border-radius: 30px; padding: 40px 20px;
-            border: 1px solid rgba(255,255,255,0.1); text-align: center;
-            box-shadow: 0 0 50px rgba(0, 242, 255, 0.1);
-            position: relative; margin-bottom: 30px;
-            transform-style: preserve-3d; transition: 0.5s;
-        }
-
-        .mining-core:hover { transform: rotateX(5deg) rotateY(-5deg); }
-
-        .diamond-glow {
-            font-size: 4rem; margin-bottom: 10px;
-            filter: drop-shadow(0 0 20px var(--primary));
-            animation: pulse 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-
-        .balance-text {
-            font-family: 'Orbitron', sans-serif; font-size: 3rem;
-            background: linear-gradient(to bottom, #fff, var(--primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 10px 0;
-        }
-
-        /* 3D Grid Buttons */
-        .game-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-        }
-
-        .game-card {
-            background: var(--glass); padding: 25px 15px; border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05); text-align: center;
-            transition: 0.4s; cursor: pointer; position: relative; overflow: hidden;
-        }
-
-        .game-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(transparent, transparent, var(--primary), transparent);
-            animation: rotateBorder 4s linear infinite; z-index: -1;
-        }
-
-        @keyframes rotateBorder { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .game-card:hover {
-            background: rgba(0, 242, 255, 0.1); border-color: var(--primary);
-            transform: translateZ(20px) scale(1.05);
-        }
-
-        .game-card i { font-size: 2rem; margin-bottom: 10px; display: block; }
-
-        /* Navigation Dock */
+        /* Nav Dock */
         .dock {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
-            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
-            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: rgba(10, 11, 16, 0.85); backdrop-filter: blur(20px);
+            padding: 12px 30px; border-radius: 100px; display: flex; gap: 30px;
+            border: 1px solid rgba(255,255,255,0.1); z-index: 100;
         }
-
-        .dock-item {
-            text-decoration: none; color: white; font-size: 1.2rem; opacity: 0.5;
-            transition: 0.3s;
-        }
-
-        .dock-item:hover, .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.2); }
+        .dock-item { text-decoration: none; font-size: 1.3rem; opacity: 0.5; color: white; transition: 0.3s; }
+        .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.2); }
 
     </style>
 </head>
@@ -122,48 +86,71 @@
 
     <canvas id="canvas3d"></canvas>
 
-    <div class="header">
-        <div style="font-family: 'Orbitron'; font-weight: bold; letter-spacing: 2px;">ADAMAS <span style="color: var(--primary);">PRO</span></div>
-        <div class="user-info" id="userAddress">0x000...0000</div>
-    </div>
-
-    <div class="main-container">
-        <div class="mining-core">
-            <div class="diamond-glow">💎</div>
-            <div style="font-size: 0.8rem; letter-spacing: 3px; opacity: 0.6;">MINING LIVE</div>
-            <div class="balance-text" id="mainBalance">0.00</div>
-            <div style="color: #00ff88; font-size: 0.9rem;">+0.01 ABP / Sec</div>
-        </div>
-
-        <div class="game-grid">
-            <div class="game-card" onclick="location.href='mines.html'">
-                <i>💣</i>
-                <strong>MINES</strong>
-            </div>
-            <div class="game-card" onclick="location.href='teenpatti.html'">
-                <i>🃏</i>
-                <strong>POKER</strong>
-            </div>
-            <div class="game-card" onclick="location.href='spin.html'">
-                <i>✨</i>
-                <strong>SCRATCH</strong>
-            </div>
-            <div class="game-card" onclick="location.href='lottery.html'">
-                <i>🎟️</i>
-                <strong>LOTTERY</strong>
+    <div class="container">
+        <div class="profile-header">
+            <img src="assets/logo.png" class="mini-avatar" id="headerPic">
+            <div style="text-align: left;">
+                <div style="font-size: 0.7rem; opacity: 0.6;">Welcome back,</div>
+                <div id="headerName" style="font-weight: bold; font-family: 'Orbitron'; font-size: 0.8rem;">Explorer</div>
             </div>
         </div>
 
-        <div style="background: rgba(112, 0, 255, 0.1); border: 1px solid var(--secondary); border-radius: 20px; padding: 20px; margin-top: 30px;">
-            <h4 style="margin: 0 0 10px 0; color: var(--primary);">🚀 AIRDROP STATUS</h4>
-            <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                <span>Wallet Connected</span>
-                <span style="color: #00ff88;">✓</span>
+        <div class="balance-card">
+            <div class="balance-label">TOTAL ABP BALANCE</div>
+            <div class="balance-main" id="mainBalance">0.00</div>
+            <div style="font-size: 0.9rem; opacity: 0.5;">≈ $<span id="usdVal">0.00</span> USD</div>
+        </div>
+
+        <div class="section-title">DAILY REWARDS</div>
+        <div class="daily-container">
+            <div class="day-box active" onclick="claimDaily(1)" id="d1">
+                <span class="day-num">Day 1</span>
+                <span class="day-reward">+10</span>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 5px;">
-                <span>Social Tasks</span>
-                <span style="color: #ff4444;">✖</span>
+            <div class="day-box" onclick="claimDaily(2)" id="d2">
+                <span class="day-num">Day 2</span>
+                <span class="day-reward">+20</span>
             </div>
+            <div class="day-box" onclick="claimDaily(3)" id="d3">
+                <span class="day-num">Day 3</span>
+                <span class="day-reward">+30</span>
+            </div>
+            <div class="day-box" onclick="claimDaily(4)" id="d4">
+                <span class="day-num">Day 4</span>
+                <span class="day-reward">+50</span>
+            </div>
+            <div class="day-box" onclick="claimDaily(5)" id="d5">
+                <span class="day-num">Day 5</span>
+                <span class="day-reward">+80</span>
+            </div>
+            <div class="day-box" onclick="claimDaily(6)" id="d6">
+                <span class="day-num">Day 6</span>
+                <span class="day-reward">+100</span>
+            </div>
+            <div class="day-box" id="d7">
+                <span class="day-num">Day 7</span>
+                <span class="day-reward">🎁</span>
+            </div>
+        </div>
+
+        <div class="section-title">GAMING HUB</div>
+        <div class="games-grid">
+            <a href="mines.html" class="game-item">
+                <span class="game-icon">💣</span>
+                <span style="font-family: 'Orbitron'; font-size: 0.7rem;">MINES</span>
+            </a>
+            <a href="spin.html" class="game-item">
+                <span class="game-icon">✨</span>
+                <span style="font-family: 'Orbitron'; font-size: 0.7rem;">SCRATCH</span>
+            </a>
+            <a href="teenpatti.html" class="game-item">
+                <span class="game-icon">🃏</span>
+                <span style="font-family: 'Orbitron'; font-size: 0.7rem;">POKER</span>
+            </a>
+            <a href="lottery.html" class="game-item">
+                <span class="game-icon">🎟️</span>
+                <span style="font-family: 'Orbitron'; font-size: 0.7rem;">LOTTERY</span>
+            </a>
         </div>
     </div>
 
@@ -175,45 +162,56 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="js/app.js"></script>
-
     <script>
-        // 1. THREE.JS Background (Char Chand logic)
+        // 1. 3D Background
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 1500;
-        const posArray = new Float32Array(particlesCount * 3);
-
-        for(let i=0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 10;
-        }
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const geometry = new THREE.BufferGeometry();
+        const posArray = new Float32Array(500 * 3);
+        for(let i=0; i<1500; i++) posArray[i] = (Math.random()-0.5)*10;
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
-        const particlesMesh = new THREE.Points(particlesGeometry, material);
-        scene.add(particlesMesh);
-
+        const mesh = new THREE.Points(geometry, material);
+        scene.add(mesh);
         camera.position.z = 3;
-
-        function animate() {
-            requestAnimationFrame(animate);
-            particlesMesh.rotation.y += 0.001;
-            renderer.render(scene, camera);
-        }
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
         animate();
 
-        // 2. Load Wallet
-        window.onload = function() {
-            const addr = localStorage.getItem('userWallet');
-            if(addr) {
-                document.getElementById('userAddress').innerText = addr.substring(0,6) + '...' + addr.substring(38);
-            }
+        // 2. Core Logic (Balance & Rewards)
+        let totalABP = parseFloat(localStorage.getItem('lastBalance') || "0");
+
+        function updateDisplay() {
+            document.getElementById('mainBalance').innerText = totalABP.toFixed(2);
+            document.getElementById('usdVal').innerText = (totalABP * 0.01).toFixed(2);
+            localStorage.setItem('lastBalance', totalABP);
         }
+
+        function claimDaily(day) {
+            const el = document.getElementById('d' + day);
+            if(el.classList.contains('claimed')) return;
+
+            let bonus = day * 10;
+            totalABP += bonus;
+            el.classList.add('claimed');
+            el.innerHTML = `<span class="day-num">Day ${day}</span><span class="day-reward">✔️</span>`;
+            updateDisplay();
+        }
+
+        // Initialize User Info
+        window.onload = () => {
+            document.getElementById('headerName').innerText = localStorage.getItem('userName') || "Explorer";
+            const savedPic = localStorage.getItem('userProfilePic');
+            if(savedPic) document.getElementById('headerPic').src = savedPic;
+            updateDisplay();
+            
+            // Start Auto Mining (0.01 ABP per sec)
+            setInterval(() => {
+                totalABP += 0.01;
+                updateDisplay();
+            }, 1000);
+        };
     </script>
 </body>
 </html>
