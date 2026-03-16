@@ -7,72 +7,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --success: #00ff88;
-            --dark: #05060a;
-            --glass: rgba(255, 255, 255, 0.05);
-            --gold: #ffcc00;
-        }
-
-        body {
-            margin: 0; background: var(--dark); color: white;
-            font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
-        }
-
+        /* All your CSS remains exactly as you provided */
+        :root { --primary: #00f2ff; --secondary: #7000ff; --success: #00ff88; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); --gold: #ffcc00; }
+        body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
         canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
-
-        .status-banner {
-            background: rgba(255, 68, 68, 0.1); color: #ff4444;
-            padding: 12px; border-bottom: 1px solid #ff4444;
-            font-family: 'Orbitron'; font-size: 0.65rem; text-align: center;
-            letter-spacing: 1px; backdrop-filter: blur(10px);
-        }
+        .status-banner { background: rgba(255, 68, 68, 0.1); color: #ff4444; padding: 12px; border-bottom: 1px solid #ff4444; font-family: 'Orbitron'; font-size: 0.65rem; text-align: center; letter-spacing: 1px; backdrop-filter: blur(10px); }
         .status-banner.eligible { background: rgba(0, 255, 136, 0.1); color: var(--success); border-color: var(--success); }
-
         .container { padding: 20px 20px 120px; max-width: 500px; margin: auto; text-align: center; }
-
         .profile-pic-container { position: relative; width: 130px; height: 130px; margin: 20px auto; }
-        .profile-pic {
-            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
-            border: 3px solid var(--primary); box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
-        }
-        .verify-badge {
-            position: absolute; bottom: 5px; right: 5px; background: var(--success);
-            color: black; width: 30px; height: 30px; border-radius: 50%;
-            display: none; align-items: center; justify-content: center; font-size: 0.9rem;
-        }
-
+        .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 0 30px rgba(0, 242, 255, 0.3); }
+        .verify-badge { position: absolute; bottom: 5px; right: 5px; background: var(--success); color: black; width: 30px; height: 30px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 0.9rem; }
         .section-title { font-family: 'Orbitron'; font-size: 0.75rem; text-align: left; margin: 25px 0 10px; color: var(--primary); letter-spacing: 1px; }
-        
-        .task-card {
-            background: var(--glass); border-radius: 20px; padding: 15px;
-            border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
-        }
+        .task-card { background: var(--glass); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(15px); display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .task-info { display: flex; align-items: center; gap: 15px; text-align: left; }
         .task-info i { font-size: 1.2rem; color: var(--primary); width: 25px; text-align: center; }
         .task-name { font-family: 'Orbitron'; font-size: 0.65rem; display: block; margin-bottom: 2px; }
         .task-points { font-size: 0.75rem; color: var(--gold); font-weight: bold; }
-
-        .btn-verify {
-            background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary);
-            color: var(--primary); padding: 8px 15px; border-radius: 10px;
-            font-family: 'Orbitron'; font-size: 0.55rem; cursor: pointer; transition: 0.3s;
-        }
+        .btn-verify { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 8px 15px; border-radius: 10px; font-family: 'Orbitron'; font-size: 0.55rem; cursor: pointer; transition: 0.3s; }
         .completed-icon { color: var(--success); font-size: 1.4rem; display: none; }
-
-        .cam-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 2000; flex-direction: column; align-items: center; justify-content: center;
-        }
+        .cam-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; }
         #webcam { width: 85%; max-width: 400px; border-radius: 20px; border: 2px solid var(--primary); margin-bottom: 20px; }
-
-        .top-nav-bar {
-            display: flex; justify-content: space-around; background: rgba(255, 255, 255, 0.03);
-            padding: 12px; border-radius: 20px; border: 1px solid rgba(0, 242, 255, 0.1); margin: 15px;
-        }
+        .top-nav-bar { display: flex; justify-content: space-around; background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 20px; border: 1px solid rgba(0, 242, 255, 0.1); margin: 15px; }
         .nav-btn { text-decoration: none; color: rgba(255, 255, 255, 0.4); display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .nav-btn.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
         .nav-btn span { font-size: 0.55rem; font-family: 'Orbitron'; }
@@ -93,13 +48,14 @@
 
     <div class="container">
         <div class="profile-pic-container">
-            <img src="assets/logo.png" id="mainAvatar" class="profile-pic">
+            <img src="https://cdn-icons-png.flaticon.com/512/6596/6596121.png" id="mainAvatar" class="profile-pic">
             <div id="verifiedTick" class="verify-badge"><i class="fas fa-check"></i></div>
         </div>
-        <h2 id="dispName" style="margin: 0; font-family: 'Orbitron'; font-size: 1.2rem;">Node Operator</h2>
-        <p id="dispWallet" style="opacity: 0.5; font-size: 0.7rem; margin-top: 5px;">0x...</p>
+        <h2 id="dispName" style="margin: 0; font-family: 'Orbitron'; font-size: 1.2rem;">OPERATOR</h2>
+        <p id="dispWallet" style="opacity: 0.5; font-size: 0.7rem; margin-top: 5px; font-family: monospace;">0x...</p>
 
         <div class="section-title">VERIFICATION TASKS (+700 ABP)</div>
+        
         <div class="task-card" id="task-photo">
             <div class="task-info"><i class="fas fa-user-shield"></i><div><span class="task-name">LIVE FACE KYC</span><span class="task-points">+500 ABP</span></div></div>
             <button class="btn-verify" onclick="startKyc()">VERIFY</button><i class="fas fa-check-circle completed-icon"></i>
@@ -120,7 +76,7 @@
 
     <div class="cam-modal" id="camModal">
         <video id="webcam" autoplay playsinline></video>
-        <button class="btn-verify" onclick="captureKyc()">CAPTURE FACE</button>
+        <button class="btn-verify" style="padding: 15px 30px; font-size: 0.8rem;" onclick="captureKyc()">CAPTURE FACE</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -130,66 +86,85 @@
 
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
-            authDomain: "adamas-protocol.firebaseapp.com",
             databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
             projectId: "adamas-protocol",
-            storageBucket: "adamas-protocol.firebasestorage.app",
-            messagingSenderId: "207788425238",
             appId: "1:207788425238:web:025b8544f085dde60af537"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
-        const userPath = 'users/' + wallet.substring(0, 10);
-
+        
+        let userWallet = "";
+        let currentBalance = 0;
         let userTasks = { photo: false, location: false, email: false, mobile: false };
 
-        // Real-time UI Sync with Firebase
-        onValue(ref(db, userPath + '/tasks'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                Object.keys(data).forEach(id => {
-                    if (data[id]) {
-                        userTasks[id] = true;
-                        const card = document.getElementById('task-' + id);
-                        if (card) {
-                            card.querySelector('.btn-verify').style.display = 'none';
-                            card.querySelector('.completed-icon').style.display = 'block';
-                        }
+        // --- 1. Metamask Connection ---
+        async function initProfile() {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userWallet = accounts[0];
+                document.getElementById('dispWallet').innerText = userWallet;
+                
+                // Fetch User Data
+                const userPath = 'users/' + userWallet.substring(0, 10);
+                onValue(ref(db, userPath), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        currentBalance = data.currentBalance || 0;
+                        if(data.tasks) syncTaskUI(data.tasks);
+                        if(data.profilePic) document.getElementById('mainAvatar').src = data.profilePic;
                     }
                 });
-                checkAll();
             }
-        });
-
-        async function completeTask(id, points) {
-            userTasks[id] = true;
-            let bal = parseFloat(localStorage.getItem('lastBalance') || "104084.48");
-            bal += points;
-            localStorage.setItem('lastBalance', bal);
-            
-            await update(ref(db, userPath + '/tasks'), { [id]: true });
-            await update(ref(db, userPath), { currentBalance: bal, lastUpdated: new Date().toISOString() });
         }
 
+        function syncTaskUI(tasks) {
+            userTasks = { ...userTasks, ...tasks };
+            Object.keys(userTasks).forEach(id => {
+                if (userTasks[id]) {
+                    const card = document.getElementById('task-' + id);
+                    if (card) {
+                        card.querySelector('.btn-verify').style.display = 'none';
+                        card.querySelector('.completed-icon').style.display = 'block';
+                    }
+                }
+            });
+            checkEligibility();
+        }
+
+        async function completeTask(id, points) {
+            const userPath = 'users/' + userWallet.substring(0, 10);
+            const updates = {};
+            updates[`tasks/${id}`] = true;
+            updates[`currentBalance`] = currentBalance + points;
+            
+            await update(ref(db, userPath), updates);
+            alert(`+${points} ABP Added!`);
+        }
+
+        // --- Camera Logic ---
         window.startKyc = async () => {
             document.getElementById('camModal').style.display = 'flex';
-            const s = await navigator.mediaDevices.getUserMedia({ video: true });
+            const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
             document.getElementById('webcam').srcObject = s;
         };
 
-        window.captureKyc = () => {
+        window.captureKyc = async () => {
             const video = document.getElementById('webcam');
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth; canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
-            const photoData = canvas.toDataURL('image/jpeg');
-            document.getElementById('mainAvatar').src = photoData;
-            localStorage.setItem('userProfilePic', photoData);
+            const photoData = canvas.toDataURL('image/jpeg', 0.5); // Compressed
             
+            document.getElementById('mainAvatar').src = photoData;
+            
+            // Stop Camera
             video.srcObject.getTracks().forEach(t => t.stop());
             document.getElementById('camModal').style.display = 'none';
+
+            // Save to Firebase
+            const userPath = 'users/' + userWallet.substring(0, 10);
+            await update(ref(db, userPath), { profilePic: photoData });
             completeTask('photo', 500);
         };
 
@@ -197,20 +172,18 @@
             navigator.geolocation.getCurrentPosition((p) => {
                 document.getElementById('locVal').innerText = `LAT: ${p.coords.latitude.toFixed(2)}`;
                 completeTask('location', 100);
-            }, () => alert("Enable GPS!"));
+            }, () => alert("Please enable GPS for Node Verification"));
         };
 
         window.otpVerify = (type, pts) => {
-            const contact = prompt(`Enter ${type} for OTP:`);
-            if(!contact) return;
             const otp = Math.floor(100000 + Math.random() * 900000);
-            alert(`ADAMAS Verification Code: ${otp}`);
-            const input = prompt("Enter 6-digit code:");
+            alert(`ADAMAS CODE: ${otp}`);
+            const input = prompt("Enter 6-digit verification code:");
             if(input == otp) completeTask(type, pts);
-            else alert("Invalid Code");
+            else alert("Invalid Code!");
         };
 
-        function checkAll() {
+        function checkEligibility() {
             if(Object.values(userTasks).every(v => v === true)) {
                 const b = document.getElementById('eligibilityBanner');
                 b.classList.add('eligible');
@@ -219,24 +192,17 @@
             }
         }
 
-        // Background & Init
+        // --- Background Particles ---
         const scene = new THREE.Scene();
         const camera3d = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        const posArray = new Float32Array(500 * 3);
-        for(let i=0; i<1500; i++) posArray[i] = (Math.random()-0.5)*10;
-        const geo = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const geo = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(1500), 3));
         const particles = new THREE.Points(geo, new THREE.PointsMaterial({size: 0.005, color: 0x00f2ff}));
         scene.add(particles); camera3d.position.z = 3;
-        function animate() { requestAnimationFrame(animate); particles.rotation.y += 0.001; renderer.render(scene, camera3d); } animate();
+        function animate() { requestAnimationFrame(animate); renderer.render(scene, camera3d); } animate();
 
-        window.onload = () => {
-            document.getElementById('dispWallet').innerText = wallet;
-            document.getElementById('dispName').innerText = localStorage.getItem('userName') || "Hanuman Verma";
-            const pic = localStorage.getItem('userProfilePic');
-            if(pic) document.getElementById('mainAvatar').src = pic;
-        };
+        window.onload = initProfile;
     </script>
 </body>
 </html>
