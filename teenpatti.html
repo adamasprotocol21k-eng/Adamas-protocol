@@ -7,100 +7,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --dark: #05060a;
-            --glass: rgba(255, 255, 255, 0.05);
-            --gold: #ffcc00;
-        }
-
-        body {
-            margin: 0; background: var(--dark); color: white;
-            font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
-        }
-
+        :root { --primary: #00f2ff; --secondary: #7000ff; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); --gold: #ffcc00; }
+        body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
         canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
-
-        .header {
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
-        }
-
-        .table-container {
-            height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            perspective: 1000px;
-        }
-
-        .poker-table {
-            position: relative; width: 300px; height: 300px;
-            background: radial-gradient(circle, #1a4d2e 0%, #051a0d 100%);
-            border-radius: 50%; border: 8px solid #3d2b1f;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,255,136,0.2);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transform: rotateX(15deg);
-        }
-
+        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2); }
+        .table-container { height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; perspective: 1000px; }
+        .poker-table { position: relative; width: 300px; height: 300px; background: radial-gradient(circle, #1a4d2e 0%, #051a0d 100%); border-radius: 50%; border: 8px solid #3d2b1f; box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,255,136,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotateX(15deg); }
         .cards-hand { display: flex; margin-top: 20px; z-index: 5; }
-        
-        .poker-card {
-            position: relative; width: 65px; height: 90px; background: white; border-radius: 8px;
-            margin: 0 -8px; border: 2px solid var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            color: black; font-weight: bold; font-size: 1.1rem;
-            transform: rotateY(180deg); transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            transform-style: preserve-3d; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-
+        .poker-card { position: relative; width: 65px; height: 90px; background: white; border-radius: 8px; margin: 0 -8px; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 1.1rem; transform: rotateY(180deg); transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .poker-card.show { transform: rotateY(0deg); }
-
-        .card-back {
-            position: absolute; width: 100%; height: 100%;
-            background: linear-gradient(45deg, var(--secondary), var(--dark));
-            border-radius: 6px; backface-visibility: hidden; z-index: 2;
-            display: flex; align-items: center; justify-content: center; color: var(--primary);
-        }
-
-        /* Bet & Input Styling */
-        .controls-area {
-            position: fixed; bottom: 30px; width: 100%; display: flex;
-            flex-direction: column; align-items: center; gap: 15px;
-        }
-
-        .bet-input-wrapper {
-            background: var(--glass); padding: 5px 15px; border-radius: 50px;
-            border: 1px solid var(--primary); display: flex; align-items: center;
-        }
-
-        #manualBet {
-            background: transparent; border: none; color: white; width: 80px;
-            padding: 8px; font-family: 'Orbitron'; text-align: center; outline: none;
-        }
-
+        .card-back { position: absolute; width: 100%; height: 100%; background: linear-gradient(45deg, var(--secondary), var(--dark)); border-radius: 6px; backface-visibility: hidden; z-index: 2; display: flex; align-items: center; justify-content: center; color: var(--primary); font-family: 'Orbitron'; }
+        .controls-area { position: fixed; bottom: 30px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .bet-input-wrapper { background: var(--glass); padding: 5px 15px; border-radius: 50px; border: 1px solid var(--primary); display: flex; align-items: center; }
+        #manualBet { background: transparent; border: none; color: white; width: 80px; padding: 8px; font-family: 'Orbitron'; text-align: center; outline: none; }
         .chip-container { display: flex; gap: 10px; }
-
-        .chip {
-            width: 45px; height: 45px; border-radius: 50%; border: 2px dashed white;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Orbitron'; font-size: 0.6rem; cursor: pointer;
-            transition: 0.3s; background: var(--secondary);
-        }
-
-        .btn-action {
-            background: var(--primary); color: black; border: none;
-            padding: 12px 40px; border-radius: 50px; font-family: 'Orbitron';
-            font-weight: bold; cursor: pointer; box-shadow: 0 0 15px var(--primary);
-        }
-
-        .pot-amount {
-            position: absolute; top: 15%; font-family: 'Orbitron';
-            color: var(--gold); font-size: 1rem; text-shadow: 0 0 10px var(--gold);
-        }
-
-        .result-overlay {
-            position: absolute; font-family: 'Orbitron'; font-size: 1.5rem;
-            font-weight: bold; z-index: 10; display: none; text-shadow: 0 0 15px white;
-        }
+        .chip { width: 45px; height: 45px; border-radius: 50%; border: 2px dashed white; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-size: 0.6rem; cursor: pointer; transition: 0.3s; background: var(--secondary); }
+        .btn-action { background: var(--primary); color: black; border: none; padding: 12px 40px; border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px var(--primary); }
+        .pot-amount { position: absolute; top: 15%; font-family: 'Orbitron'; color: var(--gold); font-size: 1rem; text-shadow: 0 0 10px var(--gold); }
+        .result-overlay { position: absolute; font-family: 'Orbitron'; font-size: 1.2rem; font-weight: bold; z-index: 10; display: none; text-align: center; width: 250px; text-shadow: 0 0 15px black; }
     </style>
 </head>
 <body>
@@ -108,7 +32,7 @@
     <canvas id="canvas3d"></canvas>
 
     <div class="header">
-        <a href="dashboard.html" style="text-decoration:none; color:var(--primary); font-family: 'Orbitron'; font-size: 0.8rem;">← EXIT</a>
+        <a href="games.html" style="text-decoration:none; color:var(--primary); font-family: 'Orbitron'; font-size: 0.8rem;">← EXIT</a>
         <div style="font-family: 'Orbitron'; color: var(--primary); font-size: 0.8rem;">BAL: <span id="headerBal">0.00</span></div>
     </div>
 
@@ -122,7 +46,7 @@
                 <div class="poker-card"><div class="card-back">A</div><span class="val">?</span></div>
                 <div class="poker-card"><div class="card-back">A</div><span class="val">?</span></div>
             </div>
-            <br>
+            <br><br>
             <button class="btn-action" id="dealBtn" onclick="playGame()">PLAY HAND</button>
         </div>
 
@@ -142,61 +66,65 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, update, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-        // 1. Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
-            authDomain: "adamas-protocol.firebaseapp.com",
             databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
             projectId: "adamas-protocol",
-            storageBucket: "adamas-protocol.firebasestorage.app",
-            messagingSenderId: "207788425238",
             appId: "1:207788425238:web:025b8544f085dde60af537"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
-        const userPath = 'users/' + wallet.substring(0, 10);
-
-        let totalBalance = 0;
-        const cardsArr = ['A', 'K', 'Q', 'J', '10', '9', '8'];
+        
+        let userWallet = "";
+        let currentBalance = 0;
+        const cardsArr = ['A', 'K', 'Q', 'J', '10', '9'];
         const symbols = ['♠', '♥', '♣', '♦'];
 
-        // 2. Load Balance from Firebase
-        async function loadData() {
-            const snap = await get(ref(db, userPath));
-            if(snap.exists()){
-                totalBalance = parseFloat(snap.val().currentBalance || 0);
-                document.getElementById('headerBal').innerText = totalBalance.toLocaleString();
+        // Sync with Wallet & Firebase
+        async function initTeenPatti() {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    userWallet = accounts[0];
+                    const userShort = userWallet.substring(0, 10);
+                    onValue(ref(db, 'users/' + userShort), (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            currentBalance = data.currentBalance || 0;
+                            document.getElementById('headerBal').innerText = currentBalance.toFixed(2);
+                        }
+                    });
+                }
             }
         }
 
         window.setBet = (val) => { document.getElementById('manualBet').value = val; };
 
-        // 3. Main Game Logic
         window.playGame = async () => {
             const betAmount = parseFloat(document.getElementById('manualBet').value);
-            
-            if(isNaN(betAmount) || betAmount <= 0) return alert("Sahi bet lagao bhai!");
-            if(betAmount > totalBalance) return alert("Insafficient Balance!");
+            if (betAmount > currentBalance || betAmount <= 0) {
+                alert("Insufficient Balance!");
+                return;
+            }
 
-            // Lock UI
+            const userShort = userWallet.substring(0, 10);
             const dealBtn = document.getElementById('dealBtn');
             dealBtn.disabled = true;
             document.getElementById('resultText').style.display = 'none';
 
-            // Deduct Bet Immediately
-            totalBalance -= betAmount;
-            updateUI();
+            // 1. Deduct Bet
+            await update(ref(db, 'users/' + userShort), { currentBalance: currentBalance - betAmount });
 
+            // 2. Deal Cards
             const hand = [];
             const cardsUI = document.querySelectorAll('.poker-card');
             
-            // Randomly pick cards
             cardsUI.forEach((card, i) => {
                 card.classList.remove('show');
                 const val = cardsArr[Math.floor(Math.random() * cardsArr.length)];
@@ -209,57 +137,52 @@
                 }, i * 400);
             });
 
-            // Calculate Result after animation
+            // 3. Logic Check
             setTimeout(async () => {
                 let multiplier = 0;
                 let msg = "LOSER!";
                 let color = "#ff4444";
 
-                // Ranking Check
                 const counts = {}; hand.forEach(x => counts[x] = (counts[x] || 0) + 1);
                 const isTriple = Object.values(counts).includes(3);
 
                 if(isTriple) {
-                    const tripleVal = hand[0];
-                    if(tripleVal === 'A') { multiplier = 10; msg = "GRAND WIN (AAA)"; color = "#00f2ff"; }
-                    else if(tripleVal === 'K') { multiplier = 5; msg = "MAJOR WIN (KKK)"; color = "#ffcc00"; }
-                    else if(tripleVal === 'Q') { multiplier = 3; msg = "MINOR WIN (QQQ)"; color = "#00ff88"; }
-                    else { multiplier = 2; msg = "TRIPLE WIN"; color = "#7000ff"; }
+                    if(hand[0] === 'A') { multiplier = 20; msg = "TRIPLE A (JACKPOT!)"; color = "#ffcc00"; }
+                    else if(hand[0] === 'K') { multiplier = 10; msg = "TRIPLE K (SUPER!)"; color = "#00f2ff"; }
+                    else { multiplier = 5; msg = "TRIPLE MATCH!"; color = "#00ff88"; }
+                } else if (new Set(hand).size === 3 && Math.random() > 0.8) { 
+                    // Random small win for high cards
+                    multiplier = 1.5; msg = "HIGH CARD WIN"; color = "#ffffff";
                 }
 
                 if(multiplier > 0) {
                     const winAmt = betAmount * multiplier;
-                    totalBalance += winAmt;
+                    await update(ref(db, 'users/' + userShort), { currentBalance: (currentBalance - betAmount) + winAmt });
                     showResult(msg, color);
                 } else {
-                    showResult("NO MATCH - LOSS", "#ff4444");
+                    showResult("NO LUCK - LOSS", "#ff4444");
                 }
-
-                // Sync with Firebase
-                await update(ref(db, userPath), { 
-                    currentBalance: totalBalance,
-                    lastGame: 'TeenPatti',
-                    timestamp: new Date().toISOString()
-                });
-                
-                updateUI();
                 dealBtn.disabled = false;
             }, 1800);
         };
 
         function showResult(text, color) {
             const res = document.getElementById('resultText');
-            res.innerText = text;
-            res.style.color = color;
-            res.style.display = 'block';
+            res.innerText = text; res.style.color = color; res.style.display = 'block';
         }
 
-        function updateUI() {
-            document.getElementById('headerBal').innerText = totalBalance.toLocaleString();
-            localStorage.setItem('lastBalance', totalBalance);
-        }
+        // Three.js Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const geo = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(900), 3));
+        const mesh = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff }));
+        scene.add(mesh); camera.position.z = 3;
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
+        animate();
 
-        window.onload = loadData;
+        window.onload = initTeenPatti;
     </script>
 </body>
 </html>
