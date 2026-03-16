@@ -11,6 +11,7 @@
             --secondary: #7000ff;
             --dark: #05060a;
             --glass: rgba(255, 255, 255, 0.05);
+            --gold: #ffcc00;
         }
 
         body {
@@ -27,7 +28,7 @@
             box-sizing: border-box;
         }
 
-        .container { padding: 40px 20px; text-align: center; perspective: 1000px; }
+        .container { padding: 40px 20px 150px; text-align: center; perspective: 1000px; }
 
         /* 3D Scratch Card */
         .scratch-card-wrapper {
@@ -44,13 +45,14 @@
         }
 
         .reward-amount {
-            font-family: 'Orbitron'; font-size: 2.5rem; color: #ffcc00;
+            font-family: 'Orbitron'; font-size: 2.5rem; color: var(--gold);
             text-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
         }
 
         #scratchLayer {
             position: absolute; top: 0; left: 0; z-index: 2;
             cursor: crosshair; border-radius: 20px; touch-action: none;
+            transition: opacity 0.5s;
         }
 
         .instruction {
@@ -61,20 +63,27 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         .btn-claim {
-            margin-top: 20px; padding: 12px 40px; border-radius: 100px;
-            background: var(--primary); color: black; border: none;
+            margin-top: 20px; padding: 15px 50px; border-radius: 100px;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            color: white; border: none;
             font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
             display: none; box-shadow: 0 0 20px var(--primary);
+            text-transform: uppercase;
         }
 
-        /* Nav Dock */
+        /* --- UPDATED NAVIGATION DOCK --- */
         .dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
-            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 11, 16, 0.85); backdrop-filter: blur(25px);
+            padding: 12px 30px; border-radius: 100px; display: flex; gap: 25px;
+            border: 1px solid rgba(0, 242, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000;
         }
-        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
+        .dock-item { text-decoration: none; font-size: 1.4rem; opacity: 0.4; transition: 0.4s; color: white; }
+        .dock-item.active { 
+            opacity: 1; color: var(--primary); 
+            transform: scale(1.3) translateY(-5px); 
+            text-shadow: 0 0 15px var(--primary);
+        }
 
     </style>
 </head>
@@ -83,8 +92,8 @@
     <canvas id="canvas3d"></canvas>
 
     <div class="header">
-        <a href="dashboard.html" style="text-decoration:none; color:var(--primary);">← BACK</a>
-        <div style="font-family: 'Orbitron';">LUCKY <span style="color:var(--primary)">SCRATCH</span></div>
+        <a href="games.html" style="text-decoration:none; color:var(--primary); font-family: 'Orbitron';">← GAMES</a>
+        <div style="font-family: 'Orbitron';">LUCKY <span style="color:var(--gold)">SCRATCH</span></div>
     </div>
 
     <div class="container">
@@ -103,6 +112,7 @@
 
     <div class="dock">
         <a href="dashboard.html" class="dock-item">🏠</a>
+        <a href="games.html" class="dock-item active">🎮</a>
         <a href="wallet.html" class="dock-item">💰</a>
         <a href="invite.html" class="dock-item">👥</a>
         <a href="profile.html" class="dock-item">👤</a>
@@ -110,7 +120,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. THREE.JS Background
+        // 1. 3D Background
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
@@ -131,20 +141,19 @@
         const ctx = canvas.getContext('2d');
         const wrapper = document.getElementById('cardWrapper');
         let isDrawing = false;
-        let scratchedPercentage = 0;
 
         function initScratch() {
             const grad = ctx.createLinearGradient(0, 0, 300, 180);
-            grad.addColorStop(0, '#333');
-            grad.addColorStop(0.5, '#666');
-            grad.addColorStop(1, '#222');
+            grad.addColorStop(0, '#222');
+            grad.addColorStop(0.5, '#444');
+            grad.addColorStop(1, '#111');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 300, 180);
             
-            ctx.font = 'bold 20px Orbitron';
+            ctx.font = 'bold 18px Orbitron';
             ctx.fillStyle = '#00f2ff';
             ctx.textAlign = 'center';
-            ctx.fillText('SCRATCH HERE', 150, 95);
+            ctx.fillText('SCRATCH TO REVEAL', 150, 95);
         }
 
         function scratch(e) {
@@ -157,7 +166,6 @@
             ctx.beginPath();
             ctx.arc(x, y, 20, 0, Math.PI * 2);
             ctx.fill();
-            
             checkScratch();
         }
 
@@ -168,13 +176,13 @@
             for (let i = 0; i < pixels.length; i += 4) {
                 if (pixels[i + 3] < 128) transparentPixels++;
             }
-            scratchedPercentage = (transparentPixels / (300 * 180)) * 100;
+            let scratchedPercentage = (transparentPixels / (300 * 180)) * 100;
             
-            if (scratchedPercentage > 50) {
+            if (scratchedPercentage > 45) {
                 canvas.style.opacity = '0';
                 setTimeout(() => {
                     canvas.style.display = 'none';
-                    document.getElementById('statusText').innerText = "JACKPOT!";
+                    document.getElementById('statusText').innerText = "BIG WIN!";
                     document.getElementById('claimBtn').style.display = 'inline-block';
                 }, 300);
             }
@@ -185,39 +193,25 @@
         canvas.addEventListener('mousemove', scratch);
         canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
         canvas.addEventListener('touchend', () => isDrawing = false);
-        canvas.addEventListener('touchmove', scratch);
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e); }, {passive: false});
 
         // 3D Tilt Effect
         wrapper.addEventListener('mousemove', (e) => {
             const rect = wrapper.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = (y - centerY) / 10;
-            const rotateY = (centerX - x) / 10;
-            wrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            wrapper.style.transform = `rotateX(${(y - rect.height/2)/10}deg) rotateY(${(rect.width/2 - x)/10}deg)`;
         });
 
-        wrapper.addEventListener('mouseleave', () => {
-            wrapper.style.transform = `rotateX(0deg) rotateY(0deg)`;
-        });
+        wrapper.addEventListener('mouseleave', () => wrapper.style.transform = `rotateX(0deg) rotateY(0deg)`);
 
-        // --- UPDATED CLAIM LOGIC ---
+        // --- CLAIM LOGIC ---
         function claimReward() {
-            // Get current balance
             let currentBalance = parseFloat(localStorage.getItem('lastBalance') || "0");
-            
-            // Add Reward (150 ABP)
             let reward = 150;
-            let newBalance = currentBalance + reward;
+            localStorage.setItem('lastBalance', (currentBalance + reward).toString());
             
-            // Save back to LocalStorage
-            localStorage.setItem('lastBalance', newBalance.toString());
-            
-            alert(`🎉 150 ABP added! New Balance: ${newBalance.toFixed(2)}`);
-            
-            // Redirect to Dashboard to see updated balance
+            alert(`🔥 150 ABP Added Successfully!`);
             window.location.href = 'dashboard.html';
         }
 
