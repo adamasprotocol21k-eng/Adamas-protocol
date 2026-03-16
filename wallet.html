@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* --- Root and Body remains same --- */
         :root {
             --primary: #00f2ff;
             --secondary: #7000ff;
@@ -24,71 +25,29 @@
         }
 
         .container { padding: 20px; max-width: 480px; margin: auto; padding-bottom: 110px; }
-
-        /* --- Header --- */
         .wallet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .brand { font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px; }
-        .address-box { 
-            font-size: 0.6rem; opacity: 0.5; font-family: 'monospace'; 
-            background: var(--glass); padding: 5px 10px; border-radius: 10px;
-        }
-
-        /* --- Asset Card (The Main Box) --- */
-        .asset-card {
-            background: linear-gradient(145deg, rgba(112, 0, 255, 0.1), rgba(0, 242, 255, 0.05));
-            border-radius: 30px; padding: 40px 20px; text-align: center;
-            border: 1px solid rgba(255,255,255,0.08); position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 30px;
-            backdrop-filter: blur(15px);
-        }
+        .address-box { font-size: 0.6rem; opacity: 0.8; font-family: 'monospace'; background: var(--glass); padding: 5px 10px; border-radius: 10px; border: 1px solid rgba(0,242,255,0.2); color: var(--primary); }
+        .asset-card { background: linear-gradient(145deg, rgba(112, 0, 255, 0.1), rgba(0, 242, 255, 0.05)); border-radius: 30px; padding: 40px 20px; text-align: center; border: 1px solid rgba(255,255,255,0.08); position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 30px; backdrop-filter: blur(15px); }
         .asset-label { font-family: 'Orbitron'; font-size: 0.7rem; color: var(--primary); letter-spacing: 3px; opacity: 0.8; }
-        .asset-value { 
-            font-family: 'Orbitron'; font-size: 3rem; font-weight: 700; margin: 15px 0;
-            background: linear-gradient(to bottom, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .asset-value { font-family: 'Orbitron'; font-size: 3rem; font-weight: 700; margin: 15px 0; background: linear-gradient(to bottom, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .token-name { color: var(--gold); font-size: 1.2rem; letter-spacing: 2px; }
-
-        /* --- Quick Actions --- */
         .wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 35px; }
-        .action-btn {
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
-            color: white; padding: 15px; border-radius: 20px; font-family: 'Orbitron';
-            font-size: 0.75rem; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; gap: 10px; transition: 0.3s;
-        }
+        .action-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px; border-radius: 20px; font-family: 'Orbitron'; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .action-btn:hover { background: var(--primary); color: black; border-color: var(--primary); }
-
-        /* --- Transaction History --- */
         .history-title { font-family: 'Orbitron'; font-size: 0.8rem; margin-bottom: 15px; display: flex; justify-content: space-between; }
-        .history-item {
-            background: var(--glass); border-radius: 18px; padding: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03);
-        }
-        .tx-icon {
-            width: 40px; height: 40px; border-radius: 12px; background: rgba(0, 255, 136, 0.1);
-            display: flex; align-items: center; justify-content: center; color: var(--success);
-        }
+        .history-item { background: var(--glass); border-radius: 18px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03); }
+        .tx-icon { width: 40px; height: 40px; border-radius: 12px; background: rgba(0, 255, 136, 0.1); display: flex; align-items: center; justify-content: center; color: var(--success); }
         .tx-info { flex: 1; margin-left: 15px; text-align: left; }
         .tx-name { font-weight: 600; font-size: 0.9rem; }
         .tx-date { font-size: 0.7rem; opacity: 0.4; }
         .tx-amount { font-family: 'Orbitron'; font-weight: bold; color: var(--success); }
-
         .withdraw-note { text-align: center; color: #ff4444; font-size: 0.7rem; margin-top: 10px; opacity: 0.8; }
-
-        /* --- Nav --- */
-        .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(20px); border-radius: 25px; padding: 12px;
-            display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.1);
-            z-index: 100;
-        }
+        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px); border-radius: 25px; padding: 12px; display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.1); z-index: 100; }
         .nav-link { color: rgba(255,255,255,0.4); text-decoration: none; text-align: center; }
         .nav-link.active { color: var(--primary); filter: drop-shadow(0 0 8px var(--primary)); }
         .nav-link i { font-size: 1.2rem; }
         .nav-link span { display: block; font-size: 0.55rem; font-family: 'Orbitron'; margin-top: 5px; }
-
     </style>
 </head>
 <body>
@@ -96,7 +55,7 @@
     <div class="container">
         <div class="wallet-header">
             <div class="brand">ADAMAS <span style="color: var(--primary);">WALLET</span></div>
-            <div class="address-box" id="walletAddr">0x6DbC...da690</div>
+            <div class="address-box" id="walletAddr">CONNECTING...</div>
         </div>
 
         <div class="asset-card">
@@ -106,8 +65,8 @@
         </div>
 
         <div class="wallet-actions">
-            <div class="action-btn"><i class="fas fa-paper-plane"></i> SEND</div>
-            <div class="action-btn"><i class="fas fa-random"></i> SWAP</div>
+            <div class="action-btn" onclick="alert('Sending coming soon!')"><i class="fas fa-paper-plane"></i> SEND</div>
+            <div class="action-btn" onclick="alert('Swap coming soon!')"><i class="fas fa-random"></i> SWAP</div>
         </div>
 
         <p class="withdraw-note">Minimum withdrawal: 5,000 ABP</p>
@@ -119,12 +78,12 @@
 
         <div id="txHistory">
             <div class="history-item">
-                <div class="tx-icon"><i class="fas fa-hammer"></i></div>
+                <div class="tx-icon"><i class="fas fa-gift"></i></div>
                 <div class="tx-info">
-                    <div class="tx-name">Cloud Mining Reward</div>
+                    <div class="tx-name">Welcome Bonus</div>
                     <div class="tx-date" id="currentDate">16 Mar, 2026</div>
                 </div>
-                <div class="tx-amount">+85.07</div>
+                <div class="tx-amount" style="color: var(--success);">+100.00</div>
             </div>
         </div>
     </div>
@@ -149,17 +108,39 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
-        const userPath = 'users/' + wallet.substring(0, 10);
 
-        // Fetch Live Balance
-        onValue(ref(db, userPath), (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                const bal = data.currentBalance || 0;
-                document.getElementById('balance').innerText = parseFloat(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
+        // --- Metamask Connection Logic ---
+        async function initWallet() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const userWallet = accounts[0];
+                    
+                    // Display Short Address
+                    document.getElementById('walletAddr').innerText = 
+                        userWallet.substring(0, 6) + "..." + userWallet.substring(userWallet.length - 4);
+
+                    // Fetch Data from Firebase using real wallet
+                    const userPath = 'users/' + userWallet.substring(0, 10);
+                    onValue(ref(db, userPath), (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            const bal = data.currentBalance || 0;
+                            document.getElementById('balance').innerText = 
+                                parseFloat(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
+                        }
+                    });
+
+                } catch (err) {
+                    document.getElementById('walletAddr').innerText = "OFFLINE";
+                }
+            } else {
+                alert("Metamask not found! Please use a Web3 Browser.");
             }
-        });
+        }
+
+        // Run on load
+        window.onload = initWallet;
 
         // Date update
         const d = new Date();
