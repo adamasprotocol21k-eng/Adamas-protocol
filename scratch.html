@@ -7,80 +7,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #00f2ff;
-            --dark: #05060a;
-            --glass: rgba(255, 255, 255, 0.05);
-            --gold: #ffcc00;
-        }
+        :root { --primary: #00f2ff; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); --gold: #ffcc00; --success: #00ff88; }
+        body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; text-align: center; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        
+        .container { padding: 20px; max-width: 400px; width: 100%; }
+        .title { font-family: 'Orbitron'; color: var(--primary); letter-spacing: 3px; margin: 0; font-size: 1.5rem; }
 
-        body {
-            margin: 0; background: var(--dark); color: white;
-            font-family: 'Rajdhani', sans-serif; text-align: center;
-            overflow: hidden;
-        }
-
-        .container { padding: 20px; max-width: 400px; margin: auto; }
-
-        .header { margin-top: 20px; margin-bottom: 30px; }
-        .title { font-family: 'Orbitron'; color: var(--primary); letter-spacing: 2px; }
-
-        /* --- Scratch Card Box --- */
+        /* Scratch Card Box */
         .scratch-container {
             position: relative; width: 300px; height: 300px;
-            margin: 20px auto; background: var(--glass);
-            border-radius: 20px; border: 2px solid rgba(0, 242, 255, 0.3);
-            overflow: hidden; box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+            margin: 30px auto; background: #111;
+            border-radius: 25px; border: 2px solid rgba(0, 242, 255, 0.2);
+            overflow: hidden; box-shadow: 0 0 40px rgba(0, 242, 255, 0.1);
         }
 
         /* The hidden reward text */
         .reward-display {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center;
-            justify-content: center; z-index: 1;
+            justify-content: center; z-index: 1; background: radial-gradient(circle, #1a1b26, #05060a);
         }
-        .reward-val { font-family: 'Orbitron'; font-size: 2.5rem; color: var(--gold); }
-        .reward-unit { font-size: 1rem; opacity: 0.7; }
+        .reward-val { font-family: 'Orbitron'; font-size: 2.8rem; color: var(--gold); text-shadow: 0 0 20px rgba(255, 204, 0, 0.4); }
+        .reward-unit { font-size: 0.9rem; opacity: 0.6; font-family: 'Orbitron'; letter-spacing: 2px; }
 
-        /* The scratchable canvas layer */
-        #scratchCanvas {
-            position: absolute; top: 0; left: 0; z-index: 2;
-            cursor: crosshair; touch-action: none;
-        }
+        /* Scratchable canvas */
+        #scratchCanvas { position: absolute; top: 0; left: 0; z-index: 2; cursor: crosshair; touch-action: none; transition: opacity 0.5s; }
 
-        .btn-back {
-            display: inline-block; margin-top: 30px; color: var(--primary);
-            text-decoration: none; font-family: 'Orbitron'; font-size: 0.8rem;
-        }
+        .btn-back { display: inline-block; margin-top: 25px; color: var(--primary); text-decoration: none; font-family: 'Orbitron'; font-size: 0.7rem; letter-spacing: 1px; transition: 0.3s; opacity: 0.7; }
+        .btn-back:hover { opacity: 1; text-shadow: 0 0 10px var(--primary); }
         
-        #statusMsg { margin-top: 15px; font-weight: bold; height: 20px; }
+        #statusMsg { margin-top: 20px; font-family: 'Orbitron'; font-size: 0.75rem; min-height: 20px; letter-spacing: 1px; }
+        .confetti { position: absolute; width: 100%; height: 100%; pointer-events: none; display: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="header">
-            <h2 class="title">LUCKY SCRATCH</h2>
-            <p style="opacity: 0.6;">Scratch the silver layer to win ABP!</p>
+            <h2 class="title">NODE <span style="color:white">SCRATCH</span></h2>
+            <p style="opacity: 0.5; font-size: 0.8rem; margin-top: 8px;">Reveal the encrypted data for rewards</p>
         </div>
 
         <div class="scratch-container" id="scratchBox">
             <div class="reward-display">
-                <i class="fas fa-coins" style="color: var(--gold); font-size: 2rem; margin-bottom: 10px;"></i>
-                <div class="reward-val" id="winAmount">0.00</div>
+                <i class="fas fa-microchip" style="color: var(--primary); font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <div class="reward-val" id="winAmount">--</div>
                 <div class="reward-unit">ABP TOKENS</div>
             </div>
             <canvas id="scratchCanvas" width="300" height="300"></canvas>
         </div>
 
-        <div id="statusMsg"></div>
+        <div id="statusMsg">HOLD & SCRATCH TO REVEAL</div>
 
-        <a href="games.html" class="btn-back"><i class="fas fa-arrow-left"></i> BACK TO HUB</a>
+        <a href="games.html" class="btn-back"><i class="fas fa-chevron-left"></i> BACK TO HUB</a>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, update, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, update, increment } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
@@ -95,27 +79,41 @@
         const canvas = document.getElementById('scratchCanvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
-        let userWallet = "";
-        let rewardWon = Math.floor(Math.random() * 50) + 10; // Random reward 10-60 ABP
+        let userWallet = "", userShort = "";
+        let rewardWon = Math.floor(Math.random() * 41) + 10; // 10 to 50 ABP
+        let isClaimed = false;
 
-        // 1. Initialize Canvas with Silver Layer
         function initCanvas() {
-            ctx.fillStyle = '#444'; // Silver/Grey cover
+            // Create Metallic Silver Gradient
+            const grad = ctx.createLinearGradient(0, 0, 300, 300);
+            grad.addColorStop(0, '#8e9eab');
+            grad.addColorStop(0.5, '#eef2f3');
+            grad.addColorStop(1, '#8e9eab');
+            
+            ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Add a pattern or text on cover
-            ctx.fillStyle = '#666';
-            ctx.font = '20px Orbitron';
+            // Add some "noise" for texture
+            for (let i = 0; i < 500; i++) {
+                ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.1})`;
+                ctx.fillRect(Math.random() * 300, Math.random() * 300, 2, 2);
+            }
+
+            ctx.fillStyle = '#111';
+            ctx.font = 'bold 16px Orbitron';
             ctx.textAlign = 'center';
-            ctx.fillText('SCRATCH HERE', 150, 160);
+            ctx.fillText('ENCRYPTED DATA', 150, 145);
+            ctx.font = '10px Orbitron';
+            ctx.fillText('SCRATCH TO DECRYPT', 150, 165);
         }
 
-        // 2. Scratching Logic
         function scratch(e) {
-            if (!isDrawing) return;
+            if (!isDrawing || isClaimed) return;
+            e.preventDefault();
+            
             const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX || e.touches[0].clientX) - rect.left;
-            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            const x = (e.clientX || (e.touches ? e.touches[0].clientX : 0)) - rect.left;
+            const y = (e.clientY || (e.touches ? e.touches[0].clientY : 0)) - rect.top;
 
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
@@ -125,10 +123,7 @@
             checkScratchPercentage();
         }
 
-        // 3. Check if user scratched enough
-        let isClaimed = false;
         function checkScratchPercentage() {
-            if (isClaimed) return;
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             let pixels = imageData.data;
             let clearPixels = 0;
@@ -137,46 +132,50 @@
                 if (pixels[i + 3] === 0) clearPixels++;
             }
 
-            if (clearPixels > (pixels.length / 4) * 0.5) { // 50% clear
+            // If 45% is cleared, reveal everything
+            if (clearPixels > (pixels.length / 4) * 0.45) {
                 isClaimed = true;
-                canvas.style.display = 'none';
+                canvas.style.opacity = '0';
+                setTimeout(() => canvas.style.display = 'none', 500);
                 claimReward();
             }
         }
 
         async function claimReward() {
-            if (!userWallet) return;
-            document.getElementById('statusMsg').innerText = "Claiming Reward...";
+            if (!userShort) return;
+            const msg = document.getElementById('statusMsg');
+            msg.innerText = "DECRYPTING REWARD...";
             
-            const userPath = 'users/' + userWallet.substring(0, 10);
-            const snapshot = await get(ref(db, userPath));
-            
-            if (snapshot.exists()) {
-                const currentBal = snapshot.val().currentBalance || 0;
-                await update(ref(db, userPath), {
-                    currentBalance: currentBal + rewardWon
+            try {
+                await update(ref(db, 'users/' + userShort), {
+                    currentBalance: increment(rewardWon)
                 });
-                document.getElementById('statusMsg').style.color = "#00ff88";
-                document.getElementById('statusMsg').innerText = `SUCCESS! +${rewardWon} ABP ADDED`;
+                msg.style.color = "var(--success)";
+                msg.innerText = `REWARD UNLOCKED: +${rewardWon} ABP`;
+            } catch (e) {
+                msg.innerText = "CONNECTION ERROR";
             }
         }
 
-        // --- Auth & Events ---
         async function init() {
             if (window.ethereum) {
                 const accounts = await window.ethereum.request({ method: 'eth_accounts' });
                 if (accounts.length > 0) {
                     userWallet = accounts[0];
-                    document.getElementById('winAmount').innerText = rewardWon.toFixed(2);
+                    userShort = userWallet.substring(0, 10);
+                    document.getElementById('winAmount').innerText = rewardWon;
                 }
             }
             initCanvas();
         }
 
+        // Desktop Events
         canvas.addEventListener('mousedown', () => isDrawing = true);
-        canvas.addEventListener('mouseup', () => isDrawing = false);
+        window.addEventListener('mouseup', () => isDrawing = false);
         canvas.addEventListener('mousemove', scratch);
-        canvas.addEventListener('touchstart', () => isDrawing = true);
+        
+        // Mobile Events
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
         canvas.addEventListener('touchend', () => isDrawing = false);
         canvas.addEventListener('touchmove', scratch);
 
@@ -184,4 +183,3 @@
     </script>
 </body>
 </html>
-
