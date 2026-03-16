@@ -7,65 +7,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --dark: #05060a;
-            --gold: #ffcc00;
-            --glass: rgba(255, 255, 255, 0.05);
-        }
-
-        body {
-            margin: 0; background: var(--dark); color: white;
-            font-family: 'Rajdhani', sans-serif; text-align: center;
-            background: radial-gradient(circle at center, #0a0b14, #05060a);
-            min-height: 100vh; overflow-x: hidden;
-        }
-
+        :root { --primary: #00f2ff; --secondary: #7000ff; --dark: #05060a; --gold: #ffcc00; --glass: rgba(255, 255, 255, 0.05); --success: #00ff88; }
+        body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; text-align: center; min-height: 100vh; overflow-x: hidden; }
+        
         .container { padding: 20px; max-width: 450px; margin: auto; }
 
-        /* --- Balance Display --- */
-        .top-nav-game { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .back-btn { color: white; text-decoration: none; font-size: 1.2rem; }
-        .bal-pill { 
-            background: var(--glass); border: 1px solid var(--primary); 
-            padding: 5px 15px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.8rem;
-        }
+        /* Balance & Nav */
+        .top-nav-game { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { color: white; text-decoration: none; font-size: 1.2rem; transition: 0.3s; }
+        .bal-pill { background: var(--glass); border: 1px solid var(--primary); padding: 6px 16px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.75rem; box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
 
-        /* --- Wheel Styling --- */
-        .wheel-box {
-            position: relative; width: 320px; height: 320px; margin: 40px auto;
-            border: 10px solid var(--glass); border-radius: 50%;
-            box-shadow: 0 0 50px rgba(0, 242, 255, 0.15);
-        }
-
+        /* Wheel */
+        .wheel-box { position: relative; width: 300px; height: 300px; margin: 30px auto; border: 8px solid var(--glass); border-radius: 50%; box-shadow: 0 0 40px rgba(112, 0, 255, 0.2); }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); }
+        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 40px; z-index: 10; filter: drop-shadow(0 0 8px var(--primary)); }
 
-        .pointer {
-            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-            width: 45px; z-index: 10; filter: drop-shadow(0 0 10px var(--primary));
-        }
+        /* Controls */
+        .spin-controls { margin-top: 25px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .btn-spin { background: linear-gradient(45deg, var(--secondary), var(--primary)); color: white; border: none; padding: 15px 50px; border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.3s; width: 100%; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3); }
+        .btn-spin:disabled { filter: grayscale(1); opacity: 0.5; cursor: not-allowed; }
+        
+        .fee-status { margin-top: 15px; font-family: 'Orbitron'; font-size: 0.65rem; letter-spacing: 1px; }
+        .timer-box { color: #ff4444; font-size: 0.75rem; margin-top: 8px; font-family: 'Orbitron'; display: none; }
 
-        /* --- Controls --- */
-        .spin-controls { margin-top: 30px; }
-        .btn-spin {
-            background: linear-gradient(45deg, var(--secondary), var(--primary));
-            color: white; border: none; padding: 15px 60px; border-radius: 50px;
-            font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); font-size: 1.1rem; transition: 0.3s;
-        }
-        .btn-spin:disabled { filter: grayscale(1); cursor: not-allowed; transform: scale(0.95); }
-
-        .fee-status { margin-top: 15px; font-family: 'Orbitron'; font-size: 0.7rem; letter-spacing: 1px; }
-        .timer-box { color: #ff4444; font-size: 0.8rem; margin-top: 5px; display: none; }
-
-        /* --- Result Modal --- */
-        #resultPopup {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            background: rgba(0,0,0,0.9); border: 2px solid var(--primary); padding: 30px;
-            border-radius: 20px; z-index: 100; transition: 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-            backdrop-filter: blur(10px);
-        }
+        /* Result Popup */
+        #resultPopup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(5, 6, 10, 0.95); border: 2px solid var(--primary); padding: 40px 20px; border-radius: 25px; z-index: 1000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(15px); width: 80%; max-width: 320px; }
         #resultPopup.show { transform: translate(-50%, -50%) scale(1); }
     </style>
 </head>
@@ -73,12 +39,12 @@
 
     <div class="container">
         <div class="top-nav-game">
-            <a href="games.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
+            <a href="games.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
             <div class="bal-pill"><span id="userBal">0</span> ABP</div>
         </div>
 
-        <h2 style="font-family: 'Orbitron'; margin: 0;">LUCKY <span style="color:var(--primary)">SPIN</span></h2>
-        <p style="opacity: 0.5; font-size: 0.8rem;">Spin the wheel and test your luck!</p>
+        <h2 style="font-family: 'Orbitron'; margin: 0; letter-spacing: 2px;">MEGA <span style="color:var(--primary)">SPIN</span></h2>
+        <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 5px;">Unlock your daily node rewards</p>
 
         <div class="wheel-box">
             <img src="https://i.ibb.co/vVpx79m/pointer.png" class="pointer">
@@ -87,21 +53,22 @@
 
         <div class="spin-controls">
             <button id="spinBtn" class="btn-spin" onclick="startSpin()">SPIN NOW</button>
-            <div class="fee-status" id="feeInfo">Checking Status...</div>
-            <div class="timer-box" id="spinTimer">Next Free: 24:00:00</div>
+            <div class="fee-status" id="feeInfo">SYNCHRONIZING...</div>
+            <div class="timer-box" id="spinTimer">NEXT FREE: 24:00:00</div>
         </div>
     </div>
 
     <div id="resultPopup">
-        <h3 style="font-family: 'Orbitron'; color: var(--gold); margin-bottom: 10px;">CONGRATS!</h3>
-        <div style="font-size: 2rem; font-weight: bold;" id="winAmt">0</div>
-        <p style="font-size: 0.8rem; opacity: 0.7;">ABP Tokens added to wallet</p>
-        <button onclick="closePopup()" class="btn-spin" style="padding: 10px 30px; font-size: 0.8rem; margin-top: 15px;">AWESOME</button>
+        <i class="fas fa-gift" style="font-size: 3rem; color: var(--gold); margin-bottom: 15px;"></i>
+        <h3 style="font-family: 'Orbitron'; color: white; margin: 0;">REWARD CLAIMED!</h3>
+        <div style="font-size: 2.5rem; font-weight: bold; color: var(--success); margin: 15px 0;" id="winAmt">0</div>
+        <p style="font-size: 0.75rem; opacity: 0.7; font-family: 'Orbitron';">ABP TOKENS CREDITED</p>
+        <button onclick="closePopup()" class="btn-spin" style="margin-top: 10px;">RECEIVE</button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, onValue, update, increment } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
@@ -112,8 +79,13 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
-        const userPath = 'users/' + wallet.substring(0, 10);
+
+        // Get Wallet from storage/connection
+        let userWallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690"; // Fallback for testing
+        if(window.ethereum && window.ethereum.selectedAddress) userWallet = window.ethereum.selectedAddress;
+        
+        const userShort = userWallet.substring(0, 10);
+        const userPath = 'users/' + userShort;
 
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
@@ -133,7 +105,8 @@
         let userData = {};
 
         function drawWheel() {
-            const size = 320; canvas.width = size; canvas.height = size;
+            const size = 600; // High res internal
+            canvas.width = size; canvas.height = size;
             const rad = size / 2;
             const arc = (Math.PI * 2) / sectors.length;
 
@@ -141,14 +114,14 @@
                 const ang = i * arc;
                 ctx.beginPath(); ctx.fillStyle = s.color;
                 ctx.moveTo(rad, rad); ctx.arc(rad, rad, rad, ang, ang + arc);
-                ctx.lineTo(rad, rad); ctx.fill();
-                ctx.strokeStyle = "rgba(255,255,255,0.1)"; ctx.stroke();
+                ctx.fill();
+                ctx.strokeStyle = "rgba(255,255,255,0.1)"; ctx.lineWidth = 2; ctx.stroke();
 
                 ctx.save();
                 ctx.translate(rad, rad); ctx.rotate(ang + arc / 2);
                 ctx.textAlign = "right"; ctx.fillStyle = "#fff";
-                ctx.font = "bold 12px Orbitron";
-                ctx.fillText(s.label, rad - 20, 5);
+                ctx.font = "bold 24px Orbitron";
+                ctx.fillText(s.label, rad - 30, 10);
                 ctx.restore();
             });
         }
@@ -156,7 +129,7 @@
         onValue(ref(db, userPath), (snap) => {
             if(snap.exists()){
                 userData = snap.val();
-                document.getElementById('userBal').innerText = parseFloat(userData.currentBalance || 0).toLocaleString();
+                document.getElementById('userBal').innerText = (userData.currentBalance || 0).toFixed(2);
                 updateUIStatus();
             }
         });
@@ -170,13 +143,13 @@
 
             if (diff < 24 * 60 * 60 * 1000) {
                 const currentFee = userData.spinFee || 10;
-                feeInfo.innerText = `NEXT SPIN FEE: ${currentFee} ABP`;
+                feeInfo.innerText = `NEXT SPIN COST: ${currentFee} ABP`;
                 feeInfo.style.color = "var(--gold)";
                 timerBox.style.display = "block";
                 startCountdown(24 * 60 * 60 * 1000 - diff);
             } else {
-                feeInfo.innerText = "DAILY FREE SPIN READY";
-                feeInfo.style.color = "var(--success)";
+                feeInfo.innerText = "STATUS: FREE SPIN AVAILABLE";
+                feeInfo.style.color = "#00ff88";
                 timerBox.style.display = "none";
             }
         }
@@ -189,15 +162,14 @@
 
             if (diff < 24 * 60 * 60 * 1000) {
                 fee = userData.spinFee || 10;
-                if ((userData.currentBalance || 0) < fee) return alert("Insufficient Balance!");
+                if ((userData.currentBalance || 0) < fee) return alert("Insufficient ABP Balance!");
             }
 
             isSpinning = true;
             document.getElementById('spinBtn').disabled = true;
 
-            // Deduct Fee if any
             if(fee > 0) {
-                await update(ref(db, userPath), { currentBalance: userData.currentBalance - fee });
+                await update(ref(db, userPath), { currentBalance: increment(-fee) });
             }
 
             const spinDeg = Math.floor(Math.random() * 360) + 3600;
@@ -206,13 +178,13 @@
 
             setTimeout(async () => {
                 const actualDeg = currentRotation % 360;
-                const idx = Math.floor((360 - actualDeg) / (360 / sectors.length)) % sectors.length;
+                // Corrected index logic to match pointer at top
+                const idx = Math.floor((360 - actualDeg + 270) % 360 / (360 / sectors.length));
                 const win = sectors[idx];
 
-                // Update Database
                 const newFee = fee === 0 ? 10 : fee + 10;
                 await update(ref(db, userPath), {
-                    currentBalance: (userData.currentBalance || 0) + win.val,
+                    currentBalance: increment(win.val),
                     lastSpinTime: Date.now(),
                     spinFee: newFee
                 });
@@ -228,11 +200,11 @@
             const timer = document.getElementById('spinTimer');
             const inter = setInterval(() => {
                 ms -= 1000;
+                if (ms <= 0) { clearInterval(inter); updateUIStatus(); return; }
                 const h = Math.floor(ms / 3600000).toString().padStart(2,'0');
                 const m = Math.floor((ms % 3600000) / 60000).toString().padStart(2,'0');
                 const s = Math.floor((ms % 60000) / 1000).toString().padStart(2,'0');
-                timer.innerText = `Next Free: ${h}:${m}:${s}`;
-                if (ms <= 0) { clearInterval(inter); updateUIStatus(); }
+                timer.innerText = `NEXT FREE: ${h}:${m}:${s}`;
             }, 1000);
         }
 
