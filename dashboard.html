@@ -44,13 +44,13 @@
 
         /* --- Action Hub --- */
         .action-hub { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0; }
-        .action-item { text-align: center; cursor: pointer; text-decoration: none; color: white; }
+        .action-item { text-align: center; cursor: pointer; text-decoration: none; color: white; transition: 0.3s; }
         .icon-box {
             width: 50px; height: 50px; background: var(--glass); border-radius: 15px;
             display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;
             border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; font-size: 1.2rem;
         }
-        .action-item:hover .icon-box { background: var(--primary); color: black; box-shadow: 0 0 15px var(--primary); }
+        .action-item:hover .icon-box { background: var(--primary); color: black; box-shadow: 0 0 15px var(--primary); transform: translateY(-3px); }
         .action-item span { font-size: 0.6rem; font-family: 'Orbitron'; opacity: 0.7; }
 
         /* --- Daily Reward --- */
@@ -61,8 +61,9 @@
         }
         .btn-claim {
             background: var(--primary); color: black; border: none; padding: 8px 20px;
-            border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+            border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
+        .btn-claim:hover:not(:disabled) { box-shadow: 0 0 15px var(--primary); transform: scale(1.05); }
         .btn-claim:disabled { background: #333; color: #666; cursor: not-allowed; }
 
         /* --- Nav --- */
@@ -84,7 +85,7 @@
     <div class="container">
         <div class="header">
             <div>
-                <h3 style="margin:0; font-family: 'Orbitron';">ADAMAS</h3>
+                <h3 style="margin:0; font-family: 'Orbitron'; letter-spacing: 2px;">ADAMAS</h3>
                 <div class="wallet-display" id="walletAddr">CONNECTING...</div>
             </div>
             <div style="text-align: right;">
@@ -94,13 +95,13 @@
 
         <div class="balance-card">
             <div style="font-size: 0.7rem; opacity: 0.6; letter-spacing: 2px;">TOTAL ASSETS</div>
-            <div class="main-balance" id="totalBalance">0.00<span class="currency">ABP</span></div>
+            <div class="main-balance" id="totalBalance">0<span class="currency">ABP</span></div>
         </div>
 
         <div class="reward-bar">
             <div>
                 <div style="font-size: 0.7rem; font-family: 'Orbitron'; color: var(--primary);">DAILY BONUS</div>
-                <div id="checkinStatus" style="font-size: 0.6rem; opacity: 0.7;">Checking status...</div>
+                <div id="checkinStatus" style="font-size: 0.6rem; opacity: 0.7;">Syncing...</div>
             </div>
             <button id="checkinBtn" class="btn-claim" onclick="claimDaily()">CLAIM</button>
         </div>
@@ -118,7 +119,7 @@
                 <span id="progressText">0%</span>
             </div>
             <div style="width:100%; height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden;">
-                <div id="barFill" style="width:0%; height:100%; background:var(--primary); box-shadow: 0 0 10px var(--primary);"></div>
+                <div id="barFill" style="width:0%; height:100%; background:var(--primary); box-shadow: 0 0 10px var(--primary); transition: 1s ease-in-out;"></div>
             </div>
         </div>
     </div>
@@ -132,8 +133,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update, get, set } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
             databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
@@ -147,90 +149,118 @@
         let userWallet = "";
         let currentBalance = 0;
 
-        // --- 1. Real Metamask Connection ---
+        // --- 1. Wallet Connection Logic ---
         async function connectWallet() {
             if (window.ethereum) {
                 try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    userWallet = accounts[0];
-                    const shortAddr = userWallet.substring(0, 6) + "..." + userWallet.substring(userWallet.length - 4);
-                    document.getElementById('walletAddr').innerText = shortAddr;
-                    
-                    startAppLogic();
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if (accounts.length > 0) {
+                        handleAccount(accounts[0]);
+                    } else {
+                        // Agar accounts nahi mile toh request karein
+                        const reqAccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                        handleAccount(reqAccounts[0]);
+                    }
                 } catch (err) {
-                    document.getElementById('walletAddr').innerText = "CONNECTION FAILED";
+                    document.getElementById('walletAddr').innerText = "ERROR CONNECTING";
                 }
             } else {
-                alert("Please install Metamask!");
+                alert("Please install MetaMask!");
             }
         }
 
-        // --- 2. Main Logic after Connection ---
+        function handleAccount(account) {
+            userWallet = account;
+            const shortAddr = userWallet.substring(0, 6) + "..." + userWallet.substring(userWallet.length - 4);
+            document.getElementById('walletAddr').innerText = shortAddr;
+            localStorage.setItem('userWallet', userWallet);
+            startAppLogic();
+        }
+
+        // --- 2. Live Data Sync ---
         function startAppLogic() {
-            const userPath = 'users/' + userWallet.substring(0, 10);
+            const userShort = userWallet.substring(0, 10);
+            const userRef = ref(db, 'users/' + userShort);
             
-            // Fetch and Init User
-            onValue(ref(db, userPath), (snapshot) => {
-                let data = snapshot.val();
+            onValue(userRef, (snapshot) => {
+                const data = snapshot.val();
                 
-                // Agar user naya hai toh database mein create karein
                 if (!data) {
-                    set(ref(db, userPath), {
-                        currentBalance: 0,
+                    // New User Welcome
+                    set(userRef, {
+                        walletAddress: userWallet,
+                        currentBalance: 500, // Welcome Bonus
                         lastCheckin: 0,
-                        checkinDay: 0,
-                        address: userWallet
+                        joinedAt: new Date().toISOString()
                     });
                     return;
                 }
 
                 currentBalance = data.currentBalance || 0;
-                document.getElementById('totalBalance').innerHTML = `${parseFloat(currentBalance).toLocaleString()}<span class="currency">ABP</span>`;
+                // Update Balance UI
+                document.getElementById('totalBalance').innerHTML = `${Math.floor(currentBalance).toLocaleString()}<span class="currency">ABP</span>`;
                 
-                // Progress Logic
-                updateProgress(data);
-                // Checkin Logic
-                checkDailyStatus(data, userPath);
+                // Update Eligibility Progress
+                updateEligibility(data);
+                
+                // Update Daily Claim Status
+                checkDailyStatus(data.lastCheckin);
             });
         }
 
-        function updateProgress(data) {
-            let tasksDone = 0;
-            if(data.tasks) tasksDone = Object.values(data.tasks).filter(v => v === true).length;
-            const percent = Math.min((tasksDone / 4) * 100, 100);
+        function updateEligibility(data) {
+            let points = 0;
+            // Balance logic (Max 50% from holding)
+            points += Math.min((currentBalance / 10000) * 50, 50);
+            // Task logic (Max 50% from tasks)
+            if(data.tasks) {
+                const tasksCompleted = Object.values(data.tasks).filter(v => v === true).length;
+                points += Math.min((tasksCompleted / 3) * 50, 50);
+            }
+
+            const percent = Math.floor(points);
             document.getElementById('barFill').style.width = percent + '%';
             document.getElementById('progressText').innerText = percent + '%';
         }
 
-        function checkDailyStatus(data, path) {
-            const lastTime = data.lastCheckin || 0;
+        function checkDailyStatus(lastCheckin) {
             const now = Date.now();
-            const diff = now - lastTime;
             const btn = document.getElementById('checkinBtn');
             const statusText = document.getElementById('checkinStatus');
+            
+            const oneDay = 24 * 60 * 60 * 1000;
+            const isReady = (now - lastCheckin) > oneDay;
 
-            if (diff < 86400000) {
-                btn.disabled = true;
-                btn.innerText = "DONE";
-                statusText.innerText = "Reward Claimed Today!";
-            } else {
+            if (isReady) {
                 btn.disabled = false;
                 btn.innerText = "CLAIM";
-                statusText.innerText = "100 ABP Reward Ready";
+                statusText.innerText = "100 ABP Reward Ready!";
+            } else {
+                btn.disabled = true;
+                btn.innerText = "LOCKED";
+                statusText.innerText = "Come back in 24h";
             }
         }
 
         window.claimDaily = async () => {
-            const userPath = 'users/' + userWallet.substring(0, 10);
-            await update(ref(db, userPath), {
-                currentBalance: currentBalance + 100,
-                lastCheckin: Date.now()
-            });
-            alert("100 ABP Added!");
+            const userShort = userWallet.substring(0, 10);
+            const btn = document.getElementById('checkinBtn');
+            btn.disabled = true;
+
+            try {
+                await update(ref(db, 'users/' + userShort), {
+                    currentBalance: currentBalance + 100,
+                    lastCheckin: Date.now()
+                });
+                alert("Daily Bonus Claimed! +100 ABP");
+            } catch (err) {
+                btn.disabled = false;
+                alert("Error claiming reward.");
+            }
         };
 
-        // Initialize on load
-        window.addEventListener('load', connectWallet);
+        // Initialize
+        window.onload = connectWallet;
     </script>
 </body>
 </html>
