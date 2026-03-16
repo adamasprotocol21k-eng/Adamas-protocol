@@ -39,3 +39,126 @@
     <script src="js/app.js"></script>
 </body>
 </html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --primary: #00f2ff;
+        --secondary: #7000ff;
+        --nav-bg: rgba(10, 11, 16, 0.7);
+    }
+
+    /* Premium Navigation Dock */
+    .dock {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--nav-bg);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        padding: 12px 25px;
+        border-radius: 30px;
+        display: flex;
+        gap: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 
+                    inset 0 0 10px rgba(0, 242, 255, 0.05);
+        z-index: 9999;
+    }
+
+    .dock-item {
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 1.3rem;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Icon Animation */
+    .dock-item i {
+        transition: transform 0.3s ease;
+    }
+
+    /* Label - initially hidden */
+    .dock-item span {
+        font-size: 0.6rem;
+        font-family: 'Orbitron', sans-serif;
+        position: absolute;
+        bottom: -18px;
+        opacity: 0;
+        transition: 0.3s;
+        color: var(--primary);
+        letter-spacing: 1px;
+    }
+
+    /* Active & Hover States */
+    .dock-item:hover, .dock-item.active {
+        color: var(--primary);
+    }
+
+    .dock-item.active i {
+        transform: translateY(-12px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary));
+    }
+
+    .dock-item.active span {
+        opacity: 1;
+        transform: translateY(-8px);
+    }
+
+    /* The "Pulse" Indicator for Active Item */
+    .dock-item.active::before {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: var(--primary);
+        border-radius: 50%;
+        bottom: -5px;
+        box-shadow: 0 0 10px var(--primary);
+    }
+
+    /* Responsive adjustment */
+    @media (max-width: 400px) {
+        .dock { gap: 20px; padding: 10px 20px; }
+        .dock-item { font-size: 1.1rem; }
+    }
+</style>
+
+<div class="dock">
+    <a href="dashboard.html" class="dock-item" id="nav-home">
+        <i class="fas fa-th-large"></i>
+        <span>HOME</span>
+    </a>
+    <a href="games.html" class="dock-item" id="nav-games">
+        <i class="fas fa-gamepad"></i>
+        <span>GAMES</span>
+    </a>
+    <a href="wallet.html" class="dock-item active" id="nav-wallet"> <i class="fas fa-wallet"></i>
+        <span>WALLET</span>
+    </a>
+    <a href="invite.html" class="dock-item" id="nav-invite">
+        <i class="fas fa-users"></i>
+        <span>FRIENDS</span>
+    </a>
+    <a href="profile.html" class="dock-item" id="nav-profile">
+        <i class="fas fa-user-astronaut"></i>
+        <span>USER</span>
+    </a>
+</div>
+
+<script>
+    // JS to automatically handle active state if you want, 
+    // though hardcoding "active" class on each page is more reliable.
+    document.querySelectorAll('.dock-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.dock-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+        });
+    });
+</script>
