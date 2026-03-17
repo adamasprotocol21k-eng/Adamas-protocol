@@ -3,137 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | The Galaxy Vault</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;800&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <title>ADAMAS | Elite Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;400;900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #ffffff;
-            --sub-text: #636366;
-            --bg-black: #000000;
-            --neon-blue: #0A84FF;
+            --accent: #00f2ff;
+            --premium-gold: #D4AF37;
+            --bg: #000000;
+            --card-bg: rgba(255, 255, 255, 0.03);
         }
 
         body {
-            margin: 0; background: var(--bg-black);
-            color: white; font-family: 'Plus Jakarta Sans', sans-serif;
-            height: 100vh; overflow: hidden;
+            margin: 0; background: var(--bg); color: white;
+            font-family: 'Outfit', sans-serif; height: 100vh; overflow: hidden;
         }
 
-        /* --- 1. DYNAMIC MESH BACKGROUND (Very Expensive Look) --- */
-        .mesh-gradient {
-            position: fixed; width: 100vw; height: 100vh;
-            background: 
-                radial-gradient(at 0% 0%, rgba(10, 132, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(191, 90, 242, 0.15) 0%, transparent 50%);
-            z-index: -1;
+        /* --- 1. THE LUXURY AMBIENCE (Animated Aurora) --- */
+        .aurora-bg {
+            position: fixed; width: 200%; height: 200%; top: -50%; left: -50%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.08), rgba(188, 19, 254, 0.05), transparent 50%);
+            animation: move-aurora 20s infinite alternate linear;
+            z-index: -1; filter: blur(60px);
+        }
+        @keyframes move-aurora {
+            from { transform: rotate(0deg); } to { transform: rotate(360deg); }
         }
 
-        /* --- 2. LUXURY HEADER --- */
+        /* --- 2. THE CROWN (Elite Header) --- */
         header {
-            padding: 40px 25px; display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 40px 30px; display: flex; justify-content: space-between; align-items: center;
         }
-        .founder-label { font-size: 0.6rem; letter-spacing: 4px; color: var(--sub-text); font-weight: 800; }
-        .wallet-pill {
-            background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.1);
-            padding: 8px 16px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;
-            backdrop-filter: blur(10px);
+        .protocol-name { font-family: 'Syncopate'; font-size: 0.8rem; letter-spacing: 6px; color: var(--accent); }
+        .user-status { font-size: 0.6rem; color: #555; font-weight: 900; letter-spacing: 2px; }
+
+        /* --- 3. THE "RICH-LIST" BALANCE DISPLAY --- */
+        .balance-section {
+            padding: 0 30px; margin-top: 20px;
+        }
+        .balance-label { font-size: 0.65rem; color: #444; letter-spacing: 4px; font-weight: 400; }
+        .main-balance {
+            font-size: 5rem; font-weight: 900; letter-spacing: -5px; margin: 5px 0;
+            background: linear-gradient(180deg, #fff 0%, #444 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .token-tag {
+            display: inline-block; padding: 4px 12px; border-radius: 100px;
+            background: rgba(0, 242, 255, 0.1); color: var(--accent);
+            font-size: 0.6rem; font-weight: 900; letter-spacing: 2px;
         }
 
-        /* --- 3. MAIN ASSET DISPLAY (The Core) --- */
-        .asset-hero {
-            text-align: center; margin-top: 10vh; padding: 0 20px;
+        /* --- 4. THE POWER STACK (Holographic Cards) --- */
+        .power-stack {
+            display: flex; gap: 15px; padding: 40px 30px;
         }
-        .main-balance-label { font-size: 0.7rem; color: var(--sub-text); letter-spacing: 5px; margin-bottom: 10px; }
-        .balance-value { 
-            font-size: 4.5rem; font-family: 'Inter', sans-serif; font-weight: 900; 
-            letter-spacing: -4px; margin: 0; position: relative;
+        .holo-card {
+            flex: 1; background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
+            padding: 25px; border-radius: 35px; backdrop-filter: blur(30px);
+            position: relative; overflow: hidden;
         }
-        .currency-tag { font-size: 1rem; color: var(--neon-blue); letter-spacing: 3px; font-weight: 800; }
+        .holo-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+        }
+        .card-title { font-size: 0.5rem; color: #555; letter-spacing: 2px; font-weight: 900; }
+        .card-data { font-size: 1.5rem; font-weight: 900; margin-top: 10px; }
 
-        /* --- 4. RICH CARDS (Floating Deck) --- */
-        .deck-container {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-            padding: 40px 25px; margin-top: 20px;
+        /* --- 5. THE COMMAND CENTER (Action Hub) --- */
+        .command-center {
+            position: fixed; bottom: 180px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between;
         }
-        .rich-card {
-            background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.08);
-            border-radius: 32px; padding: 25px; backdrop-filter: blur(20px);
-            transition: 0.4s cubic-bezier(0.2, 0, 0, 1);
+        .cmd-btn {
+            width: 60px; height: 60px; border-radius: 20px;
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5rem; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .rich-card:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
-        .card-icon { font-size: 1.5rem; margin-bottom: 15px; display: block; }
-        .card-label { font-size: 0.55rem; color: var(--sub-text); letter-spacing: 2px; font-weight: 800; }
-        .card-val { font-size: 1.2rem; font-weight: 800; margin-top: 8px; }
+        .cmd-btn:active { transform: translateY(-10px) scale(1.1); background: var(--accent); color: #000; box-shadow: 0 10px 30px rgba(0, 242, 255, 0.3); }
 
-        /* --- 5. THE "RICH-TOUCH" ACTION HUB --- */
-        .hub-dock {
-            position: fixed; bottom: 180px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 15px; background: rgba(255,255,255,0.03);
-            padding: 10px; border-radius: 100px; border: 0.5px solid rgba(255,255,255,0.1);
-        }
-        .hub-item {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: rgba(255,255,255,0.05); display: flex; 
-            justify-content: center; align-items: center; font-size: 1.2rem;
-        }
-
-        /* --- 6. PRESTIGE CLAIM BUTTON --- */
-        .prestige-btn {
-            position: fixed; bottom: 100px; left: 5%; width: 90%;
-            background: var(--accent); color: black; padding: 22px;
-            border-radius: 24px; font-size: 0.8rem; font-weight: 900;
-            text-align: center; letter-spacing: 2px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        /* --- 6. THE PROTOCOL EXECUTION (Final Button) --- */
+        .execute-btn {
+            position: fixed; bottom: 80px; left: 30px; right: 30px;
+            background: white; color: black; padding: 25px;
+            border-radius: 25px; text-align: center;
+            font-family: 'Syncopate'; font-size: 0.7rem; font-weight: 900;
+            letter-spacing: 3px; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div class="mesh-gradient"></div>
+    <div class="aurora-bg"></div>
 
     <header>
-        <div>
-            <div class="founder-label">ADAMAS PROTOCOL</div>
-            <div style="font-weight: 200; font-size: 1.5rem;">The Galaxy Vault</div>
-        </div>
-        <div class="wallet-pill" id="walletDisplay">0X...7DAB</div>
+        <div class="protocol-name">ADAMAS</div>
+        <div class="user-status">ELITE MEMBER</div>
     </header>
 
-    <div class="asset-hero">
-        <div class="main-balance-label">PORTFOLIO VALUE</div>
-        <h1 class="balance-value" id="userBalance">3,003</h1>
-        <div class="currency-tag">ABP CORE</div>
+    <div class="balance-section">
+        <div class="balance-label">SECURED ASSETS</div>
+        <div class="main-balance" id="userBalance">3,003</div>
+        <div class="token-tag">ABP PROTOCOL v3.0</div>
     </div>
 
-    <div class="deck-container">
-        <div class="rich-card" onclick="window.location.href='staking.html'">
-            <span class="card-icon">🛡️</span>
-            <span class="card-label">VAULT STAKED</span>
-            <div class="card-val" id="userStaked" style="color: var(--neon-blue);">0</div>
+    <div class="power-stack">
+        <div class="holo-card">
+            <div class="card-title">ENERGY CORE</div>
+            <div class="card-data" id="userEnergy" style="color: var(--accent);">100%</div>
         </div>
-        <div class="rich-card">
-            <span class="card-icon">⚡</span>
-            <span class="card-label">SYSTEM ENERGY</span>
-            <div class="card-val" id="userEnergy" style="color: #34C759;">100%</div>
+        <div class="holo-card">
+            <div class="card-title">VAULT LOCK</div>
+            <div class="card-data" id="userStaked" style="color: white;">0.00</div>
         </div>
     </div>
 
-    <div class="hub-dock">
-        <div class="hub-item" onclick="window.location.href='game.html'">🕹️</div>
-        <div class="hub-item" onclick="window.location.href='mines.html'">💣</div>
-        <div class="hub-item" onclick="window.location.href='referral.html'">🚀</div>
-        <div class="hub-item" onclick="window.location.href='admin.html'">⚙️</div>
+    <div class="command-center">
+        <div class="cmd-btn" onclick="window.location.href='game.html'">🕹️</div>
+        <div class="cmd-btn" onclick="window.location.href='mines.html'">💣</div>
+        <div class="cmd-btn" onclick="window.location.href='staking.html'">🛡️</div>
+        <div class="cmd-btn" onclick="window.location.href='referral.html'">🛰️</div>
     </div>
 
-    <div class="prestige-btn" onclick="alert('Accessing Daily Rewards...')">
-        EXECUTE DAILY PROTOCOL
+    <div class="execute-btn" onclick="document.getElementById('rewardModal').style.display='flex';">
+        AUTHORIZE DAILY YIELD
     </div>
 
     <div id="navbar-placeholder"></div>
 
     <script type="module">
         import { DBModule } from './js/database.js';
-        // Your logic to update values...
+        // Your logic...
     </script>
     <script src="js/nav.js"></script>
 </body>
