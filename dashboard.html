@@ -3,188 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS | The Elite Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <title>ADAMAS | Galaxy Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Plus+Jakarta+Sans:wght@300;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold-primary: #FFD700;
-            --gold-secondary: #BA8B02;
-            --bg-black: #080808;
-            --glass-white: rgba(255, 255, 255, 0.05);
+            --galaxy-purple: #6a11cb;
+            --galaxy-blue: #2575fc;
+            --gold-sun: #FFD700;
+            --stardust: rgba(255, 255, 255, 0.8);
         }
 
         body {
-            margin: 0; padding: 0; background: var(--bg-black);
-            color: white; font-family: 'Space Grotesk', sans-serif;
+            margin: 0; padding-bottom: 120px;
+            background: #020205; /* Space Black */
+            color: white; font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
         }
 
-        /* --- DYNAMIC MESH BACKGROUND --- */
-        .mesh-bg {
+        /* --- GALAXY ANIMATED BACKGROUND --- */
+        .universe {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(at 0% 0%, rgba(186, 139, 2, 0.15) 0, transparent 50%),
-                        radial-gradient(at 100% 100%, rgba(255, 215, 0, 0.1) 0, transparent 50%);
-            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -2;
         }
 
-        /* --- HEADER (GLASS STYLE) --- */
-        .header-premium {
-            padding: 30px 20px; display: flex; justify-content: space-between; align-items: center;
+        /* Stars Animation */
+        .stars {
+            position: fixed; top: 0; left: 0; width: 2px; height: 2px;
+            background: white; border-radius: 50%;
+            box-shadow: 10vw 20vh white, 50vw 40vh white, 80vw 10vh white, 30vw 70vh white, 90vw 80vh white;
+            animation: twinkle 5s infinite linear; z-index: -1;
         }
 
-        .user-id {
-            background: var(--glass-white); padding: 8px 15px; border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem;
-            display: flex; align-items: center; gap: 8px;
+        @keyframes twinkle {
+            0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; }
         }
 
-        /* --- THE VAULT (CENTERPIECE) --- */
-        .vault-container {
-            text-align: center; padding: 60px 20px; position: relative;
-        }
-
-        .vault-label {
-            font-family: 'Bebas Neue', cursive; font-size: 1.5rem; letter-spacing: 5px;
-            color: var(--gold-primary); margin-bottom: 5px; opacity: 0.8;
-        }
-
-        .balance-glow {
-            font-size: 5rem; font-weight: 700; margin: 0;
-            background: linear-gradient(180deg, #FFFFFF 0%, #8A8A8A 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.2));
-        }
-
-        /* --- ELITE ACTION TILES --- */
-        .action-container {
-            display: flex; flex-direction: column; gap: 20px; padding: 0 20px;
-        }
-
-        .luxury-tile {
-            background: linear-gradient(90deg, var(--glass-white), transparent);
-            border-radius: 25px; padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex; align-items: center; justify-content: space-between;
-            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .luxury-tile:active {
-            transform: scale(0.96); background: rgba(212, 175, 55, 0.1);
-            border-color: var(--gold-primary);
-        }
-
-        .tile-info h3 { margin: 0; font-size: 1.1rem; color: #fff; }
-        .tile-info p { margin: 5px 0 0; font-size: 0.75rem; color: #888; }
-
-        .tile-icon-circle {
-            width: 50px; height: 50px; background: rgba(255,255,255,0.03);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* --- FLOATING TAB BAR (THE MOST ADVANCED) --- */
-        .tab-bar {
-            position: fixed; bottom: 30px; left: 20px; right: 20px;
-            height: 75px; background: rgba(15, 15, 15, 0.8);
-            backdrop-filter: blur(30px); border-radius: 30px;
+        /* --- COSMIC CARDS (CHAMAKDAR SECTIONS) --- */
+        .cosmic-card {
+            margin: 20px; padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            backdrop-filter: blur(15px);
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 30px rgba(106, 17, 203, 0.2);
+            overflow: hidden;
         }
 
-        .tab-item {
-            text-decoration: none; display: flex; flex-direction: column; align-items: center;
-            color: #555; transition: 0.4s;
+        /* Moving Nebula Effect inside card */
+        .cosmic-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--galaxy-blue), var(--galaxy-purple), transparent);
+            animation: rotate-nebula 10s infinite linear; opacity: 0.1; z-index: -1;
         }
 
-        .tab-item.active { color: var(--gold-primary); transform: translateY(-5px); }
+        @keyframes rotate-nebula { 100% { transform: rotate(360deg); } }
 
-        .tab-glow {
-            width: 4px; height: 4px; background: var(--gold-primary);
-            border-radius: 50%; margin-top: 6px; box-shadow: 0 0 10px var(--gold-primary);
-            opacity: 0;
+        .balance-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem; font-weight: 900;
+            background: linear-gradient(to bottom, #fff, var(--gold-sun));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
         }
-        .active .tab-glow { opacity: 1; }
 
+        /* --- SHINING BUTTONS (GALAXY BUTTONS) --- */
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+
+        .galaxy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px; padding: 25px 10px;
+            text-align: center; transition: 0.3s;
+            position: relative; overflow: hidden;
+        }
+
+        /* The Shine/Chamki effect */
+        .galaxy-btn:hover {
+            border-color: var(--gold-sun);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .galaxy-btn::after {
+            content: ''; position: absolute; top: -100%; left: -100%;
+            width: 50%; height: 300%; background: rgba(255,255,255,0.2);
+            transform: rotate(45deg); transition: 0.5s;
+        }
+        .galaxy-btn:hover::after { left: 150%; }
+
+        .btn-icon { font-size: 2.2rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 0 5px white); }
+
+        .btn-label { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; letter-spacing: 2px; color: var(--gold-sun); }
+
+        /* --- FLOATING NAV (ASTRO DOCK) --- */
+        .astro-nav {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            width: 80%; max-width: 400px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px); border-radius: 100px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            display: flex; justify-content: space-around; padding: 15px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
+        }
+
+        .nav-item { font-size: 1.5rem; filter: grayscale(1); transition: 0.4s; }
+        .nav-item.active { filter: grayscale(0) drop-shadow(0 0 10px var(--gold-sun)); transform: scale(1.2); }
     </style>
 </head>
 <body>
 
-    <div class="mesh-bg"></div>
+    <div class="universe"></div>
+    <div class="stars"></div>
 
-    <header class="header-premium">
-        <div class="user-id">
-            <span style="color: #00ff88;">●</span>
-            <span id="userAddr">0x00...0000</span>
+    <header style="padding: 25px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-family: 'Orbitron', sans-serif; color: var(--gold-sun); letter-spacing: 2px; font-size: 0.8rem;">
+            SYSTEM: ONLINE
         </div>
-        <div style="font-family: 'Bebas Neue'; letter-spacing: 2px; color: var(--gold-primary);">ADAMAS ELITE</div>
+        <div id="userAddr" style="font-size: 0.7rem; color: #888; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);">
+            0x00...0000
+        </div>
     </header>
 
-    <div class="vault-container">
-        <div class="vault-label">Available Treasury</div>
-        <h1 class="balance-glow" id="balanceDisplay">0.00</h1>
-        <div style="margin-top: 15px; font-size: 0.7rem; letter-spacing: 2px; color: #888; border: 1px solid #333; display: inline-block; padding: 4px 15px; border-radius: 50px;">
-            PLATINUM STATUS
+    <section class="cosmic-card">
+        <p style="font-size: 0.6rem; letter-spacing: 5px; color: #888; margin-bottom: 10px;">GALAXY ASSETS</p>
+        <h1 class="balance-val" id="balanceDisplay">0.00</h1>
+        <div style="margin-top: 15px;">
+            <span style="border: 1px solid var(--galaxy-blue); padding: 5px 15px; border-radius: 50px; font-size: 0.6rem; color: var(--galaxy-blue); font-weight: 800; box-shadow: 0 0 10px var(--galaxy-blue);">
+                AIRDROP READY
+            </span>
+        </div>
+    </section>
+
+    <div class="grid-buttons">
+        <div class="galaxy-btn" onclick="RewardsModule.claimDailyBonus()">
+            <span class="btn-icon">✨</span>
+            <span class="btn-label">CLAIM STAR</span>
+        </div>
+        <div class="galaxy-btn" onclick="Notify.show('Opening Nebula Portal...', 'info')">
+            <span class="btn-icon">🌀</span>
+            <span class="btn-label">SPIN VOID</span>
+        </div>
+        <div class="galaxy-btn" onclick="window.location.href='admin.html'">
+            <span class="btn-icon">👑</span>
+            <span class="btn-label">GOVERNOR</span>
+        </div>
+        <div class="galaxy-btn" onclick="Notify.show('Connecting to Nodes...', 'success')">
+            <span class="btn-icon">🛰️</span>
+            <span class="btn-label">STATIONS</span>
         </div>
     </div>
 
-    <div class="action-container">
-        <div class="luxury-tile" onclick="RewardsModule.claimDailyBonus()">
-            <div class="tile-info">
-                <h3>Daily Harvest</h3>
-                <p>Sync with network and claim 100 ABP</p>
-            </div>
-            <div class="tile-icon-circle">⚡</div>
-        </div>
-
-        <div class="luxury-tile" onclick="Notify.show('Quantum Wheel Initializing...', 'info')">
-            <div class="tile-info">
-                <h3>Quantum Spin</h3>
-                <p>Test your luck in the decentralized wheel</p>
-            </div>
-            <div class="tile-icon-circle">🌀</div>
-        </div>
-
-        <div class="luxury-tile" onclick="window.location.href='admin.html'">
-            <div class="tile-info">
-                <h3>Governance</h3>
-                <p>Founder access to protocol control</p>
-            </div>
-            <div class="tile-icon-circle">🛡️</div>
-        </div>
-    </div>
-
-    <nav class="tab-bar">
-        <a href="#" class="tab-item active">
-            <span style="font-size: 1.5rem;">🏠</span>
-            <div class="tab-glow"></div>
-        </a>
-        <a href="#" class="tab-item">
-            <span style="font-size: 1.5rem;">🎮</span>
-            <div class="tab-glow"></div>
-        </a>
-        <a href="#" class="tab-item">
-            <span style="font-size: 1.5rem;">💰</span>
-            <div class="tab-glow"></div>
-        </a>
-        <a href="#" onclick="AuthModule.logout()" class="tab-item">
-            <span style="font-size: 1.5rem;">🔌</span>
-            <div class="tab-glow"></div>
-        </a>
+    <nav class="astro-nav">
+        <div class="nav-item active">🏠</div>
+        <div class="nav-item" onclick="Notify.show('Coming Soon', 'info')">🎮</div>
+        <div class="nav-item" onclick="Notify.show('Vault Locked', 'info')">💎</div>
+        <div id="logoutBtn" class="nav-item" onclick="AuthModule.logout()">🔌</div>
     </nav>
 
     <script src="js/notify.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/rewards.js"></script>
-
     <script type="module">
         import { DBModule } from './js/database.js';
         window.addEventListener('DOMContentLoaded', async () => {
             const wallet = localStorage.getItem('userWallet');
-            if (wallet) {
-                document.getElementById('userAddr').innerText = wallet.substring(0,6) + '...' + wallet.substring(wallet.length-4);
+            if(wallet) {
+                document.getElementById('userAddr').innerText = wallet.substring(0,6)+'...'+wallet.substring(wallet.length-4);
                 const data = await DBModule.getUserData(wallet);
-                if(data) document.getElementById('balanceDisplay').innerText = data.balance.toLocaleString();
+                if(data) document.getElementById('balanceDisplay').innerText = data.balance;
             }
         });
     </script>
