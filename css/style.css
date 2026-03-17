@@ -1,0 +1,96 @@
+/* ADAMAS PROTOCOL - Master Theme */
+:root {
+    --primary-neon: #00f2ff;
+    --secondary-neon: #7000ff;
+    --bg-dark: #0a0b10;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text-main: #ffffff;
+    --text-dim: #b0b0b0;
+    --success-green: #00ff88;
+    --error-red: #ff3366;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow-x: hidden;
+    background: radial-gradient(circle at top right, #1a1b25, #0a0b10);
+    min-height: 100vh;
+}
+
+/* --- REUSABLE COMPONENTS --- */
+
+/* Glassmorphism Card */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-neon);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+}
+
+/* Neon Button */
+.btn-neon {
+    background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon));
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(112, 0, 255, 0.4);
+    transition: 0.3s;
+}
+
+.btn-neon:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 25px var(--primary-neon);
+}
+
+/* Toast/Notification Styling */
+.toast {
+    background: rgba(0, 0, 0, 0.9);
+    border-left: 5px solid var(--primary-neon);
+    padding: 15px 25px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    animation: slideIn 0.4s ease-out;
+    min-width: 250px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.toast-success { border-color: var(--success-green); }
+.toast-error { border-color: var(--error-red); }
+
+/* --- ANIMATIONS --- */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: scale(0.9); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .glass-card { padding: 15px; }
+    .btn-neon { width: 100%; }
+}
+
