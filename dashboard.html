@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ADAMAS Protocol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .balance-val { font-size: 2rem; font-weight: 900; color: var(--primary-neon); }
+        .airdrop-bar { height: 10px; background: #333; border-radius: 5px; margin-top: 10px; overflow: hidden; }
+        .airdrop-progress { height: 100%; background: var(--secondary-neon); width: 0%; transition: 1s; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+            <div>
+                <h2 style="font-weight: 900;">ADAMAS <span style="color: var(--secondary-neon);">HUB</span></h2>
+                <p id="userAddr" style="font-size: 0.8rem; color: var(--text-dim);">0x00...000</p>
+            </div>
+            <button class="btn-neon" style="padding: 8px 15px;" onclick="AuthModule.logout()">Logout</button>
+        </header>
+
+        <div class="stats-grid">
+            <div class="glass-card">
+                <p style="color: var(--text-dim);">Available Balance</p>
+                <div class="balance-val"><span id="balance">0</span> <small style="font-size: 1rem;">ABP</small></div>
+            </div>
+            <div class="glass-card">
+                <p style="color: var(--text-dim);">Airdrop Eligibility</p>
+                <div style="font-weight: bold;"><span id="eligibility">0</span>%</div>
+                <div class="airdrop-bar"><div id="progress" class="airdrop-progress"></div></div>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 20px;">Earning Modules</h3>
+        <div class="game-grid">
+            <div class="glass-card">
+                <h4>📅 Daily Check-in</h4>
+                <p style="font-size: 0.9rem; margin: 10px 0; color: var(--text-dim);">Claim your 100 ABP daily reward.</p>
+                <button class="btn-neon" style="width: 100%;" onclick="RewardsModule.claimDailyBonus()">Claim Reward</button>
+            </div>
+
+            <div class="glass-card" style="text-align: center;">
+                <h4>🎡 Lucky Spin</h4>
+                <div id="spinWheel" style="width: 80px; height: 80px; background: var(--secondary-neon); border-radius: 50%; margin: 15px auto; transition: 4s cubic-bezier(0.1, 0, 0.1, 1); display: flex; align-items: center; justify-content: center; font-size: 30px;">🎁</div>
+                <button class="btn-neon" style="width: 100%;" onclick="RewardsModule.executeSpin()">Spin Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { DBModule } from './js/database.js';
+        
+        window.addEventListener('DOMContentLoaded', async () => {
+            const wallet = localStorage.getItem('userWallet');
+            if (!wallet) return window.location.href = "index.html";
+
+            // UI Setup
+            document.getElementById('userAddr').innerText = wallet;
+
+            // Fetch Data from Firebase
+            const data = await DBModule.getUserData(wallet);
+            if (data) {
+                document.getElementById('balance').innerText = data.balance;
+                // Simple logic for airdrop % (based on tasks or balance)
+                const progress = Math.min((data.balance / 1000) * 100, 100);
+                document.getElementById('progress').style.width = progress + "%";
+                document.getElementById('eligibility').innerText = Math.floor(progress);
+            }
+        });
+    </script>
+
+    <script src="js/notify.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/rewards.js"></script>
+</body>
+</html>
+
