@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMAS Protocol | Enter the Future</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #00f2ff, #7000ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .hero-subtitle {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section">
+        <div class="glass-card" style="border-radius: 50%; width: 100px; height: 100px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center;">
+            <span style="font-size: 40px;">💎</span>
+        </div>
+
+        <h1 class="hero-title">ADAMAS PROTOCOL</h1>
+        <p class="hero-subtitle">The first decentralized entertainment ecosystem on Polygon Amoy. Earn ABP tokens, play games, and secure your future.</p>
+
+        <button id="connectBtn" class="btn-neon" onclick="AuthModule.connect()">
+            Connect Wallet
+        </button>
+
+        <p id="statusMsg" style="margin-top: 20px; color: var(--primary-neon); font-size: 0.9rem;"></p>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="js/notify.js"></script>
+    <script src="js/auth.js"></script>
+    
+    <script>
+        // Check if already connected, then redirect to dashboard
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('userWallet')) {
+                document.getElementById('statusMsg').innerText = "Establishing secure link...";
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
+
