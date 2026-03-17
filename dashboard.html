@@ -1,50 +1,145 @@
-<div class="container">
-    
-    <div class="glass-card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #00f2ff, #7000ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">💎</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMAS Hub | Premium Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050609; padding-bottom: 90px; }
+        
+        .header-profile {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px; background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, rgba(0, 242, 255, 0.1) 0%, rgba(112, 0, 255, 0.1) 100%);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            text-align: center; padding: 40px 20px; margin: 0 20px 25px 20px;
+            border-radius: 24px; position: relative; overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
+        }
+
+        .main-balance { font-size: 3.5rem; font-weight: 800; margin: 10px 0; letter-spacing: -1px; }
+
+        .action-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px;
+        }
+
+        .feature-box {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 25px 15px; text-align: center;
+            transition: 0.3s; cursor: pointer;
+        }
+
+        .feature-box:active { transform: scale(0.95); background: rgba(0, 242, 255, 0.1); }
+
+        .feature-icon { font-size: 32px; margin-bottom: 12px; display: block; }
+
+        /* Bottom Nav - Just like the Video */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(5, 6, 9, 0.9); backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around; padding: 15px 10px;
+            border-top: 1px solid rgba(255,255,255,0.1); z-index: 1000;
+        }
+
+        .nav-item { text-align: center; color: #666; font-size: 0.7rem; font-weight: 600; text-decoration: none; }
+        .nav-item.active { color: var(--primary-neon); }
+        .nav-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+
+        .airdrop-status-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(0, 255, 136, 0.1); color: #00ff88;
+            padding: 6px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-profile">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 44px; height: 44px; border-radius: 14px; background: var(--secondary-neon); display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 0 15px rgba(112, 0, 255, 0.3);">💎</div>
             <div>
-                <h4 id="userAddr" style="margin:0; font-size: 0.9rem;">0x00...000</h4>
-                <div style="display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: #00ff88;">
-                    <span style="width: 8px; height: 8px; background: #00ff88; border-radius: 50%; display: inline-block;"></span> Verified Founder
-                </div>
+                <p id="userAddr" style="font-size: 0.85rem; font-weight: 600; color: #fff; margin: 0;">0x00...000</p>
+                <p style="font-size: 0.65rem; color: #00ff88; margin: 0; text-transform: uppercase; letter-spacing: 1px;">● Active Founder</p>
             </div>
         </div>
-        <button onclick="AuthModule.logout()" style="background: none; border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 12px; border-radius: 8px; font-size: 0.7rem;">Disconnect</button>
+        <div onclick="AuthModule.logout()" style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; cursor: pointer;">🔌</div>
     </div>
 
-    <div class="glass-card" style="text-align: center; padding: 30px 20px; margin-bottom: 25px; border: 1px solid rgba(0, 242, 255, 0.3);">
-        <p style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;">Total ABP Balance</p>
-        <h1 id="balance" style="font-size: 3rem; font-weight: 900; margin: 10px 0;">0.00</h1>
-        <div style="display: inline-block; padding: 5px 15px; background: rgba(0, 242, 255, 0.1); border-radius: 20px; color: var(--primary-neon); font-size: 0.8rem;">
-            Airdrop Status: <span id="eligibility">0</span>% Ready
-        </div>
-    </div>
-
-    <div class="game-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 80px;">
-        <div class="glass-card" onclick="RewardsModule.claimDailyBonus()" style="text-align: center; cursor: pointer;">
-            <div style="font-size: 30px;">📆</div>
-            <p style="margin-top: 10px; font-weight: bold;">Daily Bonus</p>
-        </div>
-        <div class="glass-card" onclick="showGames()" style="text-align: center; cursor: pointer;">
-            <div style="font-size: 30px;">🎮</div>
-            <p style="margin-top: 10px; font-weight: bold;">Games Hub</p>
-        </div>
-        <div class="glass-card" style="text-align: center; cursor: pointer;">
-            <div style="font-size: 30px;">🔗</div>
-            <p style="margin-top: 10px; font-weight: bold;">Invite Friends</p>
-        </div>
-        <div class="glass-card" style="text-align: center; cursor: pointer;">
-            <div style="font-size: 30px;">🛡️</div>
-            <p style="margin-top: 10px; font-weight: bold;">Staking</p>
+    <div class="balance-card">
+        <p style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px;">Your Vault Balance</p>
+        <h1 class="main-balance" id="balanceDisplay">0.00</h1>
+        <div class="airdrop-status-pill">
+            <span>Airdrop Ready:</span> <span id="eligibilityPerc">0</span>%
         </div>
     </div>
 
-    <nav style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 11, 16, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); z-index: 100;">
-        <div style="color: var(--primary-neon); text-align: center;">🏠<br><span style="font-size: 0.6rem;">Home</span></div>
-        <div style="color: var(--text-dim); text-align: center;">🎰<br><span style="font-size: 0.6rem;">Play</span></div>
-        <div style="color: var(--text-dim); text-align: center;">📊<br><span style="font-size: 0.6rem;">Airdrop</span></div>
-        <div style="color: var(--text-dim); text-align: center;" onclick="window.location.href='admin.html'">⚙️<br><span style="font-size: 0.6rem;">Admin</span></div>
+    <div class="action-grid">
+        <div class="feature-box" onclick="RewardsModule.claimDailyBonus()">
+            <span class="feature-icon">📅</span>
+            <span style="font-size: 0.9rem; font-weight: 600;">Daily Check-in</span>
+        </div>
+        <div class="feature-box" onclick="Notify.show('Games coming soon!', 'info')">
+            <span class="feature-icon">🎡</span>
+            <span style="font-size: 0.9rem; font-weight: 600;">Lucky Spin</span>
+        </div>
+        <div class="feature-box" onclick="Notify.show('Invite feature active next week', 'info')">
+            <span class="feature-icon">👥</span>
+            <span style="font-size: 0.9rem; font-weight: 600;">Referral</span>
+        </div>
+        <div class="feature-box" onclick="window.location.href='admin.html'">
+            <span class="feature-icon">⚙️</span>
+            <span style="font-size: 0.9rem; font-weight: 600;">Governance</span>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="#" class="nav-item" onclick="Notify.show('Play sector locked', 'info')">
+            <span class="nav-icon">🎮</span> Play
+        </a>
+        <a href="#" class="nav-item" onclick="Notify.show('Vault syncing...', 'info')">
+            <span class="nav-icon">💰</span> Wallet
+        </a>
+        <a href="admin.html" class="nav-item">
+            <span class="nav-icon">🛡️</span> Admin
+        </a>
     </nav>
 
-</div>
+    <script src="js/notify.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/rewards.js"></script>
+
+    <script type="module">
+        import { DBModule } from './js/database.js';
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const wallet = localStorage.getItem('userWallet');
+            if (!wallet) return window.location.href = "index.html";
+
+            // Shorten Wallet Address
+            const displayAddr = wallet.substring(0, 6) + "..." + wallet.substring(wallet.length - 4);
+            document.getElementById('userAddr').innerText = displayAddr;
+
+            // Fetch Data & Update UI
+            const data = await DBModule.getUserData(wallet);
+            if (data) {
+                document.getElementById('balanceDisplay').innerText = parseFloat(data.balance).toLocaleString();
+                const progress = Math.min((data.balance / 1000) * 100, 100);
+                document.getElementById('eligibilityPerc').innerText = Math.floor(progress);
+            }
+        });
+    </script>
+</body>
+</html>
