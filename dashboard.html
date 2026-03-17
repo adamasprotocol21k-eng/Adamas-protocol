@@ -3,138 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS | Infinity Terminal</title>
+    <title>ADAMAS | Infinity Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glow-cyan: #00f2ff;
-            --glow-purple: #bc13fe;
-            --bg-dark: #020205;
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+            --deep-dark: #010103;
         }
 
         body {
-            margin: 0; background: var(--bg-dark);
+            margin: 0; background: var(--deep-dark);
             color: white; font-family: 'Rajdhani', sans-serif;
             overflow: hidden; height: 100vh;
         }
 
-        /* --- Ambient Mesh Background --- */
-        .ambient-bg {
+        /* --- Dynamic Animated Mesh Background --- */
+        .mesh-bg {
             position: fixed; width: 100vw; height: 100vh;
             background: 
-                radial-gradient(circle at 10% 20%, rgba(0, 242, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(188, 19, 254, 0.08) 0%, transparent 40%);
-            z-index: -1;
+                radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(188, 19, 254, 0.1) 0%, transparent 50%);
+            z-index: -1; filter: blur(40px);
+        }
+
+        /* --- Pro Scanline Retro Overlay --- */
+        body::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 3px; z-index: 10; pointer-events: none; opacity: 0.3;
         }
 
         /* --- Floating Header --- */
         header {
-            padding: 30px 20px; display: flex; justify-content: space-between; align-items: center;
+            padding: 25px; display: flex; justify-content: space-between; align-items: center;
         }
-        .user-badge {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 15px; border-radius: 30px; backdrop-filter: blur(10px);
-            font-family: 'Syncopate'; font-size: 0.6rem; letter-spacing: 2px;
+        .status-chip {
+            background: rgba(0, 242, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.2);
+            padding: 5px 12px; border-radius: 20px; font-family: 'Syncopate';
+            font-size: 0.5rem; color: var(--neon-blue); letter-spacing: 2px;
         }
 
-        /* --- Central Infinity Orb (The Balance Display) --- */
-        .infinity-orb-container {
-            position: relative; height: 320px; display: flex;
-            justify-content: center; align-items: center; margin-top: -20px;
+        /* --- The "Crown Jewel" Balance Section --- */
+        .balance-vault {
+            position: relative; height: 280px; display: flex;
+            justify-content: center; align-items: center;
         }
-        .orb-glow {
-            position: absolute; width: 220px; height: 220px;
-            background: linear-gradient(135deg, var(--glow-cyan), var(--glow-purple));
-            filter: blur(80px); opacity: 0.3; animation: pulse-orb 4s infinite alternate;
-        }
-        .orb-ring {
+        .vault-glow {
             position: absolute; width: 200px; height: 200px;
-            border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: inset 0 0 20px rgba(0,242,255,0.2);
+            background: var(--neon-blue); filter: blur(100px); opacity: 0.2;
+            animation: breathe 4s infinite alternate;
+        }
+        .vault-circle {
+            width: 220px; height: 220px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.01); backdrop-filter: blur(20px);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(255,255,255,0.02); backdrop-filter: blur(15px);
+            box-shadow: inset 0 0 30px rgba(0, 242, 255, 0.05);
         }
-        .balance-title { font-family: 'Syncopate'; font-size: 0.5rem; color: #888; letter-spacing: 4px; margin-bottom: 5px; }
-        .balance-val { font-family: 'Syncopate'; font-size: 2rem; font-weight: 700; text-shadow: 0 0 15px var(--glow-cyan); }
+        .label { font-family: 'Syncopate'; font-size: 0.5rem; color: #666; letter-spacing: 4px; }
+        .balance-text { 
+            font-family: 'Syncopate'; font-size: 2.2rem; font-weight: 700; 
+            margin: 10px 0; text-shadow: 0 0 20px var(--neon-blue);
+        }
 
-        /* --- Hyper-Realistic Stats Grid --- */
-        .pro-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px;
+        /* --- Grid of Power --- */
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 25px; }
+        .glass-stat {
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+            padding: 20px; border-radius: 24px; position: relative; overflow: hidden;
         }
-        .pro-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 20px;
-            text-align: left; position: relative; overflow: hidden;
+        .glass-stat::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
         }
-        .pro-card::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--glow-cyan); box-shadow: 0 0 10px var(--glow-cyan);
-        }
-        .pro-card.purple::after { background: var(--glow-purple); box-shadow: 0 0 10px var(--glow-purple); }
 
-        /* --- Quick Action Icons --- */
-        .quick-actions {
+        /* --- Action Hub --- */
+        .action-hub {
             margin-top: 30px; display: flex; justify-content: center; gap: 20px;
         }
-        .action-circle {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            display: flex; justify-content: center; align-items: center; font-size: 1.2rem;
-            transition: 0.3s;
+        .icon-btn {
+            width: 55px; height: 55px; border-radius: 18px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.4rem; transition: 0.3s;
         }
-        .action-circle:active { transform: scale(0.9); background: var(--glow-cyan); color: black; }
+        .icon-btn:active { transform: scale(0.85) rotate(10deg); background: var(--neon-blue); color: black; }
 
-        /* --- The "Final Boss" Claim Button --- */
-        .ultimate-claim {
-            position: fixed; bottom: 120px; width: 80%; left: 10%;
+        /* --- Ultimate Claim Button --- */
+        .claim-terminal {
+            position: fixed; bottom: 110px; left: 10%; width: 80%;
             background: white; color: black; padding: 18px;
             border-radius: 40px; font-family: 'Syncopate'; font-weight: 700;
             text-align: center; font-size: 0.7rem; letter-spacing: 2px;
-            box-shadow: 0 10px 40px rgba(255,255,255,0.2);
-            cursor: pointer; animation: float-btn 3s infinite ease-in-out;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            cursor: pointer; animation: float 3s infinite ease-in-out;
         }
 
-        @keyframes pulse-orb { 0% { transform: scale(1); opacity: 0.2; } 100% { transform: scale(1.2); opacity: 0.4; } }
-        @keyframes float-btn { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes breathe { 0% { opacity: 0.1; transform: scale(0.9); } 100% { opacity: 0.3; transform: scale(1.1); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
     </style>
 </head>
 <body>
-    <div class="ambient-bg"></div>
+
+    <div class="mesh-bg"></div>
 
     <header>
-        <div class="user-badge" id="walletDisplay">ID: 0X...7DAB</div>
-        <div style="font-size: 1.5rem;" onclick="window.location.href='admin.html'">⚡</div>
+        <div>
+            <div class="status-chip">ADAMAS PROTOCOL v3.0</div>
+            <div style="font-family: 'Orbitron'; font-size: 0.9rem; margin-top: 5px;" id="walletDisplay">0x...</div>
+        </div>
+        <div onclick="window.location.href='admin.html'" style="font-size: 1.5rem; cursor: pointer;">⚙️</div>
     </header>
 
-    <div class="infinity-orb-container">
-        <div class="orb-glow"></div>
-        <div class="orb-ring">
-            <div class="balance-title">AVAILABLE</div>
-            <div class="balance-val" id="userBalance">0</div>
-            <div style="font-size: 0.5rem; color: var(--glow-cyan); margin-top: 5px; letter-spacing: 2px;">$ADAMAS TOKEN</div>
+    <div class="balance-vault">
+        <div class="vault-glow"></div>
+        <div class="vault-circle">
+            <span class="label">NET WORTH</span>
+            <span class="balance-text" id="userBalance">0</span>
+            <span style="color: var(--neon-blue); font-weight: 900; font-size: 0.7rem;">$ABP TOKEN</span>
         </div>
     </div>
 
-    <div class="pro-grid">
-        <div class="pro-card">
-            <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">ENERGY</div>
-            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 5px;" id="userEnergy">100%</div>
+    <div class="stats-container">
+        <div class="glass-stat">
+            <div class="label" style="font-size: 0.4rem;">CORE ENERGY</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-top: 5px; color: #00ff88;" id="userEnergy">100%</div>
         </div>
-        <div class="pro-card purple">
-            <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">STAKED</div>
-            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 5px;" id="userStaked">0</div>
+        <div class="glass-stat">
+            <div class="label" style="font-size: 0.4rem;">VAULT STAKED</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-top: 5px; color: var(--neon-purple);" id="userStaked">0</div>
         </div>
     </div>
 
-    <div class="quick-actions">
-        <div class="action-circle" onclick="window.location.href='game.html'">🎮</div>
-        <div class="action-circle" onclick="window.location.href='mines.html'">💣</div>
-        <div class="action-circle" onclick="window.location.href='referral.html'">🚀</div>
-        <div class="action-circle" onclick="window.location.href='wallet.html'">🏦</div>
+    <div class="action-hub">
+        <div class="icon-btn" onclick="window.location.href='game.html'">🕹️</div>
+        <div class="icon-btn" onclick="window.location.href='mines.html'">💣</div>
+        <div class="icon-btn" onclick="window.location.href='staking.html'">🛡️</div>
+        <div class="icon-btn" onclick="window.location.href='referral.html'">🚀</div>
     </div>
 
-    <div class="ultimate-claim" onclick="document.getElementById('rewardModal').style.display='flex'; DailySystem.init();">
-        ACCESS DAILY PROTOCOL 🎁
+    <div class="claim-terminal" onclick="document.getElementById('rewardModal').style.display='flex'; DailySystem.init();">
+        EXECUTE DAILY CLAIM 🎁
     </div>
 
     <div id="navbar-placeholder"></div>
@@ -142,7 +152,18 @@
     <script type="module">
         import { DBModule } from './js/database.js';
         import './js/daily-system.js';
-        // Real-time listener for data...
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const wallet = localStorage.getItem('userWallet');
+            if(!wallet) { window.location.href = 'index.html'; return; }
+            document.getElementById('walletDisplay').innerText = wallet.substring(0,8).toUpperCase() + '...';
+
+            DBModule.listenToProfile(wallet, (data) => {
+                document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
+                document.getElementById('userEnergy').innerText = (data.energy || 0) + '%';
+                document.getElementById('userStaked').innerText = (data.stakedBalance || 0).toLocaleString();
+            });
+        });
     </script>
     <script src="js/nav.js"></script>
 </body>
