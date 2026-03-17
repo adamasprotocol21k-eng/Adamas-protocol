@@ -1,82 +1,98 @@
 /**
- * ADAMAS PROTOCOL - Staking Module
- * Functionality: Lock ABP tokens and earn rewards based on time
+ * ADAMAS PROTOCOL - Staking Module (Optimized)
+ * Fix: Multi-Staking support, Correct Keys, Real-time Sync
  */
 
 const StakingModule = {
-    // APY Config (Annual Percentage Yield)
     rates: {
-        7: 5,   // 7 Days = 5% Bonus
-        30: 15, // 30 Days = 15% Bonus
-        90: 40  // 90 Days = 40% Bonus
+        7: 5,   // 5% Bonus
+        30: 15, // 15% Bonus
+        90: 40  // 40% Bonus
     },
 
-    // 1. STAKE TOKENS LOGIC
+    // 1. STAKE TOKENS
     async stake(amount, durationDays) {
         const wallet = localStorage.getItem('userWallet');
-        if (!wallet) return Notify.show("Connect Wallet!", "error");
+        if (!wallet) return Notify.show("Connect Portal First!", "error");
+
+        const amountNum = parseInt(amount);
+        if (isNaN(amountNum) || amountNum <= 0) return Notify.show("Invalid Amount!", "error");
+
+        Notify.show("Locking tokens in Galaxy Vault...", "info");
 
         const userData = await window.DBModule.getUserData(wallet);
-        if (userData.balance < amount) {
+        if (!userData || userData.balance < amountNum) {
             return Notify.show("Insufficient ABP Balance!", "error");
         }
 
         const unlockDate = Date.now() + (durationDays * 24 * 60 * 60 * 1000);
         const bonusRate = this.rates[durationDays];
+        const expectedBonus = Math.floor(amountNum * (bonusRate / 100));
 
-        // Prepare Staking Data
         const stakeData = {
-            amount: amount,
+            amount: amountNum,
             stakedAt: Date.now(),
             unlockAt: unlockDate,
-            expectedBonus: Math.floor(amount * (bonusRate / 100)),
-            status: 'locked'
+            bonus: expectedBonus,
+            status: 'locked',
+            plan: `${durationDays} Days`
         };
 
         try {
-            // Subtract from balance and add to stake
-            const userKey = wallet.toLowerCase().substring(0, 15);
-            const { getDatabase, ref, update, increment } = await import("https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js");
+            const userKey = wallet.toLowerCase().replace(/[^a-z0-9]/g, "");
+            const { getDatabase, ref, update, push, increment } = await import("https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js");
             const db = getDatabase();
             
-            await update(ref(db, 'users/' + userKey), {
-                balance: increment(-amount),
-                staking: stakeData
-            });
+            // Updates: Subtract Balance & Add to 'stakes' list (Multi-staking)
+            const updates = {};
+            updates[`users/${userKey}/balance`] = increment(-amountNum);
+            
+            // Generating a unique ID for this specific stake
+            const newStakeRef = push(ref(db, `users/${userKey}/stakes`));
+            updates[`users/${userKey}/stakes/${newStakeRef.key}`] = stakeData;
 
-            Notify.show(`Successfully Staked ${amount} ABP for ${durationDays} Days!`, "success");
-            setTimeout(() => window.location.reload(), 2000);
+            await update(ref(db), updates);
+
+            Notify.show(`Vault Locked: ${amountNum} ABP for ${durationDays} days.`, "success");
+            // No reload needed, DBModule.listenToUpdates will update the UI balance
         } catch (error) {
-            console.error("Staking Error:", error);
-            Notify.show("Staking Failed. Try again.", "error");
+            console.error("Staking Sync Error:", error);
+            Notify.show("Vault Error. Try again.", "error");
         }
     },
 
-    // 2. CHECK UNLOCK STATUS
-    async checkUnlock() {
+    // 2. AUTO-CLAIM MATURED STAKES
+    async processMaturity() {
         const wallet = localStorage.getItem('userWallet');
+        if (!wallet) return;
+
         const userData = await window.DBModule.getUserData(wallet);
+        if (!userData || !userData.stakes) return;
 
-        if (userData.staking && userData.staking.status === 'locked') {
-            if (Date.now() >= userData.staking.unlockAt) {
-                // Return original + bonus
-                const totalReturn = userData.staking.amount + userData.staking.expectedBonus;
-                await window.DBModule.addReward(wallet, totalReturn, "Staking Maturity");
+        const userKey = wallet.toLowerCase().replace(/[^a-z0-9]/g, "");
+        const { getDatabase, ref, update, increment } = await import("https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js");
+        const db = getDatabase();
+
+        let totalClaimed = 0;
+        const updates = {};
+
+        // Check each stake
+        Object.keys(userData.stakes).forEach(stakeId => {
+            const stake = userData.stakes[stakeId];
+            if (stake.status === 'locked' && Date.now() >= stake.unlockAt) {
+                const payout = stake.amount + stake.bonus;
+                totalClaimed += payout;
                 
-                // Clear stake record
-                const userKey = wallet.toLowerCase().substring(0, 15);
-                const { getDatabase, ref, update } = await import("https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js");
-                const db = getDatabase();
-                await update(ref(db, 'users/' + userKey + '/staking'), { status: 'claimed' });
-
-                Notify.show(`Staking Mature! ${totalReturn} ABP returned to vault.`, "success");
-            } else {
-                Notify.show("Tokens are still locked in the vault.", "info");
+                updates[`users/${userKey}/stakes/${stakeId}/status`] = 'claimed';
+                updates[`users/${userKey}/balance`] = increment(payout);
             }
+        });
+
+        if (totalClaimed > 0) {
+            await update(ref(db), updates);
+            Notify.show(`Staking Matured! +${totalClaimed} ABP added to Vault.`, "success");
         }
     }
 };
 
-// Global Access
 window.StakingModule = StakingModule;
-
