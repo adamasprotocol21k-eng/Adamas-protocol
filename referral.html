@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refer & Earn | ADAMAS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .ref-box { margin-top: 30px; text-align: center; }
+        .link-container { 
+            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; 
+            border: 1px dashed var(--primary-neon); margin: 20px 0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        #refLink { font-size: 0.7rem; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 80%; }
+        .copy-btn { color: var(--primary-neon); font-weight: 800; cursor: pointer; font-size: 0.8rem; }
+        
+        .ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .stat-card { padding: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="universe-bg"></div>
+
+    <div style="padding: 20px;">
+        <header style="display: flex; align-items: center; gap: 15px;">
+            <button onclick="window.location.href='dashboard.html'" class="btn-cosmic" style="padding: 5px 15px;">←</button>
+            <h1 class="title-font" style="font-size: 1rem; color: var(--gold);">REFERRAL SYSTEM</h1>
+        </header>
+
+        <div class="ref-box">
+            <h2 class="title-font" style="font-size: 1.2rem;">INVITE YOUR SQUAD</h2>
+            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">Get 50 ABP for every friend who joins using your link.</p>
+
+            <div class="link-container">
+                <span id="refLink">https://adamas.io/join?ref=loading...</span>
+                <span class="copy-btn" onclick="ReferralModule.copyLink()">COPY</span>
+            </div>
+        </div>
+
+        <div class="ref-stats">
+            <div class="glass-card stat-card">
+                <div class="title-font" style="color: var(--primary-neon); font-size: 1.2rem;" id="totalRef">0</div>
+                <div style="font-size: 0.6rem; color: #666; margin-top: 5px;">TOTAL INVITES</div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="title-font" style="color: var(--gold); font-size: 1.2rem;" id="refEarned">0</div>
+                <div style="font-size: 0.6rem; color: #666; margin-top: 5px;">ABP EARNED</div>
+            </div>
+        </div>
+
+        <div class="glass-card" style="margin-top: 30px;">
+            <h3 class="title-font" style="font-size: 0.8rem; margin-bottom: 15px;">HOW IT WORKS</h3>
+            <ul style="font-size: 0.7rem; color: #888; line-height: 1.8;">
+                <li>Share your unique link with friends.</li>
+                <li>They connect their wallet and complete social tasks.</li>
+                <li>You receive 50 ABP instantly in your vault.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="navbar-placeholder"></div>
+
+    <script src="js/notify.js"></script>
+    <script src="js/database.js" type="module"></script>
+    <script src="js/referral-logic.js" type="module"></script>
+    <script src="js/nav.js"></script>
+</body>
+</html>
+
