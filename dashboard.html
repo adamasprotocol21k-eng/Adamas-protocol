@@ -3,170 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS | Cosmic Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    
+    <title>ADAMAS | Protocol Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #FFD700;
-            --galaxy-blue: #00f2ff;
-            --galaxy-purple: #7000ff;
+            --emerald: #00ff88;
             --deep-space: #020205;
         }
 
         body {
-            margin: 0; padding-bottom: 120px;
-            background: var(--deep-space);
-            color: white; font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
+            margin: 0; background: var(--deep-space); color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif; padding-bottom: 100px;
         }
 
-        /* --- 🌌 GALAXY BACKGROUND ANIMATION --- */
-        .universe-bg {
+        /* Galaxy Background Effect */
+        .universe {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            z-index: -2;
+            background: radial-gradient(circle at top right, #1a1a2e, #020205);
+            z-index: -1;
         }
 
-        .stars-overlay {
-            position: fixed; top: 0; left: 0; width: 2px; height: 2px;
-            background: white; border-radius: 50%;
-            box-shadow: 10vw 20vh white, 50vw 40vh white, 80vw 10vh white, 30vw 70vh white, 90vw 80vh white;
-            animation: twinkle 4s infinite linear; z-index: -1;
+        /* 1. Updated Header: ADAMAS PROTOCOL */
+        .header-lux {
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
         }
 
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-
-        /* --- 💎 LUXURY VAULT DISPLAY --- */
-        .vault-container {
-            margin: 30px 20px; padding: 50px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px); text-align: center;
-            position: relative; overflow: hidden;
-            box-shadow: 0 0 30px rgba(112, 0, 255, 0.2);
+        .brand-title {
+            font-family: 'Orbitron', sans-serif; font-size: 0.9rem;
+            letter-spacing: 2px; color: var(--gold); margin: 0;
         }
 
-        .vault-container::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg, transparent, var(--galaxy-blue), transparent);
-            animation: rotate-nebula 8s infinite linear; opacity: 0.1; z-index: -1;
+        /* 2. Main Balance Section: ABP POINTS */
+        .vault-hero {
+            margin: 25px 20px; padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.03); border-radius: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3); text-align: center;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
         }
-        @keyframes rotate-nebula { 100% { transform: rotate(360deg); } }
 
-        .balance-title { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; letter-spacing: 5px; color: var(--gold); margin-bottom: 10px; }
-        .balance-main { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900; background: linear-gradient(180deg, #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3)); margin: 10px 0; }
+        .balance-val {
+            font-family: 'Orbitron', sans-serif; font-size: 3.2rem;
+            font-weight: 900; margin: 10px 0;
+            background: linear-gradient(180deg, #fff, #aaa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
 
-        /* --- ⚡ INTERACTIVE TILES --- */
-        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .tile-card {
+        .unit-text { font-size: 1rem; color: var(--gold); letter-spacing: 2px; }
+
+        /* 3. Daily Check-in Button */
+        .daily-btn {
+            background: linear-gradient(45deg, var(--gold), #b8860b);
+            color: black; border: none; padding: 15px 30px;
+            border-radius: 50px; font-weight: 800; font-size: 0.9rem;
+            width: 80%; margin: 0 auto 30px; display: block;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            cursor: pointer; transition: 0.3s;
+        }
+        .daily-btn:active { transform: scale(0.95); }
+
+        /* 4. Action Grid */
+        .grid-actions {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px;
+        }
+
+        .tile {
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px; padding: 30px 10px; text-align: center;
-            transition: 0.4s; position: relative; overflow: hidden;
+            border-radius: 20px; padding: 25px 10px; text-align: center;
         }
-        .tile-card:active { transform: scale(0.92); border-color: var(--gold); }
-        .tile-card::before {
-            content: ''; position: absolute; top: -100%; left: -100%; width: 50%; height: 300%;
-            background: rgba(255,255,255,0.1); transform: rotate(45deg); transition: 0.5s;
-        }
-        .tile-card:hover::before { left: 150%; }
 
-        /* --- 🚀 MODERN FLOATING DOCK --- */
-        .galaxy-dock {
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 500px;
-            background: rgba(5, 6, 12, 0.9); backdrop-filter: blur(30px);
-            border-radius: 100px; border: 1px solid rgba(255, 215, 0, 0.3);
+        /* 5. Modern Navigation Bar */
+        .nav-dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 500px; background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px); border-radius: 100px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
             display: flex; justify-content: space-around; padding: 12px 5px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8); z-index: 9999;
         }
 
-        .dock-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; position: relative; transition: 0.3s; min-width: 60px; color: #666; }
-        .dock-icon { font-size: 24px; margin-bottom: 4px; transition: 0.3s; }
-        .dock-label { font-size: 0.55rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Active Color Effects */
-        .home-btn.active { color: var(--galaxy-blue); filter: drop-shadow(0 0 10px var(--galaxy-blue)); }
-        .game-btn:hover { color: #ff00ff; filter: drop-shadow(0 0 10px #ff00ff); }
-        .edu-btn:hover { color: #00ff88; filter: drop-shadow(0 0 10px #00ff88); }
-        .ref-btn:hover { color: #ffcc00; filter: drop-shadow(0 0 10px #ffcc00); }
-        .wallet-btn.active { color: #fff; filter: drop-shadow(0 0 10px #fff); }
-
-        .eligibility-badge { position: absolute; top: 0; right: 10px; width: 8px; height: 8px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88; border: 2px solid #000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #666; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; }
+        .nav-item.active { color: var(--gold); }
+        .nav-icon { font-size: 20px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-    <div class="universe-bg"></div>
-    <div class="stars-overlay"></div>
+    <div class="universe"></div>
 
-    <header style="padding: 25px; display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-family: 'Orbitron', sans-serif; font-size: 0.7rem; color: #888;">0x1E12...dADB</div>
-        <div style="color: var(--gold); font-size: 0.6rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;">Founder Edition ●</div>
+    <header class="header-lux">
+        <h1 class="brand-title">ADAMAS PROTOCOL</h1>
+        <div id="userAddr" style="font-size: 0.6rem; color: #888;">0x00...000</div>
     </header>
 
-    <section class="vault-container">
-        <p class="balance-title">TOTAL TREASURY</p>
-        <h1 class="balance-main" id="balanceDisplay">0.00</h1>
-        <div style="margin-top: 15px;">
-            <span style="border: 1px solid var(--galaxy-blue); padding: 5px 15px; border-radius: 50px; font-size: 0.6rem; color: var(--galaxy-blue); font-weight: 800; box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);">
-                ELIGIBILITY: <span id="eligibilityPerc">0</span>% READY
-            </span>
-        </div>
+    <section class="vault-hero">
+        <p style="font-size: 0.7rem; letter-spacing: 3px; color: #888;">CURRENT ASSETS</p>
+        <div class="balance-val" id="balanceDisplay">0.00</div>
+        <span class="unit-text">ABP POINTS</span>
     </section>
 
-    <div class="grid-layout">
-        <div class="tile-card" onclick="RewardsModule.claimDailyBonus()">
-            <span style="font-size: 2.5rem; display: block; margin-bottom: 10px;">✨</span>
-            <span style="font-family: 'Orbitron'; font-size: 0.6rem; color: var(--gold); letter-spacing: 2px;">DAILY SYNC</span>
+    <button class="daily-btn" onclick="RewardsModule.claimDailyBonus()">
+        ✨ CLAIM DAILY REWARD
+    </button>
+
+    <div class="grid-actions">
+        <div class="tile" onclick="Notify.show('Hyper-Spin locked', 'info')">
+            <span style="font-size: 25px;">🌀</span><br>
+            <span style="font-size: 0.7rem; color: var(--gold);">NEON SPIN</span>
         </div>
-        <div class="tile-card" onclick="Notify.show('Hyper-Spin Loading...', 'info')">
-            <span style="font-size: 2.5rem; display: block; margin-bottom: 10px;">🌀</span>
-            <span style="font-family: 'Orbitron'; font-size: 0.6rem; color: var(--gold); letter-spacing: 2px;">NEON SPIN</span>
+        <div class="tile" onclick="window.location.href='admin.html'">
+            <span style="font-size: 25px;">⚙️</span><br>
+            <span style="font-size: 0.7rem; color: var(--gold);">ADMIN</span>
         </div>
     </div>
 
-    <nav class="galaxy-dock">
-        <a href="dashboard.html" class="dock-item home-btn active">
-            <span class="dock-icon">🏠</span>
-            <span class="dock-label">Home</span>
+    <nav class="nav-dock">
+        <a href="#" class="nav-item active">
+            <span class="nav-icon">🏠</span> Home
         </a>
-        <a href="#" class="dock-item game-btn" onclick="Notify.show('Launching Games...', 'info')">
-            <span class="dock-icon">🎮</span>
-            <span class="dock-label">Games</span>
+        <a href="#" class="nav-item" onclick="Notify.show('Games coming soon', 'info')">
+            <span class="nav-icon">🎮</span> Games
         </a>
-        <a href="#" class="dock-item edu-btn" onclick="Notify.show('Knowledge Base v1.0', 'info')">
-            <span class="dock-icon">📖</span>
-            <span class="dock-label">Learn</span>
+        <a href="#" class="nav-item" onclick="Notify.show('Knowledge Base v1.0', 'info')">
+            <span class="nav-icon">📖</span> Learn
         </a>
-        <a href="#" class="dock-item ref-btn" onclick="Notify.show('Referral Copied!', 'success')">
-            <span class="dock-icon">👥</span>
-            <span class="dock-label">Invite</span>
+        <a href="#" class="nav-item" onclick="Notify.show('Referral link copied', 'success')">
+            <span class="nav-icon">👥</span> Invite
         </a>
-        <a href="#" class="dock-item wallet-btn active" onclick="Notify.show('Syncing Airdrop Status...', 'success')">
-            <div class="eligibility-badge"></div>
-            <span class="dock-icon">💰</span>
-            <span class="dock-label">Wallet</span>
+        <a href="#" class="nav-item" onclick="openWallet()">
+            <span class="nav-icon">💰</span> Wallet
         </a>
     </nav>
 
     <script src="js/notify.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/rewards.js"></script>
+
     <script type="module">
         import { DBModule } from './js/database.js';
         window.addEventListener('DOMContentLoaded', async () => {
             const wallet = localStorage.getItem('userWallet');
             if(wallet) {
+                document.getElementById('userAddr').innerText = wallet.substring(0,6) + '...' + wallet.substring(wallet.length-4);
                 const data = await DBModule.getUserData(wallet);
-                if(data) {
-                    document.getElementById('balanceDisplay').innerText = data.balance.toLocaleString();
-                    const prog = Math.min((data.balance / 1000) * 100, 100);
-                    document.getElementById('eligibilityPerc').innerText = Math.floor(prog);
-                }
+                if(data) document.getElementById('balanceDisplay').innerText = data.balance.toLocaleString();
             }
         });
+
+        window.openWallet = () => {
+            const bal = document.getElementById('balanceDisplay').innerText;
+            Notify.show(`Vault Balance: ${bal} ABP | Status: Eligible`, 'success');
+        };
     </script>
 </body>
 </html>
