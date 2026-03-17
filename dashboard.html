@@ -3,147 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Neural Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Space+Grotesk:wght@300;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <title>ADAMAS | The Galaxy Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;800&family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --hyper-cyan: #00f2ff;
-            --deep-violet: #7000ff;
-            --pure-white: #ffffff;
-            --obsidian: #020205;
+            --accent: #ffffff;
+            --sub-text: #636366;
+            --bg-black: #000000;
+            --neon-blue: #0A84FF;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body, html { 
-            margin: 0; padding: 0; background: var(--obsidian); 
-            color: var(--pure-white); font-family: 'Space Grotesk', sans-serif;
+        body {
+            margin: 0; background: var(--bg-black);
+            color: white; font-family: 'Plus Jakarta Sans', sans-serif;
             height: 100vh; overflow: hidden;
         }
 
-        /* --- 1. NEURAL GRID BACKGROUND (The Matrix Feel) --- */
-        .neural-bg {
+        /* --- 1. DYNAMIC MESH BACKGROUND (Very Expensive Look) --- */
+        .mesh-gradient {
             position: fixed; width: 100vw; height: 100vh;
             background: 
-                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            perspective: 1000px; z-index: -1;
-        }
-        .neural-bg::after {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle at 50% 50%, transparent 20%, var(--obsidian) 80%);
+                radial-gradient(at 0% 0%, rgba(10, 132, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(191, 90, 242, 0.15) 0%, transparent 50%);
+            z-index: -1;
         }
 
-        /* --- 2. FLOATING ASSET RING (Hyper-Premium) --- */
-        .asset-core {
-            position: relative; height: 45vh; display: flex;
-            justify-content: center; align-items: center;
+        /* --- 2. LUXURY HEADER --- */
+        header {
+            padding: 40px 25px; display: flex; justify-content: space-between; align-items: flex-start;
         }
-        .core-glow {
-            position: absolute; width: 280px; height: 280px;
-            background: var(--hyper-cyan); filter: blur(120px);
-            opacity: 0.15; animation: core-pulse 4s infinite alternate ease-in-out;
-        }
-        .main-ring {
-            width: 240px; height: 240px; border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 242, 255, 0.1);
-            position: relative; z-index: 2;
-        }
-        .token-symbol { font-family: 'Syncopate'; font-size: 0.5rem; letter-spacing: 5px; color: var(--hyper-cyan); }
-        .balance-val { 
-            font-family: 'Space Grotesk'; font-size: 3.5rem; font-weight: 700; 
-            margin: 10px 0; letter-spacing: -2px; 
+        .founder-label { font-size: 0.6rem; letter-spacing: 4px; color: var(--sub-text); font-weight: 800; }
+        .wallet-pill {
+            background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.1);
+            padding: 8px 16px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;
+            backdrop-filter: blur(10px);
         }
 
-        /* --- 3. THE "RANK-1" STATS DECK --- */
-        .stats-deck {
-            display: flex; justify-content: space-around; padding: 0 20px;
-            margin-top: -20px;
+        /* --- 3. MAIN ASSET DISPLAY (The Core) --- */
+        .asset-hero {
+            text-align: center; margin-top: 10vh; padding: 0 20px;
         }
-        .deck-item { text-align: center; width: 45%; position: relative; }
-        .deck-label { font-size: 0.5rem; font-family: 'Syncopate'; color: #555; letter-spacing: 2px; }
-        .deck-value { font-size: 1.4rem; font-weight: 700; margin-top: 5px; color: var(--pure-white); }
-        .deck-line { width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin-top: 10px; overflow: hidden; }
-        .deck-progress { height: 100%; background: var(--hyper-cyan); box-shadow: 0 0 10px var(--hyper-cyan); }
+        .main-balance-label { font-size: 0.7rem; color: var(--sub-text); letter-spacing: 5px; margin-bottom: 10px; }
+        .balance-value { 
+            font-size: 4.5rem; font-family: 'Inter', sans-serif; font-weight: 900; 
+            letter-spacing: -4px; margin: 0; position: relative;
+        }
+        .currency-tag { font-size: 1rem; color: var(--neon-blue); letter-spacing: 3px; font-weight: 800; }
 
-        /* --- 4. HUD NAVIGATION (Lakhon mein Ek) --- */
-        .hud-actions {
-            position: absolute; bottom: 180px; width: 100%;
-            display: flex; justify-content: center; gap: 30px;
+        /* --- 4. RICH CARDS (Floating Deck) --- */
+        .deck-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            padding: 40px 25px; margin-top: 20px;
         }
-        .hud-btn {
-            width: 50px; height: 50px; border-radius: 12px;
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.2rem; transform: rotate(45deg); transition: 0.3s;
+        .rich-card {
+            background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.08);
+            border-radius: 32px; padding: 25px; backdrop-filter: blur(20px);
+            transition: 0.4s cubic-bezier(0.2, 0, 0, 1);
         }
-        .hud-btn span { transform: rotate(-45deg); }
-        .hud-btn:active { background: var(--hyper-cyan); color: #000; transform: rotate(45deg) scale(0.9); }
+        .rich-card:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
+        .card-icon { font-size: 1.5rem; margin-bottom: 15px; display: block; }
+        .card-label { font-size: 0.55rem; color: var(--sub-text); letter-spacing: 2px; font-weight: 800; }
+        .card-val { font-size: 1.2rem; font-weight: 800; margin-top: 8px; }
 
-        /* --- 5. THE PROTOCOL TRIGGER (Claim Button) --- */
-        .protocol-trigger {
+        /* --- 5. THE "RICH-TOUCH" ACTION HUB --- */
+        .hub-dock {
+            position: fixed; bottom: 180px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 15px; background: rgba(255,255,255,0.03);
+            padding: 10px; border-radius: 100px; border: 0.5px solid rgba(255,255,255,0.1);
+        }
+        .hub-item {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.05); display: flex; 
+            justify-content: center; align-items: center; font-size: 1.2rem;
+        }
+
+        /* --- 6. PRESTIGE CLAIM BUTTON --- */
+        .prestige-btn {
             position: fixed; bottom: 100px; left: 5%; width: 90%;
-            background: var(--pure-white); color: #000;
-            padding: 20px; border-radius: 15px; text-align: center;
-            font-family: 'Syncopate'; font-size: 0.7rem; font-weight: 700;
-            letter-spacing: 3px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            cursor: pointer; clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+            background: var(--accent); color: black; padding: 22px;
+            border-radius: 24px; font-size: 0.8rem; font-weight: 900;
+            text-align: center; letter-spacing: 2px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
-
-        /* Animations */
-        @keyframes core-pulse { 0% { transform: scale(1); opacity: 0.1; } 100% { transform: scale(1.3); opacity: 0.3; } }
     </style>
 </head>
 <body>
 
-    <div class="neural-bg"></div>
+    <div class="mesh-gradient"></div>
 
-    <header style="padding: 30px; display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 2px;">ADAMAS</div>
-        <div id="walletDisplay" style="font-size: 0.7rem; color: #555;">0X...7DAB</div>
+    <header>
+        <div>
+            <div class="founder-label">ADAMAS PROTOCOL</div>
+            <div style="font-weight: 200; font-size: 1.5rem;">The Galaxy Vault</div>
+        </div>
+        <div class="wallet-pill" id="walletDisplay">0X...7DAB</div>
     </header>
 
-    <div class="asset-core">
-        <div class="core-glow"></div>
-        <div class="main-ring">
-            <div class="token-symbol">LIQUID ASSETS</div>
-            <div class="balance-val" id="userBalance">3,003</div>
-            <div style="font-size: 0.6rem; color: #555;">PROTOCOL v3.0</div>
+    <div class="asset-hero">
+        <div class="main-balance-label">PORTFOLIO VALUE</div>
+        <h1 class="balance-value" id="userBalance">3,003</h1>
+        <div class="currency-tag">ABP CORE</div>
+    </div>
+
+    <div class="deck-container">
+        <div class="rich-card" onclick="window.location.href='staking.html'">
+            <span class="card-icon">🛡️</span>
+            <span class="card-label">VAULT STAKED</span>
+            <div class="card-val" id="userStaked" style="color: var(--neon-blue);">0</div>
+        </div>
+        <div class="rich-card">
+            <span class="card-icon">⚡</span>
+            <span class="card-label">SYSTEM ENERGY</span>
+            <div class="card-val" id="userEnergy" style="color: #34C759;">100%</div>
         </div>
     </div>
 
-    <div class="stats-deck">
-        <div class="deck-item">
-            <div class="deck-label">ENERGY SOURCE</div>
-            <div class="deck-value" id="userEnergy">100%</div>
-            <div class="deck-line"><div class="deck-progress" style="width: 100%;"></div></div>
-        </div>
-        <div class="deck-item">
-            <div class="deck-label">STAKED VALUE</div>
-            <div class="deck-value" id="userStaked" style="color: var(--hyper-cyan);">0</div>
-            <div class="deck-line"><div class="deck-progress" style="width: 20%; background: var(--deep-violet);"></div></div>
-        </div>
+    <div class="hub-dock">
+        <div class="hub-item" onclick="window.location.href='game.html'">🕹️</div>
+        <div class="hub-item" onclick="window.location.href='mines.html'">💣</div>
+        <div class="hub-item" onclick="window.location.href='referral.html'">🚀</div>
+        <div class="hub-item" onclick="window.location.href='admin.html'">⚙️</div>
     </div>
 
-    <div class="hud-actions">
-        <div class="hud-btn" onclick="window.location.href='game.html'"><span>🎮</span></div>
-        <div class="hud-btn" onclick="window.location.href='mines.html'"><span>💣</span></div>
-        <div class="hud-btn" onclick="window.location.href='staking.html'"><span>🛡️</span></div>
-        <div class="hud-btn" onclick="window.location.href='referral.html'"><span>🚀</span></div>
-    </div>
-
-    <div class="protocol-trigger" onclick="document.getElementById('rewardModal').style.display='flex';">
-        INITIALIZE DAILY PROTOCOL
+    <div class="prestige-btn" onclick="alert('Accessing Daily Rewards...')">
+        EXECUTE DAILY PROTOCOL
     </div>
 
     <div id="navbar-placeholder"></div>
 
     <script type="module">
         import { DBModule } from './js/database.js';
-        // Your existing Firebase Sync Logic here...
+        // Your logic to update values...
     </script>
     <script src="js/nav.js"></script>
 </body>
