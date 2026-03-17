@@ -3,153 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS | Cosmic Games</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>Game Zone | ADAMAS</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        :root {
-            --gold: #FFD700;
-            --neon-blue: #00f2ff;
-            --deep-space: #020205;
+        .game-list { padding: 20px; display: grid; gap: 15px; margin-top: 10px; }
+        .game-card { 
+            display: flex; justify-content: space-between; align-items: center; 
+            cursor: pointer; position: relative; overflow: hidden;
         }
-
-        body {
-            margin: 0; background: var(--deep-space); color: white;
-            font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden;
-            padding-bottom: 100px;
-        }
-
-        .universe-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a1a2e, #020205);
-            z-index: -2;
-        }
-
-        /* --- Header --- */
-        .game-header {
-            padding: 20px; display: flex; align-items: center; gap: 15px;
-            background: rgba(255,255,255,0.02); backdrop-filter: blur(10px);
-        }
-
-        .back-btn {
-            background: rgba(255,255,255,0.1); border: none; color: white;
-            padding: 10px 15px; border-radius: 12px; cursor: pointer;
-        }
-
-        /* --- Spin Wheel Container --- */
-        .wheel-section {
-            display: flex; flex-direction: column; align-items: center;
-            margin-top: 40px; position: relative;
-        }
-
-        .wheel-outer {
-            width: 320px; height: 320px; border-radius: 50%;
-            border: 8px solid rgba(255, 215, 0, 0.2);
-            position: relative; padding: 10px;
-            box-shadow: 0 0 50px rgba(0, 242, 255, 0.15);
-        }
-
-        #spinWheel {
-            width: 100%; height: 100%; border-radius: 50%;
-            background: conic-gradient(
-                #121212 0deg 45deg, #1a1a1a 45deg 90deg,
-                #121212 90deg 135deg, #1a1a1a 135deg 180deg,
-                #121212 180deg 225deg, #1a1a1a 225deg 270deg,
-                #121212 270deg 315deg, #1a1a1a 315deg 360deg
-            );
-            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
-            position: relative; border: 4px solid var(--neon-blue);
-        }
-
-        .wheel-pointer {
-            position: absolute; top: -10px; left: 50%;
-            transform: translateX(-50%); width: 30px; height: 40px;
-            background: var(--gold); clip-path: polygon(50% 100%, 0 0, 100% 0);
-            z-index: 10; filter: drop-shadow(0 0 10px var(--gold));
-        }
-
-        .spin-center {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px; height: 60px; background: white;
-            border-radius: 50%; z-index: 5; display: flex;
-            justify-content: center; align-items: center;
-            box-shadow: 0 0 20px white; color: black; font-weight: 900;
-        }
-
-        /* --- Action Buttons --- */
-        .game-controls { margin-top: 50px; text-align: center; }
-
-        .btn-play {
-            background: linear-gradient(45deg, var(--neon-blue), #7000ff);
-            border: none; color: white; padding: 18px 60px;
-            border-radius: 50px; font-family: 'Orbitron'; font-weight: 900;
-            letter-spacing: 2px; cursor: pointer; box-shadow: 0 10px 30px rgba(0, 242, 255, 0.3);
-            transition: 0.3s;
-        }
-        .btn-play:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* --- Scratch Card Teaser --- */
-        .scratch-card {
-            margin: 40px 20px; padding: 30px;
-            background: rgba(255,255,255,0.03); border-radius: 30px;
-            border: 1px dashed rgba(255,215,0,0.3); text-align: center;
+        .game-info h3 { font-size: 1rem; color: var(--primary-neon); margin-bottom: 5px; }
+        .game-info p { font-size: 0.7rem; color: #888; }
+        .icon-large { font-size: 2.5rem; opacity: 0.8; }
+        .badge { 
+            position: absolute; top: 10px; right: -20px; background: var(--gold); 
+            color: black; font-size: 0.5rem; font-weight: 900; padding: 2px 20px; 
+            transform: rotate(45deg); font-family: 'Orbitron';
         }
     </style>
 </head>
 <body>
-
     <div class="universe-bg"></div>
 
-    <header class="game-header">
-        <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
-        <h2 style="font-family: 'Orbitron'; font-size: 0.9rem; letter-spacing: 2px; color: var(--gold);">GAMING SECTOR</h2>
-    </header>
-
-    <div class="wheel-section">
-        <div class="wheel-pointer"></div>
-        <div class="wheel-outer">
-            <div id="spinWheel">
-                <div style="position: absolute; width: 100%; height: 100%; font-size: 0.6rem; font-weight: 800; color: rgba(255,255,255,0.3);">
-                    <span style="position: absolute; top: 10%; left: 45%;">MAX</span>
-                    <span style="position: absolute; right: 10%; top: 45%;">50</span>
-                    <span style="position: absolute; bottom: 10%; left: 45%;">20</span>
-                    <span style="position: absolute; left: 10%; top: 45%;">100</span>
+    <div style="padding: 20px;">
+        <h1 class="title-font gradient-text" style="font-size: 1.5rem; text-align: center;">GAMING SECTOR</h1>
+        
+        <div class="game-list">
+            <div class="glass-card game-card" onclick="window.location.href='mines.html'">
+                <div class="game-info">
+                    <h3 class="title-font">DIAMOND MINES</h3>
+                    <p>Find Diamonds, Avoid Bombs</p>
                 </div>
+                <div class="icon-large">💎</div>
             </div>
-            <div class="spin-center">ABP</div>
+
+            <div class="glass-card game-card" onclick="LotteryModule.openUI()">
+                <div class="game-info">
+                    <h3 class="title-font">COSMIC LOTTERY</h3>
+                    <p>Jackpot: 5,000 ABP</p>
+                </div>
+                <div class="icon-large">🎟️</div>
+                <div class="badge">HOT</div>
+            </div>
+
+            <div class="glass-card game-card" onclick="Notify.show('Syncing Card Deck...', 'info')">
+                <div class="game-info">
+                    <h3 class="title-font">TEEN PATTI</h3>
+                    <p>Multiplayer Battle (Coming)</p>
+                </div>
+                <div class="icon-large">🃏</div>
+            </div>
         </div>
     </div>
 
-    <div class="game-controls">
-        <button id="spinBtn" class="btn-play" onclick="RewardsModule.executeSpin()">
-            LAUNCH SPIN
-        </button>
-        <p style="font-size: 0.7rem; color: #555; margin-top: 15px; letter-spacing: 1px;">COST: 10 ENERGY | WIN UP TO 500 ABP</p>
+    <div id="lotteryModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;">
+        <div class="glass-card" style="width: 90%; max-width: 350px; text-align: center; border-color: var(--gold);">
+            <h2 class="title-font" style="color: var(--gold); margin-bottom: 15px;">BUY TICKET</h2>
+            <p style="font-size: 0.8rem; margin-bottom: 20px;">1 Ticket = 50 ABP<br><span style="color: #666;">Winner drawn every 24h</span></p>
+            <button class="btn-cosmic btn-gold" onclick="LotteryModule.buyTicket()">CONFIRM (50 ABP)</button>
+            <button onclick="LotteryModule.closeUI()" style="background:none; border:none; color:white; margin-top:15px; cursor:pointer;">CLOSE</button>
+        </div>
     </div>
 
-    <div class="scratch-card" onclick="RewardsModule.handleScratchComplete()">
-        <span style="font-size: 40px;">🎁</span>
-        <h3 style="font-family: 'Orbitron'; font-size: 0.8rem; margin: 10px 0;">MYSTERY SCRATCH</h3>
-        <p style="font-size: 0.7rem; color: #888;">Tap to reveal hidden protocol rewards</p>
-    </div>
-
-    <nav style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-radius: 50px; display: flex; justify-content: space-around; padding: 15px; border: 1px solid rgba(255,215,0,0.2);">
-        <span onclick="window.location.href='dashboard.html'" style="cursor: pointer;">🏠</span>
-        <span style="color: var(--neon-blue); font-weight: 800;">🎮</span>
-        <span style="opacity: 0.3;">📖</span>
-        <span style="opacity: 0.3;">💰</span>
-    </nav>
+    <div id="navbar-placeholder"></div>
 
     <script src="js/notify.js"></script>
     <script src="js/database.js" type="module"></script>
-    <script src="js/rewards.js"></script>
-    <script>
-        // Wheel spinning UI update logic
-        const spinBtn = document.getElementById('spinBtn');
-        const wheel = document.getElementById('spinWheel');
-
-        // RewardsModule.executeSpin() will handle the actual logic and balance updates
-    </script>
+    <script src="js/lottery.js" type="module"></script>
+    <script src="js/nav.js"></script>
 </body>
 </html>
-
