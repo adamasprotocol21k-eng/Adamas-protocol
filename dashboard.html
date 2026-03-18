@@ -2,142 +2,199 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Ultimate Protocol</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Plus+Jakarta+Sans:wght@300;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMAS | Quantum Command</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         :root {
-            --cyan: #00f2ff;
-            --purple: #7000ff;
-            --bg: #000205;
+            --neon-cyan: #00f2ff;
+            --neon-gold: #ffd700;
+            --neon-magenta: #ff00ff;
+            --deep-space: #020205;
             --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         body {
-            background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif;
-            height: 100vh; overflow: hidden;
+            margin: 0; background: var(--deep-space);
+            color: white; font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* --- VISUAL DEPTH BACKGROUND (As per your Screenshot) --- */
-        .visual-depth {
-            position: fixed; inset: 0; z-index: -1;
-            background: 
-                radial-gradient(circle at 50% 35%, rgba(0, 242, 255, 0.2) 0%, transparent 60%),
-                radial-gradient(circle at 0% 100%, rgba(112, 0, 255, 0.1) 0%, transparent 40%);
+        /* --- 3D Background Canvas (Three.js can be loaded here) --- */
+        #threed-bg {
+            position: fixed; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #020205 100%);
+            z-index: -2;
         }
 
-        /* --- PREMIUM HEADER --- */
-        header {
-            padding: 45px 25px 20px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .node-badge {
-            background: rgba(0, 242, 255, 0.05); border: 1px solid var(--cyan);
-            padding: 6px 15px; border-radius: 10px; font-family: 'Orbitron';
-            font-size: 0.6rem; color: var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+        /* --- Scanline Effect (Retro-Futuristic) --- */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px; z-index: -1; pointer-events: none;
         }
 
-        /* --- CENTRAL ASSET ORB --- */
-        .center-stage {
-            height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .main-orb {
-            width: 250px; height: 250px; border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 80%);
-            backdrop-filter: blur(15px); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; position: relative;
-        }
-        .bal-value { 
-            font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; 
-            text-shadow: 0 0 25px var(--cyan); margin: 10px 0;
+        .hero-section {
+            padding: 40px 20px; text-align: center;
+            position: relative;
         }
 
-        /* --- BENTO GRID (Perfectly Aligned) --- */
-        .feature-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 25px;
+        /* --- Quantum Balance Ring (Animated) --- */
+        .balance-ring {
+            position: relative; width: 250px; height: 250px;
+            margin: 0 auto; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: linear-gradient(var(--deep-space), var(--deep-space)) padding-box,
+                        linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)) border-box;
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.3);
+            animation: pulse-glow 3s infinite alternate;
         }
-        .feature-card {
-            background: var(--glass); border: 1px solid var(--border);
-            border-radius: 25px; padding: 22px; display: flex; flex-direction: column;
-            justify-content: space-between; transition: 0.4s;
-        }
-        .feature-card:active { transform: scale(0.95); border-color: var(--cyan); }
-        .card-mid { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; margin-top: 5px; }
 
-        /* --- HARVEST BUTTON --- */
-        .action-bar { padding: 30px 25px; }
-        .harvest-btn {
-            background: #fff; color: #000; padding: 22px; border-radius: 100px;
-            text-align: center; font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem;
-            letter-spacing: 3px; cursor: pointer;
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
+            100% { box-shadow: 0 0 70px rgba(0, 242, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.3); }
+        }
+
+        .abp-val { 
+            font-family: 'Orbitron'; font-size: 2.8rem; font-weight: 900; 
+            color: #fff; text-shadow: 0 0 20px var(--neon-cyan); 
+            animation: text-flicker 5s infinite;
+        }
+
+        @keyframes text-flicker {
+            0%, 100% { opacity: 1; text-shadow: 0 0 20px var(--neon-cyan); }
+            50% { opacity: 0.8; text-shadow: 0 0 10px var(--neon-cyan); }
+            52% { opacity: 1; text-shadow: 0 0 25px var(--neon-cyan); }
+        }
+        
+        /* --- Neon Glassmorphism Cards --- */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; margin-top: -40px; }
+        .stat-card {
+            background: var(--glass); backdrop-filter: blur(15px); border-radius: 20px;
+            padding: 20px; border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        .stat-card:active { transform: translateY(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.7); }
+
+        /* --- Pro Action Hub (with Glowing Icons) --- */
+        .action-hub {
+            padding: 30px 20px; display: grid;
+            grid-template-columns: repeat(4, 1fr); gap: 15px;
+        }
+        .hub-btn {
+            background: var(--glass); height: 80px;
+            border-radius: 20px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            border: 1px solid rgba(255,255,255,0.03); transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .hub-btn:active { 
+            transform: scale(0.9) rotate(5deg); 
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)); 
+            color: #000; box-shadow: 0 0 30px var(--neon-cyan);
+        }
+
+        /* --- Pulse Daily Reward Amulet --- */
+        .daily-amulet {
+            background: linear-gradient(135deg, var(--neon-gold), #b8860b);
+            color: #000; padding: 12px 30px; border-radius: 50px;
+            font-weight: 900; font-size: 0.9rem; letter-spacing: 2px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+            position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
+            cursor: pointer; z-index: 100; font-family: 'Orbitron';
+            animation: amulet-pulse 2s infinite;
+        }
+
+        @keyframes amulet-pulse {
+            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); transform: translateX(-50%) scale(1); }
+            50% { box-shadow: 0 0 60px rgba(255, 215, 0, 0.8); transform: translateX(-50%) scale(1.05); }
+            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); transform: translateX(-50%) scale(1); }
         }
     </style>
 </head>
 <body>
 
-    <div class="visual-depth"></div>
+    <div id="threed-bg"></div>
 
-    <header>
-        <div class="node-badge" id="walletDisplay">CONNECTING...</div>
-        <div onclick="window.location.href='admin.html'" style="font-size: 1.5rem; opacity: 0.3;">⚙️</div>
+    <header style="padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1;">
+        <div>
+            <div style="font-size: 0.7rem; color: var(--neon-cyan); letter-spacing: 4px; font-weight: 700;">QUANTUM LINK: ACTIVE</div>
+            <div style="font-size: 1.2rem; font-weight: 700; font-family: 'Orbitron'; text-shadow: 0 0 10px var(--neon-cyan);" id="walletDisplay">0x...</div>
+        </div>
+        <div onclick="window.location.href='admin.html'" style="cursor: pointer; opacity: 0.6; font-size: 1.3rem;">⚙️</div>
     </header>
 
-    <div class="center-stage">
-        <div class="main-orb">
-            <div style="font-size: 0.5rem; letter-spacing: 5px; color: #555;">TOTAL ASSETS</div>
-            <div class="bal-value" id="userBalance">0</div>
-            <div style="font-family: 'Orbitron'; font-size: 0.5rem; color: var(--cyan); letter-spacing: 3px;">ADAMAS CORE</div>
+    <section class="hero-section">
+        <div class="balance-ring">
+            <div style="font-size: 0.7rem; color: #aaa; letter-spacing: 3px;">TOTAL ASSETS</div>
+            <div class="abp-val" id="userBalance">0</div>
+            <div style="font-size: 0.7rem; color: var(--neon-cyan); font-weight: 700; letter-spacing: 1px;">ABP TOKENS</div>
+        </div>
+    </section>
+
+    <div class="stats-grid">
+        <div class="stat-card" style="border-left: 3px solid #00ff88;">
+            <div style="font-size: 2rem; text-shadow: 0 0 15px #00ff88;">⚡</div>
+            <div>
+                <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">ENERGY</div>
+                <div style="font-size: 1.1rem; font-weight: 700; color: #00ff88;" id="userEnergy">...</div>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left: 3px solid var(--neon-gold);">
+            <div style="font-size: 2rem; text-shadow: 0 0 15px var(--neon-gold);">💎</div>
+            <div>
+                <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">STAKED</div>
+                <div style="font-size: 1.1rem; font-weight: 700; color: var(--neon-gold);" id="userStaked">...</div>
+            </div>
         </div>
     </div>
 
-    <div class="feature-grid">
-        <div class="feature-card" onclick="window.location.href='mines.html'">
-            <div style="font-size: 0.55rem; color: #666;">ARCADE</div>
-            <div class="card-mid">MINES</div>
-            <div style="align-self: flex-end; font-size: 1.5rem;">💣</div>
-        </div>
-        <div class="feature-card" onclick="window.location.href='staking.html'">
-            <div style="font-size: 0.55rem; color: #666;">QUANTUM</div>
-            <div class="card-mid">VAULT</div>
-            <div style="align-self: flex-end; font-size: 1.5rem;">🛡️</div>
+    <div class="action-hub">
+        <div class="hub-btn" onclick="window.location.href='game.html'">🕹️<br><span style="font-size: 0.6rem; margin-top:5px;">ARCADE</span></div>
+        <div class="hub-btn" onclick="window.location.href='mines.html'">💣<br><span style="font-size: 0.6rem; margin-top:5px;">MINES</span></div>
+        <div class="hub-btn" onclick="window.location.href='staking.html'">🛡️<br><span style="font-size: 0.6rem; margin-top:5px;">VAULT</span></div>
+        <div class="hub-btn" onclick="window.location.href='referral.html'">🚀<br><span style="font-size: 0.6rem; margin-top:5px;">AIRDROP</span></div>
+    </div>
+
+    <div class="daily-amulet" onclick="document.getElementById('rewardModal').style.display='flex'; DailySystem.init();">
+        CLAIM GIFT 🎁
+    </div>
+
+    <div id="navbar-placeholder"></div>
+
+    <div id="rewardModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:10001; justify-content:center; align-items:center; backdrop-filter:blur(20px);">
+        <div class="glass-card" style="width: 85%; max-width: 380px; text-align: center; border: 1px solid var(--neon-cyan); box-shadow: 0 0 50px rgba(0,242,255,0.3);">
+            <h2 class="title-font" style="font-size: 1.1rem; color: var(--neon-cyan); margin-bottom: 25px; text-shadow: 0 0 10px var(--neon-cyan);">REWARD TERMINAL</h2>
+            <div id="rewardGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px;"></div>
+            <button id="claimBtn" class="btn-cosmic" style="width: 100%; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)); color: #000; font-weight: 900;" onclick="DailySystem.claim()">AUTHORIZE CLAIM</button>
+            <p onclick="document.getElementById('rewardModal').style.display='none'" style="color:#777; font-size:0.8rem; margin-top:20px; cursor:pointer;">DISMISS TRANSMISSION</p>
         </div>
     </div>
 
-    <div class="action-bar">
-        <div class="harvest-btn" id="claimBtn">AUTHORIZE HARVEST</div>
-    </div>
-
+    <script src="js/notify.js"></script>
     <script type="module">
         import { DBModule } from './js/database.js';
+        import './js/daily-system.js';
 
-        async function startSync() {
-            // 1. Fetch from LocalStorage (Jo index.html ne save kiya)
+        window.addEventListener('DOMContentLoaded', () => {
             const wallet = localStorage.getItem('userWallet');
-            
-            if (!wallet) {
-                console.error("No Wallet Found. Redirecting to Connect Page...");
-                window.location.href = 'index.html';
-                return;
-            }
+            if(!wallet) { window.location.href = 'index.html'; return; }
 
-            // 2. Display Truncated Wallet
-            document.getElementById('walletDisplay').innerText = 
-                wallet.substring(0, 6).toUpperCase() + "..." + wallet.substring(wallet.length - 4).toUpperCase();
+            document.getElementById('walletDisplay').innerText = wallet.substring(0,6) + '...' + wallet.substring(38);
 
-            // 3. Firebase Listen (This is where data comes live)
+            // Real-time data sync
             DBModule.listenToProfile(wallet, (data) => {
-                if (data) {
-                    document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
-                    console.log("Wallet Connected & Synced Successfully.");
-                } else {
-                    console.warn("New Profile Detected.");
-                }
+                document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
+                document.getElementById('userEnergy').innerText = data.energy || 0;
+                document.getElementById('userStaked').innerText = (data.stakedBalance || 0).toLocaleString();
             });
-        }
-
-        window.onload = startSync;
+        });
     </script>
+    <script src="js/nav.js"></script>
 </body>
 </html>
