@@ -2,74 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS Protocol | Entrance</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Entrance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Plus+Jakarta+Sans:wght@500;800&display=swap" rel="stylesheet">
     <style>
-        .gate-container { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
-        .task-box { display: none; margin-top: 30px; width: 100%; max-width: 400px; }
-        .social-link { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; 
-            margin-bottom: 10px; text-decoration: none; color: white; border: 1px solid rgba(0,242,255,0.2);
-        }
-        .verify-btn { width: 100%; margin-top: 20px; display: none; }
+        :root { --cyan: #00f2ff; --bg: #000; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .universe-bg { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.1) 0%, transparent 80%); z-index: -1; }
+        .gate-card { width: 90%; max-width: 400px; text-align: center; background: rgba(255,255,255,0.02); padding: 40px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); }
+        .title { font-family: 'Orbitron'; font-size: 2rem; letter-spacing: 5px; margin-bottom: 10px; background: linear-gradient(to bottom, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-main { width: 100%; padding: 20px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        .btn-connect { background: #fff; color: #000; box-shadow: 0 10px 30px rgba(0, 242, 255, 0.2); }
+        .task-list { display: none; margin-top: 25px; text-align: left; }
+        .task-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #ccc; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.05); }
+        .btn-enter { background: var(--cyan); color: #000; display: none; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-
     <div class="universe-bg"></div>
-
-    <div class="gate-container" id="authSection">
-        <h1 class="title-font gradient-text" style="font-size: 2.5rem;">ADAMAS PROTOCOL</h1>
-        <p style="color: #888; margin: 15px 0 30px;">Decentralized Gaming & Rewards Ecosystem</p>
+    <div class="gate-card">
+        <h1 class="title">ADAMAS</h1>
+        <p style="font-size: 0.6rem; letter-spacing: 2px; color: #666; font-weight: 800;">21,000 SCARCITY PROTOCOL</p>
         
-        <button id="connectBtn" class="btn-cosmic" onclick="handleConnect()">CONNECT WALLET</button>
+        <button id="connectBtn" class="btn-main btn-connect">CONNECT WALLET</button>
 
-        <div id="taskSection" class="task-box">
-            <h3 class="title-font" style="font-size: 0.9rem; color: var(--gold); margin-bottom: 20px;">COMPLETE TASKS TO UNLOCK</h3>
-            
-            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="social-link" onclick="markTask('tw')">
-                <span>Follow Twitter (+50 ABP)</span>
-                <span id="tw-status">⭕</span>
-            </a>
-
-            <a href="https://t.me/daimodmo" target="_blank" class="social-link" onclick="markTask('tg')">
-                <span>Join Telegram (+50 ABP)</span>
-                <span id="tg-status">⭕</span>
-            </a>
-
-            <button id="enterBtn" class="btn-cosmic verify-btn" onclick="enterApp()">ENTER DASHBOARD</button>
+        <div id="taskSection" class="task-list">
+            <p style="font-size: 0.55rem; color: #444; margin-bottom: 15px; font-weight: 900; letter-spacing: 1px;">COMPLETE TO AUTHORIZE</p>
+            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="task-item" onclick="done('tw')">Follow Twitter <span>⭕</span></a>
+            <a href="https://t.me/daimodmo" target="_blank" class="task-item" onclick="done('tg')">Join Telegram <span>⭕</span></a>
+            <button id="enterBtn" class="btn-main btn-enter">ENTER ECOSYSTEM</button>
         </div>
     </div>
 
-    <script src="js/notify.js"></script>
-    <script src="js/auth.js"></script>
-    <script>
+    <script type="module">
+        import { DBModule } from './js/database.js';
         let tasks = { tw: false, tg: false };
 
-        async function handleConnect() {
-            // Hum auth.js ka connect call karenge
-            const wallet = await AuthModule.connect();
-            if(wallet) {
-                document.getElementById('connectBtn').style.display = 'none';
-                document.getElementById('taskSection').style.display = 'block';
-                Notify.show("Wallet Linked. Complete tasks.", "info");
-            }
-        }
+        document.getElementById('connectBtn').onclick = async () => {
+            // Generate/Connect Logic
+            const wallet = "ADM-" + Math.random().toString(36).substring(2,10).toUpperCase();
+            localStorage.setItem('userWallet', wallet);
+            await DBModule.createProfile(wallet); // Sync to Firebase
+            
+            document.getElementById('connectBtn').classList.add('hidden');
+            document.getElementById('taskSection').style.display = 'block';
+        };
 
-        function markTask(type) {
-            tasks[type] = true;
-            document.getElementById(`${type}-status`).innerText = "✅";
-            if(tasks.tw && tasks.tg) {
-                document.getElementById('enterBtn').style.display = 'block';
-            }
-        }
+        window.done = (t) => {
+            tasks[t] = true;
+            event.target.querySelector('span').innerText = "✅";
+            if(tasks.tw && tasks.tg) document.getElementById('enterBtn').style.display = 'block';
+        };
 
-        function enterApp() {
-            // Reward point add karke redirect
-            window.location.href = "dashboard.html";
-        }
+        document.getElementById('enterBtn').onclick = () => window.location.href = 'dashboard.html';
     </script>
 </body>
 </html>
