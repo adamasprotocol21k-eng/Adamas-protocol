@@ -2,69 +2,102 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Refer & Earn | ADAMAS</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Referral Fleet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Plus+Jakarta+Sans:wght@500;800&display=swap" rel="stylesheet">
     <style>
-        .ref-box { margin-top: 30px; text-align: center; }
-        .link-container { 
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; 
-            border: 1px dashed var(--primary-neon); margin: 20px 0;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        #refLink { font-size: 0.7rem; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 80%; }
-        .copy-btn { color: var(--primary-neon); font-weight: 800; cursor: pointer; font-size: 0.8rem; }
+        :root { --cyan: #00f2ff; --glass: rgba(255,255,255,0.03); }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background: #000; color: white; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
+        .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 20% 80%, rgba(0, 242, 255, 0.1) 0%, transparent 50%); z-index: -1; }
         
-        .ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .stat-card { padding: 20px; text-align: center; }
+        header { padding: 35px 20px; display: flex; align-items: center; gap: 15px; }
+        .back-btn { font-size: 1.5rem; cursor: pointer; opacity: 0.5; }
+
+        .fleet-card { margin: 0 20px 25px; background: var(--glass); border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 30px; text-align: center; backdrop-filter: blur(15px); }
+        .fleet-icon { font-size: 3rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--cyan)); }
+        .fleet-title { font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 10px; }
+        .fleet-desc { font-size: 0.7rem; color: #666; line-height: 1.6; }
+
+        .reward-badge { display: inline-block; background: rgba(0, 242, 255, 0.1); color: var(--cyan); padding: 5px 15px; border-radius: 100px; font-size: 0.6rem; font-weight: 800; margin-top: 15px; border: 1px solid rgba(0,242,255,0.2); }
+
+        /* --- LINK BOX --- */
+        .link-container { padding: 0 20px; margin-top: 20px; }
+        .link-box { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .ref-url { font-size: 0.65rem; color: #aaa; word-break: break-all; font-family: 'Orbitron'; }
+        
+        .btn-copy { width: 100%; padding: 18px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; font-size: 0.75rem; background: #fff; color: #000; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-copy:active { transform: scale(0.95); background: var(--cyan); }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; margin-top: 10px; }
+        .stat-box { background: var(--glass); padding: 15px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.03); }
+        .stat-label { font-size: 0.5rem; color: #444; letter-spacing: 1px; margin-bottom: 5px; }
+        .stat-val { font-family: 'Orbitron'; font-size: 1.1rem; color: #fff; }
     </style>
 </head>
 <body>
-    <div class="universe-bg"></div>
+    <div class="bg-glow"></div>
+    
+    <header>
+        <div class="back-btn" onclick="location.href='dashboard.html'">←</div>
+        <div style="font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 2px;">NETWORK FLEET</div>
+    </header>
 
-    <div style="padding: 20px;">
-        <header style="display: flex; align-items: center; gap: 15px;">
-            <button onclick="window.location.href='dashboard.html'" class="btn-cosmic" style="padding: 5px 15px;">←</button>
-            <h1 class="title-font" style="font-size: 1rem; color: var(--gold);">REFERRAL SYSTEM</h1>
-        </header>
+    <div class="fleet-card">
+        <div class="fleet-icon">🚀</div>
+        <h2 class="fleet-title">EXPAND THE CORE</h2>
+        <p class="fleet-desc">Invite new pilots to the ADAMAS Protocol and earn bonus ABP for every successful link.</p>
+        <div class="reward-badge">+200 ABP PER PILOT</div>
+    </div>
 
-        <div class="ref-box">
-            <h2 class="title-font" style="font-size: 1.2rem;">INVITE YOUR SQUAD</h2>
-            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">Get 50 ABP for every friend who joins using your link.</p>
-
-            <div class="link-container">
-                <span id="refLink">https://adamas.io/join?ref=loading...</span>
-                <span class="copy-btn" onclick="ReferralModule.copyLink()">COPY</span>
-            </div>
-        </div>
-
-        <div class="ref-stats">
-            <div class="glass-card stat-card">
-                <div class="title-font" style="color: var(--primary-neon); font-size: 1.2rem;" id="totalRef">0</div>
-                <div style="font-size: 0.6rem; color: #666; margin-top: 5px;">TOTAL INVITES</div>
-            </div>
-            <div class="glass-card stat-card">
-                <div class="title-font" style="color: var(--gold); font-size: 1.2rem;" id="refEarned">0</div>
-                <div style="font-size: 0.6rem; color: #666; margin-top: 5px;">ABP EARNED</div>
-            </div>
-        </div>
-
-        <div class="glass-card" style="margin-top: 30px;">
-            <h3 class="title-font" style="font-size: 0.8rem; margin-bottom: 15px;">HOW IT WORKS</h3>
-            <ul style="font-size: 0.7rem; color: #888; line-height: 1.8;">
-                <li>Share your unique link with friends.</li>
-                <li>They connect their wallet and complete social tasks.</li>
-                <li>You receive 50 ABP instantly in your vault.</li>
-            </ul>
+    <div class="link-container">
+        <div class="link-box">
+            <div class="info-label" style="font-size: 0.5rem; color: #444; letter-spacing: 2px;">YOUR UNIQUE INVITE LINK</div>
+            <div class="ref-url" id="referralURL">https://adamas.app/?ref=...</div>
+            <button class="btn-copy" id="copyBtn">COPY LINK</button>
         </div>
     </div>
 
-    <div id="navbar-placeholder"></div>
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-label">TOTAL INVITES</div>
+            <div class="stat-val" id="totalRefs">0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">FLEET BONUS</div>
+            <div class="stat-val" id="refBonus">0</div>
+        </div>
+    </div>
 
-    <script src="js/notify.js"></script>
-    <script src="js/database.js" type="module"></script>
-    <script src="js/referral-logic.js" type="module"></script>
-    <script src="js/nav.js"></script>
+    <script type="module">
+        import { DBModule } from './js/database.js';
+        const wallet = localStorage.getItem('userWallet');
+        
+        // 1. Generate Referral URL
+        const refLink = `https://adamas-protocol.vercel.app/?ref=${wallet}`;
+        document.getElementById('referralURL').innerText = refLink;
+
+        // 2. Fetch Referral Stats
+        DBModule.listenToProfile(wallet, (data) => {
+            if(data) {
+                const count = data.referrals || 0;
+                document.getElementById('totalRefs').innerText = count;
+                document.getElementById('refBonus').innerText = (count * 200).toLocaleString();
+            }
+        });
+
+        // 3. Copy Functionality
+        document.getElementById('copyBtn').onclick = () => {
+            navigator.clipboard.writeText(refLink).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "COPIED TO CLIPBOARD!";
+                btn.style.background = "#00f2ff";
+                setTimeout(() => {
+                    btn.innerText = "COPY LINK";
+                    btn.style.background = "#fff";
+                }, 2000);
+            });
+        };
+    </script>
 </body>
 </html>
-
