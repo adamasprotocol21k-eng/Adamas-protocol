@@ -2,62 +2,154 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diamond Mines | ADAMAS</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Mines Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Plus+Jakarta+Sans:wght@500;800&display=swap" rel="stylesheet">
     <style>
-        .mines-container { padding: 20px; text-align: center; margin-top: 10px; }
-        .grid-5x5 { 
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; 
-            max-width: 350px; margin: 20px auto; 
-        }
-        .tile { 
-            aspect-ratio: 1; background: rgba(255,255,255,0.05); 
-            border-radius: 10px; display: flex; justify-content: center; 
-            align-items: center; font-size: 1.5rem; cursor: pointer;
-            border: 1px solid rgba(0,242,255,0.1); transition: 0.2s;
-        }
-        .tile.revealed { background: rgba(0,242,255,0.15); border-color: var(--primary-neon); cursor: default; }
-        .tile.bomb { background: rgba(255,51,102,0.2); border-color: #ff3366; }
+        :root { --cyan: #00f2ff; --bg: #000205; --glass: rgba(255,255,255,0.03); }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow-y: auto; padding-bottom: 50px; }
+        .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 50% 20%, rgba(0, 242, 255, 0.15) 0%, transparent 60%); z-index: -1; }
         
-        .game-status { margin-bottom: 20px; padding: 15px; border-radius: 15px; background: rgba(0,0,0,0.3); }
-        .bet-input { 
-            background: #111; border: 1px solid #333; color: white; 
-            padding: 12px; border-radius: 10px; width: 100px; text-align: center;
-            font-family: 'Orbitron'; margin-right: 10px;
-        }
+        header { padding: 30px 20px; display: flex; align-items: center; gap: 15px; }
+        .back-btn { font-size: 1.5rem; cursor: pointer; opacity: 0.5; }
+
+        .game-stats { display: flex; justify-content: space-around; margin-bottom: 20px; }
+        .stat-card { background: var(--glass); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); text-align: center; min-width: 100px; }
+        .stat-label { font-size: 0.5rem; color: #555; letter-spacing: 1px; margin-bottom: 5px; }
+        .stat-val { font-family: 'Orbitron'; font-size: 0.9rem; color: var(--cyan); }
+
+        /* --- THE MINES GRID --- */
+        .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 0 20px; max-width: 450px; margin: 0 auto; }
+        .cell { aspect-ratio: 1; background: var(--glass); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+        .cell:active { transform: scale(0.9); }
+        .cell.revealed { background: rgba(0, 242, 255, 0.1); border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
+        .cell.mine { background: rgba(255, 0, 0, 0.2); border-color: #ff4444; }
+
+        /* --- CONTROL PANEL --- */
+        .controls { padding: 30px 20px; max-width: 450px; margin: 0 auto; }
+        .bet-input { width: 100%; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 18px; border-radius: 15px; color: white; font-family: 'Orbitron'; text-align: center; font-size: 1rem; margin-bottom: 15px; outline: none; }
+        .btn-play { width: 100%; padding: 20px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; background: #fff; color: #000; cursor: pointer; box-shadow: 0 10px 30px rgba(0, 242, 255, 0.2); }
+        .btn-cashout { width: 100%; padding: 20px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; background: var(--cyan); color: #000; cursor: pointer; display: none; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div class="universe-bg"></div>
+    <div class="bg-glow"></div>
+    <header>
+        <div class="back-btn" onclick="location.href='dashboard.html'">←</div>
+        <div style="font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 2px;">MINES PROTOCOL</div>
+    </header>
 
-    <div class="mines-container">
-        <header style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-            <button onclick="window.location.href='game.html'" class="btn-cosmic" style="padding: 5px 15px;">BACK</button>
-            <div id="gameBalance" style="color: var(--gold); font-family: 'Orbitron';">0 ABP</div>
-        </header>
-
-        <div class="game-status glass-card">
-            <h2 class="title-font" style="font-size: 1rem; color: var(--primary-neon);">DIAMOND MINES</h2>
-            <div id="multiplier" style="font-size: 1.5rem; font-weight: 900; margin-top: 5px;">1.00x</div>
+    <div class="game-stats">
+        <div class="stat-card">
+            <div class="stat-label">CURRENT MULTIPLIER</div>
+            <div class="stat-val" id="multiplier">1.00x</div>
         </div>
-
-        <div class="grid-5x5" id="minesGrid">
-            </div>
-
-        <div id="setupSection">
-            <input type="number" id="betAmount" class="bet-input" value="10" min="10">
-            <button class="btn-cosmic" onclick="MinesLogic.startGame()">START GAME</button>
-        </div>
-
-        <div id="actionSection" style="display: none;">
-            <button class="btn-cosmic btn-gold" onclick="MinesLogic.cashout()">CASHOUT</button>
+        <div class="stat-card">
+            <div class="stat-label">ABP BALANCE</div>
+            <div class="stat-val" id="userBalance">0</div>
         </div>
     </div>
 
-    <script src="js/notify.js"></script>
-    <script src="js/database.js" type="module"></script>
-    <script src="js/mines-logic.js" type="module"></script>
+    <div class="grid-container" id="grid">
+        </div>
+
+    <div class="controls">
+        <input type="number" class="bet-input" id="betAmount" placeholder="ENTER BET AMOUNT">
+        <button class="btn-play" id="playBtn">START MISSION</button>
+        <button class="btn-cashout" id="cashoutBtn">CASHOUT</button>
+    </div>
+
+    <script type="module">
+        import { DBModule } from './js/database.js';
+        
+        let wallet = localStorage.getItem('userWallet');
+        let balance = 0;
+        let activeGame = false;
+        let mines = [];
+        let revealedCount = 0;
+        let currentBet = 0;
+
+        // Load Balance
+        DBModule.listenToProfile(wallet, (data) => {
+            if(data) {
+                balance = data.balance || 0;
+                document.getElementById('userBalance').innerText = balance.toLocaleString();
+            }
+        });
+
+        const grid = document.getElementById('grid');
+        const playBtn = document.getElementById('playBtn');
+        const cashoutBtn = document.getElementById('cashoutBtn');
+        const multDisplay = document.getElementById('multiplier');
+
+        // Create 5x5 Grid
+        function initGrid() {
+            grid.innerHTML = '';
+            for(let i=0; i<25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.onclick = () => reveal(i, cell);
+                grid.appendChild(cell);
+            }
+        }
+
+        function startGame() {
+            const bet = parseInt(document.getElementById('betAmount').value);
+            if(isNaN(bet) || bet > balance || bet <= 0) {
+                alert("Invalid Bet Amount!");
+                return;
+            }
+
+            currentBet = bet;
+            activeGame = true;
+            revealedCount = 0;
+            mines = Array.from({length: 25}, (_, i) => i).sort(() => Math.random() - 0.5).slice(0, 3); // 3 Mines
+            
+            initGrid();
+            playBtn.style.display = 'none';
+            cashoutBtn.style.display = 'block';
+            multDisplay.innerText = "1.00x";
+        }
+
+        async function reveal(idx, el) {
+            if(!activeGame || el.classList.contains('revealed')) return;
+
+            if(mines.includes(idx)) {
+                el.classList.add('mine');
+                el.innerText = '💣';
+                gameOver(false);
+            } else {
+                el.classList.add('revealed');
+                el.innerText = '💎';
+                revealedCount++;
+                const newMult = (1 + (revealedCount * 0.2)).toFixed(2);
+                multDisplay.innerText = newMult + "x";
+            }
+        }
+
+        async function gameOver(win) {
+            activeGame = false;
+            if(!win) {
+                alert("BOOM! You lost the bet.");
+                await DBModule.updateBalance(wallet, -currentBet);
+            }
+            playBtn.style.display = 'block';
+            cashoutBtn.style.display = 'none';
+        }
+
+        cashoutBtn.onclick = async () => {
+            if(!activeGame) return;
+            const mult = parseFloat(multDisplay.innerText);
+            const profit = Math.floor(currentBet * mult) - currentBet;
+            await DBModule.updateBalance(wallet, profit);
+            alert(`Mission Success! You earned ${profit} ABP`);
+            gameOver(true);
+        };
+
+        playBtn.onclick = startGame;
+        initGrid();
+    </script>
 </body>
 </html>
-
