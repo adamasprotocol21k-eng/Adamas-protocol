@@ -3,36 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Entrance</title>
+    <title>ADAMAS | Gateway</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Plus+Jakarta+Sans:wght@500;800&display=swap" rel="stylesheet">
     <style>
-        :root { --cyan: #00f2ff; --bg: #000; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .universe-bg { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.1) 0%, transparent 80%); z-index: -1; }
-        .gate-card { width: 90%; max-width: 400px; text-align: center; background: rgba(255,255,255,0.02); padding: 40px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); }
-        .title { font-family: 'Orbitron'; font-size: 2rem; letter-spacing: 5px; margin-bottom: 10px; background: linear-gradient(to bottom, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-main { width: 100%; padding: 20px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; margin-top: 20px; }
-        .btn-connect { background: #fff; color: #000; box-shadow: 0 10px 30px rgba(0, 242, 255, 0.2); }
-        .task-list { display: none; margin-top: 25px; text-align: left; }
-        .task-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #ccc; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.05); }
+        :root { --cyan: #00f2ff; --bg: #000205; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .universe-bg { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.12) 0%, transparent 70%); z-index: -1; }
+        .gate-card { width: 90%; max-width: 380px; text-align: center; background: rgba(255,255,255,0.02); padding: 40px 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); }
+        .title { font-family: 'Orbitron'; font-size: 2.2rem; letter-spacing: 6px; margin-bottom: 5px; background: linear-gradient(180deg, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-action { width: 100%; padding: 20px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; margin-top: 25px; font-size: 0.8rem; }
+        .btn-connect { background: #fff; color: #000; box-shadow: 0 10px 40px rgba(0, 242, 255, 0.2); }
+        .task-list { display: none; margin-top: 30px; text-align: left; animation: fadeIn 0.5s ease; }
+        .task-item { background: rgba(255,255,255,0.05); padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #fff; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.03); }
         .btn-enter { background: var(--cyan); color: #000; display: none; }
-        .hidden { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .status-msg { margin-top: 15px; font-size: 0.6rem; color: #444; letter-spacing: 1px; text-transform: uppercase; }
     </style>
 </head>
 <body>
     <div class="universe-bg"></div>
     <div class="gate-card">
         <h1 class="title">ADAMAS</h1>
-        <p style="font-size: 0.6rem; letter-spacing: 2px; color: #666; font-weight: 800;">21,000 SCARCITY PROTOCOL</p>
+        <p style="font-size: 0.55rem; letter-spacing: 3px; color: #555; font-weight: 900;">SECURE NODE ENTRANCE</p>
         
-        <button id="connectBtn" class="btn-main btn-connect">CONNECT WALLET</button>
+        <button id="connectBtn" class="btn-action btn-connect">CONNECT WALLET</button>
 
         <div id="taskSection" class="task-list">
-            <p style="font-size: 0.55rem; color: #444; margin-bottom: 15px; font-weight: 900; letter-spacing: 1px;">COMPLETE TO AUTHORIZE</p>
-            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="task-item" onclick="done('tw')">Follow Twitter <span>⭕</span></a>
-            <a href="https://t.me/daimodmo" target="_blank" class="task-item" onclick="done('tg')">Join Telegram <span>⭕</span></a>
-            <button id="enterBtn" class="btn-main btn-enter">ENTER ECOSYSTEM</button>
+            <p style="font-size: 0.6rem; color: #ffd700; margin-bottom: 20px; font-weight: 800; text-align: center; letter-spacing: 1px;">VERIFICATION REQUIRED</p>
+            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="task-item" onclick="verifyTask('tw')">
+                <span>Follow Twitter (+50 ABP)</span> <b id="tw-status">⭕</b>
+            </a>
+            <a href="https://t.me/daimodmo" target="_blank" class="task-item" onclick="verifyTask('tg')">
+                <span>Join Telegram (+50 ABP)</span> <b id="tg-status">⭕</b>
+            </a>
+            <button id="enterBtn" class="btn-action btn-enter">LAUNCH DASHBOARD</button>
         </div>
+        <p id="statusMsg" class="status-msg">Standby for connection...</p>
     </div>
 
     <script type="module">
@@ -40,22 +47,32 @@
         let tasks = { tw: false, tg: false };
 
         document.getElementById('connectBtn').onclick = async () => {
-            // Generate/Connect Logic
+            document.getElementById('statusMsg').innerText = "Establishing Blockchain Link...";
+            // Wallet address simulation (Replace with real wallet logic if needed)
             const wallet = "ADM-" + Math.random().toString(36).substring(2,10).toUpperCase();
             localStorage.setItem('userWallet', wallet);
-            await DBModule.createProfile(wallet); // Sync to Firebase
             
-            document.getElementById('connectBtn').classList.add('hidden');
-            document.getElementById('taskSection').style.display = 'block';
+            try {
+                await DBModule.createProfile(wallet); 
+                document.getElementById('connectBtn').style.display = 'none';
+                document.getElementById('taskSection').style.display = 'block';
+                document.getElementById('statusMsg').innerText = "Wallet Linked: " + wallet;
+            } catch(e) { 
+                document.getElementById('statusMsg').innerText = "Sync Failed. Retry.";
+            }
         };
 
-        window.done = (t) => {
-            tasks[t] = true;
-            event.target.querySelector('span').innerText = "✅";
+        window.verifyTask = (type) => {
+            tasks[type] = true;
+            document.getElementById(`${type}-status`).innerText = "✅";
+            document.getElementById(`${type}-status`).style.color = "#00f2ff";
             if(tasks.tw && tasks.tg) document.getElementById('enterBtn').style.display = 'block';
         };
 
-        document.getElementById('enterBtn').onclick = () => window.location.href = 'dashboard.html';
+        document.getElementById('enterBtn').onclick = () => {
+            document.getElementById('statusMsg').innerText = "Redirecting...";
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+        };
     </script>
 </body>
 </html>
