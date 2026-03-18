@@ -17,7 +17,6 @@
         
         body { background: #000; color: white; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
 
-        /* --- PREMIUM ANIMATED BACKGROUND --- */
         .bg-glow { 
             position: fixed; inset: 0; 
             background: radial-gradient(circle at 50% 30%, rgba(0, 242, 255, 0.15) 0%, transparent 60%);
@@ -33,7 +32,6 @@
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
         }
 
-        /* --- NEW PREMIUM ADMIN NODE ICON --- */
         .admin-node {
             position: relative; width: 42px; height: 42px;
             background: var(--glass); border: 1px solid var(--border);
@@ -55,7 +53,6 @@
             filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.5)); margin: 5px 0; 
         }
 
-        /* --- BENTO GRID WITH GLOW --- */
         .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         .bento-card { 
             background: var(--glass); border: 1px solid var(--border); padding: 25px 20px; 
@@ -86,7 +83,7 @@
 <body>
     <div class="bg-glow"></div>
     <header>
-        <div class="wallet-pill" id="walletDisplay">AUTHORIZING...</div>
+        <div class="wallet-pill" id="walletDisplay">LINKING...</div>
         <div class="admin-node" onclick="location.href='admin.html'">
             <div class="node-pulse"></div>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -103,19 +100,19 @@
 
     <div class="bento-grid">
         <div class="bento-card" onclick="location.href='mines.html'">
-            <h4>Arcade</h4>
+            <h4>Arcade Engine</h4>
             <p>MINES 💣</p>
         </div>
         <div class="bento-card" onclick="location.href='staking.html'">
-            <h4>Quantum</h4>
+            <h4>Quantum Vault</h4>
             <p>VAULT 🛡️</p>
         </div>
         <div class="bento-card">
-            <h4>Energy</h4>
+            <h4>System Energy</h4>
             <p id="userEnergy">100% ⚡</p>
         </div>
         <div class="bento-card" onclick="location.href='referral.html'">
-            <h4>Network</h4>
+            <h4>Network Fleet</h4>
             <p>FLEET 🚀</p>
         </div>
     </div>
@@ -123,8 +120,8 @@
     <div class="harvest-btn" onclick="location.href='rewards.html'">INITIALIZE HARVEST</div>
 
     <div class="nav-bar">
-        <div class="nav-item active">🏠</div>
-        <div class="nav-item" onclick="location.href='game.html'">🎮</div>
+        <div class="nav-item active">🌏</div>
+        <div class="nav-item" onclick="location.href='game.html'">🎩</div>
         <div class="nav-item" onclick="location.href='wallet.html'">🏦</div>
         <div class="nav-item" onclick="location.href='profile.html'">👤</div>
     </div>
@@ -136,10 +133,14 @@
         if(!wallet) {
             window.location.href = 'index.html';
         } else {
-            document.getElementById('walletDisplay').innerText = wallet.substring(0,6) + "..." + wallet.substring(wallet.length-4);
+            // FIXED: Real MetaMask Address Format (e.g. 0x123...ABCD)
+            const shortAddr = wallet.substring(0, 6).toUpperCase() + "..." + wallet.substring(wallet.length - 4).toUpperCase();
+            document.getElementById('walletDisplay').innerText = shortAddr;
             
+            // Sync with Firebase using real wallet address
             DBModule.listenToProfile(wallet, (data) => {
                 if(data) {
+                    // Update Balance with comma separators
                     document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
                     document.getElementById('userEnergy').innerText = (data.energy || 100) + "% ⚡";
                 }
