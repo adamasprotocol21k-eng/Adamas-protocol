@@ -2,199 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS | Quantum Command</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Plus+Jakarta+Sans:wght@300;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --neon-cyan: #00f2ff;
-            --neon-gold: #ffd700;
-            --neon-magenta: #ff00ff;
-            --deep-space: #020205;
-            --glass: rgba(255, 255, 255, 0.03);
-        }
-
-        body {
-            margin: 0; background: var(--deep-space);
-            color: white; font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* --- 3D Background Canvas (Three.js can be loaded here) --- */
-        #threed-bg {
-            position: fixed; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #020205 100%);
-            z-index: -2;
-        }
-
-        /* --- Scanline Effect (Retro-Futuristic) --- */
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px; z-index: -1; pointer-events: none;
-        }
-
-        .hero-section {
-            padding: 40px 20px; text-align: center;
-            position: relative;
-        }
-
-        /* --- Quantum Balance Ring (Animated) --- */
-        .balance-ring {
-            position: relative; width: 250px; height: 250px;
-            margin: 0 auto; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            background: linear-gradient(var(--deep-space), var(--deep-space)) padding-box,
-                        linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)) border-box;
-            box-shadow: 0 0 50px rgba(0, 242, 255, 0.3);
-            animation: pulse-glow 3s infinite alternate;
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
-            100% { box-shadow: 0 0 70px rgba(0, 242, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.3); }
-        }
-
-        .abp-val { 
-            font-family: 'Orbitron'; font-size: 2.8rem; font-weight: 900; 
-            color: #fff; text-shadow: 0 0 20px var(--neon-cyan); 
-            animation: text-flicker 5s infinite;
-        }
-
-        @keyframes text-flicker {
-            0%, 100% { opacity: 1; text-shadow: 0 0 20px var(--neon-cyan); }
-            50% { opacity: 0.8; text-shadow: 0 0 10px var(--neon-cyan); }
-            52% { opacity: 1; text-shadow: 0 0 25px var(--neon-cyan); }
-        }
+        :root { --cyan: #00f2ff; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background: #000; color: white; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
+        .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 50% 35%, rgba(0, 242, 255, 0.18) 0%, transparent 60%); z-index: -1; }
         
-        /* --- Neon Glassmorphism Cards --- */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; margin-top: -40px; }
-        .stat-card {
-            background: var(--glass); backdrop-filter: blur(15px); border-radius: 20px;
-            padding: 20px; border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: 0.3s;
-        }
-        .stat-card:active { transform: translateY(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.7); }
+        header { padding: 45px 25px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .wallet-pill { background: rgba(0, 242, 255, 0.05); border: 1px solid var(--cyan); padding: 8px 15px; border-radius: 12px; font-family: 'Orbitron'; font-size: 0.6rem; color: var(--cyan); letter-spacing: 1px; }
+        
+        .main-stage { height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .bal-val { font-family: 'Orbitron'; font-size: 3.8rem; font-weight: 900; text-shadow: 0 0 30px var(--cyan); margin: 10px 0; }
+        
+        .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; }
+        .bento-card { background: var(--glass); border: 1px solid var(--border); padding: 22px; border-radius: 25px; backdrop-filter: blur(15px); transition: 0.3s; }
+        .bento-card:active { transform: scale(0.95); border-color: var(--cyan); }
+        .bento-card h4 { font-size: 0.55rem; color: #666; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; }
+        .bento-card p { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; margin-top: 5px; }
 
-        /* --- Pro Action Hub (with Glowing Icons) --- */
-        .action-hub {
-            padding: 30px 20px; display: grid;
-            grid-template-columns: repeat(4, 1fr); gap: 15px;
-        }
-        .hub-btn {
-            background: var(--glass); height: 80px;
-            border-radius: 20px; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            border: 1px solid rgba(255,255,255,0.03); transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .hub-btn:active { 
-            transform: scale(0.9) rotate(5deg); 
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)); 
-            color: #000; box-shadow: 0 0 30px var(--neon-cyan);
-        }
-
-        /* --- Pulse Daily Reward Amulet --- */
-        .daily-amulet {
-            background: linear-gradient(135deg, var(--neon-gold), #b8860b);
-            color: #000; padding: 12px 30px; border-radius: 50px;
-            font-weight: 900; font-size: 0.9rem; letter-spacing: 2px;
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
-            position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
-            cursor: pointer; z-index: 100; font-family: 'Orbitron';
-            animation: amulet-pulse 2s infinite;
-        }
-
-        @keyframes amulet-pulse {
-            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); transform: translateX(-50%) scale(1); }
-            50% { box-shadow: 0 0 60px rgba(255, 215, 0, 0.8); transform: translateX(-50%) scale(1.05); }
-            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); transform: translateX(-50%) scale(1); }
-        }
+        .harvest-btn { margin: 25px 20px; background: #fff; color: #000; padding: 22px; border-radius: 100px; text-align: center; font-family: 'Orbitron'; font-weight: 900; font-size: 0.75rem; letter-spacing: 2px; box-shadow: 0 10px 30px rgba(255,255,255,0.1); cursor: pointer; }
+        
+        .nav-bar { position: fixed; bottom: 35px; left: 20px; right: 20px; background: rgba(10,10,10,0.85); padding: 18px; border-radius: 25px; display: flex; justify-content: space-around; border: 1px solid var(--border); backdrop-filter: blur(20px); }
+        .nav-item { font-size: 1.3rem; opacity: 0.3; transition: 0.3s; cursor: pointer; }
+        .active { opacity: 1; color: var(--cyan); }
     </style>
 </head>
 <body>
-
-    <div id="threed-bg"></div>
-
-    <header style="padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1;">
-        <div>
-            <div style="font-size: 0.7rem; color: var(--neon-cyan); letter-spacing: 4px; font-weight: 700;">QUANTUM LINK: ACTIVE</div>
-            <div style="font-size: 1.2rem; font-weight: 700; font-family: 'Orbitron'; text-shadow: 0 0 10px var(--neon-cyan);" id="walletDisplay">0x...</div>
-        </div>
-        <div onclick="window.location.href='admin.html'" style="cursor: pointer; opacity: 0.6; font-size: 1.3rem;">⚙️</div>
+    <div class="bg-glow"></div>
+    <header>
+        <div class="wallet-pill" id="walletDisplay">LINKING...</div>
+        <div style="opacity: 0.3; font-size: 1.5rem;" onclick="location.href='admin.html'">⚙️</div>
     </header>
 
-    <section class="hero-section">
-        <div class="balance-ring">
-            <div style="font-size: 0.7rem; color: #aaa; letter-spacing: 3px;">TOTAL ASSETS</div>
-            <div class="abp-val" id="userBalance">0</div>
-            <div style="font-size: 0.7rem; color: var(--neon-cyan); font-weight: 700; letter-spacing: 1px;">ABP TOKENS</div>
-        </div>
-    </section>
-
-    <div class="stats-grid">
-        <div class="stat-card" style="border-left: 3px solid #00ff88;">
-            <div style="font-size: 2rem; text-shadow: 0 0 15px #00ff88;">⚡</div>
-            <div>
-                <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">ENERGY</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #00ff88;" id="userEnergy">...</div>
-            </div>
-        </div>
-        <div class="stat-card" style="border-left: 3px solid var(--neon-gold);">
-            <div style="font-size: 2rem; text-shadow: 0 0 15px var(--neon-gold);">💎</div>
-            <div>
-                <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">STAKED</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: var(--neon-gold);" id="userStaked">...</div>
-            </div>
-        </div>
+    <div class="main-stage">
+        <p style="font-size: 0.5rem; letter-spacing: 6px; color: #444; font-weight: 900;">TOTAL ABP ASSETS</p>
+        <div class="bal-val" id="userBalance">0</div>
+        <p style="color: var(--cyan); font-size: 0.5rem; letter-spacing: 2px; font-family: 'Orbitron'; font-weight: 800;">ADAMAS ELITE PROTOCOL</p>
     </div>
 
-    <div class="action-hub">
-        <div class="hub-btn" onclick="window.location.href='game.html'">🕹️<br><span style="font-size: 0.6rem; margin-top:5px;">ARCADE</span></div>
-        <div class="hub-btn" onclick="window.location.href='mines.html'">💣<br><span style="font-size: 0.6rem; margin-top:5px;">MINES</span></div>
-        <div class="hub-btn" onclick="window.location.href='staking.html'">🛡️<br><span style="font-size: 0.6rem; margin-top:5px;">VAULT</span></div>
-        <div class="hub-btn" onclick="window.location.href='referral.html'">🚀<br><span style="font-size: 0.6rem; margin-top:5px;">AIRDROP</span></div>
-    </div>
-
-    <div class="daily-amulet" onclick="document.getElementById('rewardModal').style.display='flex'; DailySystem.init();">
-        CLAIM GIFT 🎁
-    </div>
-
-    <div id="navbar-placeholder"></div>
-
-    <div id="rewardModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:10001; justify-content:center; align-items:center; backdrop-filter:blur(20px);">
-        <div class="glass-card" style="width: 85%; max-width: 380px; text-align: center; border: 1px solid var(--neon-cyan); box-shadow: 0 0 50px rgba(0,242,255,0.3);">
-            <h2 class="title-font" style="font-size: 1.1rem; color: var(--neon-cyan); margin-bottom: 25px; text-shadow: 0 0 10px var(--neon-cyan);">REWARD TERMINAL</h2>
-            <div id="rewardGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px;"></div>
-            <button id="claimBtn" class="btn-cosmic" style="width: 100%; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)); color: #000; font-weight: 900;" onclick="DailySystem.claim()">AUTHORIZE CLAIM</button>
-            <p onclick="document.getElementById('rewardModal').style.display='none'" style="color:#777; font-size:0.8rem; margin-top:20px; cursor:pointer;">DISMISS TRANSMISSION</p>
+    <div class="bento-grid">
+        <div class="bento-card" onclick="location.href='mines.html'">
+            <h4>Arcade</h4>
+            <p>MINES 💣</p>
+        </div>
+        <div class="bento-card" onclick="location.href='staking.html'">
+            <h4>Quantum</h4>
+            <p>VAULT 🛡️</p>
+        </div>
+        <div class="bento-card">
+            <h4>Energy</h4>
+            <p id="userEnergy">100% ⚡</p>
+        </div>
+        <div class="bento-card" onclick="location.href='referral.html'">
+            <h4>Network</h4>
+            <p>FLEET 🚀</p>
         </div>
     </div>
 
-    <script src="js/notify.js"></script>
+    <div class="harvest-btn" id="claimBtn">INITIALIZE HARVEST</div>
+
+    <div class="nav-bar">
+        <div class="nav-item active">🏠</div>
+        <div class="nav-item" onclick="location.href='game.html'">🎮</div>
+        <div class="nav-item" onclick="location.href='wallet.html'">🏦</div>
+        <div class="nav-item" onclick="location.href='profile.html'">👤</div>
+    </div>
+
     <script type="module">
         import { DBModule } from './js/database.js';
-        import './js/daily-system.js';
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const wallet = localStorage.getItem('userWallet');
-            if(!wallet) { window.location.href = 'index.html'; return; }
-
-            document.getElementById('walletDisplay').innerText = wallet.substring(0,6) + '...' + wallet.substring(38);
-
-            // Real-time data sync
+        const wallet = localStorage.getItem('userWallet');
+        
+        if(!wallet) {
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('walletDisplay').innerText = wallet.substring(0,6) + "..." + wallet.substring(wallet.length-4);
+            
+            // Real-time Firebase Link
             DBModule.listenToProfile(wallet, (data) => {
-                document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
-                document.getElementById('userEnergy').innerText = data.energy || 0;
-                document.getElementById('userStaked').innerText = (data.stakedBalance || 0).toLocaleString();
+                if(data) {
+                    document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
+                    document.getElementById('userEnergy').innerText = (data.energy || 100) + "% ⚡";
+                }
             });
-        });
+        }
     </script>
-    <script src="js/nav.js"></script>
 </body>
 </html>
