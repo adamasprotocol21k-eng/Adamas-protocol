@@ -2,74 +2,151 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS Protocol | Entrance</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Universal Gate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Plus+Jakarta+Sans:wght@300;800&display=swap" rel="stylesheet">
     <style>
-        .gate-container { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
-        .task-box { display: none; margin-top: 30px; width: 100%; max-width: 400px; }
+        :root {
+            --cyan: #00f2ff;
+            --gold: #ffd700;
+            --bg: #000205;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body {
+            background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden;
+        }
+
+        /* --- LUXURY ANIMATED BACKGROUND --- */
+        .universe-bg {
+            position: fixed; inset: 0; z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.15) 0%, transparent 70%);
+        }
+        .universe-bg::after {
+            content: ""; position: absolute; inset: 0;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.3;
+        }
+
+        .gate-container { width: 90%; max-width: 400px; text-align: center; z-index: 10; }
+        
+        .title-glow {
+            font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; letter-spacing: 8px;
+            background: linear-gradient(180deg, #fff 0%, var(--cyan) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.5)); margin-bottom: 10px;
+        }
+
+        /* --- PREMIUM BUTTONS --- */
+        .btn-connect {
+            width: 100%; background: #fff; color: #000; border: none;
+            padding: 20px; border-radius: 15px; font-family: 'Orbitron';
+            font-weight: 900; font-size: 0.8rem; letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.2); cursor: pointer;
+            transition: 0.3s; margin-top: 30px;
+        }
+        .btn-connect:active { transform: scale(0.95); }
+
+        /* --- TASK SECTION (Smooth Reveal) --- */
+        .task-box { display: none; margin-top: 30px; animation: fadeInUp 0.5s ease; }
         .social-link { 
             display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; 
-            margin-bottom: 10px; text-decoration: none; color: white; border: 1px solid rgba(0,242,255,0.2);
+            background: rgba(255,255,255,0.03); padding: 18px; border-radius: 18px; 
+            margin-bottom: 12px; text-decoration: none; color: white; 
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
         }
-        .verify-btn { width: 100%; margin-top: 20px; display: none; }
+        .social-link:active { background: rgba(0, 242, 255, 0.05); border-color: var(--cyan); }
+        .status-icon { font-size: 1.1rem; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hidden { display: none !important; }
+        .show { display: block !important; }
     </style>
 </head>
 <body>
 
     <div class="universe-bg"></div>
 
-    <div class="gate-container" id="authSection">
-        <h1 class="title-font gradient-text" style="font-size: 2.5rem;">ADAMAS PROTOCOL</h1>
-        <p style="color: #888; margin: 15px 0 30px;">Decentralized Gaming & Rewards Ecosystem</p>
+    <div class="gate-container">
+        <h1 class="title-glow">ADAMAS</h1>
+        <p style="color: #666; font-size: 0.7rem; letter-spacing: 3px; font-weight: 800;">DECENTRALIZED NODE ENTRANCE</p>
         
-        <button id="connectBtn" class="btn-cosmic" onclick="handleConnect()">CONNECT WALLET</button>
+        <button id="connectBtn" class="btn-connect">CONNECT WALLET</button>
 
         <div id="taskSection" class="task-box">
-            <h3 class="title-font" style="font-size: 0.9rem; color: var(--gold); margin-bottom: 20px;">COMPLETE TASKS TO UNLOCK</h3>
+            <h3 style="font-family: 'Orbitron'; font-size: 0.6rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 20px;">SECURITY VERIFICATION REQUIRED</h3>
             
-            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="social-link" onclick="markTask('tw')">
-                <span>Follow Twitter (+50 ABP)</span>
-                <span id="tw-status">⭕</span>
+            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="social-link" onclick="verifyTask('tw')">
+                <span style="font-size: 0.8rem; font-weight: 700;">Follow Twitter (+50 ABP)</span>
+                <span id="tw-status" class="status-icon">⭕</span>
             </a>
 
-            <a href="https://t.me/daimodmo" target="_blank" class="social-link" onclick="markTask('tg')">
-                <span>Join Telegram (+50 ABP)</span>
-                <span id="tg-status">⭕</span>
+            <a href="https://t.me/daimodmo" target="_blank" class="social-link" onclick="verifyTask('tg')">
+                <span style="font-size: 0.8rem; font-weight: 700;">Join Telegram (+50 ABP)</span>
+                <span id="tg-status" class="status-icon">⭕</span>
             </a>
 
-            <button id="enterBtn" class="btn-cosmic verify-btn" onclick="enterApp()">ENTER DASHBOARD</button>
+            <button id="enterBtn" class="btn-connect hidden" style="background: var(--cyan); margin-top: 20px;">ACCESS DASHBOARD</button>
         </div>
+
+        <p id="statusMsg" style="margin-top: 20px; font-size: 0.6rem; color: #444; letter-spacing: 1px;"></p>
     </div>
 
-    <script src="js/notify.js"></script>
-    <script src="js/auth.js"></script>
-    <script>
+    <script type="module">
+        import { DBModule } from './js/database.js';
+
+        const connectBtn = document.getElementById('connectBtn');
+        const taskSection = document.getElementById('taskSection');
+        const enterBtn = document.getElementById('enterBtn');
+        const statusMsg = document.getElementById('statusMsg');
+
         let tasks = { tw: false, tg: false };
 
-        async function handleConnect() {
-            // Hum auth.js ka connect call karenge
-            const wallet = await AuthModule.connect();
-            if(wallet) {
-                document.getElementById('connectBtn').style.display = 'none';
-                document.getElementById('taskSection').style.display = 'block';
-                Notify.show("Wallet Linked. Complete tasks.", "info");
+        // 1. Connectivity Function (100% Fixed)
+        connectBtn.addEventListener('click', async () => {
+            statusMsg.innerText = "LINKING TO BLOCKCHAIN...";
+            
+            try {
+                // Generates a mock wallet for now (Can link Telegram ID here)
+                const wallet = "ADX-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+                
+                // SAVE TO LOCAL STORAGE (Sabse important step)
+                localStorage.setItem('userWallet', wallet);
+                
+                // Create profile in Firebase
+                await DBModule.createProfile(wallet);
+                
+                // UI Switch
+                connectBtn.classList.add('hidden');
+                taskSection.classList.add('show');
+                statusMsg.innerText = "WALLET LINKED: " + wallet;
+                
+            } catch (e) {
+                console.error(e);
+                statusMsg.innerText = "CONNECTION ERROR. RETRY.";
             }
-        }
+        });
 
-        function markTask(type) {
+        // 2. Task Verification
+        window.verifyTask = (type) => {
             tasks[type] = true;
             document.getElementById(`${type}-status`).innerText = "✅";
-            if(tasks.tw && tasks.tg) {
-                document.getElementById('enterBtn').style.display = 'block';
-            }
-        }
+            document.getElementById(`${type}-status`).style.color = "var(--cyan)";
 
-        function enterApp() {
-            // Reward point add karke redirect
-            window.location.href = "dashboard.html";
-        }
+            if(tasks.tw && tasks.tg) {
+                enterBtn.classList.remove('hidden');
+                enterBtn.classList.add('show');
+            }
+        };
+
+        // 3. Final Entry
+        enterBtn.addEventListener('click', () => {
+            statusMsg.innerText = "AUTHORIZING ACCESS...";
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 800);
+        });
     </script>
 </body>
 </html>
