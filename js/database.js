@@ -1,5 +1,5 @@
 /**
- * ADAMAS PROTOCOL - Firebase Realtime Engine (ULTIMATE FIX)
+ * ADAMAS PROTOCOL - Firebase Realtime Engine (META-SYNC VERSION)
  */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue, update, increment } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
@@ -18,18 +18,17 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const DBModule = {
-    // 1. Profile Creation (SABSE ZAROORI)
+    // 1. Profile Creation with MetaMask Address
     async createProfile(address) {
         if(!address) return;
-        const cleanAddress = address.trim(); // No lowercase here to match localStorage
+        const cleanAddress = address.toLowerCase().trim(); 
         const userRef = ref(db, 'users/' + cleanAddress);
         
         const snapshot = await get(userRef);
         if (!snapshot.exists()) {
-            // New user initial data
             await set(userRef, {
                 wallet: cleanAddress,
-                balance: 500, // Welcome Bonus
+                balance: 500, 
                 staked: 0,
                 streak: 0,
                 lastClaim: 0,
@@ -37,51 +36,49 @@ const DBModule = {
                 referrals: 0,
                 timestamp: Date.now()
             });
-            console.log("New Profile Created for:", cleanAddress);
+            console.log("MetaMask Profile Synchronized:", cleanAddress);
         }
     },
 
-    // 2. Real-time Listener (FIXED)
+    // 2. Real-time Dashboard Sync
     listenToProfile(address, callback) {
         if(!address) return;
-        const cleanAddress = address.trim();
+        const cleanAddress = address.toLowerCase().trim();
         const userRef = ref(db, 'users/' + cleanAddress);
         
         return onValue(userRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 callback(data);
-            } else {
-                console.warn("No data found for wallet:", cleanAddress);
             }
         }, (error) => {
-            console.error("Firebase Error:", error);
+            console.error("Blockchain Sync Error:", error);
         });
     },
 
-    // 3. Balance Updater
+    // 3. Asset Updater
     async updateBalance(address, amount) {
-        const cleanAddress = address.trim();
+        if(!address) return;
+        const cleanAddress = address.toLowerCase().trim();
         const userRef = ref(db, 'users/' + cleanAddress);
         try {
             await update(userRef, { balance: increment(amount) });
             return true;
         } catch (e) {
-            console.error("Balance Update Failed:", e);
             return false;
         }
     },
 
-    // 4. Staked Updater
+    // 4. Staking Logic
     async updateStaked(address, amount) {
-        const cleanAddress = address.trim();
+        const cleanAddress = address.toLowerCase().trim();
         const userRef = ref(db, 'users/' + cleanAddress);
         await update(userRef, { staked: increment(amount) });
     },
 
-    // 5. Streak Updater
+    // 5. Daily Streak Logic
     async updateStreak(address, newStreak) {
-        const cleanAddress = address.trim();
+        const cleanAddress = address.toLowerCase().trim();
         const userRef = ref(db, 'users/' + cleanAddress);
         await update(userRef, { 
             streak: newStreak,
@@ -90,6 +87,5 @@ const DBModule = {
     }
 };
 
-// Global export for non-module scripts
 window.DBModule = DBModule;
 export { DBModule };
