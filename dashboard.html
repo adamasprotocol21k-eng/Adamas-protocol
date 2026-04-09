@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Adamas Protocol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Adamas Dashboard | Premium Web3 Experience</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dashboard-body">
 
@@ -13,9 +13,10 @@
         <div class="user-info">
             <span id="userWallet">0x...</span>
         </div>
-        <div class="points-display">
+        <div class="abp-container">
+            <div class="diamond-icon">💎</div>
             <span class="abp-label">ABP</span>
-            <span id="abpBalance" class="abp-count">0</span>
+            <span id="abpBalance" class="abp-count">250</span>
         </div>
     </nav>
 
@@ -23,69 +24,69 @@
         <section class="mining-status">
             <div class="pulse-circle"></div>
             <h3>Testnet Ecosystem Active</h3>
-            <p>Earn points daily to qualify for <strong>ADS</strong> Airdrop</p>
+            <p>Earn daily ABP to maximize <strong>ADS</strong> conversion.</p>
         </section>
 
         <section class="game-grid">
-            <div class="game-card" onclick="openModal('spinModal')">
-                <div class="icon">🎡</div>
+            <div class="game-card neon-box" onclick="openModal('spinModal')">
+                <div class="game-icon">🎡</div>
                 <h4>Lucky Spin</h4>
-                <p>Win up to 500 ABP</p>
+                <p>Win to 500 ABP</p>
             </div>
-            <div class="game-card" onclick="openModal('scratchModal')">
-                <div class="icon">🎫</div>
+            <div class="game-card neon-box" onclick="openModal('scratchModal')">
+                <div class="game-icon">🎫</div>
                 <h4>Scratch Card</h4>
                 <p>Daily Luck Test</p>
             </div>
         </section>
 
         <section class="info-card referral-section">
-            <h4>Invite & Earn</h4>
-            <p>Get 200 ABP for every friend who joins</p>
-            <div class="ref-link-container">
+            <h4>Invite Friends</h4>
+            <p>Earn 200 ABP per joining</p>
+            <div class="ref-link-area">
                 <input type="text" id="referralLink" value="https://adamas.io/join?ref=user123" readonly>
-                <button class="btn-task" onclick="copyRef()">Copy</button>
+                <button class="btn-copy" onclick="copyRef()">Copy</button>
             </div>
         </section>
 
         <section class="daily-tasks">
             <h4>Daily Activities</h4>
-            <div class="task-row">
+            <div class="task-row glass-effect">
                 <span>Daily Check-in</span>
-                <button class="btn-claim" id="dailyBtn" onclick="claimDaily()">Claim +50</button>
+                <button class="btn-claim-upgrade" id="dailyBtn" onclick="claimDaily()">Claim +50 ABP</button>
             </div>
         </section>
     </main>
 
+    <div class="bottom-nav">
+        <div class="nav-item active"><span class="icon-nav">🏠</span><span class="label-nav">Home</span></div>
+        <div class="nav-item"><span class="icon-nav">🏆</span><span class="label-nav">Rank</span></div>
+        <div class="nav-item"><span class="icon-nav">💳</span><span class="label-nav">Wallet</span></div>
+    </div>
+
     <div id="spinModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content glass-effect neon-border">
             <span class="close" onclick="closeModal('spinModal')">&times;</span>
-            <h2>Lucky Spin</h2>
+            <h2 class="neon-text">Lucky Spin</h2>
             <div class="wheel-container">
                 <div class="pointer">▼</div>
                 <canvas id="wheelCanvas" width="300" height="300"></canvas>
             </div>
-            <button id="spinBtn" class="btn-main" onclick="spinTheWheel()">SPIN NOW</button>
-            <p id="spinResult"></p>
+            <button id="spinBtn" class="btn-main-upgrade" onclick="spinTheWheel()">SPIN NOW</button>
+            <p id="spinResult" class="glowing-text"></p>
         </div>
     </div>
 
     <div id="scratchModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content glass-effect neon-border">
             <span class="close" onclick="closeModal('scratchModal')">&times;</span>
-            <h2>Scratch & Win</h2>
+            <h2 class="neon-text">Scratch & Win</h2>
             <div class="scratch-container">
-                <div id="scratchReward" class="scratch-reward">0 ABP</div>
+                <div id="scratchReward" class="scratch-reward glowing-text">0 ABP</div>
                 <canvas id="scratchCanvas" width="250" height="150"></canvas>
             </div>
-            <p id="scratchStatus">Scratch to reveal your prize!</p>
+            <p id="scratchStatus">Scratch the gold foil to reveal your prize!</p>
         </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-item active">Home</div>
-        <div class="nav-item">Rank</div>
-        <div class="nav-item">Wallet</div>
     </div>
 
     <script src="js/engine.js"></script>
