@@ -3,40 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Web3 Gateway</title>
+    <title>Adamas Protocol | Premium Entry</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 </head>
-<body class="landing-page">
-    <div class="diamond-bg-animation"></div> <div class="landing-content">
-        <div class="main-diamond-container">
-            <div class="diamond-3d">💎</div>
-            <div class="diamond-shadow"></div>
-        </div>
-        
-        <h1 class="glow-text-white">ADAMAS PROTOCOL</h1>
-        <p class="subtitle">Next-Gen Web3 Gaming Ecosystem</p>
+<body class="landing-vault">
+    
+    <div class="diamond-overlay"></div>
 
-        <div class="auth-box glass-effect">
-            <div class="step-card">
-                <span>01</span>
-                <p>Follow & Join Community</p>
-                <div class="social-btns">
-                    <button class="btn-icon">🐦</button>
-                    <button class="btn-icon">📢</button>
-                </div>
+    <div class="landing-content">
+        <header class="hero-header">
+            <div class="main-logo-3d">💎</div>
+            <h1 class="ultra-glow">ADAMAS PROTOCOL</h1>
+            <div class="project-details">
+                <p>Next-Gen Decentralized Gaming Infrastructure</p>
+                <p class="stats">Supply: 21K ADS | Network: Polygon Amoy</p>
             </div>
-            
-            <button id="connectBtn" class="btn-ultra-diamond" onclick="connectAndRedirect()">
-                CONNECT WALLET
+        </header>
+
+        <div class="action-zone">
+            <button id="mainConnectBtn" class="btn-diamond-connect" onclick="showSocialGate()">
+                CONNECT ADAMAS PROTOCOL
+            </button>
+        </div>
+
+        <div id="socialGate" class="social-vault-card glass-effect" style="display: none;">
+            <h3>Unlocking Dashboard...</h3>
+            <p>Follow our socials to verify your identity</p>
+            <div class="social-list">
+                <button class="social-item" onclick="taskDone(this)">🐦 Follow Twitter</button>
+                <button class="social-item" onclick="taskDone(this)">📢 Join Telegram</button>
+                <button class="social-item" onclick="taskDone(this)">📺 Sub YouTube</button>
+            </div>
+            <button id="finalEntryBtn" class="btn-lock" disabled onclick="enterDashboard()">
+                ENTER DASHBOARD
             </button>
         </div>
     </div>
 
     <script>
-        function connectAndRedirect() {
-            // Yahan wallet connect ka logic aayega
-            // Abhi ke liye seedha dashboard par bhej rahe hain
+        function showSocialGate() {
+            document.getElementById('mainConnectBtn').style.display = 'none';
+            document.getElementById('socialGate').style.display = 'block';
+        }
+
+        let completed = 0;
+        function taskDone(btn) {
+            btn.style.borderColor = "#00f2ff";
+            btn.innerText += " ✅";
+            btn.disabled = true;
+            completed++;
+            if(completed >= 3) {
+                const final = document.getElementById('finalEntryBtn');
+                final.disabled = false;
+                final.classList.add('btn-unlock-glow');
+                final.innerText = "ACCESS GRANTED";
+            }
+        }
+
+        function enterDashboard() {
             window.location.href = "dashboard.html";
         }
     </script>
