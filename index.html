@@ -3,36 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Enter Ecosystem</title>
+    <title>Adamas Protocol | Web3 Gateway</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 </head>
-<body class="landing-body">
+<body class="landing-page">
+    <div class="diamond-bg-animation"></div> <div class="landing-content">
+        <div class="main-diamond-container">
+            <div class="diamond-3d">💎</div>
+            <div class="diamond-shadow"></div>
+        </div>
+        
+        <h1 class="glow-text-white">ADAMAS PROTOCOL</h1>
+        <p class="subtitle">Next-Gen Web3 Gaming Ecosystem</p>
 
-    <div class="container">
-        <section class="landing-hero">
-            <div class="diamond-logo">💎</div>
-            <h1 style="font-family: 'Exo 2'; font-size: 2.5rem; margin-bottom: 10px;">ADAMAS</h1>
-            <p style="color: var(--primary-cyan); letter-spacing: 3px; font-weight: bold;">WEB3 GAMING PROTOCOL</p>
-            
-            <div class="social-gate-container">
-                <p style="margin-top: 30px; opacity: 0.6;">Complete Tasks to Unlock Dashboard</p>
-                
-                <button class="btn-social" onclick="handleTask('twitter')">
-                    🐦 Follow Twitter
-                </button>
-                
-                <button class="btn-social" onclick="handleTask('telegram')">
-                    📢 Join Telegram
-                </button>
-
-                <button id="connectWallet" class="btn-main-upgrade" style="width: 100%; margin-top: 20px; opacity: 0.5;" disabled>
-                    Connect Wallet
-                </button>
+        <div class="auth-box glass-effect">
+            <div class="step-card">
+                <span>01</span>
+                <p>Follow & Join Community</p>
+                <div class="social-btns">
+                    <button class="btn-icon">🐦</button>
+                    <button class="btn-icon">📢</button>
+                </div>
             </div>
-        </section>
+            
+            <button id="connectBtn" class="btn-ultra-diamond" onclick="connectAndRedirect()">
+                CONNECT WALLET
+            </button>
+        </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <script>
+        function connectAndRedirect() {
+            // Yahan wallet connect ka logic aayega
+            // Abhi ke liye seedha dashboard par bhej rahe hain
+            window.location.href = "dashboard.html";
+        }
+    </script>
 </body>
 </html>
