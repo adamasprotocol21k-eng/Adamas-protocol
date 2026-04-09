@@ -1,85 +1,139 @@
+/* ADAMAS PROTOCOL - PRO EXCHANGE SYSTEM */
 :root {
-    --cyan: #00f2ff;
-    --deep-black: #020406;
-    --diamond-blue: #0a192f;
-    --font-pro: 'Exo 2', sans-serif;
+    --primary-cyan: #00f2ff;
+    --diamond-blue: #007bff;
+    --bg-dark: #020406; /* Deepest Black like OKX/Binance */
+    --card-bg: rgba(13, 20, 28, 0.7); /* Professional dark grey-blue */
+    --border-glow: rgba(0, 242, 255, 0.15);
+    --font-heading: 'Exo 2', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
 
 body {
-    background-color: var(--deep-black);
-    color: #fff;
-    font-family: 'Rajdhani', sans-serif;
-    margin: 0; overflow-x: hidden;
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(circle at top right, rgba(0, 242, 255, 0.03), transparent),
+        radial-gradient(circle at bottom left, rgba(0, 123, 255, 0.03), transparent);
+    color: #ffffff;
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-/* Diamond Texture Background */
-.diamond-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-    opacity: 0.1; pointer-events: none; z-index: -1;
-}
-
-.landing-vault {
-    display: flex; justify-content: center; align-items: center; min-height: 100vh;
-    background: radial-gradient(circle at center, #0a192f 0%, #020406 100%);
-}
-
-.ultra-glow {
-    font-family: var(--font-pro); font-size: 2.8rem; letter-spacing: 4px;
-    background: linear-gradient(to bottom, #fff, var(--cyan));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.5));
-}
-
-.project-details { margin: 20px 0; opacity: 0.7; font-size: 0.9rem; line-height: 1.6; }
-
-/* The Big Connect Button */
-.btn-diamond-connect {
-    padding: 20px 40px; font-size: 1.1rem; font-weight: 800;
-    color: #000; background: var(--cyan); border: none;
-    border-radius: 12px; cursor: pointer;
-    box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
-    transition: 0.3s; font-family: var(--font-pro);
-}
-
-.btn-diamond-connect:active { transform: scale(0.95); }
-
-/* Social Vault Gate */
-.social-vault-card {
-    padding: 30px; border-radius: 25px; border: 1px solid rgba(0, 242, 255, 0.2);
-    background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px);
-}
-
-.social-list { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
-
-.social-item {
-    background: rgba(0, 0, 0, 0.5); border: 1px solid #222;
-    color: #fff; padding: 15px; border-radius: 12px; cursor: pointer;
-}
-
-/* Fixed Floating Dashboard Stats */
+/* --- Ultra-Premium Header --- */
 .fixed-header {
-    position: fixed; top: 0; width: 100%; height: 70px;
-    background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+    position: fixed; top: 0; width: 100%; height: 75px;
+    background: rgba(2, 4, 6, 0.85);
+    backdrop-filter: blur(20px);
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 20px; box-sizing: border-box; z-index: 2000;
-    border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+    padding: 0 20px; z-index: 2000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .wallet-badge {
-    font-family: monospace; color: var(--cyan); font-size: 0.8rem;
-    background: rgba(0, 242, 255, 0.05); padding: 5px 12px; border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--primary-cyan);
+    background: rgba(0, 242, 255, 0.08);
+    padding: 8px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 242, 255, 0.2);
 }
 
 .points-badge {
-    background: linear-gradient(90deg, #00f2ff, #007bff);
-    color: #000; padding: 6px 15px; border-radius: 10px; font-weight: bold;
+    display: flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, rgba(0, 242, 255, 0.2), transparent);
+    padding: 8px 18px; border-radius: 12px;
+    border: 1px solid var(--primary-cyan);
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
 }
 
-/* Dashboard Pro Boxes */
+/* --- The "Pro-Card" Design (3D Look) --- */
 .pro-card {
-    background: linear-gradient(145deg, #0a1118, #050a0f);
-    border: 1px solid rgba(0, 242, 255, 0.1);
-    border-radius: 20px; padding: 20px;
-    box-shadow: 10px 10px 20px #020406, -5px -5px 15px rgba(255,255,255,0.01);
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pro-card:hover {
+    border-color: var(--primary-cyan);
+    background: rgba(13, 20, 28, 0.9);
+    transform: translateY(-2px);
+}
+
+/* --- Game Grid --- */
+.game-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;
+}
+
+.game-icon-3d {
+    font-size: 2.5rem; margin-bottom: 12px;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+}
+
+.reward-tag {
+    font-size: 0.7rem; font-weight: 800; color: var(--primary-cyan);
+    background: rgba(0, 242, 255, 0.1);
+    padding: 4px 10px; border-radius: 6px; margin-top: 10px;
+    display: inline-block;
+}
+
+/* --- Premium Buttons --- */
+.btn-ultra-diamond {
+    background: linear-gradient(90deg, #00f2ff, #007bff);
+    color: #000000; font-family: var(--font-heading);
+    font-weight: 800; padding: 16px; border-radius: 14px;
+    border: none; cursor: pointer; text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3);
+    width: 100%; transition: 0.2s;
+}
+
+.btn-ultra-diamond:active { transform: scale(0.98); opacity: 0.9; }
+
+/* --- Fixed Bottom Navigation (Mobile App Style) --- */
+.bottom-nav {
+    position: fixed; bottom: 15px; left: 15px; right: 15px;
+    height: 70px; background: rgba(10, 15, 20, 0.95);
+    backdrop-filter: blur(25px); border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex; justify-content: space-around; align-items: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    z-index: 2000;
+}
+
+.nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    color: #5b6b7a; transition: 0.3s;
+}
+
+.nav-item.active {
+    color: var(--primary-cyan);
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.4);
+}
+
+.icon-nav { font-size: 1.5rem; margin-bottom: 2px; }
+.label-nav { font-size: 0.75rem; font-weight: 700; }
+
+/* --- Tab Content Logic --- */
+.tab-content { display: none; animation: fadeIn 0.4s ease; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Text Glow Effects --- */
+.ultra-glow-text {
+    font-family: var(--font-heading);
+    background: linear-gradient(180deg, #fff 0%, #00f2ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
 }
