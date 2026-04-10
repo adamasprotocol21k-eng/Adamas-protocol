@@ -3,100 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Live Dashboard</title>
+    <title>ADAMAS | Universal Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="dashboard-mode">
+<body class="dashboard-active">
 
-    <div class="dashboard-container">
-        <header class="db-nav glass">
-            <div class="user-meta">
-                <div class="live-dot"></div>
-                <span id="displayWallet">0x...000</span>
+    <div class="app-wrapper">
+        
+        <header class="top-bar-premium">
+            <div class="user-profile">
+                <div class="avatar-ring">
+                    <img src="https://api.dicebear.com/7.x/identicon/svg?seed=Adamas" alt="User">
+                </div>
+                <div class="user-details">
+                    <small>PRO-MEMBER</small>
+                    <span id="wallet-id">0x7A...5D08</span>
+                </div>
             </div>
-            <div id="dailyStreakBtn" class="streak-pill" onclick="handleDailyClaim()">
-                🔥 <span id="streakText">Claim Day 1</span>
+            <div class="streak-pill-interactive" onclick="claimDailyReward()">
+                <span class="fire-icon">🔥</span>
+                <span id="streak-count">Day 1</span>
             </div>
         </header>
 
-        <section class="node-master glass-premium">
-            <div class="node-header">
-                <small>ADS MINING NODE</small>
-                <div class="tag">ACTIVE</div>
+        <section class="asset-card glass-premium">
+            <div class="asset-header">
+                <div class="token-info">
+                    <div class="mini-diamond"></div>
+                    <span>ADAMAS ABP</span>
+                </div>
+                <div class="live-status">
+                    <span class="ping"></span> MINING LIVE
+                </div>
             </div>
-            
-            <div class="counter-box">
-                <h1 id="abpBalance">0.0000</h1>
-                <p>TOTAL ABP EARNED</p>
+            <div class="balance-section">
+                <h1 id="live-balance">0.0000</h1>
+                <div class="balance-sub">≈ <span id="usd-value">0.00</span> USD</div>
             </div>
-
-            <div class="visual-engine">
-                <div class="core-glow"></div>
-                <div class="rotating-diamond">ADS</div>
+            <div class="action-row">
+                <button class="action-btn-sub" onclick="location.href='deposit.html'">STAKE</button>
+                <button class="action-btn-sub main" onclick="location.href='wallet.html'">WITHDRAW</button>
             </div>
         </section>
 
-        <div class="feature-grid">
-            <div class="f-card glass" onclick="location.href='mines.html'">
-                <span class="icon">💣</span>
+        <div class="hub-label">
+            <span>ENTERTAINMENT HUB</span>
+            <hr>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="glass-card grid-item premium-border" onclick="location.href='mines.html'">
+                <div class="card-tag hot">HOT</div>
+                <span class="grid-icon">💣</span>
                 <h3>MINES</h3>
-                <small class="badge-hot">HOT</small>
+                <small>Multiplier: Up to 100x</small>
             </div>
-            <div class="f-card glass" onclick="location.href='quiz.html'">
-                <span class="icon">🧠</span>
+
+            <div class="glass-card grid-item" onclick="location.href='quiz.html'">
+                <span class="grid-icon">🧠</span>
                 <h3>QUIZ</h3>
-                <small>EARN</small>
+                <small>Earn 50 ABP / Task</small>
             </div>
-            <div class="f-card glass" onclick="location.href='vault.html'">
-                <span class="icon">🔒</span>
+
+            <div class="glass-card grid-item" onclick="location.href='patti.html'">
+                <div class="card-tag new">NEW</div>
+                <span class="grid-icon">🃏</span>
+                <h3>3D PATTI</h3>
+                <small>Live Multiplayer</small>
+            </div>
+
+            <div class="glass-card grid-item" onclick="location.href='vault.html'">
+                <span class="grid-icon">🔒</span>
                 <h3>VAULT</h3>
-                <small>24D LOCK</small>
-            </div>
-            <div class="f-card glass" onclick="location.href='referral.html'">
-                <span class="icon">👥</span>
-                <h3>INVITE</h3>
-                <small>+200 ABP</small>
+                <small>APY: 21% Burn Rate</small>
             </div>
         </div>
 
-        <nav class="footer-nav glass">
-            <div class="nav-item active">🏠<br>Home</div>
-            <div class="nav-item" onclick="location.href='leaderboard.html'">🏆<br>Rank</div>
-            <div class="nav-item" onclick="location.href='wallet.html'">💳<br>Wallet</div>
+        <section class="glass-card referral-banner">
+            <div class="ref-text">
+                <h3>Invite & Earn</h3>
+                <p>Get 200 ABP per successful node unlock.</p>
+            </div>
+            <button class="btn-copy" onclick="copyLink()">COPY</button>
+        </section>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <span class="nav-ico">🏠</span>
+                <small>Home</small>
+            </div>
+            <div class="nav-item" onclick="location.href='leaderboard.html'">
+                <span class="nav-ico">🏆</span>
+                <small>Rank</small>
+            </div>
+            <div class="nav-item" onclick="location.href='profile.html'">
+                <span class="nav-ico">👤</span>
+                <small>Profile</small>
+            </div>
         </nav>
     </div>
 
     <script>
-        // 1. Initial Setup
-        let balance = parseFloat(localStorage.getItem('abp_balance')) || 0;
-        let wallet = localStorage.getItem('adamas_user') || "0x000...000";
+        // --- FUNCTIONAL LOGIC ---
+        let balance = parseFloat(localStorage.getItem('adamas_balance')) || 0.0000;
         
-        document.getElementById('displayWallet').innerText = wallet.substring(0,6) + "..." + wallet.substring(38);
-        document.getElementById('abpBalance').innerText = balance.toFixed(4);
+        // 1. Live Mining Engine (The Heartbeat)
+        function updateMining() {
+            setInterval(() => {
+                balance += 0.0001;
+                document.getElementById('live-balance').innerText = balance.toFixed(4);
+                document.getElementById('usd-value').innerText = (balance * 0.12).toFixed(2); // Mock Price
+                localStorage.setItem('adamas_balance', balance);
+            }, 3000);
+        }
 
-        // 2. Real-time Mining Simulation (0.0001 ABP every 3 seconds)
-        setInterval(() => {
-            balance += 0.0001;
-            document.getElementById('abpBalance').innerText = balance.toFixed(4);
-            localStorage.setItem('abp_balance', balance);
-        }, 3000);
-
-        // 3. Daily Streak Logic
-        function handleDailyClaim() {
-            const lastClaim = localStorage.getItem('last_claim_date');
+        // 2. Daily Streak System
+        function claimDailyReward() {
+            const lastClaim = localStorage.getItem('adamas_last_claim');
             const today = new Date().toDateString();
 
-            if (lastClaim === today) {
-                alert("Already claimed today! Come back tomorrow.");
+            if(lastClaim === today) {
+                alert("Protocol Notice: Daily Reward already claimed.");
             } else {
-                balance += 100; // Day 1 reward
-                localStorage.setItem('abp_balance', balance);
-                localStorage.setItem('last_claim_date', today);
-                document.getElementById('abpBalance').innerText = balance.toFixed(4);
-                alert("Congratulations! 100 ABP added to your vault.");
+                balance += 100;
+                localStorage.setItem('adamas_last_claim', today);
+                alert("Success: 100 ABP added to your secure vault!");
             }
         }
+
+        // 3. UI Copy Link
+        function copyLink() {
+            const dummy = "https://adamas-protocol.vercel.app/?ref=0xUser";
+            navigator.clipboard.writeText(dummy);
+            alert("Referral link copied to clipboard!");
+        }
+
+        // Start App
+        window.onload = updateMining;
     </script>
 </body>
 </html>
