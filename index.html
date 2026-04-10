@@ -3,89 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Control Center</title>
+    <title>ADAMAS PROTOCOL | The 21K Club</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="bg-glow"></div>
 
-    <section id="landing-page" class="view active">
-        <div class="hero-box">
-            <div class="diamond-icon">ADS</div>
-            <h1 class="main-heading">ADAMAS <span>PROTOCOL</span></h1>
+    <div class="app-wrapper">
+        
+        <main id="screen-landing" class="active-view">
+            <div class="diamond-logo">ADS</div>
+            
+            <h1 class="glitch-text">ADAMAS <span>PROTOCOL</span></h1>
             <p class="tagline">The last digital asset you'll ever need</p>
-            <div class="info-pills">
-                <div class="pill">SUPPLY: 21K</div>
-                <div class="pill">NETWORK: AMOY</div>
+            
+            <div class="status-row">
+                <div class="glass-pill">SUPPLY: 21,000</div>
+                <div class="glass-pill">NETWORK: AMOY</div>
             </div>
-            <button onclick="openAccessModal()" class="claim-btn">CLAIM YOUR DESTINY</button>
-        </div>
-    </section>
 
-    <div id="access-modal" class="modal-overlay">
-        <div class="modal-content glass">
-            <h2>PROTOCOL ACCESS</h2>
-            <div class="wallet-display">
-                <small>Connected Wallet</small>
-                <p>0x7A0F...5D08</p>
-                <span class="status-online">Connected</span>
+            <button onclick="openPortal()" class="btn-main">CLAIM YOUR DESTINY</button>
+            <p class="footer-lock">🔒 SECURE • DECENTRALIZED</p>
+        </main>
+
+        <div id="modal-portal" class="modal-overlay" style="display: none;">
+            <div class="glass-card modal-box">
+                <h2>PROTOCOL ACCESS</h2>
+                <div class="wallet-context">
+                    <small>User Identity</small>
+                    <p id="userAddr">0x7A0F...5D08</p>
+                    <div class="pulse-status">ACTIVE CONNECTION</div>
+                </div>
+                <p class="instruction">Complete social validation to unlock the mining node.</p>
+                <button onclick="unlockDashboard()" class="btn-main">VERIFY & ENTER</button>
             </div>
-            <p class="modal-note">Complete social validation to unlock the mining node.</p>
-            <button onclick="startDashboard()" class="verify-btn">VERIFY & ENTER</button>
         </div>
-    </div>
 
-    <section id="dashboard-page" class="view">
-        <div class="dash-container">
-            <header class="dash-top">
-                <span>CONTROL CENTER</span>
-                <div class="streak-box" onclick="claimStreak()">🔥 Day 1</div>
+        <section id="screen-dashboard" class="hidden-view">
+            <header class="top-nav">
+                <span class="brand-small">ADAMAS CONTROL</span>
+                <div class="streak-badge" onclick="bonusClaim()">🔥 Day 1</div>
             </header>
 
-            <div class="mining-box glass-premium">
-                <div class="node-viz">
-                    <div class="spin-ring"></div>
-                    <div class="live-tag">LIVE</div>
+            <div class="glass-card mining-engine">
+                <div class="node-visual">
+                    <div class="core-spinner"></div>
+                    <div class="live-dot">● LIVE</div>
                 </div>
-                <h1 id="abp-balance">0.0000</h1>
-                <p>ADS MINED</p>
+                <div class="balance-container">
+                    <h1 id="main-balance">0.0000</h1>
+                    <small>ABP TOTAL BALANCE</small>
+                </div>
             </div>
 
-            <div class="function-grid">
-                <div class="func-card glass"><span>💣</span><p>MINES</p><small class="hot">HOT</small></div>
-                <div class="func-card glass"><span>🧠</span><p>QUIZ</p></div>
-                <div class="func-card glass"><span>🔒</span><p>VAULT</p></div>
-                <div class="func-card glass"><span>👥</span><p>INVITE</p></div>
+            <div class="dashboard-grid">
+                <div class="glass-card grid-item" onclick="gameAlert('MINES')">
+                    <span class="grid-icon">💣</span>
+                    <p>MINES</p>
+                    <div class="hot-tag">HOT</div>
+                </div>
+                <div class="glass-card grid-item" onclick="gameAlert('QUIZ')">
+                    <span class="grid-icon">🧠</span>
+                    <p>QUIZ</p>
+                </div>
+                <div class="glass-card grid-item" onclick="gameAlert('VAULT')">
+                    <span class="grid-icon">🔒</span>
+                    <p>VAULT</p>
+                </div>
+                <div class="glass-card grid-item" onclick="gameAlert('INVITE')">
+                    <span class="grid-icon">👥</span>
+                    <p>INVITE</p>
+                </div>
             </div>
 
-            <nav class="footer-tabs glass">
-                <div class="tab active">🏠</div>
-                <div class="tab">🏆</div>
-                <div class="tab">💳</div>
+            <nav class="bottom-nav">
+                <div class="nav-item active">🏠<br>Home</div>
+                <div class="nav-item">🏆<br>Rank</div>
+                <div class="nav-item">💳<br>Wallet</div>
             </nav>
-        </div>
-    </section>
+        </section>
+
+    </div>
 
     <script>
         let balance = 0.0000;
-        function openAccessModal() { document.getElementById('access-modal').style.display = 'flex'; }
-        
-        function startDashboard() {
-            document.getElementById('access-modal').style.display = 'none';
-            document.getElementById('landing-page').classList.remove('active');
-            document.getElementById('dashboard-page').classList.add('active');
-            // Auto-Mining Simulation
+
+        function openPortal() {
+            document.getElementById('modal-portal').style.display = 'flex';
+        }
+
+        function unlockDashboard() {
+            document.getElementById('modal-portal').style.display = 'none';
+            document.getElementById('screen-landing').style.display = 'none';
+            document.getElementById('screen-dashboard').classList.remove('hidden-view');
+            document.getElementById('screen-dashboard').classList.add('active-view');
+            
+            // Start Auto-Mining Sequence
             setInterval(() => {
                 balance += 0.0001;
-                document.getElementById('abp-balance').innerText = balance.toFixed(4);
+                document.getElementById('main-balance').innerText = balance.toFixed(4);
             }, 3000);
         }
 
-        function claimStreak() {
+        function bonusClaim() {
             balance += 100;
-            document.getElementById('abp-balance').innerText = balance.toFixed(4);
-            alert("100 ABP Claimed Successfully!");
+            document.getElementById('main-balance').innerText = balance.toFixed(4);
+            alert("Digital Diamond Protocol: 100 ABP Claimed!");
+        }
+
+        function gameAlert(name) {
+            alert(name + " Module Loading... Finalizing Secure Connection.");
         }
     </script>
 </body>
