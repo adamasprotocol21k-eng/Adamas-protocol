@@ -3,81 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Dashboard | Premium Ecosystem</title>
+    <title>ADAMAS | Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Dashboard Specific Tweaks for 100% Fit */
+        body { overflow-y: auto; align-items: flex-start; padding: 20px 0; }
+        .dashboard-wrapper { width: 92%; max-width: 450px; margin: 0 auto; display: grid; gap: 15px; }
+    </style>
 </head>
-<body class="dashboard-theme">
+<body>
 
-    <header class="pro-header">
-        <div class="header-left">
-            <span class="testnet-label">AMOY v1.2</span>
-            <div id="walletAddr" class="address-chip">0x...0000</div>
-        </div>
-        <div class="header-right">
-            <div class="balance-pill">
-                <span class="coin-icon">💎</span>
-                <span id="balance">0</span> <small>ABP</small>
-            </div>
-        </div>
-    </header>
-
-    <main class="dashboard-content">
-        <section class="mining-card glass-effect">
-            <div class="mining-header">
-                <h3>ADS MINING NODE</h3>
-                <span class="status-badge">● LIVE</span>
-            </div>
-            <div class="mining-body">
-                <div class="ads-counter">
-                    <span id="liveAds" class="ultra-glow-text">0.0000</span>
-                    <small>ADS MINED</small>
+    <div class="dashboard-wrapper">
+        
+        <header class="db-header glass">
+            <div class="user-profile">
+                <div class="mini-diamond"></div>
+                <div>
+                    <small id="statusBadge" class="status-live">Initializing...</small>
+                    <p id="walletDisplay">0x...000</p>
                 </div>
-                <div class="mining-progress-bg">
-                    <div class="progress-fill"></div>
+            </div>
+            <div class="referral-counter">
+                <span id="refCount">0/10</span>
+                <small>REFERRALS</small>
+            </div>
+        </header>
+
+        <section class="mining-node glass-premium">
+            <h3>ADS MINING NODE</h3>
+            <div class="mining-display">
+                <span id="abpBalance">0.0000</span>
+                <small>ABP EARNED</small>
+            </div>
+            <div class="mining-visual">
+                <div class="pulse-ring"></div>
+                <div class="inner-core">LIVE</div>
+            </div>
+        </section>
+
+        <section class="action-grid">
+            <div class="action-card glass">
+                <small>YOUR INVITE LINK</small>
+                <div class="copy-box">
+                    <input type="text" id="referralLink" value="Loading..." readonly>
+                    <button onclick="copyRef()" class="icon-btn">📋</button>
                 </div>
             </div>
         </section>
 
-        <h3 class="section-title">GAMING ZONE</h3>
-        <div class="grid-2x2">
-            <div class="game-card pro-card" onclick="openGame('mines')">
-                <div class="game-icon">💣</div>
-                <div class="game-info">
-                    <h4>MINES</h4>
-                    <small>High Risk</small>
+        <section class="gaming-zone glass">
+            <div class="zone-header">
+                <h3>ADS MINES <span class="tag-hot">HOT</span></h3>
+                <p>Multiplier: <span id="currentWin" style="color:var(--cyan)">1.00</span>x</p>
+            </div>
+            <div id="minesGrid" class="mines-grid">
+                </div>
+            <div class="game-controls">
+                <input type="number" id="betAmount" placeholder="Bet ABP">
+                <div class="btn-group">
+                    <button onclick="startMines(document.getElementById('betAmount').value)" class="play-btn">START</button>
+                    <button onclick="cashout()" class="cash-btn">CASHOUT</button>
                 </div>
             </div>
-            <div class="game-card pro-card" onclick="openGame('patti')">
-                <div class="game-icon">🃏</div>
-                <div class="game-info">
-                    <h4>3D PATTI</h4>
-                    <small>Casino Style</small>
-                </div>
-            </div>
-        </div>
+        </section>
 
-        <section id="taskContainer" class="tasks-section">
-            </section>
-    </main>
+        <nav class="bottom-nav glass">
+            <button class="nav-item active">🏠<br>Home</button>
+            <button class="nav-item" onclick="alert('Coming Soon')">🏆<br>Rank</button>
+            <button class="nav-item" onclick="alert('Coming Soon')">💳<br>Wallet</button>
+        </nav>
 
-    <div id="gameModal" class="modal-overlay">
-        <div class="modal-content glass-effect game-window">
-            <span class="close-btn" onclick="closeGame()">&times;</span>
-            <div id="gameContainer"></div>
-        </div>
     </div>
 
-    <nav class="bottom-dock">
-        <div class="dock-item active">🏠 <span>Home</span></div>
-        <div class="dock-item">🏆 <span>Rank</span></div>
-        <div class="dock-item">💳 <span>Wallet</span></div>
-    </nav>
-
-    <script src="js/web3.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/tasks.js"></script>
-    <script src="js/game-mines.js"></script>
-    <script src="js/game-patti.js"></script>
+    <script type="module" src="js/ui.js"></script>
+    <script type="module" src="js/tasks.js"></script>
+    <script type="module" src="js/game-mines.js"></script>
+    <script>
+        function copyRef() {
+            let copyText = document.getElementById("referralLink");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Referral Link Copied!");
+        }
+        // Wallet display update
+        document.getElementById('walletDisplay').innerText = localStorage.getItem('adamas_user').substring(0,8) + "...";
+    </script>
 </body>
 </html>
