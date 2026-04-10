@@ -1,27 +1,37 @@
-document.getElementById('connectWallet').onclick = async () => {
+let tasks = { x: false, tg: false };
+
+async function handleAuth() {
+    // Wallet Connection Simulation (Polygon Amoy)
     if (window.ethereum) {
         try {
             const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
             console.log("Connected:", accounts[0]);
-            
-            // Wallet connect hote hi Social Popup dikhao
-            document.getElementById('socialPopup').style.display = 'block';
-        } catch (error) {
-            alert("Connection Failed!");
+            // Wallet connect hote hi Social Popup show karo
+            document.getElementById('socialModal').style.display = 'block';
+        } catch (err) {
+            alert("Connection Cancelled");
         }
     } else {
-        alert("Please install MetaMask!");
+        alert("Please use a Web3 Browser (Metamask/Trust)");
     }
-};
+}
 
-// Simple logic: Button click hone par verify enable kar do
-document.querySelectorAll('.social-btn').forEach(btn => {
-    btn.onclick = () => {
-        document.getElementById('verifySocials').disabled = false;
-        document.getElementById('verifySocials').style.background = '#00f2ff';
-    };
-});
+function taskDone(type) {
+    tasks[type] = true;
+    document.getElementById(`${type}-status`).innerText = "✅";
+    checkVerification();
+}
 
-document.getElementById('verifySocials').onclick = () => {
-    window.location.href = "dashboard.html"; // Seedha Dashboard par bhej do
-};
+function checkVerification() {
+    if (tasks.x && tasks.tg) {
+        const btn = document.getElementById('verifyBtn');
+        btn.classList.remove('btn-disabled');
+        btn.classList.add('btn-primary');
+        btn.disabled = false;
+    }
+}
+
+function enterDashboard() {
+    // User verified, now redirect
+    window.location.href = "dashboard.html";
+}
