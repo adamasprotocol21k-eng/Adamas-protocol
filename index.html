@@ -3,96 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Control Center</title>
+    <title>ADAMAS PROTOCOL</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="screen-landing" class="page-view active">
-        <div class="diamond-logo">ADS</div>
-        <h1 class="main-title">ADAMAS <span>PROTOCOL</span></h1>
-        <p class="hero-subtext">Gold is heavy. Diamonds are Forever.</p>
-        <div class="stats-pills">
-            <span>SUPPLY: 21,000</span>
-            <span>NETWORK: AMOY</span>
-        </div>
-        <button onclick="showAuth()" class="btn-primary">CLAIM YOUR DESTINY</button>
-    </div>
+    <div class="bg-glow"></div>
 
-    <div id="modal-auth" class="modal-overlay">
-        <div class="modal-box glass">
+    <section id="screen-landing" class="view active">
+        <div class="hero-container">
+            <div class="diamond-logo">ADS</div>
+            <h1 class="title">ADAMAS <span>PROTOCOL</span></h1>
+            <p class="subtitle">Gold is heavy. Diamonds are Forever.</p>
+            <div class="pills">
+                <span>SUPPLY: 21K</span>
+                <span>NETWORK: AMOY</span>
+            </div>
+            <button onclick="openAuth()" class="btn-main">CLAIM YOUR DESTINY</button>
+        </div>
+    </section>
+
+    <div id="modal-auth" class="modal">
+        <div class="modal-content glass">
             <h2>PROTOCOL ACCESS</h2>
-            <div class="wallet-card">
+            <div class="wallet-box">
                 <small>Connected Wallet</small>
-                <p id="userWallet">0x7a0f...5d08</p>
-                <div class="status-online">Connected</div>
+                <p>0x7A0F...5D08</p>
+                <span class="status">Verified</span>
             </div>
-            <p>Complete social validation to unlock the mining node.</p>
-            <button onclick="goToDashboard()" class="btn-verify">VERIFY & ENTER</button>
+            <p class="modal-info">Complete social validation to unlock the mining node.</p>
+            <button onclick="enterDash()" class="btn-verify">VERIFY & ENTER</button>
         </div>
     </div>
 
-    <div id="screen-dashboard" class="page-view">
-        <header class="db-header">
-            <span>CONTROL CENTER</span>
-            <div class="streak-pill" onclick="claimDaily()">🔥 Day 1</div>
-        </header>
+    <section id="screen-dash" class="view">
+        <div class="dash-container">
+            <header class="dash-head">
+                <span>CONTROL CENTER</span>
+                <div class="streak" onclick="addBonus()">🔥 Day 1</div>
+            </header>
 
-        <div class="mining-card glass-premium">
-            <small>ADS MINING NODE</small>
-            <div class="node-viz">
-                <div class="spinning-ring"></div>
-                <div class="node-status">LIVE</div>
+            <div class="mining-card glass-premium">
+                <div class="node-ui">
+                    <div class="orbit"></div>
+                    <div class="node-text">LIVE</div>
+                </div>
+                <h1 id="abp-val">0.0000</h1>
+                <small>ABP MINED</small>
             </div>
-            <h2 id="balanceDisplay">0.0000</h2>
-            <p>ADS MINED</p>
+
+            <div class="menu-grid">
+                <div class="card glass" onclick="alert('Mines: Coming Soon')"><span>💣</span><p>MINES</p><b class="hot">HOT</b></div>
+                <div class="card glass" onclick="alert('Quiz: Coming Soon')"><span>🧠</span><p>QUIZ</p></div>
+                <div class="card glass" onclick="alert('Vault: Coming Soon')"><span>🔒</span><p>VAULT</p></div>
+                <div class="card glass" onclick="alert('Invite: Coming Soon')"><span>👥</span><p>INVITE</p></div>
+            </div>
+
+            <nav class="bottom-bar glass">
+                <div class="nav-btn active">🏠</div>
+                <div class="nav-btn">🏆</div>
+                <div class="nav-btn">💳</div>
+            </nav>
         </div>
-
-        <div class="action-grid">
-            <div class="action-item glass" onclick="alert('Mines Opening...')">
-                <span>💣</span><p>MINES</p><small class="hot">HOT</small>
-            </div>
-            <div class="action-item glass" onclick="alert('Quiz Loading...')">
-                <span>🧠</span><p>QUIZ</p>
-            </div>
-            <div class="action-item glass" onclick="alert('Vault Opening...')">
-                <span>🔒</span><p>VAULT</p>
-            </div>
-            <div class="action-item glass" onclick="alert('Invite Friends...')">
-                <span>👥</span><p>INVITE</p>
-            </div>
-        </div>
-
-        <nav class="bottom-nav glass">
-            <div class="nav-icon active">🏠</div>
-            <div class="nav-icon">🏆</div>
-            <div class="nav-icon">💳</div>
-        </nav>
-    </div>
+    </section>
 
     <script>
-        // Simple functional logic
-        let abp = 0.0000;
-        function showAuth() { document.getElementById('modal-auth').style.display = 'flex'; }
-        
-        function goToDashboard() {
+        let balance = 0.0000;
+        function openAuth() { document.getElementById('modal-auth').style.display = 'flex'; }
+        function enterDash() {
             document.getElementById('modal-auth').style.display = 'none';
             document.getElementById('screen-landing').classList.remove('active');
-            document.getElementById('screen-dashboard').classList.add('active');
-            startMining();
-        }
-
-        function startMining() {
+            document.getElementById('screen-dash').classList.add('active');
             setInterval(() => {
-                abp += 0.0001;
-                document.getElementById('balanceDisplay').innerText = abp.toFixed(4);
+                balance += 0.0001;
+                document.getElementById('abp-val').innerText = balance.toFixed(4);
             }, 3000);
         }
-
-        function claimDaily() {
-            abp += 100;
-            document.getElementById('balanceDisplay').innerText = abp.toFixed(4);
-            alert("100 ABP Claimed!");
+        function addBonus() {
+            balance += 100;
+            document.getElementById('abp-val').innerText = balance.toFixed(4);
+            alert("100 ABP Added!");
         }
     </script>
 </body>
