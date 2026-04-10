@@ -3,282 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas | Final Elite Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-cyan: #00f2ff;
-            --deep-blue: #007bff;
-            --bg-dark: #020406;
-            --card-bg: rgba(13, 22, 33, 0.9);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            background: var(--bg-dark);
-            color: #fff;
-            font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* --- Global UI Fixes --- */
-        .ultra-glow-text {
-            font-family: 'Exo 2', sans-serif;
-            background: linear-gradient(to bottom, #fff, var(--primary-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-        }
-
-        /* --- Header Fix --- */
-        .fixed-header {
-            position: fixed; top: 0; width: 100%; height: 70px;
-            background: rgba(2, 4, 6, 0.9); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; z-index: 1000; border-bottom: 1px solid rgba(0, 242, 255, 0.1);
-        }
-
-        .points-badge {
-            background: rgba(0, 242, 255, 0.1); padding: 8px 15px; border-radius: 15px;
-            border: 1px solid var(--primary-cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
-            font-weight: 800; display: flex; align-items: center; gap: 5px;
-        }
-
-        /* --- Dashboard Container --- */
-        .dash-container { padding: 90px 15px 100px; max-width: 450px; margin: 0 auto; }
-
-        .pro-card {
-            background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 25px; padding: 20px; margin-bottom: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative;
-        }
-
-        /* --- Grid System --- */
-        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .game-card { text-align: center; cursor: pointer; transition: 0.2s; }
-        .game-card:active { transform: scale(0.95); }
-        .game-icon-3d { font-size: 2.5rem; margin-bottom: 10px; }
-
-        /* --- Modal (Z-Index Triple Check) --- */
-        .modal {
-            display: none; position: fixed; z-index: 9999; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px);
-        }
-
-        .modal-content {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 350px; background: #0d1621;
-            padding: 25px; border-radius: 30px; border: 1px solid var(--primary-cyan);
-            text-align: center;
-        }
-
-        /* --- Wheel Fix (No Overflow) --- */
-        .wheel-box { position: relative; width: 240px; height: 240px; margin: 0 auto 20px; }
-        canvas { width: 100% !important; height: 100% !important; border-radius: 50%; }
-        .pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 20px; color: #fff; z-index: 10; }
-
-        /* --- Bottom Nav --- */
-        .bottom-nav {
-            position: fixed; bottom: 15px; left: 15px; right: 15px;
-            height: 70px; background: rgba(10, 20, 30, 0.95);
-            border-radius: 25px; border: 1px solid rgba(0, 242, 255, 0.1);
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
-        }
-
-        .nav-item { opacity: 0.5; text-align: center; font-size: 0.7rem; font-weight: 700; transition: 0.3s; }
-        .nav-item.active { opacity: 1; color: var(--primary-cyan); }
-        .nav-icon { font-size: 1.4rem; display: block; }
-
-        .btn-action {
-            background: linear-gradient(90deg, var(--primary-cyan), var(--deep-blue));
-            border: none; color: #000; padding: 12px; border-radius: 12px;
-            width: 100%; font-weight: 800; font-family: 'Exo 2'; margin-top: 10px;
-        }
-
-        .tab-content { display: none; }
-        .tab-active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
+    <title>Adamas Dashboard | Testnet v1</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dash-body">
 
     <header class="fixed-header">
-        <div id="userWallet" style="font-family: monospace; font-size: 0.8rem; color: #888;">0x...0000</div>
-        <div class="points-badge">
-            <span>💎</span> <span id="mainBalance">1250</span> <small>ABP</small>
+        <div class="user-info">
+            <span class="testnet-badge">AMOY TESTNET</span>
+            <div id="walletAddr" class="wallet-pilla">0x...0000</div>
+        </div>
+        <div class="balance-card">
+            <span class="dia-icon">💎</span>
+            <span id="balance">1250</span> <small>ABP</small>
         </div>
     </header>
 
-    <main class="dash-container">
-        
-        <div id="homeTab" class="tab-content tab-active">
-            <section class="pro-card">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <small style="color:var(--primary-cyan); font-weight:800;">MINING STATUS</small>
-                    <small id="sessionClock" style="color:#00ff88;">00:00:00</small>
-                </div>
-                <h3 class="ultra-glow-text" style="font-size:1.5rem;">ECOSYSTEM LIVE</h3>
-                <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:10px 0; overflow:hidden;">
-                    <div style="width:70%; height:100%; background:var(--primary-cyan); box-shadow:0 0 10px var(--primary-cyan);"></div>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:0.7rem; opacity:0.6;">
-                    <span>Rate: 0.05 ADS/H</span>
-                    <span>Session: +1.2 ABP</span>
-                </div>
-            </section>
+    <main class="content-area">
+        <section class="pro-card mining-section">
+            <div class="flex-row">
+                <h4>ADS MINING NODE</h4>
+                <span class="live-indicator">● ACTIVE</span>
+            </div>
+            <div class="mining-visual">
+                <div class="diamond-pulse">💎</div>
+                <h2 id="liveAds">0.0000</h2>
+            </div>
+        </section>
 
-            <div class="game-grid">
-                <div class="game-card pro-card" onclick="toggleModal('spinModal', true)">
-                    <div class="game-icon-3d">🎡</div>
-                    <div style="font-size:0.8rem; font-weight:700;">LUCKY SPIN</div>
-                    <div style="font-size:0.6rem; color:var(--primary-cyan);">WIN 500</div>
-                </div>
-                <div class="game-card pro-card" onclick="alert('Scratch card coming in next update!')">
-                    <div class="game-icon-3d">🎫</div>
-                    <div style="font-size:0.8rem; font-weight:700;">SCRATCH</div>
-                    <div style="font-size:0.6rem; color:var(--primary-cyan);">WIN 200</div>
-                </div>
+        <div class="game-grid">
+            <div class="game-item pro-card" onclick="openGame('spin')">
+                <span class="icon">🎡</span> <h4>SPIN</h4>
+            </div>
+            <div class="game-item pro-card" onclick="openGame('scratch')">
+                <span class="icon">🎫</span> <h4>SCRATCH</h4>
+            </div>
+            <div class="game-item pro-card" onclick="openGame('mines')">
+                <span class="icon">💣</span> <h4>MINES</h4>
+                <small class="badge-new">NEW</small>
+            </div>
+            <div class="game-item pro-card" onclick="openGame('patti')">
+                <span class="icon">🃏</span> <h4>3D PATTI</h4>
+                <small class="badge-new">NEW</small>
             </div>
         </div>
-
-        <div id="rankTab" class="tab-content">
-            <section class="pro-card">
-                <h3 class="ultra-glow-text">LEADERBOARD</h3>
-                <p style="margin-top:15px; opacity:0.6;">Ranking will refresh every 24 hours.</p>
-            </section>
-        </div>
-
-        <div id="walletTab" class="tab-content">
-            <section class="pro-card" style="text-align:center;">
-                <h3 class="ultra-glow-text">AVAILABLE ASSETS</h3>
-                <h1 style="font-size:2.5rem; margin:15px 0;">0.00 <small style="font-size:1rem; color:var(--primary-cyan);">ADS</small></h1>
-                <button class="btn-action">WITHDRAW TO MAINNET</button>
-            </section>
-        </div>
-
     </main>
 
-    <div id="spinModal" class="modal">
-        <div class="modal-content">
-            <span onclick="toggleModal('spinModal', false)" style="position:absolute; right:20px; top:15px; font-size:25px; cursor:pointer;">&times;</span>
-            <div style="background:rgba(0,242,255,0.1); padding:8px; border-radius:10px; margin-bottom:15px; border:1px solid rgba(0,242,255,0.2);">
-                <small>BALANCE:</small> <span id="modalBalance" style="color:var(--primary-cyan); font-weight:800;">1250</span> <small>ABP</small>
-            </div>
-            <h2 class="ultra-glow-text" style="font-size:1.3rem; margin-bottom:15px;">LUCKY SPIN</h2>
-            
-            <div class="wheel-box">
-                <div class="pointer">▼</div>
-                <canvas id="wheelCanvas" width="240" height="240"></canvas>
-            </div>
-
-            <button id="spinBtn" class="btn-action" onclick="startSpin()">SPIN NOW</button>
-            <p id="spinMsg" style="margin-top:10px; font-weight:700; color:#00ff88; min-height:1.2rem;"></p>
+    <div id="gameModal" class="modal-overlay">
+        <div class="modal-content glass-effect">
+            <span class="close-btn" onclick="closeGame()">&times;</span>
+            <div id="gameContainer"></div>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" id="homeBtn" onclick="tabSwitch('home')">
-            <span class="nav-icon">🏠</span><span>HOME</span>
-        </div>
-        <div class="nav-item" id="rankBtn" onclick="tabSwitch('rank')">
-            <span class="nav-icon">🏆</span><span>RANK</span>
-        </div>
-        <div class="nav-item" id="walletBtn" onclick="tabSwitch('wallet')">
-            <span class="nav-icon">💳</span><span>WALLET</span>
-        </div>
+        <div class="nav-btn active">🏠</div>
+        <div class="nav-btn">🏆</div>
+        <div class="nav-btn">💳</div>
     </nav>
 
-    <script>
-        // --- 1. CORE LOGIC ---
-        let points = 1250;
-        const walletAddr = "0x7a23456789abcdef0123456789abcdef01234d2e";
-
-        window.onload = () => {
-            document.getElementById('userWallet').innerText = walletAddr.substring(0,6) + "..." + walletAddr.substring(walletAddr.length - 4);
-            initWheel();
-            startTimer();
-        };
-
-        function tabSwitch(tab) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('tab-active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(tab + 'Tab').classList.add('tab-active');
-            document.getElementById(tab + 'Btn').classList.add('active');
-        }
-
-        function toggleModal(id, show) {
-            document.getElementById(id).style.display = show ? 'block' : 'none';
-            if(show) document.getElementById('modalBalance').innerText = points;
-        }
-
-        function startTimer() {
-            let s = 0;
-            setInterval(() => {
-                s++;
-                let hh = Math.floor(s/3600).toString().padStart(2,'0');
-                let mm = Math.floor((s%3600)/60).toString().padStart(2,'0');
-                let ss = (s%60).toString().padStart(2,'0');
-                document.getElementById('sessionClock').innerText = `${hh}:${mm}:${ss}`;
-            }, 1000);
-        }
-
-        // --- 2. SPIN WHEEL ENGINE (Triple Checked) ---
-        const canvas = document.getElementById('wheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const sectors = [0, 50, 10, 500, 20, 0, 100, 50];
-        const colors = ['#020406', '#00f2ff', '#020406', '#007bff', '#020406', '#00f2ff', '#020406', '#007bff'];
-        let angle = 0;
-
-        function initWheel() {
-            const arc = (Math.PI * 2) / sectors.length;
-            sectors.forEach((label, i) => {
-                ctx.beginPath();
-                ctx.fillStyle = colors[i];
-                ctx.moveTo(120, 120);
-                ctx.arc(120, 120, 115, arc * i, arc * (i + 1));
-                ctx.fill();
-                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                ctx.stroke();
-                
-                ctx.save();
-                ctx.translate(120, 120);
-                ctx.rotate(arc * i + arc / 2);
-                ctx.fillStyle = "#fff";
-                ctx.font = "bold 14px Arial";
-                ctx.fillText(label, 70, 5);
-                ctx.restore();
-            });
-        }
-
-        function startSpin() {
-            const btn = document.getElementById('spinBtn');
-            const msg = document.getElementById('spinMsg');
-            btn.disabled = true;
-            msg.innerText = "Spinning...";
-
-            let extraDeg = Math.floor(2000 + Math.random() * 2000);
-            let totalDeg = angle + extraDeg;
-            
-            canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
-            canvas.style.transform = `rotate(${totalDeg}deg)`;
-            
-            setTimeout(() => {
-                angle = totalDeg % 360;
-                const actualDeg = 360 - (angle % 360);
-                const sectorIdx = Math.floor(actualDeg / (360 / sectors.length)) % sectors.length;
-                const win = sectors[sectorIdx];
-                
-                points += win;
-                document.getElementById('mainBalance').innerText = points;
-                document.getElementById('modalBalance').innerText = points;
-                msg.innerText = win > 0 ? `YOU WON ${win} ABP! 💎` : "BETTER LUCK NEXT TIME!";
-                btn.disabled = false;
-            }, 4000);
-        }
-    </script>
+    <script src="js/ui.js"></script>
+    <script src="js/game-mines.js"></script>
+    <script src="js/game-patti.js"></script>
 </body>
 </html>
