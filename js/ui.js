@@ -1,83 +1,77 @@
-const UIController = {
-    currentBalance: 1250, // Starting default balance
-    miningRate: 0.0001,
-    currentAds: 0.0000,
+// ADAMAS PROTOCOL - UI & Mining Engine (Final)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-    init: async function() {
-        // 1. Network & Wallet Sync
-        await web3Handler.checkNetwork();
-        const wallet = await web3Handler.getUserWallet();
-        if(wallet) {
-            document.getElementById('walletAddr').innerText = wallet.slice(0,6) + "..." + wallet.slice(-4);
-        }
-
-        // 2. Load Persisted Data (from Tasks/Games)
-        this.loadLocalData();
-
-        // 3. Start Engines
-        this.startMiningEngine();
-        TaskManager.renderTasks();
-        this.updateBalanceUI();
-    },
-
-    // Central function to add/subtract points from anywhere
-    updateBalance: function(amount) {
-        this.currentBalance += amount;
-        this.updateBalanceUI();
-        localStorage.setItem('userBalance', this.currentBalance);
-        
-        // Success animation logic can go here
-        console.log(`Balance Updated: ${amount} ABP`);
-    },
-
-    updateBalanceUI: function() {
-        const balEl = document.getElementById('balance');
-        if(balEl) balEl.innerText = Math.floor(this.currentBalance).toLocaleString();
-    },
-
-    startMiningEngine: function() {
-        const adsEl = document.getElementById('liveAds');
-        if(!adsEl) return;
-
-        setInterval(() => {
-            this.currentAds += this.miningRate;
-            adsEl.innerText = this.currentAds.toFixed(4);
-            // Optional: Har 10 unit par auto-collect logic yahan dal sakte hain
-        }, 3000);
-    },
-
-    loadLocalData: function() {
-        const savedBal = localStorage.getItem('userBalance');
-        if(savedBal) this.currentBalance = parseFloat(savedBal);
-    }
+// PARTNER: Yahan apna Firebase config paste karein (Console se milega)
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_ID",
+    appId: "YOUR_APP_ID"
 };
 
-// --- GLOBAL FUNCTIONS (Used by HTML/Games) ---
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-window.onload = () => UIController.init();
+let userWallet = localStorage.getItem('adamas_user');
+let currentABP = 0;
 
-function openGame(gameType) {
-    const modal = document.getElementById('gameModal');
-    const container = document.getElementById('gameContainer');
+if (userWallet) {
+    initUserStats();
+}
+
+// 1. User Data Fetch/Create
+async function initUserStats() {
+    const userRef = ref(db, 'users/' + userWallet);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+        currentABP = snapshot.val().abp || 0;
+    } else {
+        // New User Initialization
+        await set(userRef, {
+            abp: 0,
+            referrals: 0,
+            lastActive: Date.now(),
+            isVerified: false
+        });
+    }
     
-    if(!modal || !container) return;
-
-    modal.style.display = 'block';
-    container.innerHTML = '<div class="loader">Loading Game Engine...</div>';
-
-    // Small delay for smooth transition
-    setTimeout(() => {
-        if(gameType === 'mines') MinesGame.init();
-        if(gameType === 'patti') PattiGame.init();
-        // Future: if(gameType === 'spin') SpinGame.init();
-    }, 300);
+    updateUI();
+    startMining();
 }
 
-function closeGame() {
-    document.getElementById('gameModal').style.display = 'none';
+// 2. Mining Logic (ABP Engine)
+function startMining() {
+    setInterval(async () => {
+        // 0.001 ABP per second (Aap ise change kar sakte hain)
+        currentABP += 0.001; 
+        updateUI();
+        
+        // Every 30 seconds, sync with Firebase to save data
+        if (Math.floor(Date.now() / 1000) % 30 === 0) {
+            syncWithDB();
+        }
+    }, 1000);
 }
 
-// Helper for Games to sync back to UI
-function syncBalance(amount) {
-    UIController.updateBalance(amount);
+function updateUI() {
+    const abpDisplay = document.getElementById('abpBalance');
+    if (abpDisplay) {
+        abpDisplay.innerText = currentABP.toFixed(4);
+    }
 }
+
+async function syncWithDB() {
+    const userRef = ref(db, 'users/' + userWallet);
+    await update(userRef, {
+        abp: currentABP,
+        lastActive: Date.now()
+    });
+}
+
+// Global Export for Games/Tasks
+window.AdamasUI = { syncWithDB, currentABP };
