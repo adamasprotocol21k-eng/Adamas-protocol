@@ -1,26 +1,16 @@
-// web3.js - Handles Wallet and Blockchain Connection
-const web3Handler = {
-    provider: null,
-    userAddress: null,
-
-    async connectWallet() {
+// web3.js - Professional Web3 Provider
+export const web3 = {
+    address: null,
+    async connect() {
         if (window.ethereum) {
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                this.userAddress = accounts[0];
-                console.log("Connected to:", this.userAddress);
-                return this.userAddress;
-            } catch (error) {
-                console.error("User denied account access");
-            }
-        } else {
-            alert("Please install MetaMask or a Web3 Wallet!");
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            this.address = accounts[0];
+            localStorage.setItem('user_addr', this.address);
+            return this.address;
         }
+        throw new Error("Wallet not found");
     },
-
-    shortenAddress(address) {
-        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    getStoredAddress() {
+        return localStorage.getItem('user_addr');
     }
 };
-
-export default web3Handler;
