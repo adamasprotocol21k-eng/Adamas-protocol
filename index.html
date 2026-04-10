@@ -3,41 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas | The Digital Diamond</title>
+    <title>ADAMAS | The Digital Diamond</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 </head>
-<body class="entry-page">
+<body class="entry-theme">
 
-    <div class="glow-layer"></div>
+    <div class="glow-overlay"></div>
 
-    <section class="hero-container" id="hero">
-        <div class="diamond-logo-3d">💎</div>
-        <h1 class="brand-name">ADAMAS</h1>
-        <p class="tagline">Mining the future on Polygon Amoy</p>
-        <button id="connectBtn" class="btn-primary" onclick="handleAuth()">CONNECT WALLET</button>
-    </section>
-
-    <div id="socialModal" class="modal-overlay">
-        <div class="modal-card glass-effect">
-            <h2>COMMUNITY LOCK</h2>
-            <p>Verify your profile to unlock $ADS Mining.</p>
+    <main class="landing-wrapper">
+        <div class="hero-content">
+            <div class="diamond-container">
+                <div class="diamond-3d">💎</div>
+                <div class="diamond-shadow"></div>
+            </div>
             
-            <div class="task-list">
-                <a href="https://x.com/adamas" target="_blank" class="task-item" onclick="taskDone('x')">
-                    <span>Follow on X</span>
-                    <span id="x-status">❌</span>
-                </a>
-                <a href="https://t.me/adamas" target="_blank" class="task-item" onclick="taskDone('tg')">
-                    <span>Join Telegram</span>
-                    <span id="tg-status">❌</span>
-                </a>
+            <h1 class="brand-logo ultra-glow-text">ADAMAS</h1>
+            <p class="hero-tagline">Bitcoin was Gold. Adamas is the <b>Diamond</b>.</p>
+            
+            <div class="network-badge">
+                <span class="pulse-dot"></span> Polygon Amoy Testnet
             </div>
 
-            <button id="verifyBtn" class="btn-disabled" disabled onclick="enterDashboard()">VERIFY & ENTER</button>
+            <div class="action-area">
+                <button id="connectBtn" class="btn-primary main-cta" onclick="handleAuth()">
+                    CONNECT WALLET
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="socialModal" class="modal-overlay">
+        <div class="modal-content glass-effect">
+            <h2 class="ultra-glow-text">COMMUNITY LOCK</h2>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Complete tasks to unlock the ecosystem.</p>
+            
+            <div class="social-grid">
+                <div class="social-item" onclick="taskDone('x')">
+                    <a href="https://x.com/adamas" target="_blank">
+                        <span class="icon">🐦</span> Follow on X
+                    </a>
+                    <span id="x-status" class="status-icon">❌</span>
+                </div>
+                <div class="social-item" onclick="taskDone('tg')">
+                    <a href="https://t.me/adamas" target="_blank">
+                        <span class="icon">📢</span> Join Telegram
+                    </a>
+                    <span id="tg-status" class="status-icon">❌</span>
+                </div>
+            </div>
+
+            <button id="verifyBtn" class="btn-disabled" disabled onclick="enterDashboard()">
+                VERIFY & ENTER
+            </button>
         </div>
     </div>
 
+    <script src="js/web3.js"></script>
     <script src="js/auth.js"></script>
 </body>
 </html>
