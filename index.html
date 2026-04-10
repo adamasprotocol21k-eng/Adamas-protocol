@@ -3,59 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | The Future of Scarcity</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <title>ADAMAS | The 21,000 Club</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="bg-glow"></div>
 
-    <div class="glow-sphere"></div>
-
-    <div class="app-wrapper">
-        
-        <header class="hero-header">
-            <div class="diamond-container">
-                <div class="diamond-core">
-                    <span class="logo-text">ADS</span>
-                </div>
-                <div class="diamond-ring"></div>
+    <main class="hero-section">
+        <div class="logo-container">
+            <div class="diamond-wrapper">
+                <div class="diamond-shape">ADS</div>
             </div>
-            
-            <h1 class="main-title">ADAMAS<span>PROTOCOL</span></h1>
-            <p class="hero-subtitle">The Last Digital Asset You'll Ever Need.</p>
-        </header>
+        </div>
 
-        <div class="stats-glass-container">
-            <div class="stat-card">
-                <small>SUPPLY</small>
-                <p>21,000</p>
-            </div>
+        <div class="hero-text">
+            <h1>ADAMAS <span>PROTOCOL</span></h1>
+            <p>Gold is heavy. Diamonds are Forever.</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">SUPPLY: <span>21,000</span></div>
             <div class="stat-divider"></div>
-            <div class="stat-card">
-                <small>NETWORK</small>
-                <p>AMOY</p>
-            </div>
+            <div class="stat-item">NETWORK: <span>AMOY</span></div>
         </div>
 
-        <div class="action-footer">
-            <button id="connectBtn" class="premium-btn">
-                <span class="btn-content">CLAIM YOUR DESTINY</span>
-                <div class="btn-glow"></div>
-            </button>
-            <p class="safe-text">Safe • Decentralized • Immutable</p>
-        </div>
+        <button id="connectBtn" class="main-cta">CLAIM YOUR DESTINY</button>
+        <p class="footer-note">SAFE • DECENTRALIZED • IMMUTABLE</p>
+    </main>
 
-    </div>
-
-    <div id="authModal" class="access-portal">
-        <div class="portal-box glassmorphism">
-            <div class="portal-header">
-                <h2>SECURITY CHECK</h2>
-                <div class="wallet-badge" id="walletInfo">0x00...000</div>
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-box glass">
+            <h2>PROTOCOL ACCESS</h2>
+            <div class="wallet-info">
+                <small>Connected Wallet</small>
+                <p id="walletInfo">0x...000</p>
             </div>
-            <p class="portal-desc">Complete social validation to unlock the mining node.</p>
+            <p class="modal-desc">Complete social validation to unlock the mining node.</p>
             <button id="verifyBtn" class="verify-btn">VERIFY & ENTER</button>
         </div>
     </div>
