@@ -111,3 +111,56 @@ body {
 
 .premium-btn:hover .btn-glow { left: 150%; }
 .safe-text { font-size: 0.7rem; opacity: 0.3; margin-top: 15px; text-transform: uppercase; }
+/* Dashboard Premium Layout */
+.glass {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 242, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.glass-premium {
+    background: radial-gradient(circle at top right, rgba(0, 242, 255, 0.1), transparent);
+    border: 1px solid var(--cyan);
+    border-radius: 25px;
+    padding: 25px;
+    text-align: center;
+}
+
+/* Mining Pulse Animation */
+.mining-display { margin: 15px 0; }
+.mining-display span { font-size: 2.5rem; font-weight: 700; color: var(--cyan); text-shadow: 0 0 20px var(--cyan); }
+
+.mining-visual {
+    position: relative; width: 60px; height: 60px; margin: 0 auto;
+}
+.pulse-ring {
+    position: absolute; width: 100%; height: 100%;
+    border: 2px solid var(--cyan); border-radius: 50%;
+    animation: pulse-ring 1.5s infinite;
+}
+@keyframes pulse-ring { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+
+/* Mines Grid Styling */
+.mines-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 15px 0;
+}
+.mine-cell {
+    aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+
+/* Copy Box & Inputs */
+.copy-box { display: flex; gap: 10px; margin-top: 10px; }
+input { 
+    background: rgba(0,0,0,0.3); border: 1px solid var(--border); 
+    color: white; padding: 10px; border-radius: 8px; flex: 1;
+}
+
+.bottom-nav {
+    position: sticky; bottom: 0; display: flex; justify-content: space-around;
+    padding: 10px 0; margin-top: 20px;
+}
+.nav-item { background: none; border: none; color: white; opacity: 0.5; font-size: 0.7rem; }
+.nav-item.active { opacity: 1; color: var(--cyan); }
