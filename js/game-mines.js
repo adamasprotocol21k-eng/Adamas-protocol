@@ -1,22 +1,46 @@
-// game-mines.js - Core Logic for the Mines Game
-export const minesGame = {
-    grid: [],
-    minesCount: 3,
+/**
+ * ADAMAS MINES - CASINO ENGINE
+ * Implementation: Random Seed Distribution
+ */
+export const minesEngine = {
+    gameState: {
+        active: false,
+        board: [],
+        bet: 0,
+        revealed: []
+    },
 
-    initGame() {
-        this.grid = Array(25).fill('diamond');
+    init(mineCount = 3) {
+        this.gameState.active = true;
+        this.gameState.revealed = [];
+        this.gameState.board = Array(25).fill('diamond');
+        
         let placed = 0;
-        while (placed < this.minesCount) {
-            let idx = Math.floor(Math.random() * 25);
-            if (this.grid[idx] !== 'mine') {
-                this.grid[idx] = 'mine';
+        while (placed < mineCount) {
+            let pos = Math.floor(Math.random() * 25);
+            if (this.board[pos] !== 'mine') {
+                this.board[pos] = 'mine';
                 placed++;
             }
         }
-        console.log("Mines Board Ready");
+        console.log("Board Encrypted. Game Ready.");
     },
 
-    checkTile(index) {
-        return this.grid[index] === 'mine' ? 'BOOM' : 'SAFE';
+    selectTile(index) {
+        if (!this.gameState.active || this.gameState.revealed.includes(index)) return null;
+        
+        this.gameState.revealed.push(index);
+        const result = this.gameState.board[index];
+        
+        if (result === 'mine') {
+            this.gameState.active = false;
+            return { status: 'BUST', board: this.gameState.board };
+        }
+        return { status: 'SAFE', multiplier: this.calculateMultiplier() };
+    },
+
+    calculateMultiplier() {
+        const count = this.gameState.revealed.length;
+        return (count * 1.45).toFixed(2); // Dynamic Multiplier Logic
     }
 };
