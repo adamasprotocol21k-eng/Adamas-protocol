@@ -2,6 +2,8 @@
     --cyan: #00f2ff;
     --dark: #020406;
     --glass: rgba(13, 22, 33, 0.85);
+    --gold: #ffcf40;
+    --red: #ff4b2b;
 }
 
 body {
@@ -9,28 +11,140 @@ body {
     color: white;
     font-family: 'Rajdhani', sans-serif;
     margin: 0;
+    padding-bottom: 80px; /* Space for bottom nav */
     overflow-x: hidden;
 }
 
-/* Glassmorphism Card */
+/* --- UNIVERSAL GLASS & GLOW --- */
 .glass-effect {
     background: var(--glass);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(0, 242, 255, 0.2);
-    border-radius: 25px;
-    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.05);
 }
 
-/* Button Styling */
+.pro-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.ultra-glow-text {
+    text-shadow: 0 0 10px var(--cyan);
+    letter-spacing: 2px;
+}
+
+/* --- MINES GAME UI --- */
+.mine-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.mine-tile {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.mine-tile:active { transform: scale(0.9); }
+
+/* --- TEEN PATTI UI --- */
+.table-3d {
+    background: radial-gradient(circle, #0a2d20 0%, #020406 100%);
+    border-radius: 50% / 20%;
+    padding: 40px 10px;
+    margin: 20px 0;
+    border: 2px solid rgba(0, 242, 255, 0.1);
+}
+
+.card-slot {
+    width: 60px;
+    height: 85px;
+    background: #1a1a1a;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 5px;
+    border: 1px solid #333;
+    line-height: 85px;
+    font-weight: bold;
+}
+
+.card-slot.revealed {
+    background: white;
+    color: black;
+    animation: flipIn 0.5s ease-out;
+}
+
+@keyframes flipIn {
+    from { transform: rotateY(90deg); opacity: 0; }
+    to { transform: rotateY(0deg); opacity: 1; }
+}
+
+/* --- DASHBOARD ELEMENTS --- */
+.fixed-header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(2, 4, 6, 0.9);
+    z-index: 100;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 70px;
+    background: var(--glass);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(0, 242, 255, 0.1);
+}
+
+.nav-btn { font-size: 1.5rem; opacity: 0.5; transition: 0.3s; }
+.nav-btn.active { opacity: 1; color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+
+/* --- BUTTONS --- */
 .btn-primary {
-    background: linear-gradient(90deg, #00f2ff, #007bff);
+    background: linear-gradient(90deg, var(--cyan), #007bff);
     color: black;
     border: none;
-    padding: 15px 40px;
+    padding: 12px 30px;
     font-weight: 800;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 242, 255, 0.4);
+}
+
+.btn-primary-sm {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+}
+
+.btn-done {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    border: 1px solid #00ff88;
+    padding: 5px 15px;
+    border-radius: 5px;
+    opacity: 0.8;
 }
 
 /* Modal Overlay */
@@ -38,24 +152,24 @@ body {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95);
-    z-index: 9999;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
 }
 
-.modal-card {
+.modal-content {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%; max-width: 350px;
-    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    padding: 25px;
     text-align: center;
 }
 
-.btn-disabled {
-    background: #333;
-    color: #888;
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
+.close-btn {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 2rem;
+    color: #fff;
 }
