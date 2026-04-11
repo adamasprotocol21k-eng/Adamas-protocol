@@ -1,13 +1,14 @@
-/* ADAMAS PROTOCOL - NEXT LEVEL UI
-   Theme: Scarcity, Luxury, Future
+/* ADAMAS PROTOCOL - THE ELITE INTERFACE
+   Style: Ultra-Premium, Deep-Cyan, Cyberpunk Depth
 */
 
 :root { 
     --cyan: #00f2ff; 
     --blue: #0062ff;
+    --dark-cyan: #002a2a;
     --bg: #000000; 
     --glass: rgba(255, 255, 255, 0.03);
-    --border: rgba(0, 242, 255, 0.2);
+    --border: rgba(0, 242, 255, 0.25);
 }
 
 * { 
@@ -23,128 +24,127 @@ body {
     height: 100vh;
 }
 
-/* --- Phase Container --- */
+/* --- Layout Engine (Fixes Side Alignment) --- */
 .screen { 
     display: none; height: 100vh; width: 100vw; 
     flex-direction: column; align-items: center; justify-content: center;
-    position: relative; padding: 25px;
-    background: radial-gradient(circle at center, #001a1a 0%, #000 100%);
+    position: relative; padding: 20px;
+    background: radial-gradient(circle at center, #001212 0%, #000 100%);
 }
 
 .screen.active { 
     display: flex; 
-    animation: zoomPerspective 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    animation: entryZoom 1s cubic-bezier(0.19, 1, 0.22, 1); 
 }
 
-/* --- Cinematic Logo Effect --- */
-.glitch-text {
-    font-size: clamp(2rem, 8vw, 3.8rem); 
-    letter-spacing: clamp(5px, 2vw, 15px); 
-    font-weight: 800;
-    text-transform: uppercase; 
-    color: #fff;
-    text-shadow: 0 0 15px var(--cyan), 0 0 30px var(--blue);
-    margin-bottom: 10px;
+/* --- Phase 1: Landing Page Overhaul --- */
+.tech-grid-overlay {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px), 
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.1;
+    perspective: 1000px;
+    transform: rotateX(60deg) translateY(-200px);
+    z-index: 0;
+}
+
+.premium-glitch-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.2rem, 9vw, 4rem); 
+    letter-spacing: 10px; font-weight: 800;
+    text-transform: uppercase; color: #fff;
+    text-shadow: 0 0 10px var(--cyan), 0 0 20px var(--blue);
     text-align: center;
+    z-index: 2;
 }
 
-/* --- 3D Diamond Glow (The Heart) --- */
-.diamond-glow {
-    position: absolute; 
-    width: 350px; height: 350px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 95,35 80,95 20,95 5,35" fill="none" stroke="%2300f2ff" stroke-width="0.5" opacity="0.3"/></svg>');
-    background-size: contain;
-    filter: blur(2px);
-    animation: rotate3D 10s linear infinite, pulseGlow 4s ease-in-out infinite;
-    z-index: -1;
+.future-tagline {
+    font-size: 0.9rem; letter-spacing: 6px; color: rgba(255,255,255,0.5);
+    margin: 20px 0 40px; text-transform: uppercase;
+}
+.future-tagline span { color: var(--cyan); font-weight: 700; text-shadow: 0 0 10px var(--cyan); }
+
+/* --- PRO BUTTON: No more "Local" feel --- */
+.btn-pro-entry {
+    background: transparent; color: #fff;
+    border: 1px solid var(--cyan);
+    padding: 16px 50px; border-radius: 0; /* Sharp Edges */
+    font-weight: 700; letter-spacing: 4px;
+    cursor: pointer; position: relative;
+    overflow: hidden; transition: 0.4s;
+    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); /* Futuristic Shape */
 }
 
-/* --- Introduction Card (Phase 2) --- */
-.intro-card {
+.btn-pro-entry:hover {
+    background: var(--cyan); color: #000;
+    box-shadow: 0 0 40px var(--cyan);
+    transform: translateY(-5px);
+}
+
+.btn-glimmer {
+    position: absolute; top: -100%; left: -100%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: 0.6s;
+}
+.btn-pro-entry:hover .btn-glimmer { top: 100%; left: 100%; }
+
+/* --- Phase 2: Security & Wallet Upgrade --- */
+.intro-card-premium {
     background: var(--glass);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(15px);
     border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 35px 25px;
-    width: 100%;
-    max-width: 420px;
+    border-radius: 20px;
+    padding: 30px; width: 100%; max-width: 400px;
     text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 0 50px rgba(0,0,0,1);
 }
 
-.title-modern { 
-    font-size: 1.8rem; letter-spacing: 4px; margin-bottom: 15px; 
-}
-.title-modern span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-
-.info-text { 
-    font-size: 0.95rem; opacity: 0.7; line-height: 1.6; margin-bottom: 30px; 
-}
-
-/* --- Validation Rows --- */
-.task-row {
+.node-item {
     display: flex; justify-content: space-between; align-items: center;
-    background: rgba(255,255,255,0.02); 
-    padding: 18px; border-radius: 12px;
-    margin-bottom: 12px; 
-    border: 1px solid rgba(255,255,255,0.05); 
-    transition: all 0.4s ease;
+    background: rgba(0, 242, 255, 0.02);
+    padding: 18px; margin-bottom: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; transition: 0.3s;
 }
+.node-item:hover { border-color: var(--cyan); transform: scale(1.02); }
 
-.task-row:hover { border-color: var(--cyan); background: rgba(0, 242, 255, 0.03); }
+.node-label { display: block; font-size: 0.7rem; color: var(--cyan); opacity: 0.6; }
+.node-name { font-weight: 700; font-size: 0.9rem; }
 
-.status-indicator { 
-    font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; color: #555; 
-}
-
-/* --- Next Level Buttons --- */
-.btn-premium {
-    background: #fff; color: #000; border: none;
-    padding: 18px 45px; border-radius: 2px; font-weight: 700;
-    letter-spacing: 3px; cursor: pointer;
-    box-shadow: 0 5px 15px rgba(255,255,255,0.2);
-    transition: 0.3s;
-}
-
-.btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 25px var(--cyan); }
-
-.btn-locked {
+.btn-lock-status {
     width: 100%; padding: 20px; background: #111; color: #444;
-    border: 1px solid #222; border-radius: 12px; margin-top: 25px;
-    font-weight: 700; letter-spacing: 1px; transition: 0.5s;
+    border: 1px solid #222; border-radius: 5px; font-weight: 700;
+    margin-top: 20px; transition: 0.5s;
 }
 
-/* The Blinking "Success" Button */
+/* Final Blinking Connect Button */
 .btn-active-blink {
     background: var(--cyan) !important; color: #000 !important;
-    box-shadow: 0 0 30px var(--cyan); border: none;
-    animation: neonBlink 1.2s infinite alternate;
+    box-shadow: 0 0 20px var(--cyan); border: none;
+    animation: hyperBlink 1s infinite alternate;
     cursor: pointer !important;
 }
 
-/* --- Animations --- */
-@keyframes neonBlink {
-    from { box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan); transform: scale(1); }
-    to { box-shadow: 0 0 25px var(--cyan), 0 0 50px var(--blue); transform: scale(1.02); }
+/* --- Core Animations --- */
+@keyframes hyperBlink {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0.8; transform: scale(1.03); filter: brightness(1.2); }
 }
 
-@keyframes rotate3D {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+@keyframes entryZoom {
+    from { transform: scale(1.2) translateY(50px); opacity: 0; filter: blur(15px); }
+    to { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
 }
 
 @keyframes pulseGlow {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.1); }
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.5; }
 }
 
-@keyframes zoomPerspective {
-    from { transform: scale(1.3) translateZ(100px); opacity: 0; filter: blur(10px); }
-    to { transform: scale(1) translateZ(0); opacity: 1; filter: blur(0); }
-}
-
-/* Mobile Fixes */
+/* --- Responsive Fixes --- */
 @media (max-width: 480px) {
-    .intro-card { padding: 25px 20px; }
-    .glitch-text { letter-spacing: 8px; }
+    .premium-glitch-text { letter-spacing: 6px; }
+    .btn-pro-entry { padding: 14px 40px; font-size: 0.8rem; }
 }
