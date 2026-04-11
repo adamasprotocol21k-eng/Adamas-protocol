@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS PROTOCOL | Secure Entry</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <title>ADAMAS PROTOCOL | Premium Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,38 +12,57 @@
     <div class="app-container">
         
         <section id="phase-intro" class="screen active">
-            <div class="diamond-glow"></div>
-            <div class="logo-wrap">
-                <h1 id="typing-logo" class="glitch-text"></h1>
-            </div>
-            <div id="entry-controls" class="fade-in-ui">
-                <p class="tagline">ENTER YOUR FUTURE</p>
-                <button class="btn-premium" onclick="startJourney()">ENTER ADAMAS</button>
+            <div class="tech-grid-overlay"></div>
+            <div class="diamond-glow-core"></div>
+
+            <div class="content-wrapper">
+                <div class="logo-area">
+                    <h1 id="typing-logo" class="premium-glitch-text"></h1>
+                </div>
+                
+                <div id="entry-controls" class="ui-reveal">
+                    <p class="future-tagline"><span>ENTER</span> YOUR FUTURE</p>
+                    
+                    <button class="btn-pro-entry" onclick="startJourney()">
+                        <span class="btn-text">ENTER ADAMAS</span>
+                        <div class="btn-glimmer"></div>
+                    </button>
+                </div>
             </div>
         </section>
 
         <section id="phase-social" class="screen">
-            <div class="intro-card">
+            <div class="intro-card-premium">
                 <h2 class="title-modern">ADAMAS <span>PROTOCOL</span></h2>
-                <div class="info-text">
-                    <p>Accessing the 21,000 Scarcity Standard. Please validate your nodes below to enable the protocol link.</p>
+                
+                <div class="protocol-info">
+                    <p>Accessing the 21,000 Scarcity Standard. Please validate your nodes to initialize wallet connection.</p>
                 </div>
                 
-                <div class="validation-list">
-                    <div class="task-row" onclick="verifyTask(this)" data-status="pending">
-                        <span class="task-name">JOIN TELEGRAM NODE</span>
-                        <div class="status-indicator">PENDING</div>
+                <div class="node-validation-list">
+                    <div class="node-item" onclick="verifyTask(this)" data-status="pending">
+                        <div class="node-info">
+                            <span class="node-label">NODE 01</span>
+                            <span class="node-name">TELEGRAM NETWORK</span>
+                        </div>
+                        <div class="node-status">PENDING</div>
                     </div>
 
-                    <div class="task-row" onclick="verifyTask(this)" data-status="pending">
-                        <span class="task-name">FOLLOW X PROTOCOL</span>
-                        <div class="status-indicator">PENDING</div>
+                    <div class="node-item" onclick="verifyTask(this)" data-status="pending">
+                        <div class="node-info">
+                            <span class="node-label">NODE 02</span>
+                            <span class="node-name">X PROTOCOL (TWITTER)</span>
+                        </div>
+                        <div class="node-status">PENDING</div>
                     </div>
                 </div>
 
-                <button id="connect-wallet-btn" class="btn-locked" disabled onclick="connectWeb3()">
-                    CONNECT WALLET
-                </button>
+                <div class="wallet-trigger-area">
+                    <button id="connect-wallet-btn" class="btn-lock-status" disabled onclick="connectWeb3()">
+                        CONNECT WALLET
+                    </button>
+                    <p id="wallet-instruction" class="instruction-faded">Verify all nodes to unlock wallet</p>
+                </div>
             </div>
         </section>
 
