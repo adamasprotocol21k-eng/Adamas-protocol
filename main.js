@@ -1,34 +1,56 @@
-// Function to show Popup
-window.openPortal = () => {
-    document.getElementById('modal-portal').style.display = 'flex';
-};
+// 1. Typing Logo Animation on Load
+const logoText = "ADAMAS PROTOCOL";
+const typingEl = document.getElementById('typing-logo');
+let charIdx = 0;
 
-// MetaMask Connection Logic
-window.connectMetaMask = async () => {
-    const btn = document.getElementById('connectBtn');
-    const status = document.getElementById('statusMsg');
+function typeLogo() {
+    if (charIdx < logoText.length) {
+        typingEl.innerHTML += logoText.charAt(charIdx);
+        charIdx++;
+        setTimeout(typeLogo, 100); // Speed of spelling pop-up
+    }
+}
 
+window.onload = typeLogo;
+
+// 2. Journey Start
+function startJourney() {
+    document.getElementById('phase-intro').classList.remove('active');
+    document.getElementById('phase-social').classList.add('active');
+}
+
+// 3. Social Validation Logic
+let tasksDone = 0;
+function verifyTask(el) {
+    const status = el.querySelector('.status-box');
+    if (status.innerText === '✕') {
+        status.innerText = '✓';
+        status.style.color = '#00ff88';
+        tasksDone++;
+        checkValidation();
+    }
+}
+
+function checkValidation() {
+    if (tasksDone >= 2) {
+        const btn = document.getElementById('connect-wallet-btn');
+        btn.disabled = false;
+        btn.classList.add('btn-active-blink');
+        btn.innerText = "CONFIRM & CONNECT WALLET";
+    }
+}
+
+// 4. MetaMask Logic
+async function connectWeb3() {
     if (window.ethereum) {
         try {
-            status.innerText = "Requesting Confirmation...";
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const address = accounts[0];
-            
-            btn.innerText = "CONNECTED";
-            btn.style.background = "#00ff88";
-            status.innerText = "Verified: " + address.slice(0,6) + "..." + address.slice(-4);
-            
-            // Success: Redirect to Dashboard after 1.5s
-            setTimeout(() => {
-                alert("Protocol Unlocked. Welcome.");
-                // window.location.href = "dashboard.html";
-            }, 1500);
-
-        } catch (error) {
-            status.innerText = "Connection Denied";
+            alert("Wallet Connected: " + accounts[0]);
+            // Next: Redirect to Dashboard Screen
+        } catch (err) {
+            alert("Connection Denied.");
         }
     } else {
-        alert("Please install MetaMask extension!");
+        alert("Please install MetaMask!");
     }
-};
-
+}
