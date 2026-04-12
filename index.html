@@ -7,16 +7,24 @@
     <link rel="stylesheet" href="style.css">
     <style>
         /* Specific Landing Page Overlays */
-        #phase-intro, #phase-social { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        #phase-intro, #phase-social { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .active-phase { display: flex !important; animation: fadeIn 0.8s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Typing Cursor Effect */
+        #typing-logo::after { content: "|"; animation: blink 0.7s infinite; margin-left: 5px; color: var(--cyan); }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
         .btn-entry { 
             background: transparent; color: var(--cyan); border: 1px solid var(--cyan); 
             padding: 15px 40px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
             transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            letter-spacing: 2px;
         }
-        .btn-entry:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); }
+        .btn-entry:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px rgba(0, 242, 255, 0.4); }
+
+        .status-icon { font-family: 'Orbitron'; font-size: 9px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -24,38 +32,38 @@
     <div class="app-container">
         <section id="phase-intro" class="active-phase">
             <div style="text-align: center;">
-                <h1 id="typing-logo" class="glow-text" style="font-family: 'Orbitron'; font-size: 2rem; letter-spacing: 5px;"></h1>
-                <p style="font-size: 10px; color: #555; margin-top: 10px; letter-spacing: 3px;">DECENTRALIZED REWARD SYSTEM</p>
-                <div style="margin-top: 40px;">
+                <h1 id="typing-logo" class="glow-text" style="font-family: 'Orbitron'; font-size: 2rem; letter-spacing: 5px; min-height: 40px;"></h1>
+                <p style="font-size: 10px; color: #555; margin-top: 10px; letter-spacing: 3px; text-transform: uppercase;">Decentralized Node Infrastructure</p>
+                <div style="margin-top: 50px;">
                     <button class="btn-entry" onclick="startJourney()">ENTER SYSTEM</button>
                 </div>
             </div>
         </section>
 
         <section id="phase-social">
-            <div class="premium-card" style="width: 90%; max-width: 400px; text-align: center;">
-                <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 20px;">NODE <span style="color: var(--cyan);">VALIDATION</span></h2>
+            <div class="premium-card" style="width: 90%; max-width: 400px; text-align: center; border-color: #222;">
+                <h2 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 25px; letter-spacing: 1px;">NODE <span style="color: var(--cyan);">VALIDATION</span></h2>
                 
-                <div class="task-list" style="margin-bottom: 25px;">
-                    <div class="task-card" onclick="verifyTask(this, 'https://t.me/ADSProtocol')">
+                <div class="task-list" style="margin-bottom: 30px;">
+                    <div class="task-card" onclick="verifyTask(this, 'https://t.me/ADSProtocol')" style="cursor: pointer; transition: 0.3s;">
                         <div style="text-align: left;">
-                            <span style="font-size: 10px; color: var(--cyan);">NODE 01</span>
-                            <p style="font-weight: bold; font-size: 13px;">TELEGRAM COMMUNITY</p>
+                            <span style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron';">STEP 01</span>
+                            <p style="font-weight: bold; font-size: 13px; color: #eee;">JOIN TELEGRAM</p>
                         </div>
-                        <span class="status-icon" style="color: #444;">PENDING</span>
+                        <span class="status-icon" style="color: #444;">[ PENDING ]</span>
                     </div>
 
-                    <div class="task-card" onclick="verifyTask(this, 'https://x.com/AdamasADS')">
+                    <div class="task-card" onclick="verifyTask(this, 'https://x.com/AdamasADS')" style="cursor: pointer; transition: 0.3s; margin-top: 12px;">
                         <div style="text-align: left;">
-                            <span style="font-size: 10px; color: var(--cyan);">NODE 02</span>
-                            <p style="font-weight: bold; font-size: 13px;">X PROTOCOL</p>
+                            <span style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron';">STEP 02</span>
+                            <p style="font-weight: bold; font-size: 13px; color: #eee;">FOLLOW X (TWITTER)</p>
                         </div>
-                        <span class="status-icon" style="color: #444;">PENDING</span>
+                        <span class="status-icon" style="color: #444;">[ PENDING ]</span>
                     </div>
                 </div>
 
-                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()">CONNECT WALLET</button>
-                <p style="font-size: 10px; color: #444; margin-top: 15px;">Secure Web3 connection required for data sync.</p>
+                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="letter-spacing: 1px;">CONNECT WEB3 WALLET</button>
+                <p style="font-size: 9px; color: #444; margin-top: 15px; font-style: italic;">*Authorized Web3 access required for token forging.</p>
             </div>
         </section>
     </div>
@@ -80,22 +88,26 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // Typing Effect
+    // Typing Effect Logic
     const logoText = "ADAMAS PROTOCOL";
     let charIndex = 0;
     function typeEffect() {
         if (charIndex < logoText.length) {
             document.getElementById("typing-logo").innerHTML += logoText.charAt(charIndex);
             charIndex++;
-            setTimeout(typeEffect, 80);
+            setTimeout(typeEffect, 100);
         }
     }
 
     window.onload = () => {
         typeEffect();
+        // Secure referral capture
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
-        if (refCode) localStorage.setItem('adamas_referrer', refCode);
+        if (refCode && refCode.startsWith('0x')) {
+            localStorage.setItem('adamas_referrer', refCode);
+            console.log("Referrer Locked:", refCode);
+        }
     };
 
     function startJourney() {
@@ -106,7 +118,8 @@
     function verifyTask(element, link) {
         window.open(link, '_blank');
         element.style.borderColor = "var(--cyan)";
-        element.querySelector('.status-icon').innerText = "VERIFIED ✅";
+        element.style.background = "rgba(0, 242, 255, 0.03)";
+        element.querySelector('.status-icon').innerText = "[ VERIFIED ✅ ]";
         element.querySelector('.status-icon').style.color = "var(--cyan)";
     }
 
@@ -120,7 +133,8 @@
         if (typeof window.ethereum !== 'undefined') {
             try {
                 const btn = document.getElementById('connect-wallet-btn');
-                btn.innerText = "AUTHORIZING...";
+                btn.innerText = "AUTHORIZING NODE...";
+                btn.disabled = true;
                 
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0];
@@ -139,21 +153,26 @@
                             lastClaim: "NEVER",
                             role: isAdmin ? "FOUNDER" : "USER",
                             joinedAt: new Date().toISOString(),
-                            currentMultiplier: isAdmin ? 5.0 : 1.0
+                            currentMultiplier: isAdmin ? 5.0 : 1.0,
+                            miningStatus: false
                         });
+                        // Credit Referrer
                         if (referrer !== "DIRECT" && !isAdmin) {
                             database.ref('users/' + referrer + '/myReferrals/' + wallet).set(true);
                         }
                     }
-                    btn.innerText = "ACCESS GRANTED ✅";
-                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+                    btn.innerText = "CONNECTION SECURE ✅";
+                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
                 });
             } catch (err) {
-                alert("Auth Failed: " + err.message);
-                document.getElementById('connect-wallet-btn').innerText = "RETRY CONNECTION";
+                console.error(err);
+                alert("Authorization Denied.");
+                const btn = document.getElementById('connect-wallet-btn');
+                btn.innerText = "RETRY CONNECTION";
+                btn.disabled = false;
             }
         } else {
-            alert("Please open in MetaMask/Trust Wallet browser.");
+            alert("Please install MetaMask or Trust Wallet.");
         }
     }
     </script>
