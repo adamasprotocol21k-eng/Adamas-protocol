@@ -1,9 +1,9 @@
 /**
- * ADAMAS PROTOCOL - DASHBOARD CORE (V5 - AIRDROP ELIGIBILITY EDITION)
- * Logic: Mining + Distribution + Leaderboard + Elite Tier Scoring
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V6 - FULL SYNC EDITION)
+ * Fixes: Multiplier Sync, L2 Tracking, and Wallet Connection
  */
 
-// 1. FIREBASE CONFIGURATION
+// 1. FIREBASE INITIALIZE
 const firebaseConfig = {
   apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
   authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -23,10 +23,17 @@ let balance = 0;
 let miningActive = false;
 let currentStreak = 0;
 let myReferrer = "DIRECT";
-let l1Count = 0; // Tracking for Tier Logic
+let l1Count = 0;
+let currentMultiplier = 1.0; // Default Multiplier
 
 // 2. DASHBOARD INITIALIZE
 window.onload = () => {
+    // Session Security
+    if(userWallet === "0xADAMAS_GUEST_USER") {
+        window.location.href = "index.html";
+        return;
+    }
+
     const addressEl = document.getElementById('user-address');
     if (addressEl) {
         addressEl.innerText = userWallet.slice(0, 6) + "..." + userWallet.slice(-4);
@@ -36,18 +43,18 @@ window.onload = () => {
     const refInput = document.getElementById('ref-link-input');
     if (refInput) refInput.value = `${baseUrl}?ref=${userWallet}`;
 
-    // DATA SYNC
+    // DATA SYNC (BALANCE, STREAK, MULTIPLIER)
     database.ref('users/' + userWallet).on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
             balance = data.balance || 0;
             currentStreak = data.streak || 0;
             myReferrer = data.referredBy || "DIRECT";
+            currentMultiplier = data.currentMultiplier || 1.0; // Get boost from Missions
             
             updateDisplay();
             calculateTrustScore(data);
             loadNetworkStats();
-            // 🔥 Calculate Tier every time data changes
             calculateEliteTier(balance, currentStreak, l1Count);
         }
     });
@@ -80,30 +87,16 @@ function calculateTrustScore(data) {
     }
 }
 
-// 🏆 ELITE TIER LOGIC (Airdrop Readiness)
+// 🏆 ELITE TIER LOGIC
 function calculateEliteTier(bal, streak, refs) {
     let tier = "BRONZE";
-    let color = "#cd7f32"; // Bronze color
+    let color = "#cd7f32"; 
     let progress = 25;
 
-    // Logic: Points + Streak + Refs
-    if (bal >= 50 || refs >= 3 || streak >= 3) {
-        tier = "SILVER";
-        color = "#c0c0c0";
-        progress = 50;
-    }
-    if (bal >= 200 && refs >= 7 && streak >= 7) {
-        tier = "GOLD";
-        color = "#ffd700";
-        progress = 75;
-    }
-    if (bal >= 1000 && refs >= 15 && streak >= 14) {
-        tier = "DIAMOND";
-        color = "#00f2ff";
-        progress = 100;
-    }
+    if (bal >= 50 || refs >= 3 || streak >= 3) { tier = "SILVER"; color = "#c0c0c0"; progress = 50; }
+    if (bal >= 200 && refs >= 7 && streak >= 7) { tier = "GOLD"; color = "#ffd700"; progress = 75; }
+    if (bal >= 1000 && refs >= 15 && streak >= 14) { tier = "DIAMOND"; color = "#00f2ff"; progress = 100; }
 
-    // UI Updates
     const tierEl = document.getElementById('elite-tier-name');
     const tierBar = document.getElementById('tier-progress-fill');
     
@@ -114,49 +107,29 @@ function calculateEliteTier(bal, streak, refs) {
     if (tierBar) {
         tierBar.style.width = progress + "%";
         tierBar.style.backgroundColor = color;
-        tierBar.style.boxShadow = `0 0 10px ${color}`;
     }
 }
 
-// 🔥 ADVANCED LEADERBOARD ENGINE
-function initLeaderboard() {
-    database.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
-        const listContainer = document.getElementById('leaderboard-list');
-        if (!listContainer) return;
-
-        let players = [];
-        snapshot.forEach((child) => {
-            players.push({
-                address: child.key,
-                bal: child.val().balance || 0
-            });
-        });
-
-        players.sort((a, b) => b.bal - a.bal);
-        listContainer.innerHTML = ""; 
-
-        players.forEach((player, i) => {
-            let badge = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `#${i+1}`));
-            let isMe = player.address === userWallet ? "style='background: rgba(0,242,255,0.1); border-left: 2px solid var(--cyan);'" : "";
-            
-            listContainer.innerHTML += `
-                <div class="leaderboard-row" ${isMe} style="display:flex; justify-content:space-between; padding:10px; margin-bottom:5px; border-radius:5px; font-size:13px; align-items:center;">
-                    <span style="font-weight:bold;">${badge} <span style="font-family:monospace; margin-left:8px;">${player.address.slice(0,6)}...${player.address.slice(-4)}</span></span>
-                    <span style="color:var(--cyan); font-weight:700;">${player.bal.toFixed(3)} ABP</span>
-                </div>
-            `;
-        });
-    });
-}
-
-// NETWORK STATS
+// 🔥 NETWORK STATS (L1 & L2)
 function loadNetworkStats() {
+    // Level 1
     database.ref('users/' + userWallet + '/myReferrals').once('value', (snapshot) => {
         const l1Data = snapshot.val();
         l1Count = l1Data ? Object.keys(l1Data).length : 0;
         document.getElementById('ref-count').innerText = l1Count;
-        // Trigger tier update after getting ref count
-        calculateEliteTier(balance, currentStreak, l1Count);
+
+        // Level 2 (Simple loop to count)
+        let l2Total = 0;
+        if(l1Data) {
+            Object.keys(l1Data).forEach(refKey => {
+                database.ref('users/' + refKey + '/myReferrals').once('value', (l2Snap) => {
+                    if(l2Snap.exists()) {
+                        l2Total += Object.keys(l2Snap.val()).length;
+                        document.getElementById('l2-count').innerText = l2Total;
+                    }
+                });
+            });
+        }
     });
 
     database.ref('users/' + userWallet + '/networkEarnings').on('value', (snap) => {
@@ -166,42 +139,32 @@ function loadNetworkStats() {
     });
 }
 
-// DAILY SYNC
-window.claimDailyBonus = function() {
-    const today = new Date().toDateString();
-    database.ref('users/' + userWallet).once('value').then((snapshot) => {
-        const data = snapshot.val() || {};
-        if (data.lastClaim === today) return alert("Already Synced Today!");
-
-        let newStreak = (data.streak || 0) + 1;
-        balance += (1 + (newStreak * 0.2));
-        database.ref('users/' + userWallet).update({ balance: balance, streak: newStreak, lastClaim: today });
-        alert(`Protocol Synced! Streak: ${newStreak} Days.`);
-    });
-};
-
-// MINING & DISTRIBUTION
+// MINING ENGINE (REFINED WITH MULTIPLIER)
 window.toggleMining = function() {
     miningActive = !miningActive;
     const btn = document.querySelector('.btn-mine-start');
-    if(btn) btn.innerText = miningActive ? "MINING IN PROGRESS..." : "INITIALIZE MINING";
+    if(btn) {
+        btn.innerText = miningActive ? "MINING AT " + currentMultiplier + "x" : "INITIALIZE MINING";
+        btn.style.boxShadow = miningActive ? "0 0 20px var(--cyan)" : "none";
+    }
     if (miningActive) mineLoop();
 };
 
 function mineLoop() {
     if (!miningActive) return;
-    let mineStep = 0.000125;
+    
+    // Base speed * Active Multiplier (from Chicken Game)
+    let mineStep = 0.000125 * currentMultiplier;
     balance += mineStep;
     updateDisplay();
 
-    if (Math.floor(balance * 10000) % 10 === 0) {
+    // Auto-save every few steps
+    if (Math.floor(balance * 10000) % 5 === 0) {
         database.ref('users/' + userWallet).update({ balance: balance });
+        
+        // Referral Commissions
         if (myReferrer !== "DIRECT") {
-            payUpline(myReferrer, mineStep * 0.10);
-            database.ref('users/' + myReferrer + '/referredBy').once('value', (snap) => {
-                const l2 = snap.val();
-                if (l2 && l2 !== "DIRECT") payUpline(l2, mineStep * 0.05);
-            });
+            payUpline(myReferrer, mineStep * 0.10); // 10% L1
         }
     }
     setTimeout(mineLoop, 3000);
@@ -216,3 +179,38 @@ function payUpline(uplineAddr, amount) {
         return user;
     });
 }
+
+// LEADERBOARD
+function initLeaderboard() {
+    database.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
+        const listContainer = document.getElementById('leaderboard-list');
+        if (!listContainer) return;
+        let players = [];
+        snapshot.forEach((child) => {
+            players.push({ address: child.key, bal: child.val().balance || 0 });
+        });
+        players.sort((a, b) => b.bal - a.bal);
+        listContainer.innerHTML = ""; 
+        players.forEach((player, i) => {
+            let badge = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `#${i+1}`));
+            let isMe = player.address === userWallet ? "style='background: rgba(0,242,255,0.1); border-left: 2px solid var(--cyan);'" : "";
+            listContainer.innerHTML += `<div class="leaderboard-row" ${isMe} style="display:flex; justify-content:space-between; padding:8px; margin-bottom:5px; border-radius:5px; font-size:12px;"><span>${badge} ${player.address.slice(0,6)}...</span><span style="color:var(--cyan);">${player.bal.toFixed(3)}</span></div>`;
+        });
+    });
+}
+
+window.claimDailyBonus = function() {
+    const today = new Date().toDateString();
+    database.ref('users/' + userWallet).once('value').then((snapshot) => {
+        const data = snapshot.val() || {};
+        if (data.lastClaim === today) return alert("Protocol already synced for today!");
+        let newStreak = (data.streak || 0) + 1;
+        let reward = 1 + (newStreak * 0.1);
+        database.ref('users/' + userWallet).update({ 
+            balance: (data.balance || 0) + reward, 
+            streak: newStreak, 
+            lastClaim: today 
+        });
+        alert(`Success! +${reward.toFixed(2)} ABP. Streak: ${newStreak}`);
+    });
+};
