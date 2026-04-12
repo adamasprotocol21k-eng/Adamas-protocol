@@ -3,71 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS PROTOCOL | Premium Access</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <title>ADAMAS PROTOCOL | Elite Access</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Force style for enabled button */
-        .btn-active-now {
-            background: linear-gradient(90deg, #00f2ff, #0066ff) !important;
-            color: white !important;
-            opacity: 1 !important;
-            cursor: pointer !important;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+        /* Specific Landing Page Overlays */
+        #phase-intro, #phase-social { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .active-phase { display: flex !important; animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        .btn-entry { 
+            background: transparent; color: var(--cyan); border: 1px solid var(--cyan); 
+            padding: 15px 40px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+            transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
         }
+        .btn-entry:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <section id="phase-intro" class="screen active">
-            <div class="tech-grid-overlay"></div>
-            <div class="diamond-glow-core"></div>
-            <div class="content-wrapper">
-                <div class="logo-area">
-                    <h1 id="typing-logo" class="premium-glitch-text"></h1>
-                </div>
-                <div id="entry-controls" class="ui-reveal">
-                    <p class="future-tagline"><span>ENTER</span> YOUR FUTURE</p>
-                    <button class="btn-pro-entry" onclick="startJourney()">
-                        <span class="btn-text">ENTER ADAMAS</span>
-                        <div class="btn-glimmer"></div>
-                    </button>
+        <section id="phase-intro" class="active-phase">
+            <div style="text-align: center;">
+                <h1 id="typing-logo" class="glow-text" style="font-family: 'Orbitron'; font-size: 2rem; letter-spacing: 5px;"></h1>
+                <p style="font-size: 10px; color: #555; margin-top: 10px; letter-spacing: 3px;">DECENTRALIZED REWARD SYSTEM</p>
+                <div style="margin-top: 40px;">
+                    <button class="btn-entry" onclick="startJourney()">ENTER SYSTEM</button>
                 </div>
             </div>
         </section>
 
-        <section id="phase-social" class="screen">
-            <div class="intro-card-premium">
-                <h2 class="title-modern">ADAMAS <span>PROTOCOL</span></h2>
-                <div class="protocol-info">
-                    <p>Accessing the 21,000 Scarcity Standard. Please validate your nodes or connect directly.</p>
-                </div>
+        <section id="phase-social">
+            <div class="premium-card" style="width: 90%; max-width: 400px; text-align: center;">
+                <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 20px;">NODE <span style="color: var(--cyan);">VALIDATION</span></h2>
                 
-                <div class="node-validation-list">
-                    <div class="node-item" onclick="verifyTask(this, 'https://t.me/ADSProtocol')" data-status="pending">
-                        <div class="node-info">
-                            <span class="node-label">NODE 01</span>
-                            <span class="node-name">TELEGRAM NETWORK</span>
+                <div class="task-list" style="margin-bottom: 25px;">
+                    <div class="task-card" onclick="verifyTask(this, 'https://t.me/ADSProtocol')">
+                        <div style="text-align: left;">
+                            <span style="font-size: 10px; color: var(--cyan);">NODE 01</span>
+                            <p style="font-weight: bold; font-size: 13px;">TELEGRAM COMMUNITY</p>
                         </div>
-                        <div class="node-status">PENDING</div>
+                        <span class="status-icon" style="color: #444;">PENDING</span>
                     </div>
 
-                    <div class="node-item" onclick="verifyTask(this, 'https://x.com/AdamasADS')" data-status="pending">
-                        <div class="node-info">
-                            <span class="node-label">NODE 02</span>
-                            <span class="node-name">X PROTOCOL</span>
+                    <div class="task-card" onclick="verifyTask(this, 'https://x.com/AdamasADS')">
+                        <div style="text-align: left;">
+                            <span style="font-size: 10px; color: var(--cyan);">NODE 02</span>
+                            <p style="font-weight: bold; font-size: 13px;">X PROTOCOL</p>
                         </div>
-                        <div class="node-status">PENDING</div>
+                        <span class="status-icon" style="color: #444;">PENDING</span>
                     </div>
                 </div>
 
-                <div class="wallet-trigger-area">
-                    <button id="connect-wallet-btn" class="btn-lock-status btn-active-now" onclick="connectWeb3()">
-                        CONNECT WALLET
-                    </button>
-                    <p id="wallet-instruction" class="instruction-faded">Wallet connection prioritized</p>
-                </div>
+                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()">CONNECT WALLET</button>
+                <p style="font-size: 10px; color: #444; margin-top: 15px;">Secure Web3 connection required for data sync.</p>
             </div>
         </section>
     </div>
@@ -76,8 +64,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-    // --- 1. FIREBASE & ADMIN CONFIG ---
-    const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e"; // Aapka actual wallet
+    const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
@@ -89,55 +76,41 @@
       appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
       measurementId: "G-FKP19J67TT"
     };
-    firebase.initializeApp(firebaseConfig);
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    const logoText = "ADAMAS PROTOCOL | Real Diamond";
-    const typingEl = document.getElementById("typing-logo");
+    // Typing Effect
+    const logoText = "ADAMAS PROTOCOL";
     let charIndex = 0;
-
     function typeEffect() {
         if (charIndex < logoText.length) {
-            typingEl.innerHTML += logoText.charAt(charIndex);
+            document.getElementById("typing-logo").innerHTML += logoText.charAt(charIndex);
             charIndex++;
-            setTimeout(typeEffect, 50);
+            setTimeout(typeEffect, 80);
         }
     }
 
     window.onload = () => {
         typeEffect();
-        if (sessionStorage.getItem('adamas_step') === 'social_phase') showSocialPhase();
-        
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
         if (refCode) localStorage.setItem('adamas_referrer', refCode);
-
-        // Instant Unlock Logic
-        const btn = document.getElementById('connect-wallet-btn');
-        btn.disabled = false;
-        btn.classList.add('btn-active-now');
     };
 
     function startJourney() {
-        sessionStorage.setItem('adamas_step', 'social_phase');
-        showSocialPhase();
-    }
-
-    function showSocialPhase() {
-        document.getElementById('phase-intro').classList.remove('active');
-        document.getElementById('phase-social').classList.add('active');
+        document.getElementById('phase-intro').classList.remove('active-phase');
+        document.getElementById('phase-social').classList.add('active-phase');
     }
 
     function verifyTask(element, link) {
         window.open(link, '_blank');
-        element.querySelector('.node-status').innerText = 'VERIFIED';
-        element.setAttribute('data-status', 'completed');
-        element.style.borderColor = '#00f2ff';
+        element.style.borderColor = "var(--cyan)";
+        element.querySelector('.status-icon').innerText = "VERIFIED ✅";
+        element.querySelector('.status-icon').style.color = "var(--cyan)";
     }
 
-    // --- 4. SMART WEB3 CONNECTION (MOBILE FIX) ---
     async function connectWeb3() {
-        // Deep Link for Mobile Chrome users
         if (!window.ethereum && /Android|iPhone|iPad/i.test(navigator.userAgent)) {
             const dappUrl = window.location.href.split('://')[1];
             window.location.href = `https://metamask.app.link/dapp/${dappUrl}`;
@@ -147,9 +120,8 @@
         if (typeof window.ethereum !== 'undefined') {
             try {
                 const btn = document.getElementById('connect-wallet-btn');
-                btn.innerText = "CONNECTING...";
+                btn.innerText = "AUTHORIZING...";
                 
-                await checkAndSwitchNetwork();
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0];
                 localStorage.setItem('adamas_user', wallet);
@@ -165,7 +137,6 @@
                             referredBy: referrer,
                             streak: 0,
                             lastClaim: "NEVER",
-                            trustScore: isAdmin ? 100 : 10,
                             role: isAdmin ? "FOUNDER" : "USER",
                             joinedAt: new Date().toISOString(),
                             currentMultiplier: isAdmin ? 5.0 : 1.0
@@ -174,41 +145,15 @@
                             database.ref('users/' + referrer + '/myReferrals/' + wallet).set(true);
                         }
                     }
-                    
-                    btn.innerText = "AUTHORIZED ✅";
-                    setTimeout(() => {
-                        window.location.href = "dashboard.html";
-                    }, 800);
+                    btn.innerText = "ACCESS GRANTED ✅";
+                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
                 });
             } catch (err) {
-                alert("Connection Error: " + err.message);
+                alert("Auth Failed: " + err.message);
                 document.getElementById('connect-wallet-btn').innerText = "RETRY CONNECTION";
             }
         } else {
-            alert("Please open this site inside MetaMask or Trust Wallet browser.");
-        }
-    }
-
-    async function checkAndSwitchNetwork() {
-        const amoyChainId = '0x13882';
-        try {
-            await window.ethereum.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: amoyChainId }],
-            });
-        } catch (err) {
-            if (err.code === 4902) {
-                await window.ethereum.request({
-                    method: 'wallet_addEthereumChain',
-                    params: [{
-                        chainId: amoyChainId,
-                        chainName: 'Polygon Amoy Testnet',
-                        nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-                        rpcUrls: ['https://rpc-amoy.polygon.technology/'],
-                        blockExplorerUrls: ['https://amoy.polygonscan.com/']
-                    }]
-                });
-            }
+            alert("Please open in MetaMask/Trust Wallet browser.");
         }
     }
     </script>
