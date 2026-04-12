@@ -1,6 +1,6 @@
 /**
- * ADAMAS PROTOCOL - DASHBOARD CORE (V4 - GLOBAL LEADERBOARD EDITION)
- * Master Logic: User Mining + L1/L2 Distribution + Global Rankings
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V5 - AIRDROP ELIGIBILITY EDITION)
+ * Logic: Mining + Distribution + Leaderboard + Elite Tier Scoring
  */
 
 // 1. FIREBASE CONFIGURATION
@@ -23,6 +23,7 @@ let balance = 0;
 let miningActive = false;
 let currentStreak = 0;
 let myReferrer = "DIRECT";
+let l1Count = 0; // Tracking for Tier Logic
 
 // 2. DASHBOARD INITIALIZE
 window.onload = () => {
@@ -46,10 +47,11 @@ window.onload = () => {
             updateDisplay();
             calculateTrustScore(data);
             loadNetworkStats();
+            // 🔥 Calculate Tier every time data changes
+            calculateEliteTier(balance, currentStreak, l1Count);
         }
     });
 
-    // 🔥 NEW: Start Leaderboard Engine
     initLeaderboard();
 };
 
@@ -78,11 +80,46 @@ function calculateTrustScore(data) {
     }
 }
 
+// 🏆 ELITE TIER LOGIC (Airdrop Readiness)
+function calculateEliteTier(bal, streak, refs) {
+    let tier = "BRONZE";
+    let color = "#cd7f32"; // Bronze color
+    let progress = 25;
+
+    // Logic: Points + Streak + Refs
+    if (bal >= 50 || refs >= 3 || streak >= 3) {
+        tier = "SILVER";
+        color = "#c0c0c0";
+        progress = 50;
+    }
+    if (bal >= 200 && refs >= 7 && streak >= 7) {
+        tier = "GOLD";
+        color = "#ffd700";
+        progress = 75;
+    }
+    if (bal >= 1000 && refs >= 15 && streak >= 14) {
+        tier = "DIAMOND";
+        color = "#00f2ff";
+        progress = 100;
+    }
+
+    // UI Updates
+    const tierEl = document.getElementById('elite-tier-name');
+    const tierBar = document.getElementById('tier-progress-fill');
+    
+    if (tierEl) {
+        tierEl.innerText = tier + " NODE";
+        tierEl.style.color = color;
+    }
+    if (tierBar) {
+        tierBar.style.width = progress + "%";
+        tierBar.style.backgroundColor = color;
+        tierBar.style.boxShadow = `0 0 10px ${color}`;
+    }
+}
+
 // 🔥 ADVANCED LEADERBOARD ENGINE
 function initLeaderboard() {
-    const leaderboardEl = document.getElementById('chain-list'); // Existing container usage or new
-    
-    // Fetch Top 10 by Balance
     database.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
         const listContainer = document.getElementById('leaderboard-list');
         if (!listContainer) return;
@@ -95,10 +132,8 @@ function initLeaderboard() {
             });
         });
 
-        // Sort descending (Top at #1)
         players.sort((a, b) => b.bal - a.bal);
-
-        listContainer.innerHTML = ""; // Clear loader
+        listContainer.innerHTML = ""; 
 
         players.forEach((player, i) => {
             let badge = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `#${i+1}`));
@@ -118,7 +153,10 @@ function initLeaderboard() {
 function loadNetworkStats() {
     database.ref('users/' + userWallet + '/myReferrals').once('value', (snapshot) => {
         const l1Data = snapshot.val();
-        document.getElementById('ref-count').innerText = l1Data ? Object.keys(l1Data).length : 0;
+        l1Count = l1Data ? Object.keys(l1Data).length : 0;
+        document.getElementById('ref-count').innerText = l1Count;
+        // Trigger tier update after getting ref count
+        calculateEliteTier(balance, currentStreak, l1Count);
     });
 
     database.ref('users/' + userWallet + '/networkEarnings').on('value', (snap) => {
@@ -146,7 +184,7 @@ window.claimDailyBonus = function() {
 window.toggleMining = function() {
     miningActive = !miningActive;
     const btn = document.querySelector('.btn-mine-start');
-    btn.innerText = miningActive ? "MINING IN PROGRESS..." : "INITIALIZE MINING";
+    if(btn) btn.innerText = miningActive ? "MINING IN PROGRESS..." : "INITIALIZE MINING";
     if (miningActive) mineLoop();
 };
 
