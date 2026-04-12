@@ -5,60 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ADAMAS | Terminal</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Essential Fixes for Layout */
-        .avatar-icon { 
-            width: 42px; height: 42px; border-radius: 10px; 
-            border: 1px solid rgba(0,242,255,0.3); overflow: hidden;
-            background: #000; display: flex; align-items: center; justify-content: center;
-        }
-        .brand-logo { width: 100%; height: 100%; object-fit: cover; }
-        .wallet-pill { font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); }
-        
-        /* Bottom Nav fix to ensure it stays at bottom */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            display: flex; justify-content: space-around; padding: 10px 0;
-            background: rgba(0,0,0,0.9); border-top: 1px solid #222; z-index: 1000;
-        }
-        .nav-item { text-decoration: none; color: #555; text-align: center; font-size: 9px; }
-        .nav-item.active { color: var(--cyan); }
-    </style>
 </head>
 <body>
 
-    <div class="dashboard-wrapper" style="padding-bottom: 80px;">
-        <header class="main-header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
-            <div class="user-avatar-gate" style="display: flex; align-items: center; gap: 10px;">
+    <div class="dashboard-wrapper">
+        <header class="main-header">
+            <div class="user-avatar-gate">
                 <div class="avatar-icon" onclick="window.location.href='profile.html'">
-                    <img src="6532.jpg" alt="Logo" class="brand-logo" onerror="this.src='https://via.placeholder.com/40/00f2ff/000000?text=AD'">
+                    <span class="avatar-placeholder">A</span>
                 </div>
                 <div class="eligibility-info">
-                    <div class="trust-meter-mini" style="width: 50px; height: 3px; background: #222; border-radius: 5px; margin-bottom: 4px;">
-                        <div id="trust-fill" class="progress-fill" style="width: 100%;"></div>
+                    <div class="trust-meter-mini" style="width: 60px; height: 4px; background: #222; border-radius: 5px; margin-bottom: 4px; overflow: hidden;">
+                        <div id="trust-fill" class="progress-fill" style="width: 15%;"></div>
                     </div>
-                    <span id="eligibility-status" style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron';">PROTOCOL SECURED</span>
+                    <span id="eligibility-status" style="font-size: 10px; font-weight: bold; color: var(--cyan);">PROTOCOL SECURED ✅</span>
                 </div>
             </div>
 
-            <div class="header-right" style="text-align: right;">
-                <span style="font-size: 8px; color: #444; display: block; font-family: 'Orbitron';">NETWORK: POLYGON</span>
-                <div id="user-address" class="wallet-pill">0x...</div>
+            <div class="header-right">
+                <div class="wallet-container" style="text-align: right;">
+                    <span style="font-size: 10px; color: #555; display: block; margin-bottom: 2px;">NETWORK: POLYGON</span>
+                    <div id="user-address" class="wallet-pill">0x...</div>
+                </div>
             </div>
         </header>
 
-        <main class="engine-room" style="padding: 0 15px;">
+        <main class="engine-room" style="padding: 15px;">
             <section class="premium-card" style="text-align: center; margin-bottom: 20px;">
-                <p style="font-size: 10px; letter-spacing: 2px; color: #666; font-family: 'Orbitron';">TOTAL MINED ASSETS</p>
-                <h1 id="total-balance" class="balance-count" style="font-family: 'Orbitron'; font-size: 2.2rem; margin: 10px 0;">0.0000</h1>
+                <p style="font-size: 10px; letter-spacing: 2px; color: #666;">TOTAL MINED POINTS</p>
+                <h1 id="total-balance" class="balance-count" style="font-family: 'Orbitron'; font-size: 2.5rem; margin: 10px 0;">0.0000</h1>
                 <span style="color: var(--cyan); font-weight: bold; letter-spacing: 2px;">ABP</span>
                 
                 <div class="scarcity-meter" style="margin-top: 15px;">
                     <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 5px;">
-                        <span>GENESIS TARGET</span>
+                        <span>GENESIS TARGET: 21,000 $ADS</span>
                         <span id="scarcity-percent">0%</span>
                     </div>
-                    <div class="progress-bar" style="height: 4px; background: #111;">
+                    <div class="progress-bar">
                         <div id="scarcity-fill" class="progress-fill" style="width: 0%;"></div>
                     </div>
                 </div>
@@ -66,47 +49,70 @@
 
             <section class="premium-card" style="margin-bottom: 20px; border-left: 3px solid var(--cyan);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <p style="font-size: 10px; font-weight: bold; color: #555;">AIRDROP READINESS</p>
-                    <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 10px; color: var(--cyan);">BRONZE NODE</span>
+                    <p style="font-size: 11px; font-weight: bold; color: #555;">AIRDROP READINESS</p>
+                    <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 11px; color: var(--cyan);">BRONZE NODE</span>
                 </div>
-                <div class="progress-bar" style="height: 5px;">
+                <div class="progress-bar">
                     <div id="tier-progress-fill" class="progress-fill" style="width: 10%;"></div>
                 </div>
             </section>
 
             <section class="action-grid">
-                <button class="btn-primary" onclick="toggleMining()" id="mining-btn" style="height: 50px;">INITIALIZE MINING</button>
+                <button class="btn-primary" onclick="toggleMining()" id="mining-btn">INITIALIZE MINING</button>
                 
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                     <div class="premium-card" style="flex: 1; padding: 12px; text-align: center;">
-                        <span style="font-size: 9px; color: #555;">ACTIVE NODES</span>
-                        <span id="ref-count" style="display: block; font-size: 1.2rem; font-weight: bold; color: #fff;">0</span>
+                        <span style="font-size: 10px; color: #555;">ACTIVE NODES</span>
+                        <span id="ref-count" style="display: block; font-size: 1.2rem; font-weight: bold;">0</span>
                     </div>
                     <div class="premium-card" style="flex: 1; padding: 12px; text-align: center;">
-                        <span style="font-size: 9px; color: #555;">STREAK</span>
-                        <span id="streak-info-dash" style="display: block; font-size: 1.2rem; font-weight: bold; color: #fff;">0 DAYS</span>
+                        <span style="font-size: 10px; color: #555;">STREAK</span>
+                        <span id="streak-info-dash" style="display: block; font-size: 1.2rem; font-weight: bold;">0</span>
                     </div>
                 </div>
             </section>
 
             <section style="margin-top: 20px;">
+                <div class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div>
+                        <h3 style="font-size: 14px; font-family: 'Orbitron';">DAILY SYNC</h3>
+                        <p id="streak-text" style="font-size: 11px; color: #666;">Sync daily for multipliers</p>
+                    </div>
+                    <button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 12px;" onclick="claimDailyBonus()">CLAIM</button>
+                </div>
+
                 <div class="premium-card">
-                    <p style="font-size: 9px; color: var(--cyan); margin-bottom: 8px; font-family: 'Orbitron';">NODE INVITE LINK</p>
-                    <div style="display: flex; gap: 8px;">
+                    <p style="font-size: 10px; color: var(--cyan); margin-bottom: 10px; font-family: 'Orbitron';">NETWORK INVITE LINK</p>
+                    <div style="display: flex; gap: 10px;">
                         <input type="text" id="ref-link-input" readonly value="LOADING..." 
-                               style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #222; color: #fff; padding: 10px; border-radius: 8px; font-size: 10px; outline: none;">
-                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 12px; border-radius: 8px; font-weight: bold; font-size: 10px;">COPY</button>
+                               style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 12px; border-radius: 10px; font-size: 11px; outline: none;">
+                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 10px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px;">COPY</button>
                     </div>
                 </div>
             </section>
         </main>
 
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item active">🏠<br>HOME</a>
-            <a href="vault.html" class="nav-item">🔒<br>VAULT</a>
-            <a href="missions.html" class="nav-item">⚡<br>TASKS</a>
-            <a href="referral.html" class="nav-item">👥<br>NETWORK</a>
-            <a href="profile.html" class="nav-item">🏆<br>RANK</a>
+            <a href="dashboard.html" class="nav-item active">
+                <span class="icon">🏠</span>
+                <span>HOME</span>
+            </a>
+            <a href="vault.html" class="nav-item">
+                <span class="icon">🔒</span>
+                <span>VAULT</span>
+            </a>
+            <a href="missions.html" class="nav-item">
+                <span class="icon">⚡</span>
+                <span>TASKS</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <span class="icon">👥</span>
+                <span>NETWORK</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon">🏆</span>
+                <span>RANK</span>
+            </a>
         </nav>
     </div>
 
