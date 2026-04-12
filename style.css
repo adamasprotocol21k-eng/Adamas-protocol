@@ -1,4 +1,4 @@
-/* ADAMAS PROTOCOL - MASTER PREMIUM CSS (V9.0) */
+/* ADAMAS PROTOCOL - MASTER PREMIUM CSS (V10.0 - GENESIS EDITION) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
@@ -10,6 +10,9 @@
     --neon-red: #ff4444;
     --neon-gold: #ffcc00;
     --glass-border: rgba(255, 255, 255, 0.1);
+    /* Genesis Special Colors */
+    --genesis-glow: rgba(0, 242, 255, 0.5);
+    --vault-lock: #333;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -21,12 +24,56 @@ body {
     font-family: 'Rajdhani', sans-serif; 
     overflow-x: hidden; 
     min-height: 100vh;
-    padding-bottom: 100px; /* Essential for Nav Space */
+    padding-bottom: 110px; 
 }
 
-/* --- PREMIUM UTILITIES --- */
+/* --- PREMIUM UTILITIES & ANIMATIONS --- */
 .glow-text { text-shadow: 0 0 10px var(--cyan); }
-.premium-card { background: var(--card-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(15px); border-radius: 20px; padding: 20px; }
+.premium-card { background: var(--card-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(15px); border-radius: 20px; padding: 20px; position: relative; overflow: hidden; }
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 5px var(--genesis-glow); }
+    50% { box-shadow: 0 0 20px var(--cyan); }
+    100% { box-shadow: 0 0 5px var(--genesis-glow); }
+}
+
+@keyframes vault-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* --- THE VAULT (GENESIS) STYLES --- */
+.vault-container {
+    border: 2px solid var(--glass-border);
+    background: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(20,20,20,1) 100%);
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 25px;
+    animation: pulse-glow 3s infinite;
+}
+
+.vault-lock-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.scarcity-tag {
+    background: rgba(255, 68, 68, 0.1);
+    color: var(--neon-red);
+    border: 1px solid var(--neon-red);
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-family: 'Orbitron';
+    letter-spacing: 1px;
+}
+
+/* --- TIER SPECIFIC GLOWS --- */
+.tier-silver { border-left: 4px solid #c0c0c0; box-shadow: -5px 0 15px rgba(192, 192, 192, 0.2); }
+.tier-gold { border-left: 4px solid var(--neon-gold); box-shadow: -5px 0 15px rgba(255, 204, 0, 0.2); }
+.tier-diamond { border-left: 4px solid var(--cyan); box-shadow: -5px 0 20px rgba(0, 242, 255, 0.3); }
 
 /* --- MASTER HEADER --- */
 .main-header {
@@ -49,46 +96,56 @@ body {
     border: 1px solid var(--glass-border); font-family: 'Orbitron';
 }
 
-/* --- NEW PREMIUM BOTTOM NAV --- */
+/* --- PREMIUM BOTTOM NAV --- */
 .bottom-nav {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     width: 92%; max-width: 450px;
-    background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(25px);
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px);
     display: flex; justify-content: space-around; align-items: center;
     padding: 12px 0; border-radius: 30px;
     border: 1px solid var(--glass-border);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    box-shadow: 0 10px 50px rgba(0,0,0,0.9);
     z-index: 9999;
 }
 
 .nav-item { 
-    text-decoration: none; color: #555; font-size: 9px; 
+    text-decoration: none; color: #666; font-size: 9px; 
     font-weight: bold; font-family: 'Orbitron'; 
     display: flex; flex-direction: column; align-items: center; gap: 4px;
     transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.nav-item span.icon { font-size: 20px; }
+.nav-item span.icon { font-size: 20px; transition: 0.3s; }
+.nav-item.active { color: var(--cyan); }
+.nav-item.active span.icon { transform: translateY(-5px); filter: drop-shadow(0 0 8px var(--cyan)); }
 
-.nav-item.active { color: var(--cyan); transform: translateY(-10px); }
-.nav-item.active span.icon { filter: drop-shadow(0 0 8px var(--cyan)); }
-
-/* --- GAME & TASK ELEMENTS --- */
+/* --- BUTTONS & PROGRESS --- */
 .btn-primary {
-    width: 100%; padding: 18px; background: linear-gradient(90deg, var(--cyan), #0066ff);
+    width: 100%; padding: 18px; 
+    background: linear-gradient(90deg, var(--cyan), #0066ff);
     color: #000; border: none; border-radius: 15px; font-weight: 900;
     font-family: 'Orbitron'; cursor: pointer; transition: 0.3s;
     box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+    text-transform: uppercase; letter-spacing: 1px;
 }
 
-.btn-primary:active { transform: scale(0.96); }
+.btn-primary:active { transform: scale(0.96); opacity: 0.8; }
 
 .task-card {
     background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);
     padding: 15px; border-radius: 15px; margin-bottom: 10px;
     display: flex; justify-content: space-between; align-items: center;
+    transition: 0.3s;
 }
+.task-card:hover { background: rgba(255,255,255,0.05); border-color: var(--cyan); }
 
-/* Progress Bars */
-.progress-bar { height: 6px; background: #111; border-radius: 10px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--cyan); transition: width 0.5s; box-shadow: 0 0 10px var(--cyan); }
+/* Scarcity Progress Bars */
+.progress-bar { height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin: 10px 0; }
+.progress-fill { 
+    height: 100%; background: var(--cyan); 
+    transition: width 0.8s ease-in-out; 
+    box-shadow: 0 0 15px var(--cyan); 
+    background-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    background-size: 200% 100%;
+    animation: vault-shimmer 2s linear infinite;
+}
