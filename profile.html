@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol Eligibility - Adamas</title>
+    <link rel="stylesheet" href="style.css"> <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        .eligibility-card { background: #111; border: 1px solid #333; padding: 20px; border-radius: 15px; margin-top: 20px; }
+        .progress-container { background: #222; height: 10px; border-radius: 5px; margin: 15px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #00f2ff, #0066ff); width: 0%; transition: 2s ease-in-out; }
+        .requirement-list { list-style: none; padding: 0; }
+        .requirement-list li { padding: 10px 0; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 14px; }
+        .status-badge { padding: 4px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        .done { color: #00ff88; }
+        .pending { color: #ffaa00; }
+    </style>
+</head>
+<body style="background: #000; color: #fff; font-family: sans-serif;">
+
+    <div class="container" style="padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 30px;">
+            <button onclick="window.location.href='dashboard.html'" style="background:none; border:none; color:#00f2ff; font-size:24px; cursor:pointer;">←</button>
+            <h2 style="margin: 0;">Protocol Status</h2>
+        </div>
+
+        <div class="eligibility-card" style="text-align: center;">
+            <div id="rank-icon" style="font-size: 50px;">💎</div>
+            <h1 id="rank-title" style="margin: 10px 0; color: #00f2ff;">...</h1>
+            <p id="rank-desc" style="color: #888; font-size: 14px;"></p>
+        </div>
+
+        <div class="eligibility-card">
+            <h3>Eligibility Progress</h3>
+            <div class="progress-container">
+                <div id="eligibility-bar" class="progress-fill"></div>
+            </div>
+            <p id="completion-text" style="font-size: 14px; color: #00f2ff;">Analyzing requirements...</p>
+        </div>
+
+        <div class="eligibility-card">
+            <h3>Tier Requirements</h3>
+            <ul id="requirement-list" class="requirement-list">
+                </ul>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script> <script>
+        // Special logic for this page
+        window.onload = () => {
+            if(userWallet === "0xADAMAS_GUEST_USER") return window.location.href = "index.html";
+            
+            database.ref('users/' + userWallet).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    renderEligibility(data);
+                }
+            });
+        };
+
+        function renderEligibility(data) {
+            const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
+            const bal = data.balance || 0;
+            const streak = data.streak || 0;
+            const refs = l1Count || 0;
+
+            let rank = "BRONZE NODE";
+            let desc = "Welcome to the Protocol. Start mining to unlock higher tiers.";
+            let progress = 0;
+            let listHTML = "";
+
+            if (isAdmin) {
+                rank = "💎 DIAMOND FOUNDER";
+                desc = "Protocol Architect - Genesis Node Access Granted.";
+                progress = 100;
+                listHTML = `
+                    <li><span>Protocol Ownership</span><span class="done">✓ VERIFIED</span></li>
+                    <li><span>Node Governance</span><span class="done">✓ ACTIVE</span></li>
+                    <li><span>Alpha Tester Badge</span><span class="done">✓ EARNED</span></li>
+                `;
+            } else {
+                // Calculation logic for Normal Users (Next Goal: SILVER)
+                const targetPoints = 1000;
+                const targetStreak = 7;
+                const targetRefs = 3;
+
+                progress = ((Math.min(bal, targetPoints)/targetPoints) + (Math.min(streak, targetStreak)/targetStreak) + (Math.min(refs, targetRefs)/targetRefs)) / 3 * 100;
+
+                rank = bal >= 100000 ? "DIAMOND NODE" : (bal >= 10000 ? "GOLD NODE" : (bal >= 1000 ? "SILVER NODE" : "BRONZE NODE"));
+                desc = `You are currently in ${rank} tier. Level up to increase mining boost.`;
+
+                listHTML = `
+                    <li><span>Min. 1,000 ABP Points</span><span class="${bal >= 1000 ? 'done':'pending'}">${bal >= 1000 ? '✓ Done' : (1000-bal).toFixed(0) + ' Left'}</span></li>
+                    <li><span>Min. 7 Day Streak</span><span class="${streak >= 7 ? 'done':'pending'}">${streak >= 7 ? '✓ Done' : (7-streak) + ' Days Left'}</span></li>
+                    <li><span>Min. 3 Referrals</span><span class="${refs >= 3 ? 'done':'pending'}">${refs >= 3 ? '✓ Done' : (3-refs) + ' More Needed'}</span></li>
+                `;
+            }
+
+            document.getElementById('rank-title').innerText = rank;
+            document.getElementById('rank-desc').innerText = desc;
+            document.getElementById('eligibility-bar').style.width = progress + "%";
+            document.getElementById('completion-text').innerText = isAdmin ? "Founder Status Fully Active" : progress.toFixed(0) + "% Towards Next Tier";
+            document.getElementById('requirement-list').innerHTML = listHTML;
+        }
+    </script>
+</body>
+</html>
+
