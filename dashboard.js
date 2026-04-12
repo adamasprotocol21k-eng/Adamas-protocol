@@ -1,5 +1,6 @@
 /**
- * ADAMAS PROTOCOL - DASHBOARD CORE (V11.6 - CRASH RECOVERY)
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V11.8 - FINAL SYNC)
+ * Status: Fixed Rank, Referrals, Streak & Balance
  */
 
 const firebaseConfig = {
@@ -18,7 +19,7 @@ const database = firebase.database();
 
 const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e"; 
 const GENESIS_SUPPLY = 21000; 
-let userWallet = localStorage.getItem('adamas_user');
+let userWallet = localStorage.getItem('adamas_user') || "0xADAMAS_GUEST_USER";
 let balance = 0;
 let miningActive = false;
 let currentStreak = 0;
@@ -26,27 +27,19 @@ let l1Count = 0;
 let currentMultiplier = 1.0;
 
 window.onload = () => {
-    if(!userWallet) { 
-        window.location.href = "index.html"; 
-        return; 
+    if(userWallet === "0xADAMAS_GUEST_USER") {
+        window.location.href = "index.html";
+        return;
     }
 
-    // 1. Wallet Display Fix
     const addressEl = document.getElementById('user-address');
-    if (addressEl) {
-        addressEl.innerText = userWallet.slice(0, 6) + "..." + userWallet.slice(-4);
-    }
+    if (addressEl) addressEl.innerText = userWallet.slice(0, 6) + "..." + userWallet.slice(-4);
 
-    // 2. Referral Link Generation
     const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html');
     const refInput = document.getElementById('ref-link-input');
     if (refInput) refInput.value = `${baseUrl}?ref=${userWallet}`;
 
-    // 3. START REAL-TIME SYNC
-    startDataSync();
-};
-
-function startDataSync() {
+    // REAL-TIME SYNC
     database.ref('users/' + userWallet).on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -54,46 +47,33 @@ function startDataSync() {
             currentStreak = data.streak || 0;
             currentMultiplier = data.currentMultiplier || 1.0;
             
-            // UI Updates
             updateDisplay();
             updateScarcityMeter(balance);
-            loadNetworkStats(data);
-            
-            // Trust Score
-            const fill = document.getElementById('trust-fill');
-            if(fill) fill.style.width = "100%"; 
+            loadNetworkStats(); 
+            // 🔥 Rank logic call
+            calculateEliteTier(balance, currentStreak, l1Count);
         }
-    }, (error) => {
-        console.error("Firebase Error:", error);
     });
-}
-
-function updateDisplay() {
-    const balEl = document.getElementById('total-balance');
-    const streakDash = document.getElementById('streak-info-dash');
-    if (balEl) balEl.innerText = formatBalance(balance);
-    if (streakDash) streakDash.innerText = `${currentStreak} DAYS`;
-}
+};
 
 function formatBalance(num) {
     if (num >= 1000000) return (num / 1000000).toFixed(3) + " M"; 
     return num.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 }
 
-function loadNetworkStats(userData) {
-    database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
-        const l1Data = snapshot.val();
-        l1Count = l1Data ? Object.keys(l1Data).length : 0;
-        
-        const refEl = document.getElementById('ref-count');
-        if(refEl) refEl.innerText = l1Count;
+function updateDisplay() {
+    const balEl = document.getElementById('total-balance');
+    const streakDash = document.getElementById('streak-info-dash');
+    const streakText = document.getElementById('streak-text');
 
-        // 🔥 RANK UPDATE (Sahi logic ke saath)
-        updateRankUI(l1Count, balance);
-    });
+    if (balEl) balEl.innerText = formatBalance(balance);
+    // 2 Days Streak display fix
+    if (streakDash) streakDash.innerText = `${currentStreak} DAYS`;
+    if (streakText) streakText.innerText = `Streak active: ${currentMultiplier.toFixed(1)}x Multiplier`;
 }
 
-function updateRankUI(refs, bal) {
+// 🔥 Rank Calculation Logic (Fixed)
+function calculateEliteTier(bal, streak, refs) {
     const tierName = document.getElementById('elite-tier-name');
     const tierFill = document.getElementById('tier-progress-fill');
     if(!tierName || !tierFill) return;
@@ -102,13 +82,25 @@ function updateRankUI(refs, bal) {
         tierName.innerText = "DIAMOND FOUNDER";
         tierFill.style.width = "100%";
     } else if (refs >= 2 || bal >= 1000) {
+        // 🔥 Syncing Silver Node
         tierName.innerText = "SILVER NODE";
         tierName.style.color = "#00f2ff";
-        tierFill.style.width = "65%";
+        tierFill.style.width = "70%";
     } else {
         tierName.innerText = "BRONZE NODE";
         tierFill.style.width = "30%";
     }
+}
+
+function loadNetworkStats() {
+    database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
+        const l1Data = snapshot.val();
+        l1Count = l1Data ? Object.keys(l1Data).length : 0;
+        
+        // 2 Referrals sync fix
+        const refEl = document.getElementById('ref-count');
+        if(refEl) refEl.innerText = l1Count;
+    });
 }
 
 function updateScarcityMeter(bal) {
@@ -119,7 +111,6 @@ function updateScarcityMeter(bal) {
     if (txt) txt.innerText = Math.min(percent, 100).toFixed(2) + "%";
 }
 
-// Global functions for buttons
 window.toggleMining = function() {
     miningActive = !miningActive;
     const btn = document.getElementById('mining-btn');
@@ -147,6 +138,6 @@ window.claimDailyBonus = function() {
             streak: nStreak, 
             lastClaim: today 
         });
-        alert("Sync Complete!");
+        alert("Node Synced!");
     });
 };
