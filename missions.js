@@ -1,6 +1,6 @@
 /**
- * ADAMAS PROTOCOL - MISSION COMMAND (V7.2 - OFFICIAL LINKS & ADMIN MODE)
- * Features: Priority Socials, 5x5 Casino Grid, Infinite Tasks
+ * ADAMAS PROTOCOL - MISSION COMMAND (V8.0 - GAMING HUB)
+ * Features: Diamond Hunt (Mines), Chicken Road, Official Socials
  */
 
 const firebaseConfig = {
@@ -14,31 +14,29 @@ const firebaseConfig = {
   measurementId: "G-FKP19J67TT"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const database = firebase.database();
 
+const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e";
 let userWallet = localStorage.getItem('adamas_user') || "0xADAMAS_GUEST_USER";
 let userBalance = 0;
 let userEnergy = 100;
 let missionProgress = {};
 
-// CASINO STATE
-let gameActive = false;
-let gameMultiplier = 1.0;
-let bones = []; 
+// --- GAME STATES ---
+let mineActive = false;
+let mineMultiplier = 1.0;
+let bombs = [];
+let chickenLevel = 0;
 
-// 1. OFFICIAL MISSION LIST (Priority Links)
+// 1. OFFICIAL MISSION LIST
 const priorityMissions = [
     { id: 'OFFICIAL_TG_COMM', title: 'Join ADS Community', reward: 15, link: 'https://t.me/adsprotocolcommunity' },
     { id: 'OFFICIAL_TG_CHAN', title: 'Join ADS Official', reward: 10, link: 'https://t.me/ADSProtocol' },
     { id: 'OFFICIAL_X_DIAMO', title: 'Follow Diamo Protocol', reward: 20, link: 'https://x.com/DiamoProtocol' },
     { id: 'OFFICIAL_X_ADAMAS', title: 'Follow Adamas ADS', reward: 20, link: 'https://x.com/AdamasADS' }
-];
-
-// DYNAMIC GENERIC MISSIONS
-const missionTemplates = [
-    { type: 'X', title: 'Follow Adamas Node', reward: 5, count: 20, link: 'https://x.com' },
-    { type: 'TG', title: 'Join Sync Channel', reward: 3, count: 15, link: 'https://t.me' }
 ];
 
 // 2. INITIALIZE
@@ -48,167 +46,158 @@ window.onload = () => {
     database.ref('users/' + userWallet).on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-            // ADMIN FLEX: Agar aapka wallet hai, toh balance ko 100x karke dikhao Twitter ke liye
-            // Apne wallet address yahan check kar sakte hain
             userBalance = data.balance || 0;
             userEnergy = data.energy !== undefined ? data.energy : 100;
             missionProgress = data.missionProgress || {};
             
-            const now = Date.now();
-            if (data.multiplierExpiry && now > data.multiplierExpiry) {
-                resetMultiplier();
-            } else {
-                document.getElementById('active-multiplier').innerText = (data.currentMultiplier || 1.0).toFixed(1) + "x";
-            }
+            document.getElementById('header-balance').innerText = formatBalance(userBalance);
+            document.getElementById('active-multiplier').innerText = (data.currentMultiplier || 1.0).toFixed(1) + "x";
             updateEnergyUI();
         }
     });
 
-    initCasinoGrid();
+    initMinesGrid();
     setInterval(refillEnergy, 60000); 
 };
 
-// 3. MISSION RENDERING
+function formatBalance(num) {
+    return num >= 1000000 ? (num/1000000).toFixed(2) + "M" : num.toLocaleString();
+}
+
+// 💎 --- DIAMOND HUNT (MINES) LOGIC --- 💎
+function initMinesGrid() {
+    const grid = document.getElementById('mines-grid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    bombs = [];
+    
+    // Set 3 Random Bombs in 25 tiles
+    while(bombs.length < 3) {
+        let r = Math.floor(Math.random() * 25);
+        if(!bombs.includes(r)) bombs.push(r);
+    }
+
+    for(let i=0; i<25; i++) {
+        const tile = document.createElement('div');
+        tile.className = 'mine-tile';
+        tile.innerHTML = '?';
+        tile.onclick = () => revealMine(i, tile);
+        grid.appendChild(tile);
+    }
+}
+
+window.startMines = function() {
+    if(userBalance < 100) return alert("Min. 100 ABP required to Hunt!");
+    if(mineActive) return alert("Game already in progress!");
+    
+    userBalance -= 100; // Bet amount
+    database.ref(`users/${userWallet}`).update({ balance: userBalance });
+    
+    mineActive = true;
+    mineMultiplier = 1.0;
+    document.getElementById('mine-start-btn').style.display = 'none';
+    document.getElementById('mine-cashout-btn').style.display = 'block';
+    initMinesGrid();
+};
+
+function revealMine(id, el) {
+    if(!mineActive || el.classList.contains('revealed')) return;
+
+    el.classList.add('revealed');
+    if(bombs.includes(id)) {
+        el.innerHTML = '💣';
+        el.classList.add('bomb');
+        alert("BOMB! You lost 100 ABP.");
+        endMinesGame(false);
+    } else {
+        el.innerHTML = '💎';
+        el.classList.add('win');
+        mineMultiplier += 0.25;
+        document.getElementById('mine-multiplier').innerText = `NEXT: ${mineMultiplier.toFixed(2)}x`;
+    }
+}
+
+window.cashoutMines = function() {
+    if(!mineActive) return;
+    let winAmount = 100 * mineMultiplier;
+    userBalance += winAmount;
+    database.ref(`users/${userWallet}`).update({ balance: userBalance });
+    alert(`CASHED OUT! You won ${winAmount.toFixed(0)} ABP!`);
+    endMinesGame(true);
+};
+
+function endMinesGame(isWin) {
+    mineActive = false;
+    document.getElementById('mine-start-btn').style.display = 'block';
+    document.getElementById('mine-cashout-btn').style.display = 'none';
+    document.getElementById('mine-multiplier').innerText = `POTENTIAL: 1.0x`;
+}
+
+// 🐔 --- CHICKEN ROAD (INSTANT CRASH) --- 🐔
+window.startChickenRun = function() {
+    if(userBalance < 50) return alert("Need 50 ABP to run!");
+    
+    // 80% Win chance for Lane 1, decreases as you go up
+    let winChance = Math.random();
+    let result = "";
+    let reward = 0;
+
+    if(winChance > 0.3) {
+        reward = 50 * 1.5;
+        result = "SUCCESS! You crossed Lane 1. +75 ABP";
+    } else {
+        reward = -50;
+        result = "BOOM! A car hit the chicken. -50 ABP";
+    }
+
+    userBalance += reward;
+    database.ref(`users/${userWallet}`).update({ balance: userBalance });
+    alert(result);
+};
+
+// --- MISSION LOGIC ---
 window.toggleMissionList = () => {
     const term = document.getElementById('mission-terminal');
-    const isOpening = term.style.display !== 'flex';
-    term.style.display = isOpening ? 'flex' : 'none';
-    if(isOpening) renderMissions();
+    term.style.display = term.style.display === 'flex' ? 'none' : 'flex';
+    if(term.style.display === 'flex') renderMissions();
 };
 
 function renderMissions() {
     const container = document.getElementById('mission-list-container');
     let html = "";
-    
-    // First, Render Official Priority Links
     priorityMissions.forEach(m => {
         const isDone = missionProgress[m.id];
         html += `
-            <div class="task-card ${isDone ? 'task-done' : ''}" onclick="executeMission('${m.id}', '${m.link}', ${m.reward})" style="border-left: 4px solid #00f2ff; background: rgba(0, 242, 255, 0.05);">
-                <div>
-                    <span class="task-name">💎 ${m.title}</span>
-                    <span class="task-reward">+${m.reward}.00 ABP</span>
-                </div>
-                <div class="task-status">${isDone ? 'VERIFIED' : 'CORE TASK'}</div>
-            </div>
-        `;
-    });
-
-    // Then, Render Infinite Generic Missions
-    missionTemplates.forEach(template => {
-        for(let i=1; i<=template.count; i++) {
-            const mid = `${template.type}_${i}`;
-            const isDone = missionProgress[mid];
-            html += `
-                <div class="task-card ${isDone ? 'task-done' : ''}" onclick="executeMission('${mid}', '${template.link}', ${template.reward})">
-                    <div>
-                        <span class="task-name">${template.title} #${i}</span>
-                        <span class="task-reward">+${template.reward}.00 ABP</span>
-                    </div>
-                    <div class="task-status">${isDone ? 'VERIFIED' : 'EXECUTE'}</div>
-                </div>
-            `;
-        }
+            <div class="task-card ${isDone ? 'task-done' : ''}" onclick="executeMission('${m.id}', '${m.link}', ${m.reward})">
+                <div><span>💎 ${m.title}</span><br><small>+${m.reward} ABP</small></div>
+                <div>${isDone ? 'DONE' : 'GO'}</div>
+            </div>`;
     });
     container.innerHTML = html;
 }
 
 window.executeMission = function(mid, link, reward) {
     if(missionProgress[mid]) return;
-    
     window.open(link, '_blank');
-    
-    // Official links ke liye 5 sec delay, generic ke liye 3 sec
-    let delay = mid.startsWith('OFFICIAL') ? 5000 : 3000;
-
     setTimeout(() => {
         missionProgress[mid] = true;
         database.ref(`users/${userWallet}`).update({
             balance: userBalance + reward,
             missionProgress: missionProgress
         });
-        alert(`Mission Verified! Reward: ${reward} ABP Added.`);
+        alert("Mission Verified!");
         renderMissions();
-    }, delay);
+    }, 4000);
 };
 
-// 4. CASINO GRID LOGIC (5x5)
-function initCasinoGrid() {
-    const grid = document.getElementById('chicken-grid');
-    if(!grid) return;
-    grid.innerHTML = '';
-    gameActive = false;
-    gameMultiplier = 1.0;
-    bones = [];
-    
-    while(bones.length < 5) {
-        let r = Math.floor(Math.random() * 25);
-        if(!bones.includes(r)) bones.push(r);
-    }
-
-    for(let i=0; i<25; i++) {
-        const tile = document.createElement('div');
-        tile.className = 'casino-tile';
-        tile.onclick = () => revealTile(i, tile);
-        grid.appendChild(tile);
-    }
-}
-
-function revealTile(id, el) {
-    if(el.classList.contains('tile-win') || el.classList.contains('tile-loss')) return;
-    
-    if(!gameActive) {
-        if(userEnergy < 20) return alert("Low Energy!");
-        gameActive = true;
-        userEnergy -= 20;
-        database.ref(`users/${userWallet}`).update({ energy: userEnergy });
-        document.getElementById('cashout-btn').style.display = 'block';
-    }
-
-    if(bones.includes(id)) {
-        el.innerHTML = '☠️';
-        el.classList.add('tile-loss');
-        alert("BONE! Better luck next time.");
-        resetCasinoUI();
-    } else {
-        el.innerHTML = '🍗';
-        el.classList.add('tile-win');
-        gameMultiplier += 0.2;
-        document.getElementById('current-multiplier-display').innerText = `POTENTIAL: ${gameMultiplier.toFixed(1)}x`;
-    }
-}
-
-window.cashout = () => {
-    const expiry = Date.now() + (3600 * 1000); 
-    database.ref(`users/${userWallet}`).update({
-        currentMultiplier: parseFloat(gameMultiplier.toFixed(1)),
-        multiplierExpiry: expiry
-    });
-    alert(`BOOST ACTIVE! Multiplier: ${gameMultiplier.toFixed(1)}x`);
-    resetCasinoUI();
-};
-
-function resetCasinoUI() {
-    document.getElementById('cashout-btn').style.display = 'none';
-    document.getElementById('current-multiplier-display').innerText = `POTENTIAL: 1.0x`;
-    setTimeout(initCasinoGrid, 1000);
-}
-
-// 5. ENERGY & UTILS
 function updateEnergyUI() {
     const fill = document.getElementById('energy-fill');
     if(fill) fill.style.width = userEnergy + "%";
-    const val = document.getElementById('energy-val');
-    if(val) val.innerText = userEnergy + "/100";
 }
 
 function refillEnergy() {
     if (userEnergy < 100) {
-        userEnergy += 2;
+        userEnergy += 5;
         database.ref('users/' + userWallet).update({ energy: userEnergy });
     }
-}
-
-function resetMultiplier() {
-    database.ref('users/' + userWallet).update({ currentMultiplier: 1.0, multiplierExpiry: 0 });
 }
