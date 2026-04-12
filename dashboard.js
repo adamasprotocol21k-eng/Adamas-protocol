@@ -5,13 +5,14 @@
 
 // 1. FIREBASE CONFIGURATION
 const firebaseConfig = {
-  apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
-  authDomain: "adamas-protocol.firebaseapp.com",
-  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
-  projectId: "adamas-protocol",
-  storageBucket: "adamas-protocol.firebasestorage.app",
-  messagingSenderId: "207788425238",
-  appId: "1:207788425238:web:025b8544f085dde60af537"
+  apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+  authDomain: "adamas-protocol-v2.firebaseapp.com",
+  databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+  projectId: "adamas-protocol-v2",
+  storageBucket: "adamas-protocol-v2.firebasestorage.app",
+  messagingSenderId: "197711342782",
+  appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
+  measurementId: "G-FKP19J67TT"
 };
 
 firebase.initializeApp(firebaseConfig);
