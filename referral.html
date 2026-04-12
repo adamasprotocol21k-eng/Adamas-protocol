@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Network</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .node-stats-grid { display: flex; gap: 10px; margin-bottom: 20px; }
+        .stat-box { 
+            flex: 1; background: var(--card-bg); border: 1px solid var(--glass-border); 
+            padding: 15px; border-radius: 15px; text-align: center;
+        }
+        .stat-value { display: block; font-family: 'Orbitron'; font-size: 1.5rem; color: var(--cyan); margin-top: 5px; }
+        
+        .referral-input-group {
+            display: flex; gap: 10px; background: rgba(0,0,0,0.5); 
+            padding: 5px; border-radius: 12px; border: 1px solid #222;
+        }
+        .referral-input-group input {
+            flex: 1; background: none; border: none; color: #fff; 
+            padding: 10px; font-size: 11px; outline: none; font-family: 'Rajdhani';
+        }
+
+        .node-list { margin-top: 20px; }
+        .node-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: rgba(255,255,255,0.02); 
+            border-radius: 10px; margin-bottom: 8px; border-left: 2px solid var(--cyan);
+        }
+        .node-info span { display: block; }
+        .node-addr { font-size: 12px; font-family: 'Orbitron'; color: #eee; }
+        .node-date { font-size: 9px; color: #555; margin-top: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="network-wrapper" style="padding: 15px;">
+        <header class="premium-card" style="margin-bottom: 20px; text-align: center;">
+            <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px; color: var(--cyan);">NETWORK NODES</h2>
+            <p style="font-size: 10px; color: #666; margin-top: 5px;">EXPAND YOUR DECENTRALIZED INFRASTRUCTURE</p>
+        </header>
+
+        <div class="node-stats-grid">
+            <div class="stat-box">
+                <span style="font-size: 10px; color: #555;">L1 NODES</span>
+                <span id="l1-count" class="stat-value">0</span>
+            </div>
+            <div class="stat-box">
+                <span style="font-size: 10px; color: #555;">L2 NODES</span>
+                <span id="l2-count" class="stat-value">0</span>
+            </div>
+        </div>
+
+        <section class="premium-card" style="margin-bottom: 25px; border-style: dashed; border-color: var(--cyan);">
+            <p style="font-size: 11px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; text-align: center;">SHARE UNIQUE NODE LINK</p>
+            <div class="referral-input-group">
+                <input type="text" id="ref-link-input" readonly value="LOADING LINK...">
+                <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px;">COPY</button>
+            </div>
+            <p style="font-size: 9px; color: #444; margin-top: 10px; text-align: center;">
+                Receive bonus ABP for every active node synchronized under your link.
+            </p>
+        </section>
+
+        <section class="node-list">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: #fff;">ACTIVE CONNECTIONS</h3>
+                <span style="font-size: 10px; color: var(--neon-green);">LIVE DATA</span>
+            </div>
+
+            <div id="nodes-container">
+                <p style="text-align: center; color: #333; font-size: 12px; margin-top: 20px;">Scanning for active nodes...</p>
+            </div>
+        </section>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item">
+                <span class="icon">🏠</span>
+                <span>HOME</span>
+            </a>
+            <a href="vault.html" class="nav-item">
+                <span class="icon">🔒</span>
+                <span>VAULT</span>
+            </a>
+            <a href="missions.html" class="nav-item">
+                <span class="icon">⚡</span>
+                <span>TASKS</span>
+            </a>
+            <a href="referral.html" class="nav-item active">
+                <span class="icon">👥</span>
+                <span>NETWORK</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon">🏆</span>
+                <span>RANK</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="dashboard.js"></script> <script>
+        function copyRefLink() {
+            const copyText = document.getElementById("ref-link-input");
+            if(copyText.value.includes("LOADING")) return;
+            copyText.select();
+            document.execCommand("copy");
+            alert("Node Link Copied!");
+        }
+
+        // Simple script to render a "Visual" list if you have referral data in Firebase
+        // This can be expanded in your dashboard.js to fetch actual wallet addresses
+    </script>
+</body>
+</html>
+
