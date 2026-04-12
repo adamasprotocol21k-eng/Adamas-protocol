@@ -22,6 +22,10 @@
             padding: 10px; font-size: 11px; outline: none; font-family: 'Rajdhani';
         }
 
+        .earning-row { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
+        .earning-label { font-size: 11px; color: #888; }
+        .earning-value { font-size: 11px; color: #fff; font-family: 'Orbitron'; }
+
         .node-list { margin-top: 20px; padding-bottom: 20px; }
         .node-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -56,14 +60,36 @@
             </div>
         </div>
 
+        <section class="premium-card" style="background: linear-gradient(180deg, rgba(0,242,255,0.08) 0%, rgba(0,0,0,0) 100%); margin-bottom: 20px;">
+            <h3 style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-gold); margin-bottom: 15px; text-align: center; letter-spacing: 1px;">ESTIMATED NETWORK REWARDS</h3>
+            
+            <div class="earning-row">
+                <span class="earning-label">Direct Rewards (L1 x 100)</span>
+                <span id="l1-earnings" class="earning-value">0 ABP</span>
+            </div>
+            
+            <div class="earning-row">
+                <span class="earning-label">Indirect Rewards (L2 x 30)</span>
+                <span id="l2-earnings" class="earning-value">0 ABP</span>
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 10px 0;">
+            
+            <div class="earning-row">
+                <span style="font-size: 12px; color: #fff; font-weight: bold;">TOTAL EARNED</span>
+                <span id="total-referral-earned" style="font-size: 14px; color: var(--neon-gold); font-family: 'Orbitron'; font-weight: bold; text-shadow: 0 0 10px rgba(255,204,0,0.3);">0 ABP</span>
+            </div>
+        </section>
+
         <section class="premium-card" style="margin-bottom: 25px; border-style: dashed; border-color: var(--cyan); background: rgba(0,242,255,0.02);">
             <p style="font-size: 11px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; text-align: center;">SHARE UNIQUE NODE LINK</p>
             <div class="referral-input-group">
                 <input type="text" id="ref-link-input" readonly value="LOADING LINK...">
                 <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px; cursor: pointer;">COPY</button>
             </div>
-            <p style="font-size: 9px; color: #444; margin-top: 10px; text-align: center;">
-                Build your network to increase your global mining multiplier.
+            <p style="font-size: 9px; color: #777; margin-top: 12px; text-align: center; line-height: 1.4;">
+                <b style="color: var(--neon-green);">PROMO:</b> You receive <span style="color:#fff;">100 ABP</span> per invite.<br>
+                Invited friend receives <span style="color:#fff;">50 ABP</span> instantly.
             </p>
         </section>
 
@@ -72,33 +98,17 @@
                 <h3 style="font-family: 'Orbitron'; font-size: 11px; color: #fff; letter-spacing: 1px;">ACTIVE CONNECTIONS</h3>
                 <span style="font-size: 9px; color: var(--neon-green); font-family: 'Orbitron';">● LIVE SYNC</span>
             </div>
-
             <div id="nodes-container">
                 <p style="text-align: center; color: #444; font-size: 11px; margin-top: 30px; font-family: 'Orbitron';">SCANNING FOR ACTIVE NODES...</p>
             </div>
         </section>
 
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item">
-                <span class="icon">🏠</span>
-                <span>HOME</span>
-            </a>
-            <a href="vault.html" class="nav-item">
-                <span class="icon">🔒</span>
-                <span>VAULT</span>
-            </a>
-            <a href="missions.html" class="nav-item">
-                <span class="icon">⚡</span>
-                <span>TASKS</span>
-            </a>
-            <a href="referral.html" class="nav-item active">
-                <span class="icon">👥</span>
-                <span>NETWORK</span>
-            </a>
-            <a href="profile.html" class="nav-item">
-                <span class="icon">🏆</span>
-                <span>RANK</span>
-            </a>
+            <a href="dashboard.html" class="nav-item">🏠<br>HOME</a>
+            <a href="vault.html" class="nav-item">🔒<br>VAULT</a>
+            <a href="missions.html" class="nav-item">⚡<br>TASKS</a>
+            <a href="referral.html" class="nav-item active">👥<br>NETWORK</a>
+            <a href="profile.html" class="nav-item">🏆<br>RANK</a>
         </nav>
     </div>
 
@@ -106,7 +116,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // CONFIG SYNC (Same as dashboard.js)
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -123,12 +132,8 @@
 
         window.onload = () => {
             if(!userWallet) { window.location.href = "index.html"; return; }
-
-            // Set Referral Link
             const baseUrl = window.location.origin + window.location.pathname.replace('referral.html', 'index.html');
             document.getElementById('ref-link-input').value = `${baseUrl}?ref=${userWallet}`;
-
-            // Fetch Network Data
             loadNetworkData();
         };
 
@@ -140,18 +145,16 @@
                 
                 if (!l1Data) {
                     container.innerHTML = `<p style="text-align: center; color: #333; font-size: 11px; margin-top: 30px;">NO ACTIVE NODES DETECTED</p>`;
-                    l1CountEl.innerText = "0";
                     return;
                 }
 
                 const wallets = Object.keys(l1Data);
-                l1CountEl.innerText = wallets.length;
-                container.innerHTML = ""; // Clear loader
+                const l1Count = wallets.length;
+                l1CountEl.innerText = l1Count;
+                container.innerHTML = ""; 
 
                 let l2Total = 0;
-
                 wallets.forEach(walletAddr => {
-                    // Create Node Item UI
                     const nodeBox = document.createElement('div');
                     nodeBox.className = 'node-item';
                     nodeBox.innerHTML = `
@@ -163,15 +166,27 @@
                     `;
                     container.appendChild(nodeBox);
 
-                    // Fetch L2 for this wallet
                     database.ref('users/' + walletAddr + '/myReferrals').once('value').then(s => {
                         if(s.exists()) {
                             l2Total += Object.keys(s.val()).length;
                             document.getElementById('l2-count').innerText = l2Total;
+                            updateEarningDisplay(l1Count, l2Total); // Update on each fetch
+                        } else {
+                            updateEarningDisplay(l1Count, l2Total);
                         }
                     });
                 });
             });
+        }
+
+        function updateEarningDisplay(l1, l2) {
+            const l1Earned = l1 * 100;
+            const l2Earned = l2 * 30;
+            const total = l1Earned + l2Earned;
+
+            document.getElementById('l1-earnings').innerText = l1Earned + " ABP";
+            document.getElementById('l2-earnings').innerText = l2Earned + " ABP";
+            document.getElementById('total-referral-earned').innerText = total + " ABP";
         }
 
         function copyRefLink() {
