@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Mission Command</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="missions.css">
+</head>
+<body>
+
+    <div class="mission-wrapper">
+        <header class="mission-header">
+            <div class="energy-container">
+                <span class="label">CORE ENERGY</span>
+                <div class="energy-bar">
+                    <div id="energy-fill" class="fill" style="width: 80%;"></div>
+                </div>
+                <span id="energy-val">80/100</span>
+            </div>
+            <div class="multiplier-badge">
+                <span class="mult-label">ACTIVE BOOST</span>
+                <span id="active-multiplier" class="mult-val">1.0x</span>
+            </div>
+        </header>
+
+        <main class="mission-grid">
+            
+            <section class="mission-section">
+                <h2 class="section-title">⚡ ACTION HUB</h2>
+                <div class="task-card" onclick="startTask('twitter')">
+                    <div class="task-info">
+                        <span class="task-name">X PROTOCOL BOOST</span>
+                        <span class="task-reward">+5 ABP</span>
+                    </div>
+                    <div class="task-status" id="status-twitter">READY</div>
+                </div>
+                
+                <div class="task-card" onclick="startTask('telegram')">
+                    <div class="task-info">
+                        <span class="task-name">COMMUNITY SYNC</span>
+                        <span class="task-reward">+3 ABP</span>
+                    </div>
+                    <div class="task-status" id="status-telegram">READY</div>
+                </div>
+            </section>
+
+            <section class="mission-section">
+                <h2 class="section-title">🎮 ADAMAS ARCADE</h2>
+                <div class="arcade-card chicken-game" onclick="openGame('chicken')">
+                    <div class="overlay">
+                        <h3>NODE CROSSER</h3>
+                        <p>Cross the chain to boost multiplier!</p>
+                        <span class="play-btn">START GAME</span>
+                    </div>
+                </div>
+
+                <div class="mini-grid">
+                    <div class="mini-card" onclick="openGame('spin')">
+                        <span class="icon">🎡</span>
+                        <span>LUCKY SPIN</span>
+                    </div>
+                    <div class="mini-card" onclick="openGame('combo')">
+                        <span class="icon">🧩</span>
+                        <span>DAILY COMBO</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mission-section">
+                <h2 class="section-title">🧠 ACADEMY</h2>
+                <div class="task-card academy" onclick="startTask('quiz')">
+                    <div class="task-info">
+                        <span class="task-name">PROTOCOL KNOWLEDGE QUIZ</span>
+                        <span class="task-reward">+10 ABP</span>
+                    </div>
+                    <div class="task-status">START</div>
+                </div>
+            </section>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item">TERMINAL</a>
+            <a href="missions.html" class="nav-item active">MISSIONS</a>
+            <a href="#" class="nav-item">WALLET</a>
+        </nav>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="missions.js"></script>
+</body>
+</html>
+
