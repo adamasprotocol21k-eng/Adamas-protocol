@@ -1,6 +1,6 @@
 /**
- * ADAMAS PROTOCOL - DASHBOARD CORE (V7 - FOUNDER EDITION)
- * Security: Wallet-Locked Admin Mode for 0xC926...F25e
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V8 - TRANSPARENT FOUNDER EDITION)
+ * Final Fix: Organic Data, Clean Formatting, and Founder Authority.
  */
 
 // 1. FIREBASE INITIALIZE
@@ -63,14 +63,13 @@ window.onload = () => {
     initLeaderboard();
 };
 
-// 💎 SMART FORMATTING (Founder Logic Included)
+// 💎 CLEAN FORMATTING (Organic Look)
 function formatBalance(num) {
-    // If it's the Admin, show in Millions (M)
-    if (userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase() && num >= 1000000) {
-        return (num / 1000000).toFixed(2) + "M";
-    }
-    // Normal formatting for others
-    return num >= 1000000 ? (num / 1000000).toFixed(2) + "M" : num.toFixed(4);
+    // 9,853,005.00 format with commas - No 'M' to keep it looking like raw technical data
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 4 // Founders usually track precise decimals
+    }).format(num);
 }
 
 function updateDisplay() {
@@ -82,11 +81,10 @@ function updateDisplay() {
 
 // 🛡️ TRUST SCORE ENGINE
 function calculateTrustScore(data) {
-    let score = 0;
-    // Founder always gets 100%
-    if (userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase()) {
-        score = 100;
-    } else {
+    const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
+    let score = isAdmin ? 100 : 0; 
+
+    if (!isAdmin) {
         if (data.balance > 0.01) score += 20;
         if (data.streak >= 1) score += 20;
         if (data.streak >= 5) score += 20;
@@ -104,21 +102,21 @@ function calculateTrustScore(data) {
     }
 }
 
-// 🏆 ELITE TIER LOGIC (Founder Overclock)
+// 🏆 ELITE TIER LOGIC (Founder Authority)
 function calculateEliteTier(bal, streak, refs, role) {
-    let tier = "BRONZE";
+    let tier = "BRONZE NODE";
     let color = "#cd7f32"; 
     let progress = 25;
 
-    // ADMIN OVERRIDE
+    // ADMIN OVERRIDE - Real organic founder look
     if (userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase() || role === "FOUNDER") {
-        tier = "👑 DIAMOND FOUNDER";
+        tier = "💎 DIAMOND FOUNDER";
         color = "#00f2ff"; 
         progress = 100;
     } else {
-        if (bal >= 50 || refs >= 3 || streak >= 3) { tier = "SILVER"; color = "#c0c0c0"; progress = 50; }
-        if (bal >= 200 && refs >= 7 && streak >= 7) { tier = "GOLD"; color = "#ffd700"; progress = 75; }
-        if (bal >= 1000 && refs >= 15 && streak >= 14) { tier = "DIAMOND"; color = "#00f2ff"; progress = 100; }
+        if (bal >= 1000 || refs >= 3 || streak >= 7) { tier = "SILVER NODE"; color = "#c0c0c0"; progress = 50; }
+        if (bal >= 10000 || refs >= 7 || streak >= 15) { tier = "GOLD NODE"; color = "#ffd700"; progress = 75; }
+        if (bal >= 100000 || refs >= 15 || streak >= 30) { tier = "DIAMOND NODE"; color = "#00f2ff"; progress = 100; }
     }
 
     const tierEl = document.getElementById('elite-tier-name');
@@ -127,18 +125,17 @@ function calculateEliteTier(bal, streak, refs, role) {
     if (tierEl) {
         tierEl.innerText = tier;
         tierEl.style.color = color;
-        if(progress === 100) tierEl.style.textShadow = "0 0 15px " + color;
     }
     if (tierBar) {
         tierBar.style.width = progress + "%";
         tierBar.style.backgroundColor = color;
-        tierBar.style.boxShadow = "0 0 10px " + color;
+        if(progress === 100) tierBar.style.boxShadow = "0 0 10px " + color;
     }
 }
 
-// 🔥 NETWORK STATS
+// 🔥 NETWORK STATS (Real Organic Data)
 function loadNetworkStats() {
-    database.ref('users/' + userWallet + '/myReferrals').once('value', (snapshot) => {
+    database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
         const l1Data = snapshot.val();
         l1Count = l1Data ? Object.keys(l1Data).length : 0;
         document.getElementById('ref-count').innerText = l1Count;
@@ -168,20 +165,26 @@ window.toggleMining = function() {
     miningActive = !miningActive;
     const btn = document.querySelector('.btn-mine-start');
     if(btn) {
-        btn.innerText = miningActive ? "SYSTEM OVERCLOCK: " + currentMultiplier + "x" : "INITIALIZE MINING";
+        btn.innerText = miningActive ? "MINING ACTIVE" : "INITIALIZE MINING";
         btn.style.boxShadow = miningActive ? "0 0 20px var(--cyan)" : "none";
-        if(userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase()) btn.style.borderColor = "gold";
+        if(userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase()) {
+            btn.innerText = miningActive ? "FOUNDER OVERCLOCK ACTIVE" : "INITIALIZE MINING";
+        }
     }
     if (miningActive) mineLoop();
 };
 
 function mineLoop() {
     if (!miningActive) return;
-    let mineStep = 0.000125 * currentMultiplier;
+    // Organic speed for users, special stable testing speed for Admin
+    const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
+    let mineStep = isAdmin ? 0.0005 : (0.000125 * currentMultiplier); 
+    
     balance += mineStep;
     updateDisplay();
 
-    if (Math.floor(balance * 10000) % 5 === 0) {
+    // Auto-save every few ticks
+    if (Math.floor(balance * 1000) % 5 === 0) {
         database.ref('users/' + userWallet).update({ balance: balance });
         if (myReferrer !== "DIRECT") {
             payUpline(myReferrer, mineStep * 0.10);
@@ -200,7 +203,7 @@ function payUpline(uplineAddr, amount) {
     });
 }
 
-// LEADERBOARD
+// LEADERBOARD (Real Global Stats)
 function initLeaderboard() {
     database.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
         const listContainer = document.getElementById('leaderboard-list');
