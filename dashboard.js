@@ -1,9 +1,9 @@
 /**
- * ADAMAS PROTOCOL - DASHBOARD CORE (V10 - PROFILE INTEGRATED)
- * Feature: Tier-click navigation to profile.html & Hybrid Balance.
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V11 - OPTIMIZED)
+ * Status: Stable & Modular
  */
 
-// 1. FIREBASE INITIALIZE
+// 1. FIREBASE INITIALIZATION
 const firebaseConfig = {
   apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
   authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -15,10 +15,13 @@ const firebaseConfig = {
   measurementId: "G-FKP19J67TT"
 };
 
-firebase.initializeApp(firebaseConfig);
+// Prevent multiple initializations
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const database = firebase.database();
 
-// --- FOUNDER CONFIG ---
+// --- CONFIGURATION ---
 const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e"; 
 let userWallet = localStorage.getItem('adamas_user') || "0xADAMAS_GUEST_USER";
 let balance = 0;
@@ -28,23 +31,25 @@ let myReferrer = "DIRECT";
 let l1Count = 0;
 let currentMultiplier = 1.0;
 
-// 2. DASHBOARD INITIALIZE
+// 2. DASHBOARD STARTUP
 window.onload = () => {
     if(userWallet === "0xADAMAS_GUEST_USER") {
         window.location.href = "index.html";
         return;
     }
 
+    // Display Wallet (Shortened)
     const addressEl = document.getElementById('user-address');
     if (addressEl) {
         addressEl.innerText = userWallet.slice(0, 6) + "..." + userWallet.slice(-4);
     }
 
+    // Referral Link Gen
     const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html');
     const refInput = document.getElementById('ref-link-input');
     if (refInput) refInput.value = `${baseUrl}?ref=${userWallet}`;
 
-    // DATA SYNC
+    // DATA SYNC WITH FIREBASE
     database.ref('users/' + userWallet).on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -63,11 +68,9 @@ window.onload = () => {
     initLeaderboard();
 };
 
-// 💎 HYBRID FORMATTING (Million Switch)
+// 💎 FORMATTING ENGINE
 function formatBalance(num) {
-    if (num >= 1000000) {
-        return (num / 1000000).toFixed(2) + "M"; 
-    } 
+    if (num >= 1000000) return (num / 1000000).toFixed(2) + "M"; 
     return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 4
@@ -78,10 +81,10 @@ function updateDisplay() {
     const balEl = document.getElementById('total-balance');
     const streakEl = document.getElementById('streak-info');
     if (balEl) balEl.innerText = formatBalance(balance);
-    if (streakEl) streakEl.innerText = `Current Streak: ${currentStreak} Days`;
+    if (streakEl) streakEl.innerText = `Streak: ${currentStreak} Days`;
 }
 
-// 🛡️ TRUST SCORE ENGINE
+// 🛡️ TRUST SCORE LOGIC
 function calculateTrustScore(data) {
     const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
     let score = isAdmin ? 100 : 0; 
@@ -96,19 +99,14 @@ function calculateTrustScore(data) {
 
     const fill = document.getElementById('trust-fill');
     const status = document.getElementById('eligibility-status');
-    if(fill) {
-        fill.style.width = score + "%";
-        fill.style.cursor = "pointer";
-        fill.onclick = () => window.location.href = 'profile.html';
-    }
+    if(fill) fill.style.width = score + "%";
     if(status) {
         status.innerText = score + "% SECURE";
         status.style.color = score < 40 ? "#ff4444" : (score < 80 ? "#ffaa00" : "#00ff88");
-        if(score === 100) status.style.textShadow = "0 0 10px #00ff88";
     }
 }
 
-// 🏆 ELITE TIER LOGIC (Founder Authority & Navigation)
+// 🏆 ELITE TIER LOGIC
 function calculateEliteTier(bal, streak, refs, role) {
     let tier = "BRONZE NODE";
     let color = "#cd7f32"; 
@@ -130,17 +128,10 @@ function calculateEliteTier(bal, streak, refs, role) {
     if (tierEl) {
         tierEl.innerText = tier;
         tierEl.style.color = color;
-        tierEl.style.cursor = "pointer"; // Hath ka nishan dikhega
-        tierEl.title = "Click to view Eligibility";
-        // CLICK TO GO TO PROFILE
-        tierEl.onclick = () => window.location.href = 'profile.html';
     }
     if (tierBar) {
         tierBar.style.width = progress + "%";
         tierBar.style.backgroundColor = color;
-        tierBar.style.cursor = "pointer";
-        tierBar.onclick = () => window.location.href = 'profile.html';
-        if(progress === 100) tierBar.style.boxShadow = "0 0 10px " + color;
     }
 }
 
@@ -149,7 +140,8 @@ function loadNetworkStats() {
     database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
         const l1Data = snapshot.val();
         l1Count = l1Data ? Object.keys(l1Data).length : 0;
-        document.getElementById('ref-count').innerText = l1Count;
+        const refEl = document.getElementById('ref-count');
+        if(refEl) refEl.innerText = l1Count;
 
         let l2Total = 0;
         if(l1Data) {
@@ -164,24 +156,18 @@ function loadNetworkStats() {
             });
         }
     });
-
-    database.ref('users/' + userWallet + '/networkEarnings').on('value', (snap) => {
-        const earnings = snap.val() || 0;
-        const revEl = document.getElementById('net-revenue');
-        if (revEl) revEl.innerText = formatBalance(earnings) + " ABP";
-    });
 }
 
-// MINING ENGINE (Founder Speed Lock)
+// ⛏️ MINING ENGINE
 window.toggleMining = function() {
     miningActive = !miningActive;
-    const btn = document.querySelector('.btn-mine-start');
+    const btn = document.getElementById('mining-btn');
     if(btn) {
         btn.innerText = miningActive ? "MINING ACTIVE" : "INITIALIZE MINING";
-        btn.style.boxShadow = miningActive ? "0 0 20px var(--cyan)" : "none";
-        if(userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase()) {
-            btn.innerText = miningActive ? "FOUNDER OVERCLOCK ACTIVE" : "INITIALIZE MINING";
-        }
+        btn.style.boxShadow = miningActive ? "0 0 25px var(--cyan)" : "none";
+        btn.style.background = miningActive ? "var(--bg-dark)" : "linear-gradient(90deg, var(--cyan), #0066ff)";
+        btn.style.color = miningActive ? "var(--cyan)" : "#000";
+        btn.style.border = miningActive ? "1px solid var(--cyan)" : "none";
     }
     if (miningActive) mineLoop();
 };
@@ -189,13 +175,13 @@ window.toggleMining = function() {
 function mineLoop() {
     if (!miningActive) return;
     const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
-    // Admin speed stays high for testing balance representation
     let mineStep = isAdmin ? 0.0005 : (0.000125 * currentMultiplier); 
     
     balance += mineStep;
     updateDisplay();
 
-    if (Math.floor(balance * 1000) % 5 === 0) {
+    // Auto-save every few ticks
+    if (Math.floor(balance * 1000) % 10 === 0) {
         database.ref('users/' + userWallet).update({ balance: balance });
         if (myReferrer !== "DIRECT") {
             payUpline(myReferrer, mineStep * 0.10);
@@ -214,9 +200,9 @@ function payUpline(uplineAddr, amount) {
     });
 }
 
-// LEADERBOARD
+// 🏁 LEADERBOARD
 function initLeaderboard() {
-    database.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
+    database.ref('users').orderByChild('balance').limitToLast(8).on('value', (snapshot) => {
         const listContainer = document.getElementById('leaderboard-list');
         if (!listContainer) return;
         let players = [];
@@ -228,23 +214,29 @@ function initLeaderboard() {
         players.forEach((player, i) => {
             let badge = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `#${i+1}`));
             let isMe = player.address.toLowerCase() === userWallet.toLowerCase() ? "style='background: rgba(0,242,255,0.1); border-left: 2px solid var(--cyan);'" : "";
-            listContainer.innerHTML += `<div class="leaderboard-row" ${isMe} style="display:flex; justify-content:space-between; padding:8px; margin-bottom:5px; border-radius:5px; font-size:12px;"><span>${badge} ${player.address.slice(0,6)}...</span><span style="color:var(--cyan);">${formatBalance(player.bal)}</span></div>`;
+            listContainer.innerHTML += `<div class="task-card" ${isMe} style="margin-bottom:6px; padding:10px;">
+                <span style="font-size:12px;">${badge} ${player.address.slice(0,6)}...</span>
+                <span style="color:var(--cyan); font-weight:bold; font-size:12px;">${formatBalance(player.bal)}</span>
+            </div>`;
         });
     });
 }
 
+// 🎁 CLAIM BONUS
 window.claimDailyBonus = function() {
     const today = new Date().toDateString();
     database.ref('users/' + userWallet).once('value').then((snapshot) => {
         const data = snapshot.val() || {};
-        if (data.lastClaim === today) return alert("System already synced!");
+        if (data.lastClaim === today) return alert("Already Synced Today!");
+        
         let newStreak = (data.streak || 0) + 1;
-        let reward = 1 + (newStreak * 0.1);
+        let reward = 1.0 + (newStreak * 0.1);
+        
         database.ref('users/' + userWallet).update({ 
             balance: (data.balance || 0) + reward, 
             streak: newStreak, 
             lastClaim: today 
         });
-        alert(`Success! +${reward.toFixed(2)} ABP. Streak: ${newStreak}`);
+        alert(`System Synced! +${reward.toFixed(2)} ABP. Streak: ${newStreak} Days`);
     });
 };
