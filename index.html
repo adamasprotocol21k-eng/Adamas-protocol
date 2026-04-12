@@ -38,7 +38,7 @@
                 </div>
                 
                 <div class="node-validation-list">
-                    <div class="node-item" onclick="verifyTask(this, 'https://t.me/yourchannel')" data-status="pending">
+                    <div class="node-item" onclick="verifyTask(this, 'https://t.me/your_telegram')" data-status="pending">
                         <div class="node-info">
                             <span class="node-label">NODE 01</span>
                             <span class="node-name">TELEGRAM NETWORK</span>
@@ -46,7 +46,7 @@
                         <div class="node-status">PENDING</div>
                     </div>
 
-                    <div class="node-item" onclick="verifyTask(this, 'https://twitter.com/yourprofile')" data-status="pending">
+                    <div class="node-item" onclick="verifyTask(this, 'https://x.com/your_twitter')" data-status="pending">
                         <div class="node-info">
                             <span class="node-label">NODE 02</span>
                             <span class="node-name">X PROTOCOL (TWITTER)</span>
@@ -66,35 +66,49 @@
     </div>
 
     <script src="main.js"></script>
-
     <script>
-        // 1. TYPING ANIMATION (Restored)
-        const text = "ADAMAS";
-        const typingLogo = document.getElementById("typing-logo");
-        let i = 0;
-        function typeWriter() {
-            if (i < text.length) {
-                typingLogo.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 150);
+        // 1. TYPING ANIMATION LOGIC
+        const logoText = "ADAMAS";
+        const typingEl = document.getElementById("typing-logo");
+        let charIndex = 0;
+
+        function typeEffect() {
+            if (charIndex < logoText.length) {
+                typingEl.innerHTML += logoText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeEffect, 150);
             }
         }
-        window.onload = typeWriter;
 
-        // 2. NAVIGATION LOGIC (Fixed Start Journey)
+        // 2. STATE MANAGEMENT (Fixes Back Button Issue)
+        window.onload = () => {
+            typeEffect();
+
+            // Agar user ne pehle enter dabaya tha, toh direct social screen dikhao
+            if (sessionStorage.getItem('adamas_step') === 'social_phase') {
+                showSocialPhase();
+            }
+
+            // Referral Capture (Fixed window.location)
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            if (refCode && refCode.startsWith('0x')) {
+                localStorage.setItem('adamas_referrer', refCode);
+                console.log("Referrer Saved: " + refCode);
+            }
+        };
+
         function startJourney() {
+            sessionStorage.setItem('adamas_step', 'social_phase');
+            showSocialPhase();
+        }
+
+        function showSocialPhase() {
             document.getElementById('phase-intro').classList.remove('active');
             document.getElementById('phase-social').classList.add('active');
         }
 
-        // 3. REFERRAL CAPTURE
-        const urlParams = new URLSearchParams(window.location.search);
-        const refCode = urlParams.get('ref');
-        if (refCode && refCode.startsWith('0x')) {
-            localStorage.setItem('adamas_referrer', refCode);
-        }
-
-        // 4. NETWORK AUTO-SWITCH (Polygon Amoy)
+        // 3. TASK VERIFICATION & NETWORK SWITCH
         async function checkAndSwitchNetwork() {
             if (!window.ethereum) return;
             const amoyChainId = '0x13882';
@@ -103,8 +117,8 @@
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: amoyChainId }],
                 });
-            } catch (switchError) {
-                if (switchError.code === 4902) {
+            } catch (err) {
+                if (err.code === 4902) {
                     await window.ethereum.request({
                         method: 'wallet_addEthereumChain',
                         params: [{
@@ -113,32 +127,31 @@
                             nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
                             rpcUrls: ['https://rpc-amoy.polygon.technology/'],
                             blockExplorerUrls: ['https://amoy.polygonscan.com/']
-                        }],
+                        }]
                     });
                 }
             }
         }
 
-        // 5. TASK VERIFICATION
         function verifyTask(element, link) {
             window.open(link, '_blank');
             setTimeout(() => {
                 element.setAttribute('data-status', 'completed');
                 element.querySelector('.node-status').innerText = 'VERIFIED';
                 element.style.borderColor = '#00f2ff';
-                checkAllTasks();
+                checkTasksStatus();
             }, 2000);
         }
 
-        function checkAllTasks() {
+        function checkTasksStatus() {
             const pending = document.querySelectorAll('.node-item[data-status="pending"]');
             if (pending.length === 0) {
                 const btn = document.getElementById('connect-wallet-btn');
                 btn.disabled = false;
-                btn.style.background = "#00f2ff";
+                btn.style.background = "var(--cyan, #00f2ff)";
                 btn.style.color = "#000";
-                document.getElementById('wallet-instruction').innerText = 'System Ready for Connection';
-                checkAndSwitchNetwork();
+                document.getElementById('wallet-instruction').innerText = 'All Nodes Verified. Connect Wallet.';
+                checkAndSwitchNetwork(); // Auto-switch prompt
             }
         }
     </script>
