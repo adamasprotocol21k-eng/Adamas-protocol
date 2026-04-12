@@ -1,6 +1,6 @@
 /**
- * ADAMAS PROTOCOL - MISSION COMMAND (V8.0 - GAMING HUB)
- * Features: Diamond Hunt (Mines), Chicken Road, Official Socials
+ * ADAMAS PROTOCOL - MISSION COMMAND (V9.0 - GAMING HUB)
+ * Status: Optimized for Performance & Real-time Rewards
  */
 
 const firebaseConfig = {
@@ -22,14 +22,12 @@ const database = firebase.database();
 const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e";
 let userWallet = localStorage.getItem('adamas_user') || "0xADAMAS_GUEST_USER";
 let userBalance = 0;
-let userEnergy = 100;
 let missionProgress = {};
 
 // --- GAME STATES ---
 let mineActive = false;
 let mineMultiplier = 1.0;
 let bombs = [];
-let chickenLevel = 0;
 
 // 1. OFFICIAL MISSION LIST
 const priorityMissions = [
@@ -47,21 +45,18 @@ window.onload = () => {
         const data = snapshot.val();
         if (data) {
             userBalance = data.balance || 0;
-            userEnergy = data.energy !== undefined ? data.energy : 100;
             missionProgress = data.missionProgress || {};
             
-            document.getElementById('header-balance').innerText = formatBalance(userBalance);
+            document.getElementById('header-balance').innerText = formatBalance(userBalance) + " ABP";
             document.getElementById('active-multiplier').innerText = (data.currentMultiplier || 1.0).toFixed(1) + "x";
-            updateEnergyUI();
         }
     });
 
     initMinesGrid();
-    setInterval(refillEnergy, 60000); 
 };
 
 function formatBalance(num) {
-    return num >= 1000000 ? (num/1000000).toFixed(2) + "M" : num.toLocaleString();
+    return num >= 1000000 ? (num/1000000).toFixed(2) + "M" : num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
 // 💎 --- DIAMOND HUNT (MINES) LOGIC --- 💎
@@ -87,16 +82,17 @@ function initMinesGrid() {
 }
 
 window.startMines = function() {
-    if(userBalance < 100) return alert("Min. 100 ABP required to Hunt!");
-    if(mineActive) return alert("Game already in progress!");
+    if(userBalance < 100) return alert("Min. 100 ABP required to start!");
+    if(mineActive) return;
     
-    userBalance -= 100; // Bet amount
+    userBalance -= 100;
     database.ref(`users/${userWallet}`).update({ balance: userBalance });
     
     mineActive = true;
     mineMultiplier = 1.0;
     document.getElementById('mine-start-btn').style.display = 'none';
     document.getElementById('mine-cashout-btn').style.display = 'block';
+    document.getElementById('mine-multiplier').innerText = "NEXT: 1.25x";
     initMinesGrid();
 };
 
@@ -107,7 +103,7 @@ function revealMine(id, el) {
     if(bombs.includes(id)) {
         el.innerHTML = '💣';
         el.classList.add('bomb');
-        alert("BOMB! You lost 100 ABP.");
+        alert("SYSTEM ERROR: Bomb detected! 100 ABP Lost.");
         endMinesGame(false);
     } else {
         el.innerHTML = '💎';
@@ -122,7 +118,7 @@ window.cashoutMines = function() {
     let winAmount = 100 * mineMultiplier;
     userBalance += winAmount;
     database.ref(`users/${userWallet}`).update({ balance: userBalance });
-    alert(`CASHED OUT! You won ${winAmount.toFixed(0)} ABP!`);
+    alert(`MISSION SUCCESS! Mined ${winAmount.toFixed(0)} ABP.`);
     endMinesGame(true);
 };
 
@@ -130,29 +126,29 @@ function endMinesGame(isWin) {
     mineActive = false;
     document.getElementById('mine-start-btn').style.display = 'block';
     document.getElementById('mine-cashout-btn').style.display = 'none';
-    document.getElementById('mine-multiplier').innerText = `POTENTIAL: 1.0x`;
+    document.getElementById('mine-multiplier').innerText = `BET: 100 ABP`;
 }
 
-// 🐔 --- CHICKEN ROAD (INSTANT CRASH) --- 🐔
+// 🐔 --- CHICKEN ROAD (CRASH) --- 🐔
 window.startChickenRun = function() {
-    if(userBalance < 50) return alert("Need 50 ABP to run!");
+    if(userBalance < 50) return alert("Need 50 ABP to start!");
     
-    // 80% Win chance for Lane 1, decreases as you go up
+    // Quick RNG for Chicken
     let winChance = Math.random();
-    let result = "";
     let reward = 0;
+    let msg = "";
 
-    if(winChance > 0.3) {
-        reward = 50 * 1.5;
-        result = "SUCCESS! You crossed Lane 1. +75 ABP";
+    if(winChance > 0.4) {
+        reward = 25; // Net profit
+        msg = "SUCCESS! You crossed the lane. +25 ABP Reward.";
     } else {
-        reward = -50;
-        result = "BOOM! A car hit the chicken. -50 ABP";
+        reward = -50; // Loss
+        msg = "CRITICAL FAILURE: Collision detected! -50 ABP.";
     }
 
     userBalance += reward;
     database.ref(`users/${userWallet}`).update({ balance: userBalance });
-    alert(result);
+    alert(msg);
 };
 
 // --- MISSION LOGIC ---
@@ -168,9 +164,17 @@ function renderMissions() {
     priorityMissions.forEach(m => {
         const isDone = missionProgress[m.id];
         html += `
-            <div class="task-card ${isDone ? 'task-done' : ''}" onclick="executeMission('${m.id}', '${m.link}', ${m.reward})">
-                <div><span>💎 ${m.title}</span><br><small>+${m.reward} ABP</small></div>
-                <div>${isDone ? 'DONE' : 'GO'}</div>
+            <div class="task-card" style="border-left: 2px solid ${isDone ? 'var(--neon-green)' : 'var(--cyan)'};">
+                <div>
+                    <span style="font-size: 13px; font-weight: bold;">${m.title}</span><br>
+                    <small style="color: var(--cyan);">+${m.reward} ABP Reward</small>
+                </div>
+                <button onclick="executeMission('${m.id}', '${m.link}', ${m.reward})" 
+                        style="background: ${isDone ? 'rgba(0,255,136,0.1)' : 'var(--cyan)'}; 
+                               color: ${isDone ? 'var(--neon-green)' : '#000'}; 
+                               border: none; padding: 8px 15px; border-radius: 5px; font-size: 10px; font-weight: bold;">
+                    ${isDone ? 'COMPLETED' : 'EXECUTE'}
+                </button>
             </div>`;
     });
     container.innerHTML = html;
@@ -179,25 +183,15 @@ function renderMissions() {
 window.executeMission = function(mid, link, reward) {
     if(missionProgress[mid]) return;
     window.open(link, '_blank');
+    
+    // Simulate Verification
     setTimeout(() => {
         missionProgress[mid] = true;
         database.ref(`users/${userWallet}`).update({
             balance: userBalance + reward,
             missionProgress: missionProgress
         });
-        alert("Mission Verified!");
+        alert("PROTOCOL VERIFIED: Reward credited.");
         renderMissions();
-    }, 4000);
+    }, 3000);
 };
-
-function updateEnergyUI() {
-    const fill = document.getElementById('energy-fill');
-    if(fill) fill.style.width = userEnergy + "%";
-}
-
-function refillEnergy() {
-    if (userEnergy < 100) {
-        userEnergy += 5;
-        database.ref('users/' + userWallet).update({ energy: userEnergy });
-    }
-}
