@@ -175,7 +175,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
-    <script>
+        <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -185,6 +185,14 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        // [AUTO-LOGIN CHECK] Agar user pehle se logged in hai toh seedha bhej do
+        window.onload = function() {
+            const savedUser = localStorage.getItem('adamas_user');
+            if(savedUser) {
+                window.location.href = "dashboard.html";
+            }
+        }
 
         function startJourney() {
             document.getElementById('phase-intro').classList.remove('active-phase');
@@ -220,36 +228,51 @@
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const wallet = accounts[0];
                     
-                    // Signing for 800 ABP sync
+                    // Simple Sign (Optional but good for Web3 feel)
                     await window.ethereum.request({ 
                         method: 'personal_sign', 
-                        params: ["Authorize Adamas Node for 800 ABP Credit", wallet] 
+                        params: ["Authorize Adamas Node Sync", wallet] 
                     });
 
                     const userRef = db.ref('users/' + wallet);
-                    const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                    
+                    // [CRITICAL FIX]: Check if user exists BEFORE resetting balance
+                    userRef.once('value').then(async (snapshot) => {
+                        if (!snapshot.exists()) {
+                            // NAYA USER HAI - Tabhi 800 do
+                            const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                            await userRef.set({
+                                balance: 800,
+                                abp_balance: 800,
+                                wallet: wallet,
+                                refCode: wallet.substring(2, 8).toUpperCase(),
+                                referredBy: referrer,
+                                joinedAt: new Date().toISOString(),
+                                lastLogin: new Date().toISOString()
+                            });
 
-                    await userRef.update({
-                        balance: 800,
-                        abp_balance: 800,
-                        wallet: wallet,
-                        refCode: wallet.substring(2, 8).toUpperCase(),
-                        referredBy: referrer,
-                        joinedAt: new Date().toISOString()
+                            // Referral Bonus
+                            if(referrer !== "DIRECT") {
+                                const rRef = db.ref('users/' + referrer);
+                                rRef.child('balance').transaction(b => (b || 0) + 100);
+                                rRef.child('abp_balance').transaction(b => (b || 0) + 100);
+                            }
+                        } else {
+                            // PURANA USER HAI - Sirf last login update karo
+                            await userRef.update({
+                                lastLogin: new Date().toISOString()
+                            });
+                        }
+
+                        // Save in browser memory and redirect
+                        localStorage.setItem('adamas_user', wallet);
+                        window.location.href = "dashboard.html";
                     });
 
-                    // Referral Logic
-                    if(referrer !== "DIRECT") {
-                        const rRef = db.ref('users/' + referrer);
-                        rRef.child('balance').transaction(b => (b || 0) + 100);
-                        rRef.child('abp_balance').transaction(b => (b || 0) + 100);
-                    }
-
-                    localStorage.setItem('adamas_user', wallet);
-                    window.location.href = "dashboard.html";
-                } catch (e) { alert("Auth Failed"); }
-            } else { alert("Install Trust Wallet / MetaMask"); }
+                } catch (e) { alert("Auth Failed: " + e.message); }
+            } else { alert("Install Trust Wallet / MetaMask / OKX Wallet"); }
         }
     </script>
+
 </body>
 </html>
