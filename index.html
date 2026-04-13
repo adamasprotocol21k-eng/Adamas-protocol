@@ -82,21 +82,29 @@
         <section id="phase-intro">
             <h1 id="typing-logo" class="glow-text" style="font-size: 2rem;"></h1>
             <p style="font-size: 10px; color: #aaa; text-transform: uppercase;">Elite Node Infrastructure</p>
+            
             <div class="system-specs">
                 <div class="spec-line"><span class="spec-label">Admin</span><span class="spec-value">SYSTEM-ROOT-V12</span></div>
                 <div class="spec-line"><span class="spec-label">Network</span><span class="spec-value">ADAMAS TESTNET 1.0</span></div>
                 <div class="spec-line"><span class="spec-label">Protocol</span><span class="spec-value">PRO-ELITE CYBER-SYSTEM</span></div>
                 <div class="spec-line" style="border:none;"><span class="spec-label">Status</span><span class="spec-value" style="color:var(--parrot-green)">● ONLINE</span></div>
             </div>
+
             <p style="font-size: 10px; color: #888; max-width: 80%; line-height: 1.5;">
-                Adammas Protocol uses high-frequency node verification. Secure your future mainnet position.
+                Adammas Protocol uses high-frequency node verification to secure the future mainnet ecosystem. Stress-test the system now to earn early adopter rewards.
             </p>
+
             <button class="btn-entry" onclick="startJourney()">INITIALIZE NODE</button>
         </section>
 
         <section id="phase-social">
             <div style="width: 100%; max-width: 400px;">
                 <h2 class="glow-text">ELITE ACCESS</h2>
+                
+                <div style="background: rgba(173, 255, 47, 0.1); padding: 15px; border-radius: 15px; border: 1px dashed var(--parrot-green); margin-bottom: 15px;">
+                    <span style="font-size: 11px;">TASK REWARD: </span><span style="color:var(--parrot-green); font-weight: 900;">800 ABP</span>
+                </div>
+
                 <div class="task-card">
                     <span style="font-size: 10px; color: var(--neon-blue); font-weight: 900;">COMMUNITY VALIDATION</span>
                     <div class="social-grid">
@@ -108,6 +116,7 @@
                         </a>
                     </div>
                 </div>
+
                 <div class="task-card">
                     <span style="font-size: 10px; color: var(--neon-blue); font-weight: 900;">X-COMMAND HUB</span>
                     <div class="social-grid">
@@ -119,8 +128,9 @@
                         </a>
                     </div>
                 </div>
+
                 <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="opacity: 0.2; pointer-events: none; width: 100%;">CONNECT WALLET</button>
-                <p id="lock-msg">[!] COMPLETE TASKS TO AUTHENTICATE</p>
+                <p id="lock-msg">[!] COMPLETE ALL CHECKS TO AUTHENTICATE</p>
             </div>
         </section>
     </div>
@@ -136,7 +146,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Typing Effect
         const logoText = "ADAMAS PROTOCOL";
         let charIndex = 0;
         function typeEffect() {
@@ -150,10 +159,10 @@
         window.onload = () => {
             typeEffect();
             
-            // 🔄 Restore Referral from URL
+            // Referral Capture from URL
             const urlParams = new URLSearchParams(window.location.search);
             if(urlParams.has('ref')) {
-                localStorage.setItem('refBy', urlParams.get('ref'));
+                localStorage.setItem('referredBy', urlParams.get('ref'));
             }
 
             if (localStorage.getItem('adamas_phase') === 'social') {
@@ -167,16 +176,16 @@
         };
 
         function restoreTasks() {
-            let done = 0;
+            let doneCount = 0;
             ['t1', 't2', 't3', 't4'].forEach(id => {
                 if(localStorage.getItem(id) === 'true') {
                     const btn = document.getElementById(id);
                     btn.classList.add('verified');
                     btn.querySelector('.btn-lbl').innerText = "VERIFIED ✅";
-                    done++;
+                    doneCount++;
                 }
             });
-            updateUI(done);
+            updateUIState(doneCount);
         }
 
         function startJourney() {
@@ -185,71 +194,75 @@
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
-        // 🛠️ FIX: Proper Redirect & Verifying Delay
-        function handleTaskClick(btn, id, pts) {
+        // 🛠️ REPAIR: Direct verification fix (Redirect then Verify)
+        function handleTaskClick(btn, id, points) {
             if(!btn.classList.contains('verified')) {
                 const label = btn.querySelector('.btn-lbl');
                 label.innerText = "VERIFYING... ⏳";
                 
-                // User redirect ho jaye tab verify process start ho
+                // Simulation delay after clicking (User gets time to follow)
                 setTimeout(() => {
                     btn.classList.add('verified');
                     label.innerText = "VERIFIED ✅";
                     localStorage.setItem(id, 'true');
                     
-                    let total = parseInt(localStorage.getItem('temp_abp') || "0");
-                    localStorage.setItem('temp_abp', total + pts);
+                    let current = parseInt(localStorage.getItem('temp_abp') || "0");
+                    localStorage.setItem('temp_abp', current + points);
 
                     let done = 0;
                     ['t1', 't2', 't3', 't4'].forEach(tid => {
                         if(localStorage.getItem(tid) === 'true') done++;
                     });
-                    updateUI(done);
+                    updateUIState(done);
                 }, 3000); 
             }
         }
 
-        function updateUI(count) {
+        function updateUIState(count) {
             if(count >= 4) {
                 const conn = document.getElementById('connect-wallet-btn');
                 conn.style.opacity = "1";
                 conn.style.pointerEvents = "all";
-                document.getElementById('lock-msg').innerText = "NODE READY ✅";
+                document.getElementById('lock-msg').innerText = "NODE AUTHORIZED ✅";
+                document.getElementById('lock-msg').style.color = "var(--parrot-green)";
             }
         }
 
-        // 🚀 FIX: Points & Referral Credit to Firebase
+        // 🚀 REPAIR: Points & Referral Sync to Firebase
         async function connectWeb3() {
             if (window.ethereum) {
                 try {
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const wallet = accounts[0];
 
-                    const msg = "Link Node to Adamas Protocol.";
+                    const msg = "Verify ABP Reward Sync for wallet: " + wallet;
                     await window.ethereum.request({ method: 'personal_sign', params: [msg, wallet] });
 
-                    // Final Data Sync
-                    const abp = localStorage.getItem('temp_abp') || "800";
-                    const refBy = localStorage.getItem('refBy') || "None";
+                    const finalABP = localStorage.getItem('temp_abp') || "800";
+                    const refBy = localStorage.getItem('referredBy') || "None";
 
-                    await db.ref('users/' + wallet).set({
-                        address: wallet,
-                        abp_balance: abp,
+                    // Sync to Firebase
+                    await db.ref('users/' + wallet).update({
+                        abp_balance: finalABP,
+                        wallet: wallet,
+                        refCode: wallet.substring(2, 8).toUpperCase(),
                         referredBy: refBy,
-                        timestamp: new Date().getTime()
+                        lastUpdated: firebase.database.ServerValue.TIMESTAMP
                     });
 
-                    // Referral Bonus for the inviter
+                    // Inviter Bonus
                     if(refBy !== "None") {
-                        const refRef = db.ref('users/' + refBy + '/abp_balance');
-                        refRef.transaction(current => (current || 0) + 100);
+                        const refPoints = db.ref('users/' + refBy + '/abp_balance');
+                        refPoints.transaction((current) => (parseInt(current) || 0) + 100);
                     }
 
                     localStorage.setItem('adamas_user', wallet);
                     window.location.href = "dashboard.html";
                 } catch (err) {
-                    alert("Sync Error");
+                    alert("Authorization Error. Please Confirm in Wallet.");
                 }
+            } else {
+                alert("Please use MetaMask/Trust Wallet.");
             }
         }
     </script>
