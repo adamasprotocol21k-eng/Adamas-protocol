@@ -25,10 +25,7 @@
                 radial-gradient(circle at 90% 90%, rgba(173, 255, 47, 0.05) 0%, transparent 40%);
         }
 
-        .app-container {
-            width: 100%; max-width: 500px; height: 100vh;
-            display: flex; flex-direction: column; position: relative;
-        }
+        .app-container { width: 100%; max-width: 500px; height: 100vh; position: relative; }
 
         section {
             display: none; flex-direction: column; align-items: center;
@@ -93,7 +90,9 @@
                 <div class="spec-line" style="border:none;"><span class="spec-label">Status</span><span class="spec-value" style="color:var(--parrot-green)">● ONLINE</span></div>
             </div>
 
-            <p style="font-size: 10px; color: #888; max-width: 80%; line-height: 1.5;">Stress-test the protocol to secure your position in the future ecosystem.</p>
+            <p style="font-size: 10px; color: #888; max-width: 80%; line-height: 1.5;">
+                Adammas Protocol uses high-frequency node verification to secure the future mainnet ecosystem. Stress-test the system now to earn early adopter rewards.
+            </p>
 
             <button class="btn-entry" onclick="startJourney()">INITIALIZE NODE</button>
         </section>
@@ -103,16 +102,16 @@
                 <h2 class="glow-text">ELITE ACCESS</h2>
                 
                 <div style="background: rgba(173, 255, 47, 0.1); padding: 15px; border-radius: 15px; border: 1px dashed var(--parrot-green); margin-bottom: 15px;">
-                    <span style="font-size: 11px;">REWARD POOL: </span><span style="color:var(--parrot-green); font-weight: 900;">800 ABP</span>
+                    <span style="font-size: 11px;">TASK REWARD: </span><span style="color:var(--parrot-green); font-weight: 900;">800 ABP</span>
                 </div>
 
                 <div class="task-card">
                     <span style="font-size: 10px; color: var(--neon-blue); font-weight: 900;">COMMUNITY VALIDATION</span>
                     <div class="social-grid">
-                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" id="t1" onclick="verifyTask(this, 't1')">
+                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" id="t1" onclick="verifyTask(this, 't1', 200)">
                             <span style="color:var(--parrot-green)">+200 ABP</span><span class="btn-lbl">CHANNEL</span>
                         </a>
-                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" id="t2" onclick="verifyTask(this, 't2')">
+                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" id="t2" onclick="verifyTask(this, 't2', 200)">
                             <span style="color:var(--parrot-green)">+200 ABP</span><span class="btn-lbl">COMMUNITY</span>
                         </a>
                     </div>
@@ -121,36 +120,34 @@
                 <div class="task-card">
                     <span style="font-size: 10px; color: var(--neon-blue); font-weight: 900;">X-COMMAND HUB</span>
                     <div class="social-grid">
-                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" id="t3" onclick="verifyTask(this, 't3')">
+                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" id="t3" onclick="verifyTask(this, 't3', 200)">
                             <span style="color:var(--parrot-green)">+200 ABP</span><span class="btn-lbl">FOLLOW X1</span>
                         </a>
-                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" id="t4" onclick="verifyTask(this, 't4')">
+                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" id="t4" onclick="verifyTask(this, 't4', 200)">
                             <span style="color:var(--parrot-green)">+200 ABP</span><span class="btn-lbl">FOLLOW X2</span>
                         </a>
                     </div>
                 </div>
 
                 <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="opacity: 0.2; pointer-events: none; width: 100%;">CONNECT WALLET</button>
-                <p id="lock-msg">[!] COMPLETE ALL TASKS TO UNLOCK</p>
+                <p id="lock-msg">[!] COMPLETE ALL CHECKS TO AUTHENTICATE</p>
             </div>
         </section>
     </div>
 
     <script>
-        // 1. Firebase Configuration
+        // Firebase Config (Must Match Your Project)
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
             databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
             projectId: "adamas-protocol-v2",
-            storageBucket: "adamas-protocol-v2.firebasestorage.app",
-            messagingSenderId: "197711342782",
             appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. Typing Effect Logic
+        // Typing Effect Logic
         const logoText = "ADAMAS PROTOCOL";
         let charIndex = 0;
         function typeEffect() {
@@ -161,16 +158,10 @@
             }
         }
 
-        // 3. Page Load Logic (Referral + State Restore)
         window.onload = () => {
             typeEffect();
-
-            // 🔥 REFERRAL HANDLING: URL se referral id nikaal kar save karna
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            if (ref) localStorage.setItem('adamas_referrer', ref);
-
-            // 🔥 STATE RESTORE: Back aane par wahi page dikhao
+            
+            // 🔄 RESTORE STATE: Back aane par page bhatkega nahi
             if (localStorage.getItem('adamas_phase') === 'social') {
                 document.getElementById('phase-intro').style.display = 'none';
                 document.getElementById('phase-social').classList.add('active-phase');
@@ -178,17 +169,17 @@
                 document.getElementById('phase-intro').classList.add('active-phase');
             }
 
-            // Restore Verified Tasks
-            let done = 0;
+            // Restore Tasks
+            let doneCount = 0;
             ['t1', 't2', 't3', 't4'].forEach(id => {
                 if(localStorage.getItem(id) === 'true') {
                     const btn = document.getElementById(id);
                     btn.classList.add('verified');
                     btn.querySelector('.btn-lbl').innerText = "VERIFIED ✅";
-                    done++;
+                    doneCount++;
                 }
             });
-            updateWalletStatus(done);
+            updateUIState(doneCount);
         };
 
         function startJourney() {
@@ -197,8 +188,8 @@
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
-        // 🛠️ Task Verification with Genuine Delay
-        function verifyTask(btn, id) {
+        // 🛠️ Verify with Delay & Credit Logic
+        function verifyTask(btn, id, points) {
             if(!btn.classList.contains('verified')) {
                 const label = btn.querySelector('.btn-lbl');
                 label.innerText = "VERIFYING... ⏳";
@@ -208,62 +199,57 @@
                     label.innerText = "VERIFIED ✅";
                     localStorage.setItem(id, 'true');
                     
-                    let count = 0;
+                    // Temp credit
+                    let current = parseInt(localStorage.getItem('temp_abp') || "0");
+                    localStorage.setItem('temp_abp', current + points);
+
+                    let done = 0;
                     ['t1', 't2', 't3', 't4'].forEach(tid => {
-                        if(localStorage.getItem(tid) === 'true') count++;
+                        if(localStorage.getItem(tid) === 'true') done++;
                     });
-                    updateWalletStatus(count);
-                }, 2000); 
+                    updateUIState(done);
+                }, 2500); // Realistic 2.5s delay
             }
         }
 
-        function updateWalletStatus(count) {
+        function updateUIState(count) {
             if(count >= 4) {
                 const conn = document.getElementById('connect-wallet-btn');
                 conn.style.opacity = "1";
                 conn.style.pointerEvents = "all";
                 conn.style.boxShadow = "0 0 20px var(--parrot-green)";
-                document.getElementById('lock-msg').innerText = "SYSTEM READY ✅";
+                document.getElementById('lock-msg').innerText = "NODE AUTHORIZED ✅";
                 document.getElementById('lock-msg').style.color = "var(--parrot-green)";
             }
         }
 
-        // 🚀 Wallet Connection with Proper Signature & Point Credit
+        // 🚀 Final Wallet Connection & Point Sync
         async function connectWeb3() {
-            const btn = document.getElementById('connect-wallet-btn');
             if (window.ethereum) {
                 try {
-                    btn.innerText = "LINKING NODE...";
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const wallet = accounts[0];
 
-                    // Signature Popup
-                    const msg = "Confirm ABP Credit to your Adamas Node Protocol.";
+                    // Mandatory Confirmation Popup
+                    const msg = "Sign to sync your 800 ABP rewards with Adamas Protocol.";
                     await window.ethereum.request({ method: 'personal_sign', params: [msg, wallet] });
 
-                    // 🔥 CREDIT POINTS TO DATABASE
-                    const referrer = localStorage.getItem('adamas_referrer') || "none";
-                    await db.ref('users/' + wallet).set({
-                        address: wallet,
-                        abp_balance: 800,
-                        referred_by: referrer,
-                        timestamp: Date.now()
+                    // Final Credit to Firebase
+                    const finalABP = localStorage.getItem('temp_abp') || "800";
+                    await db.ref('users/' + wallet).update({
+                        abp_balance: finalABP,
+                        wallet: wallet,
+                        refCode: wallet.substring(2, 8).toUpperCase(), // Self Referral Code
+                        lastUpdated: new Date().getTime()
                     });
 
-                    // Referral commission credit logic (optional)
-                    if(referrer !== "none") {
-                        const refRef = db.ref('users/' + referrer + '/referral_count');
-                        refRef.transaction(current => (current || 0) + 1);
-                    }
-
                     localStorage.setItem('adamas_user', wallet);
-                    btn.innerText = "AUTHORIZED ✅";
-                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+                    window.location.href = "dashboard.html"; // Next page
                 } catch (err) {
-                    btn.innerText = "RETRY CONNECTION";
+                    alert("Authorization failed. Try again.");
                 }
             } else {
-                alert("Please open this in Trust Wallet or MetaMask browser.");
+                alert("Please use MetaMask/Trust Wallet.");
             }
         }
     </script>
