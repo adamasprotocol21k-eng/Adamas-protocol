@@ -146,3 +146,4 @@ body {
 .status-tag { padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; font-family: 'Orbitron'; }
 .status-pending { background: rgba(255,255,255,0.05); color: #555; }
 .status-active { background: var(--cyan-glow); color: var(--cyan); border: 1px solid var(--cyan); }
+
