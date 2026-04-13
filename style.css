@@ -1,10 +1,10 @@
-/* ADAMAS PROTOCOL - PRO-ELITE CYBER-SYSTEM (V12.2 - BRANDING UPDATE) */
+/* ADAMAS PROTOCOL - PRO-ELITE CYBER-SYSTEM (V12.3 - ULTRA GLOW) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
     --cyan: #00f2ff; 
     --bg-dark: #000000;
-    --card-bg: rgba(255, 255, 255, 0.04);
+    --card-bg: rgba(255, 255, 255, 0.08); /* Clarity ke liye thoda badhaya */
     --neon-green: #00ff88;
     --neon-purple: #bc13fe;
     --neon-gold: #ffcc00;
@@ -17,10 +17,12 @@
 
 body { 
     background: var(--bg-dark); 
+    /* 🔥 ENHANCED RADIAL GLOW FOR DEPTH */
     background-image: 
-        radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 5% 5%, rgba(188, 19, 254, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 95% 5%, rgba(0, 242, 255, 0.1) 0%, transparent 40%),
         radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
+    background-attachment: fixed; /* Glow screen ke saath move nahi hoga, fixed rahega */
     color: #eee; 
     font-family: 'Rajdhani', sans-serif; 
     overflow-x: hidden; 
@@ -28,7 +30,7 @@ body {
     padding-bottom: 120px; 
 }
 
-/* --- BRANDING LOGIC (NEW) --- */
+/* --- BRANDING LOGIC --- */
 .brand-identity {
     display: flex;
     align-items: center;
@@ -44,7 +46,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 15px var(--cyan-glow);
+    box-shadow: 0 0 20px var(--cyan-glow);
     animation: logoFloat 3s infinite ease-in-out;
 }
 
@@ -69,6 +71,7 @@ body {
     background: linear-gradient(to right, #fff, var(--cyan));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px var(--cyan-glow));
 }
 
 .protocol-sub {
@@ -77,7 +80,7 @@ body {
     color: var(--cyan);
     font-weight: bold;
     margin-top: 3px;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 @keyframes logoFloat {
@@ -91,7 +94,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(15px);
     border-bottom: 1px solid var(--glass-border);
 }
 
@@ -102,7 +106,7 @@ body {
     gap: 4px;
 }
 
-/* --- REMAINING ORIGINAL CODE --- */
+/* --- REMAINING ORIGINAL CODE (WITH CLARITY TWEAKS) --- */
 @keyframes breathing {
     0% { filter: drop-shadow(0 0 5px var(--cyan-glow)); }
     50% { filter: drop-shadow(0 0 15px var(--cyan-glow)); }
@@ -118,11 +122,11 @@ body {
 .premium-card { 
     background: var(--card-bg); 
     border: 1px solid var(--glass-border); 
-    backdrop-filter: blur(25px); 
+    backdrop-filter: blur(35px); /* Clarity ke liye blur badhaya */
     border-radius: 28px; 
     padding: 22px; 
     margin-bottom: 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6); /* Depth badhayi */
     transition: transform 0.3s ease;
 }
 
@@ -134,6 +138,7 @@ body {
     -webkit-text-fill-color: transparent;
     margin: 12px 0;
     font-weight: 900;
+    filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.3)); /* Text pop fix */
 }
 
 .btn-primary {
@@ -141,7 +146,7 @@ body {
     background: linear-gradient(90deg, var(--cyan), var(--neon-purple));
     color: #fff; border: none; border-radius: 18px; font-weight: 900;
     font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
-    box-shadow: 0 5px 20px var(--purple-glow);
+    box-shadow: 0 8px 25px var(--purple-glow);
     transition: 0.3s;
     letter-spacing: 1px;
 }
@@ -153,19 +158,19 @@ body {
     transform: translateX(-50%);
     width: 92%; 
     max-width: 420px;
-    background: rgba(10, 10, 10, 0.85); 
-    backdrop-filter: blur(40px);
+    background: rgba(10, 10, 10, 0.9); /* Thoda solid kiya clarity ke liye */
+    backdrop-filter: blur(45px);
     display: flex; 
     justify-content: space-around;
     padding: 14px 5px; 
     border-radius: 40px; 
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 20px 45px rgba(0,0,0,0.9), inset 0 1px 2px rgba(255,255,255,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 45px rgba(0,0,0,1), inset 0 1px 2px rgba(255,255,255,0.05);
     z-index: 10000;
 }
 
 .nav-item { 
-    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
+    text-decoration: none; color: #666; font-size: 8px; font-family: 'Orbitron'; 
     display: flex; flex-direction: column; align-items: center; gap: 5px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative; width: 65px;
@@ -182,7 +187,7 @@ body {
 
 .nav-item .icon { font-size: 1.2rem; transition: 0.3s; }
 
-.progress-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
+.progress-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.6); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--neon-purple)); box-shadow: 0 0 15px var(--cyan-glow); transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
 .status-tag { padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; font-family: 'Orbitron'; }
