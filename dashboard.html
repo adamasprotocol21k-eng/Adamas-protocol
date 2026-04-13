@@ -13,7 +13,7 @@
             <div class="brand-identity" onclick="window.location.href='profile.html'">
                 <div class="logo-wrapper">
                     <div class="main-logo-icon">A</div> 
-                    </div>
+                </div>
                 <div class="brand-text">
                     <span class="protocol-name">ADAMAS</span>
                     <span class="protocol-sub">PROTOCOL</span>
@@ -94,39 +94,81 @@
         </main>
 
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item active">
-                <span class="icon">🏠</span>
-                <span>HOME</span>
-            </a>
-            <a href="vault.html" class="nav-item">
-                <span class="icon">🔒</span>
-                <span>VAULT</span>
-            </a>
-            <a href="missions.html" class="nav-item">
-                <span class="icon">⚡</span>
-                <span>TASKS</span>
-            </a>
-            <a href="referral.html" class="nav-item">
-                <span class="icon)'>👥</span>
-                <span>NETWORK</span>
-            </a>
-            <a href="profile.html" class="nav-item">
-                <span class="icon">🏆</span>
-                <span>RANK</span>
-            </a>
+            <a href="dashboard.html" class="nav-item active">🏠 HOME</a>
+            <a href="missions.html" class="nav-item">⚡ TASKS</a>
+            <a href="referral.html" class="nav-item">👥 NETWORK</a>
+            <a href="profile.html" class="nav-item">🏆 RANK</a>
         </nav>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="dashboard.js"></script>
+
     <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+            authDomain: "adamas-protocol-v2.firebaseapp.com",
+            databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol-v2",
+            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // 1. Check if user is logged in
+        const userWallet = localStorage.getItem('adamas_user');
+        if (!userWallet) {
+            window.location.href = "index.html"; // Agar login nahi hai toh piche bhejo
+        }
+
+        // 2. Load Real-time Data from Firebase
+        const userRef = db.ref('users/' + userWallet);
+        userRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Update Balance
+                document.getElementById('total-balance').innerText = parseFloat(data.balance || 0).toFixed(4);
+                
+                // Update Wallet Pill
+                document.getElementById('user-address').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
+                
+                // Update Referral Link
+                const refLink = window.location.origin + "/index.html?ref=" + userWallet;
+                document.getElementById('ref-link-input').value = refLink;
+
+                // Update Referral Count
+                document.getElementById('ref-count').innerText = data.referralCount || 0;
+
+                // Update Progress Bar
+                const progress = Math.min((data.balance / 21000) * 100, 100).toFixed(2);
+                document.getElementById('scarcity-percent').innerText = progress + "%";
+                document.getElementById('scarcity-fill').style.width = progress + "%";
+            }
+        });
+
+        // 3. Mining Logic
+        function toggleMining() {
+            const btn = document.getElementById('mining-btn');
+            btn.innerText = "MINING ACTIVE...";
+            btn.style.background = "#adff2f";
+            btn.style.color = "#000";
+            alert("Node Synchronized! Mining started.");
+        }
+
+        // 4. Copy Referral
         function copyRefLink() {
             const copyText = document.getElementById("ref-link-input");
             if(copyText.value.includes("LOADING")) return;
             copyText.select();
-            document.execCommand("copy");
-            alert("Node Link Copied!");
+            navigator.clipboard.writeText(copyText.value);
+            alert("Node Invite Link Copied!");
+        }
+
+        // 5. Daily Bonus
+        function claimDailyBonus() {
+            userRef.child('balance').transaction((b) => (b || 0) + 10);
+            alert("Daily Sync Complete! +10 ABP credited.");
         }
     </script>
 </body>
