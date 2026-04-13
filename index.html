@@ -9,14 +9,14 @@
         :root {
             --parrot-green: #adff2f;
             --neon-blue: #00f2ff;
-            --deep-black: rgba(0, 0, 0, 0.9);
+            --deep-black: rgba(0, 0, 0, 0.95);
         }
 
         body {
             background: #000;
             background-image: 
-                radial-gradient(circle at 10% 10%, rgba(188, 19, 254, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(173, 255, 47, 0.08) 0%, transparent 40%);
+                radial-gradient(circle at 15% 15%, rgba(188, 19, 254, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(173, 255, 47, 0.1) 0%, transparent 45%);
             color: #fff;
             font-family: 'Orbitron', sans-serif;
             margin: 0;
@@ -25,53 +25,63 @@
 
         #phase-intro, #phase-social { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; }
         .active-phase { display: flex !important; animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        /* 🔥 HIGH VISIBILITY TEXT (Bright Light Fix) */
+        /* 🔥 HIGH-CONTRAST TEXT (For bright light visibility) */
         .glow-text { 
-            text-shadow: 0 0 10px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,1), 0 0 8px var(--parrot-green); 
+            text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 12px var(--parrot-green); 
             color: var(--parrot-green) !important;
             font-weight: 900;
+            letter-spacing: 4px;
         }
         
         .sub-text { 
-            color: #fff; 
-            text-shadow: 2px 2px 4px #000, -1px -1px 0 #000; 
-            font-weight: bold; 
+            color: #ffffff; 
+            text-shadow: 2px 2px 5px #000, -1px -1px 0 #000; 
+            font-weight: 800; 
             letter-spacing: 1px; 
         }
 
-        /* 💎 ROYAL SYSTEM SPECS BOX */
+        /* 💎 SYSTEM INFRASTRUCTURE BOX */
         .system-specs {
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid rgba(173, 255, 47, 0.3);
-            border-radius: 18px;
-            padding: 20px;
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid rgba(173, 255, 47, 0.4);
+            border-radius: 20px;
+            padding: 22px;
             width: 88%;
-            max-width: 360px;
+            max-width: 370px;
             margin: 25px 0;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.9);
         }
-        .spec-line { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .spec-label { font-size: 8px; color: #888; letter-spacing: 1px; }
-        .spec-value { font-size: 10px; color: var(--neon-blue); font-weight: bold; }
+        .spec-line { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
+        .spec-label { font-size: 9px; color: #999; text-transform: uppercase; font-weight: bold; }
+        .spec-value { font-size: 11px; color: var(--neon-blue); font-weight: 900; }
 
         .btn-entry { 
             background: var(--parrot-green); color: #000; border: none; 
-            padding: 18px 50px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
-            transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-            letter-spacing: 2px; box-shadow: 0 0 30px var(--parrot-green);
-            margin-top: 30px;
+            padding: 20px 55px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
+            letter-spacing: 2.5px; box-shadow: 0 0 40px var(--parrot-green);
+            margin-top: 35px;
         }
+        .btn-entry:active { transform: scale(0.9); }
 
         .task-card {
-            background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(173, 255, 47, 0.15);
-            border-radius: 20px; padding: 18px; margin-top: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+            background: rgba(15, 15, 15, 0.95); border: 1px solid rgba(173, 255, 47, 0.2);
+            border-radius: 22px; padding: 20px; margin-top: 14px;
+            box-shadow: 0 12px 45px rgba(0,0,0,1);
         }
 
         #typing-logo::after { content: "|"; animation: blink 0.7s infinite; color: var(--parrot-green); }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .admin-badge {
+            font-size: 8px; background: rgba(173, 255, 47, 0.15); color: var(--parrot-green);
+            padding: 4px 12px; border-radius: 50px; border: 1px solid var(--parrot-green);
+            margin-bottom: 15px; display: inline-block; font-weight: 900;
+        }
     </style>
 </head>
 <body>
@@ -79,18 +89,19 @@
     <div class="app-container">
         <section id="phase-intro" class="active-phase">
             <div style="text-align: center; width: 100%;">
-                <h1 id="typing-logo" class="glow-text" style="font-size: 2.2rem; letter-spacing: 3px;"></h1>
-                <p class="sub-text" style="font-size: 10px; margin-top: 5px; text-transform: uppercase; color: #aaa;">Pro-Elite Cyber-System [V12.0]</p>
+                <div class="admin-badge">AUTHORIZED BY: SYSTEM-ROOT-V12</div>
+                <h1 id="typing-logo" class="glow-text" style="font-size: 2.4rem;"></h1>
+                <p class="sub-text" style="font-size: 11px; margin-top: 8px; text-transform: uppercase; color: #fff; opacity: 0.9;">Decentralized Node Infrastructure</p>
                 
                 <div class="system-specs">
-                    <div class="spec-line"><span class="spec-label">Admin</span><span class="spec-value">SYSTEM-ROOT-V12</span></div>
-                    <div class="spec-line"><span class="spec-label">Network</span><span class="spec-value">ADAMAS TESTNET 1.0</span></div>
-                    <div class="spec-line"><span class="spec-label">Status</span><span class="spec-value" style="color: var(--parrot-green);">● ACTIVE NODE</span></div>
-                    <div class="spec-line" style="border:none;"><span class="spec-label">Security</span><span class="spec-value">SSL-256 BIT</span></div>
+                    <div class="spec-line"><span class="spec-label">Administrator</span><span class="spec-value">PRO-ELITE CYBER-SYSTEM</span></div>
+                    <div class="spec-line"><span class="spec-label">Environment</span><span class="spec-value">TESTNET PHASE 1.0</span></div>
+                    <div class="spec-line"><span class="spec-label">System Status</span><span class="spec-value" style="color: var(--parrot-green);">● ACTIVE NODE</span></div>
+                    <div class="spec-line" style="border:none;"><span class="spec-label">Network Tier</span><span class="spec-value">MAINNET ALPHA (V12.0)</span></div>
                 </div>
 
-                <p class="sub-text" style="font-size: 9px; color: #eee; max-width: 280px; margin: 0 auto; line-height: 1.6;">
-                    Test the node infrastructure and earn Activity Points (ABP) for future eligibility.
+                <p class="sub-text" style="font-size: 10px; color: #ccc; max-width: 300px; margin: 0 auto; line-height: 1.7;">
+                    Participate in node testing. Your activity records and opinions will determine future eligibility.
                 </p>
 
                 <button class="btn-entry" onclick="startJourney()">INITIALIZE NODE</button>
@@ -98,44 +109,32 @@
         </section>
 
         <section id="phase-social">
-            <div class="premium-card" style="width: 92%; max-width: 400px; text-align: center;">
-                <h2 class="glow-text" style="font-size: 1.4rem; letter-spacing: 2px;">ELITE REWARDS</h2>
-                <p class="sub-text" style="font-size: 9px; color: #888; margin-bottom: 15px;">Systematic Transparency: Testing Phase</p>
+            <div class="premium-card" style="width: 94%; max-width: 420px; text-align: center; background: rgba(0,0,0,0.8); padding: 30px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.08);">
+                <h2 class="glow-text" style="font-size: 1.5rem;">ELITE REWARDS</h2>
+                <p class="sub-text" style="font-size: 10px; color: #999; margin-bottom: 18px;">Earn Activity Points through System Validation</p>
 
-                <div style="margin-bottom: 20px; background: rgba(173, 255, 47, 0.1); padding: 15px; border-radius: 15px; border: 1px solid var(--parrot-green);">
-                    <p class="sub-text" style="font-size: 11px; margin:0;">WELCOME BONUS: <span class="glow-text" style="font-size: 20px;">800 ABP</span></p>
+                <div style="margin-bottom: 25px; background: rgba(173, 255, 47, 0.12); padding: 18px; border-radius: 18px; border: 2px dashed var(--parrot-green);">
+                    <p class="sub-text" style="font-size: 12px; margin:0;">STRESS-TEST BONUS: <span class="glow-text" style="font-size: 22px;">800 ABP</span></p>
                 </div>
 
                 <div class="task-card">
-                    <p style="color: var(--neon-blue); font-size: 11px; font-weight: 900; margin-bottom: 12px; font-family: 'Orbitron';">STEP 01: TELEGRAM VALIDATION</p>
-                    <div class="social-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; text-decoration: none;">
-                            <span style="color: var(--parrot-green); font-size: 8px; font-weight: 900;">+200 ABP</span>
-                            <span class="btn-label" style="font-size: 9px; color: #fff; display: block;">CHANNEL</span>
+                    <p style="color: var(--neon-blue); font-size: 11px; font-weight: 900; margin-bottom: 15px; font-family: 'Orbitron'; letter-spacing: 1px;">TASK 01: TELEGRAM HUB</p>
+                    <div class="social-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 15px; border-radius: 14px; text-decoration: none;">
+                            <span style="color: var(--parrot-green); font-size: 9px; font-weight: 900; display: block;">+200 ABP</span>
+                            <span class="btn-label" style="font-size: 10px; color: #fff; font-weight: 900; margin-top: 4px;">CHANNEL</span>
                         </a>
-                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="verifyTask(this)" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; text-decoration: none;">
-                            <span style="color: var(--parrot-green); font-size: 8px; font-weight: 900;">+200 ABP</span>
-                            <span class="btn-label" style="font-size: 9px; color: #fff; display: block;">COMMUNITY</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="task-card" style="margin-top:15px;">
-                    <p style="color: var(--neon-blue); font-size: 11px; font-weight: 900; margin-bottom: 12px; font-family: 'Orbitron';">STEP 02: X-COMMAND HUB</p>
-                    <div class="social-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; text-decoration: none;">
-                            <span style="color: var(--parrot-green); font-size: 8px; font-weight: 900;">+200 ABP</span>
-                            <span class="btn-label" style="font-size: 9px; color: #fff; display: block;">FOLLOW X1</span>
-                        </a>
-                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" onclick="verifyTask(this)" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; text-decoration: none;">
-                            <span style="color: var(--parrot-green); font-size: 8px; font-weight: 900;">+200 ABP</span>
-                            <span class="btn-label" style="font-size: 9px; color: #fff; display: block;">FOLLOW X2</span>
+                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="verifyTask(this)" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 15px; border-radius: 14px; text-decoration: none;">
+                            <span style="color: var(--parrot-green); font-size: 9px; font-weight: 900; display: block;">+200 ABP</span>
+                            <span class="btn-label" style="font-size: 10px; color: #fff; font-weight: 900; margin-top: 4px;">COMMUNITY</span>
                         </a>
                     </div>
                 </div>
 
-                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="margin-top: 25px; opacity: 0.2; pointer-events: none; width: 100%; padding: 18px; border-radius: 15px; background: var(--parrot-green); color: #000; font-weight: 900; border: none;">CONNECT WALLET</button>
-                <p id="lock-msg" style="font-size: 9px; color: #ff0033; margin-top: 10px; font-weight: bold;">[!] COMPLETE ALL STEPS TO AUTHORIZE</p>
+                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="margin-top: 30px; opacity: 0.3; pointer-events: none; width: 100%; padding: 20px; border-radius: 18px; background: var(--parrot-green); color: #000; font-weight: 900; border: none; font-family: 'Orbitron'; font-size: 14px; letter-spacing: 1px;">AUTHENTICATE WALLET</button>
+                <p id="lock-msg" style="font-size: 10px; color: #ff0033; margin-top: 15px; font-weight: 900;">[!] COMPLETE ALL SYSTEM CHECKS TO PROCEED</p>
+                
+                <p class="sub-text" style="font-size: 9px; color: #666; margin-top: 20px; font-style: italic;">Note: Activity Points (ABP) are used to measure community contribution.</p>
             </div>
         </section>
     </div>
@@ -144,7 +143,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-    // Config same as yours
     const firebaseConfig = {
       apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
       authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -163,7 +161,7 @@
         if (charIndex < logoText.length) {
             document.getElementById("typing-logo").innerHTML += logoText.charAt(charIndex);
             charIndex++;
-            setTimeout(typeEffect, 100);
+            setTimeout(typeEffect, 120);
         }
     }
 
@@ -182,23 +180,28 @@
         if(!btn.classList.contains('verified')) {
             btn.classList.add('verified');
             btn.style.borderColor = "var(--parrot-green)";
-            btn.style.background = "rgba(173, 255, 47, 0.1)";
+            btn.style.background = "rgba(173, 255, 47, 0.2)";
             btn.querySelector('.btn-label').innerText = "VERIFIED ✅";
+            btn.querySelector('.btn-label').style.color = "var(--parrot-green)";
             completedTasks++;
             if(completedTasks >= 4) {
                 const conn = document.getElementById('connect-wallet-btn');
                 conn.style.opacity = "1"; conn.style.pointerEvents = "all";
-                document.getElementById('lock-msg').innerText = "READY FOR AUTHENTICATION ✅";
+                conn.style.boxShadow = "0 0 40px var(--parrot-green)";
+                document.getElementById('lock-msg').innerText = "SYSTEM AUTHENTICATED: READY ✅";
                 document.getElementById('lock-msg').style.color = "var(--parrot-green)";
             }
         }
     }
 
     async function connectWeb3() {
-        // Your existing Web3 logic here
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        localStorage.setItem('adamas_user', accounts[0]);
-        window.location.href = "dashboard.html";
+        if (typeof window.ethereum !== 'undefined') {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                localStorage.setItem('adamas_user', accounts[0]);
+                window.location.href = "dashboard.html";
+            } catch (err) { alert("Connection Failed"); }
+        } else { alert("Use Trust/MetaMask Browser."); }
     }
     </script>
 </body>
