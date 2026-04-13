@@ -178,8 +178,6 @@
         window.onload = () => {
             typeEffect();
             
-            // 🔄 STATE RESTORE LOGIC
-            // Agar journey start ho chuki hai toh seedha social section dikhao
             if (localStorage.getItem('adamas_phase') === 'social') {
                 document.getElementById('phase-intro').style.display = 'none';
                 document.getElementById('phase-social').classList.add('active-phase');
@@ -187,7 +185,6 @@
                 document.getElementById('phase-intro').classList.add('active-phase');
             }
 
-            // Restore Verified Tasks
             let done = 0;
             ['t1', 't2', 't3', 't4'].forEach(id => {
                 if(localStorage.getItem(id) === 'true') {
@@ -201,22 +198,28 @@
         };
 
         function startJourney() {
-            localStorage.setItem('adamas_phase', 'social'); // Save phase state
+            localStorage.setItem('adamas_phase', 'social');
             document.getElementById('phase-intro').classList.remove('active-phase');
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
+        // 🛠️ UPDATE 1: Loading/Verification Delay added
         function verifyTask(btn, id) {
             if(!btn.classList.contains('verified')) {
-                btn.classList.add('verified');
-                btn.querySelector('.btn-lbl').innerText = "VERIFIED ✅";
-                localStorage.setItem(id, 'true'); // Save task state
+                const label = btn.querySelector('.btn-lbl');
+                label.innerText = "VERIFYING... ⏳";
                 
-                let count = 0;
-                ['t1', 't2', 't3', 't4'].forEach(tid => {
-                    if(localStorage.getItem(tid) === 'true') count++;
-                });
-                updateWalletStatus(count);
+                setTimeout(() => {
+                    btn.classList.add('verified');
+                    label.innerText = "VERIFIED ✅";
+                    localStorage.setItem(id, 'true');
+                    
+                    let count = 0;
+                    ['t1', 't2', 't3', 't4'].forEach(tid => {
+                        if(localStorage.getItem(tid) === 'true') count++;
+                    });
+                    updateWalletStatus(count);
+                }, 2000); // 2 Second wait
             }
         }
 
@@ -231,17 +234,26 @@
             }
         }
 
+        // 🛠️ UPDATE 2: Proper Wallet Confirmation Popup (Personal Sign)
         async function connectWeb3() {
             const btn = document.getElementById('connect-wallet-btn');
             if (window.ethereum) {
                 try {
                     btn.innerText = "LINKING NODE...";
+                    // Request accounts
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    if(accounts.length > 0) {
-                        localStorage.setItem('adamas_user', accounts[0]);
-                        btn.innerText = "CONNECTED ✅";
-                        setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
-                    }
+                    const wallet = accounts[0];
+
+                    // Request Confirmation Popup (Signature)
+                    const msg = "Verify your access to Adamas Protocol Elite Terminal.";
+                    await window.ethereum.request({
+                        method: 'personal_sign',
+                        params: [msg, wallet],
+                    });
+
+                    localStorage.setItem('adamas_user', wallet);
+                    btn.innerText = "AUTHORIZED ✅";
+                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
                 } catch (err) {
                     btn.innerText = "RETRY CONNECTION";
                 }
