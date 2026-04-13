@@ -1,49 +1,78 @@
-/* ADAMAS PROTOCOL - ELITE TESTNET SYNC (V13.0) */
+/* ADAMAS PROTOCOL - ELITE CYBER-SYSTEM (V13.5) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
-    --p-green: #adff2f; 
     --cyan: #00f2ff; 
-    --bg-dark: #000000;
+    --p-green: #adff2f; 
+    --bg-dark: #010808;
+    --card-bg: rgba(255, 255, 255, 0.03);
     --neon-purple: #bc13fe;
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(0, 242, 255, 0.15);
+    --cyan-glow: rgba(0, 242, 255, 0.3);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
     background: var(--bg-dark); 
-    background-image: radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
+    background-image: radial-gradient(circle at 50% 10%, #001a1a 0%, #000 100%);
     color: #eee; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; min-height: 100vh;
 }
 
-/* --- BRANDING & TERMINAL --- */
-.terminal-box {
-    background: rgba(15, 15, 15, 0.7);
-    border: 1px solid rgba(173, 255, 47, 0.3);
-    border-radius: 25px; width: 92%; padding: 25px; margin: 20px auto;
-    backdrop-filter: blur(15px); box-shadow: 0 0 30px rgba(0,0,0,0.5);
+/* --- PROFESSIONAL HEADER FIX --- */
+header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--glass-border);
 }
 
-.spec-row { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 0.5px solid rgba(255,255,255,0.05); padding-bottom: 8px; font-size: 10px; }
-.spec-label { color: #888; text-transform: uppercase; }
-.spec-value { color: var(--cyan); font-weight: bold; font-family: 'Orbitron'; }
+.brand-sec { display: flex; align-items: center; gap: 10px; }
+.logo-box { width: 32px; height: 32px; background: var(--cyan); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-weight: 900; color: #000; box-shadow: 0 0 15px var(--cyan-glow); }
+.brand-name { font-family: 'Orbitron'; font-size: 14px; font-weight: 900; letter-spacing: 1px; }
 
-.btn-slanted {
-    background: var(--p-green); color: #000; border: none; padding: 18px;
-    font-family: 'Orbitron'; font-weight: 900; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-    cursor: pointer; width: 85%; display: block; margin: 25px auto; text-transform: uppercase; letter-spacing: 2px;
+.wallet-badge { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--cyan); padding: 5px 12px; border-radius: 20px; font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); }
+
+/* --- DASHBOARD CARDS & STATS --- */
+.container { padding: 20px; max-width: 500px; margin: auto; }
+
+.main-balance-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,242,255,0.02));
+    border: 1px solid var(--glass-border); border-radius: 30px;
+    padding: 35px 20px; text-align: center; margin-bottom: 20px;
+    backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.4);
 }
 
-/* --- DASHBOARD ELEMENTS (SYNC) --- */
-.premium-card { background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; margin-bottom: 18px; }
-.balance-count { font-family: 'Orbitron'; font-size: 2.8rem; font-weight: 900; color: var(--cyan); text-align: center; }
+.balance-label { font-family: 'Orbitron'; font-size: 10px; color: #888; letter-spacing: 3px; margin-bottom: 10px; }
+.balance-count { font-family: 'Orbitron'; font-size: 2.8rem !important; font-weight: 900; color: var(--cyan); text-shadow: 0 0 20px var(--cyan-glow); }
+.token-symbol { font-family: 'Orbitron'; color: var(--cyan); font-size: 14px; font-weight: bold; margin-top: 5px; display: block; }
 
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+.stat-item { 
+    background: var(--card-bg); border: 1px solid var(--glass-border); 
+    padding: 15px; border-radius: 20px; text-align: center;
+}
+.stat-label { font-size: 9px; color: #666; font-family: 'Orbitron'; text-transform: uppercase; margin-bottom: 5px; }
+.stat-value { font-family: 'Orbitron'; font-size: 15px; font-weight: bold; color: #fff; }
+
+/* --- MINING BADGE --- */
+.mining-status-pill {
+    background: rgba(173, 255, 47, 0.1); border: 1px solid var(--p-green);
+    color: var(--p-green); padding: 6px 15px; border-radius: 8px;
+    font-size: 10px; font-family: 'Orbitron'; font-weight: 900;
+    display: inline-block; margin-bottom: 15px; letter-spacing: 1px;
+}
+
+/* --- NAVIGATION --- */
 .bottom-nav {
     position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-    width: 92%; max-width: 420px; background: rgba(10, 10, 10, 0.85); 
+    width: 92%; max-width: 420px; background: rgba(10, 10, 10, 0.9); 
     backdrop-filter: blur(40px); display: flex; justify-content: space-around;
-    padding: 14px 5px; border-radius: 40px; border: 1px solid var(--glass-border); z-index: 10000;
+    padding: 14px 5px; border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10000;
 }
-.nav-item { text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 65px; }
+
+.nav-item { 
+    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
+    display: flex; flex-direction: column; align-items: center; gap: 6px; width: 65px;
+}
 .nav-item.active { color: var(--cyan); }
+.icon { font-size: 1.2rem; margin-bottom: 2px; }
