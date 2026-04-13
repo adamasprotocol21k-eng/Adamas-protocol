@@ -1,139 +1,133 @@
-/* ADAMAS PROTOCOL - QUANTUM CORE (V60.0)
-   ENGINEERED BY: GEMINI CYBER-SYNC 
-   DESIGN: ULTRA-PREMIUM WEB3 INTERFACE (DARK MODE)
-*/
-
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;500;700&display=swap');
+/* ADAMAS PROTOCOL - V12.4 - CLEAN NEON FIX */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
-    --neon-cyan: #00f2ff; 
-    --toxic-green: #adff2f; 
-    --deep-vibe: #bc13fe;
-    --surface: rgba(255, 255, 255, 0.04);
-    --border-light: rgba(255, 255, 255, 0.12);
-    --bg-black: #050505;
+    --cyan: #00f2ff; 
+    --bg-dark: #000000;
+    --card-bg: rgba(255, 255, 255, 0.06); 
+    --neon-purple: #bc13fe;
+    --neon-red: #ff0033;
+    --parrot-green: #adff2f; /* Naya Parrot Green */
+    --neon-blue: #0077ff;
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --cyan-glow: rgba(0, 242, 255, 0.4);
+    --purple-glow: rgba(188, 19, 254, 0.3);
 }
 
-/* --- [1] THE ENGINE --- */
-* { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
-    background-color: var(--bg-black);
+    background: var(--bg-dark); 
+    /* 🔥 MULTI-COLOR GLOW BACKGROUND (Stays in background, doesn't break layout) */
     background-image: 
-        radial-gradient(at 0% 0%, rgba(0, 242, 255, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(188, 19, 254, 0.12) 0px, transparent 50%);
-    color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
-    min-height: 100vh; display: flex; justify-content: center;
-    overflow-x: hidden; padding: env(safe-area-inset-top) 20px 120px;
+        radial-gradient(circle at 10% 10%, rgba(188, 19, 254, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(255, 0, 51, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
+    background-attachment: fixed;
+    color: #eee; 
+    font-family: 'Rajdhani', sans-serif; 
+    overflow-x: hidden; 
+    min-height: 100vh;
+    padding-bottom: 120px; 
 }
 
-.app-container {
-    width: 100%; max-width: 420px;
-    display: flex; flex-direction: column; align-items: center;
-    animation: fadeIn 0.8s ease-out;
-}
-
-/* --- [2] BRANDING (The "Wow" Factor) --- */
-.brand-identity {
-    padding-top: 50px; text-align: center; margin-bottom: 40px;
-}
+/* --- BRANDING LOGIC --- */
+.brand-identity { display: flex; align-items: center; gap: 12px; cursor: pointer; }
 
 .logo-wrapper {
-    width: 90px; height: 90px; margin: 0 auto 20px;
-    background: linear-gradient(135deg, var(--neon-cyan), var(--deep-vibe));
-    border-radius: 28% 72% 28% 72% / 28% 28% 72% 72%; /* Organic Cyber Shape */
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 10px 40px rgba(0, 242, 255, 0.3);
-    animation: morphing 8s infinite alternate;
+    box-shadow: 0 0 15px var(--purple-glow);
+    animation: logoFloat 3s infinite ease-in-out;
 }
 
-.main-logo-icon { font-family: 'Orbitron'; font-size: 42px; font-weight: 900; color: #000; }
+.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: #fff; }
 
 .protocol-name {
-    font-family: 'Orbitron'; font-size: 2.4rem; letter-spacing: 6px; font-weight: 900;
-    background: linear-gradient(to right, #fff, var(--neon-cyan));
+    font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; letter-spacing: 1.5px;
+    background: linear-gradient(to right, #fff, var(--parrot-green));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.4));
+    filter: drop-shadow(0 0 8px rgba(173, 255, 47, 0.5));
 }
 
-/* --- [3] TERMINAL (The Pro Console) --- */
-.terminal-box {
-    width: 100%; padding: 25px;
-    background: rgba(15, 15, 15, 0.6);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border-light);
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    position: relative;
+.protocol-sub { font-size: 7px; letter-spacing: 3px; color: var(--parrot-green); font-weight: bold; margin-top: 3px; opacity: 0.8; }
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 15px var(--purple-glow); }
+    50% { transform: translateY(-3px); box-shadow: 0 0 25px var(--purple-glow); }
 }
 
-.terminal-box::before {
-    content: "CONNECTED_TO_ADAMAS_V13";
-    position: absolute; top: -10px; left: 20px;
-    background: #adff2f; color: #000; font-family: 'Orbitron';
-    font-size: 9px; padding: 2px 12px; border-radius: 4px; font-weight: 900;
-}
-
-.spec-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-.spec-label { color: #888; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
-.spec-value { font-family: 'Orbitron'; color: var(--toxic-green); font-size: 13px; }
-
-/* --- [4] NEON-FLOW TASKS (The Premium List) --- */
-.premium-card {
-    width: 100%; margin-bottom: 16px; padding: 20px 25px;
-    background: var(--surface);
-    border: 1px solid var(--border-light);
-    border-radius: 100px; /* Perfect Capsule */
+/* --- HEADER FIX --- */
+.main-header {
     display: flex; justify-content: space-between; align-items: center;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    padding: 15px 20px; background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border);
 }
 
-.premium-card:active { transform: scale(0.96); background: rgba(0, 242, 255, 0.05); }
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 
-.task-info h4 { font-family: 'Plus Jakarta Sans'; font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
-
-/* Status Button - Glowing Capsule */
-.status-badge {
-    font-family: 'Orbitron'; font-size: 10px; font-weight: 900;
-    padding: 10px 24px; border-radius: 50px;
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #fff; background: rgba(255,255,255,0.05);
-    transition: 0.4s ease;
+/* --- PREMIUM CARDS (Structure preserved, Colors updated) --- */
+.premium-card { 
+    background: var(--card-bg); 
+    border: 1px solid var(--glass-border); 
+    backdrop-filter: blur(25px); 
+    border-radius: 28px; 
+    padding: 22px; margin-bottom: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
 }
 
-.status-badge.verified {
-    background: var(--toxic-green) !important; color: #000 !important;
-    border-color: #fff !important; box-shadow: 0 0 25px var(--toxic-green);
+.balance-count {
+    font-family: 'Orbitron';
+    font-size: 2.6rem !important;
+    background: linear-gradient(to right, #fff, var(--parrot-green)); /* Parrot Green Glow */
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin: 12px 0; font-weight: 900;
+    filter: drop-shadow(0 0 12px rgba(173, 255, 47, 0.4));
 }
 
-/* --- [5] MASTER ACTION BUTTONS --- */
-.btn-slanted {
-    width: 100%; height: 68px; margin-top: 30px;
-    background: linear-gradient(90deg, var(--neon-cyan), #0072ff);
-    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-    border: none; color: #fff; font-family: 'Orbitron';
-    font-weight: 900; font-size: 18px; letter-spacing: 4px;
-    box-shadow: 0 10px 30px rgba(0, 242, 255, 0.4);
-    cursor: pointer;
+/* --- BUTTON (Red to Purple) --- */
+.btn-primary {
+    width: 100%; padding: 16px; 
+    background: linear-gradient(90deg, var(--neon-red), var(--neon-purple));
+    color: #fff; border: none; border-radius: 18px; font-weight: 900;
+    font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
+    box-shadow: 0 5px 20px var(--purple-glow);
+    transition: 0.3s; letter-spacing: 1px;
 }
 
-.btn-ready {
-    background: linear-gradient(90deg, var(--deep-vibe), #ff00cc) !important;
-    box-shadow: 0 10px 40px rgba(188, 19, 254, 0.5) !important;
-}
-
-/* --- [6] BOTTOM NAVIGATION BAR --- */
+/* --- NAVIGATION --- */
 .bottom-nav {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 380px; padding: 18px;
-    background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(30px);
-    border: 1px solid var(--border-light); border-radius: 100px;
-    display: flex; justify-content: space-around; z-index: 1000;
+    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 420px;
+    background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(40px);
+    display: flex; justify-content: space-around;
+    padding: 14px 5px; border-radius: 40px; 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.9);
+    z-index: 10000;
 }
 
-/* --- [7] ANIMATIONS --- */
-@keyframes morphing {
-    0% { border-radius: 28% 72% 28% 72% / 28% 28% 72% 72%; }
-    100% { border-radius: 72% 28% 72% 28% / 72% 72% 28% 28%; }
+.nav-item { 
+    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    transition: 0.4s; position: relative; width: 65px;
 }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.nav-item.active { color: var(--parrot-green); transform: translateY(-8px); }
+.nav-item.active .icon { font-size: 1.4rem; filter: drop-shadow(0 0 10px var(--parrot-green)); }
+
+.nav-item.active::after {
+    content: ""; position: absolute; bottom: -10px; width: 18px; height: 3px;
+    background: var(--parrot-green); border-radius: 10px; box-shadow: 0 0 15px var(--parrot-green);
+}
+
+.nav-item .icon { font-size: 1.2rem; transition: 0.3s; }
+
+/* --- PROGRESS --- */
+.progress-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--parrot-green), var(--neon-blue)); box-shadow: 0 0 15px rgba(173, 255, 47, 0.3); transition: 1.5s; }
+
+#eligibility-status { color: var(--parrot-green); text-shadow: 0 0 5px var(--parrot-green); }
