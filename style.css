@@ -1,34 +1,28 @@
-/* ADAMAS PROTOCOL - PRO-ELITE CYBER-SYSTEM (V12.4 - NEON CYBER-FUSION) */
+/* ADAMAS PROTOCOL - V12.4 - CLEAN NEON FIX */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
     --cyan: #00f2ff; 
     --bg-dark: #000000;
-    --card-bg: rgba(10, 10, 10, 0.75); 
+    --card-bg: rgba(255, 255, 255, 0.06); 
     --neon-purple: #bc13fe;
     --neon-red: #ff0033;
-    --parrot-green: #adff2f;
+    --parrot-green: #adff2f; /* Naya Parrot Green */
     --neon-blue: #0077ff;
-    --glass-border: rgba(255, 255, 255, 0.08);
-    
-    /* Glowing Variables */
-    --cyan-glow: rgba(0, 242, 255, 0.5);
-    --purple-glow: rgba(188, 19, 254, 0.4);
-    --red-glow: rgba(255, 0, 51, 0.4);
-    --green-glow: rgba(173, 255, 47, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --cyan-glow: rgba(0, 242, 255, 0.4);
+    --purple-glow: rgba(188, 19, 254, 0.3);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
     background: var(--bg-dark); 
-    /* 🔥 MULTI-COLOR RADIAL MESH BACKGROUND */
+    /* 🔥 MULTI-COLOR GLOW BACKGROUND (Stays in background, doesn't break layout) */
     background-image: 
-        radial-gradient(circle at 5% 5%, rgba(188, 19, 254, 0.15) 0%, transparent 40%),   /* Purple Top-Left */
-        radial-gradient(circle at 95% 5%, rgba(255, 0, 51, 0.12) 0%, transparent 40%),    /* Red Top-Right */
-        radial-gradient(circle at 5% 95%, rgba(0, 119, 255, 0.12) 0%, transparent 40%),   /* Blue Bottom-Left */
-        radial-gradient(circle at 95% 95%, rgba(173, 255, 47, 0.1) 0%, transparent 40%),  /* Green Bottom-Right */
-        radial-gradient(circle at 50% 50%, #050505 0%, #000 100%);
+        radial-gradient(circle at 10% 10%, rgba(188, 19, 254, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(255, 0, 51, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
     background-attachment: fixed;
     color: #eee; 
     font-family: 'Rajdhani', sans-serif; 
@@ -37,103 +31,103 @@ body {
     padding-bottom: 120px; 
 }
 
-/* --- BRANDING LOGIC (Blue & Purple Glow) --- */
+/* --- BRANDING LOGIC --- */
+.brand-identity { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+
 .logo-wrapper {
-    width: 42px;
-    height: 42px;
+    width: 40px; height: 40px;
     background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 20px var(--purple-glow), inset 0 0 10px rgba(255,255,255,0.2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 15px var(--purple-glow);
     animation: logoFloat 3s infinite ease-in-out;
 }
 
-.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; color: #fff; text-shadow: 0 0 10px #fff; }
+.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: #fff; }
 
 .protocol-name {
-    font-family: 'Orbitron';
-    font-size: 1.2rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    background: linear-gradient(to right, #fff, var(--neon-blue), var(--neon-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px var(--purple-glow));
+    font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; letter-spacing: 1.5px;
+    background: linear-gradient(to right, #fff, var(--parrot-green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(173, 255, 47, 0.5));
 }
 
-/* --- PREMIUM CARDS (Red & Purple Borders) --- */
+.protocol-sub { font-size: 7px; letter-spacing: 3px; color: var(--parrot-green); font-weight: bold; margin-top: 3px; opacity: 0.8; }
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 15px var(--purple-glow); }
+    50% { transform: translateY(-3px); box-shadow: 0 0 25px var(--purple-glow); }
+}
+
+/* --- HEADER FIX --- */
+.main-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 20px; background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border);
+}
+
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+/* --- PREMIUM CARDS (Structure preserved, Colors updated) --- */
 .premium-card { 
     background: var(--card-bg); 
-    border: 1px solid var(--glass-border);
-    /* Border par red-to-purple ka subtle glow */
-    border-image: linear-gradient(to bottom right, var(--neon-red), var(--neon-purple)) 1;
-    border: 1px solid; 
-    backdrop-filter: blur(40px); 
-    border-radius: 24px; 
-    padding: 22px; 
-    margin-bottom: 18px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-    clip-path: inset(0 round 24px); /* For rounded borders with border-image */
+    border: 1px solid var(--glass-border); 
+    backdrop-filter: blur(25px); 
+    border-radius: 28px; 
+    padding: 22px; margin-bottom: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
 }
 
-/* --- BALANCE COUNT (Parrot Green Focus) --- */
 .balance-count {
     font-family: 'Orbitron';
-    font-size: 2.8rem !important;
-    background: linear-gradient(to right, #fff, var(--parrot-green));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 900;
-    filter: drop-shadow(0 0 15px var(--green-glow)); /* Parrot green pop */
+    font-size: 2.6rem !important;
+    background: linear-gradient(to right, #fff, var(--parrot-green)); /* Parrot Green Glow */
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin: 12px 0; font-weight: 900;
+    filter: drop-shadow(0 0 12px rgba(173, 255, 47, 0.4));
 }
 
-/* --- MAIN BUTTON (Red to Purple Extreme Glow) --- */
+/* --- BUTTON (Red to Purple) --- */
 .btn-primary {
-    width: 100%; padding: 18px; 
+    width: 100%; padding: 16px; 
     background: linear-gradient(90deg, var(--neon-red), var(--neon-purple));
-    color: #fff; border: none; border-radius: 20px; font-weight: 900;
+    color: #fff; border: none; border-radius: 18px; font-weight: 900;
     font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
-    box-shadow: 0 0 20px var(--red-glow), 0 0 40px var(--purple-glow);
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    letter-spacing: 2px;
-    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 5px 20px var(--purple-glow);
+    transition: 0.3s; letter-spacing: 1px;
 }
 
-.btn-primary:active { transform: scale(0.95); filter: brightness(1.2); }
-
-/* --- NAVIGATION (Neon Blue Accents) --- */
+/* --- NAVIGATION --- */
 .bottom-nav {
-    background: rgba(5, 5, 5, 0.95); 
-    border: 1px solid var(--neon-blue);
-    box-shadow: 0 -5px 25px rgba(0, 119, 255, 0.3);
+    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 420px;
+    background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(40px);
+    display: flex; justify-content: space-around;
+    padding: 14px 5px; border-radius: 40px; 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.9);
+    z-index: 10000;
 }
 
-.nav-item.active { 
-    color: var(--neon-blue); 
+.nav-item { 
+    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    transition: 0.4s; position: relative; width: 65px;
 }
 
-.nav-item.active .icon {
-    filter: drop-shadow(0 0 12px var(--neon-blue));
-}
+.nav-item.active { color: var(--parrot-green); transform: translateY(-8px); }
+.nav-item.active .icon { font-size: 1.4rem; filter: drop-shadow(0 0 10px var(--parrot-green)); }
 
 .nav-item.active::after {
-    background: var(--neon-blue);
-    box-shadow: 0 0 20px var(--neon-blue);
+    content: ""; position: absolute; bottom: -10px; width: 18px; height: 3px;
+    background: var(--parrot-green); border-radius: 10px; box-shadow: 0 0 15px var(--parrot-green);
 }
 
-/* --- PROGRESS ENGINE (Parrot Green) --- */
-.progress-bar { background: rgba(255, 0, 51, 0.1); border: 1px solid rgba(255,255,255,0.05); }
-.progress-fill { 
-    background: linear-gradient(90deg, var(--parrot-green), var(--neon-blue)); 
-    box-shadow: 0 0 20px var(--green-glow); 
-}
+.nav-item .icon { font-size: 1.2rem; transition: 0.3s; }
 
-/* --- STATUS INDICATORS --- */
-#eligibility-status {
-    color: var(--parrot-green);
-    text-shadow: 0 0 8px var(--green-glow);
-}
+/* --- PROGRESS --- */
+.progress-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--parrot-green), var(--neon-blue)); box-shadow: 0 0 15px rgba(173, 255, 47, 0.3); transition: 1.5s; }
 
-@keyframes logoFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+#eligibility-status { color: var(--parrot-green); text-shadow: 0 0 5px var(--parrot-green); }
