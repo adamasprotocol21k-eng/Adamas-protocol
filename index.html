@@ -3,163 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS PROTOCOL | Royal Cyber Terminal</title>
-    
+    <title>ADAMAS PROTOCOL | Elite Access</title>
     <link rel="stylesheet" href="style.css">
-
     <style>
-        /* 🔥 CORE DESIGN INJECTED - Multi-Color & Extreme Glow */
-        :root { 
-            --cyan: #00f2ff; 
-            --neon-purple: #bc13fe;
-            --neon-red: #ff0033;
+        /* 🔥 HIGH VISIBILITY & ROYAL THEME */
+        :root {
             --parrot-green: #adff2f;
-            --neon-blue: #0077ff;
-            --bg-dark: #000000;
-            --card-bg: rgba(10, 10, 10, 0.6); 
-            
-            /* Glowing Sub-Variables */
-            --cyan-glow: rgba(0, 242, 255, 0.5);
-            --purple-glow: rgba(188, 19, 254, 0.4);
-            --red-glow: rgba(255, 0, 51, 0.4);
-            --green-glow: rgba(173, 255, 47, 0.4);
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+            --deep-black: rgba(0, 0, 0, 0.85);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body { 
-            background: var(--bg-dark); 
-            /* 🔥 ROYAL MESH GRADIENT BACKGROUND */
+        body {
+            background: #000;
             background-image: 
-                radial-gradient(circle at 5% 5%, rgba(188, 19, 254, 0.15) 0%, transparent 35%),   /* Purple */
-                radial-gradient(circle at 95% 5%, rgba(255, 0, 51, 0.1) 0%, transparent 35%),    /* Red */
-                radial-gradient(circle at 5% 95%, rgba(0, 119, 255, 0.1) 0%, transparent 35%),   /* Blue */
-                radial-gradient(circle at 95% 95%, rgba(173, 255, 47, 0.08) 0%, transparent 35%),/* Green */
-                radial-gradient(circle at 50% 50%, #050505 0%, #000 100%);
-            background-attachment: fixed;
-            color: #eee; 
-            font-family: 'Rajdhani', sans-serif; 
-            overflow-x: hidden; 
-            min-height: 100vh;
+                radial-gradient(circle at 10% 10%, rgba(188, 19, 254, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(173, 255, 47, 0.05) 0%, transparent 40%);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
         }
 
-        #phase-intro, #phase-social { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .active-phase { display: flex !important; animation: fadeIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        #phase-intro, #phase-social { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow-y: auto; padding: 20px 0; }
+        .active-phase { display: flex !important; animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* TEXT SHADOW FOR BRIGHT LIGHT VISIBILITY */
+        .glow-text { text-shadow: 0 0 15px rgba(0,0,0,1), 0 0 5px var(--parrot-green); color: var(--parrot-green) !important; }
+        .sub-text { color: #fff; text-shadow: 2px 2px 4px #000; font-weight: bold; letter-spacing: 1px; }
 
-        /* 🔥 GLOWING LOGO FIXED */
-        #typing-logo {
-            font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; letter-spacing: 5px; 
-            min-height: 45px; margin-bottom: 5px;
-            background: linear-gradient(to right, #fff, var(--parrot-green), var(--parrot-green));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px var(--green-glow));
+        /* SYSTEMATIC INFO BOX */
+        .system-specs {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            width: 85%;
+            max-width: 350px;
+            margin: 20px 0;
+            text-align: left;
+            backdrop-filter: blur(10px);
         }
-        #typing-logo::after { content: "|"; animation: blink 0.7s infinite; color: var(--parrot-green); }
+        .spec-line { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px; }
+        .spec-label { font-size: 8px; color: #888; text-transform: uppercase; }
+        .spec-value { font-size: 9px; color: var(--neon-blue); font-weight: bold; }
+
+        #typing-logo::after { content: "|"; animation: blink 0.7s infinite; margin-left: 5px; color: var(--parrot-green); }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* VIBRATING ACTION BUTTONS */
-        .btn-action-main { 
-            background: rgba(0,0,0,0.4); 
-            color: var(--parrot-green); 
-            border: 1px solid var(--parrot-green); 
-            padding: 18px 50px; 
-            font-family: 'Orbitron'; 
-            font-weight: 900; 
-            cursor: pointer;
-            transition: 0.4s; 
-            letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(173, 255, 47, 0.3);
-            position: relative;
-            overflow: hidden;
+        .btn-entry { 
+            background: transparent; color: var(--parrot-green); border: 1px solid var(--parrot-green); 
+            padding: 15px 45px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
+            transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            letter-spacing: 2px; box-shadow: 0 0 20px rgba(173, 255, 47, 0.2);
+            text-shadow: 0 0 5px #000;
         }
-        .btn-action-main::before {
-            content: ''; position: absolute; top: -100%; left: -100%; width: 300%; height: 300%;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: 0.5s;
-        }
-        .btn-action-main:hover::before { top: 100%; left: 100%; }
-        .btn-action-main:hover { 
-            background: var(--parrot-green); color: #000; 
-            box-shadow: 0 0 35px var(--parrot-green);
-        }
-
-        /* PREMIUM REWARD SECTION */
-        .premium-card {
-            background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.06); 
-            backdrop-filter: blur(40px); border-radius: 28px; padding: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-        }
-
-        .highlight-bonus {
-            margin: 15px 0 25px 0; background: rgba(188, 19, 254, 0.05); 
-            padding: 10px; border-radius: 12px; border: 1px solid var(--neon-purple);
-            box-shadow: 0 0 15px var(--purple-glow);
-        }
-
-        .balance-label { font-family: 'Rajdhani'; font-weight: 700; color: #fff; font-size: 11px; letter-spacing: 2px; }
-        .balance-value { font-family: 'Orbitron'; color: var(--parrot-green); font-size: 20px; font-weight: 900; text-shadow: 0 0 10px var(--green-glow); }
+        .btn-entry:hover { background: var(--parrot-green); color: #000; box-shadow: 0 0 40px var(--parrot-green); }
 
         .task-card {
-            background: rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px; padding: 20px; margin-top: 15px; text-align: left;
+            background: var(--deep-black); border: 1px solid rgba(173, 255, 47, 0.2);
+            backdrop-filter: blur(20px); border-radius: 20px; padding: 18px; margin-top: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: left;
         }
-        .reward-summary { font-family: 'Orbitron'; color: var(--cyan); font-size: 13px; font-weight: 900; margin-bottom: 12px; filter: drop-shadow(0 0 5px var(--cyan-glow)); }
 
+        .reward-summary { font-family: 'Orbitron'; color: var(--neon-blue); font-size: 11px; font-weight: 900; margin-bottom: 10px; }
         .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
         .btn-social-action {
             display: flex; flex-direction: column; align-items: center; padding: 12px 5px;
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px; text-decoration: none; transition: 0.3s all;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; text-decoration: none; transition: 0.3s;
         }
-        .btn-social-action:hover { border-color: var(--parrot-green); background: rgba(173, 255, 47, 0.03); transform: translateY(-2px); }
+        .btn-social-action.verified { border-color: var(--parrot-green); background: rgba(173, 255, 47, 0.1); }
+        .btn-label { font-size: 9px; color: #fff; font-weight: bold; letter-spacing: 1px; text-shadow: 1px 1px 2px #000; }
+        .unit-reward { font-size: 8px; color: var(--parrot-green); font-weight: 900; margin-bottom: 3px; }
 
-        .unit-reward { font-size: 8px; color: var(--parrot-green); font-weight: 900; font-family: 'Orbitron'; margin-bottom: 3px; }
-        .btn-label { font-size: 9px; color: #fff; font-weight: bold; letter-spacing: 1px; }
-
-        /* Verified State with Multi-Color Vibe */
-        .btn-social-action.verified { border-color: var(--parrot-green); background: rgba(173, 255, 47, 0.08); box-shadow: 0 0 15px rgba(173, 255, 47, 0.15); }
-        .btn-social-action.verified .btn-label { color: var(--parrot-green); text-shadow: 0 0 5px var(--green-glow); }
-        
-        #lock-msg { font-size: 9px; color: var(--neon-red); margin-top: 10px; font-weight: bold; font-family: 'Orbitron'; letter-spacing: 1px; }
-
-        /* Primary action button glow updated */
-        .btn-primary-vibe {
-            width: 100%; padding: 18px; 
-            background: linear-gradient(90deg, var(--neon-red), var(--neon-purple));
-            color: #fff; border: none; border-radius: 20px; font-weight: 900;
-            font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
-            box-shadow: 0 0 20px var(--purple-glow);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            letter-spacing: 2px;
-        }
+        #lock-msg { font-size: 9px; color: #ff0033; margin-top: 12px; font-weight: 900; text-shadow: 1px 1px 2px #000; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         <section id="phase-intro" class="active-phase">
-            <div style="text-align: center;">
-                <h1 id="typing-logo"></h1>
-                <p style="font-size: 10px; color: #777; margin-top: 8px; letter-spacing: 3px; text-transform: uppercase;">Decentralized Node Infrastructure</p>
-                <div style="margin-top: 55px;">
-                    <button class="btn-action-main" onclick="startJourney()">INITIALIZE NODE</button>
+            <div style="text-align: center; width: 100%;">
+                <h1 id="typing-logo" class="glow-text"></h1>
+                <p class="sub-text" style="font-size: 10px; margin-top: 10px; text-transform: uppercase;">Decentralized Node Infrastructure</p>
+                
+                <div class="system-specs" style="margin: 30px auto;">
+                    <div class="spec-line"><span class="spec-label">Administrator</span><span class="spec-value">SYSTEM-ROOT V12.0</span></div>
+                    <div class="spec-line"><span class="spec-label">Protocol</span><span class="spec-value">PRO-ELITE CYBER-SYSTEM</span></div>
+                    <div class="spec-line"><span class="spec-label">Environment</span><span class="spec-value">TESTNET PHASE 1.0</span></div>
+                    <div class="spec-line"><span class="spec-label">Node Status</span><span class="spec-value" style="color: var(--parrot-green);">● ACTIVE</span></div>
                 </div>
+
+                <p class="sub-text" style="font-size: 9px; color: #888; max-width: 280px; margin: 0 auto 30px auto; line-height: 1.5;">Participate in system testing and provide feedback to secure your position in the future ecosystem.</p>
+
+                <button class="btn-entry" onclick="startJourney()">INITIALIZE TERMINAL</button>
             </div>
         </section>
 
         <section id="phase-social">
-            <div class="premium-card" style="width: 92%; max-width: 400px; text-align: center;">
-                <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; letter-spacing: 2px;">ELITE <span style="color: var(--neon-purple);">COMMAND</span></h2>
+            <div class="premium-card" style="width: 92%; max-width: 400px; text-align: center; background: rgba(0,0,0,0.7); padding: 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05);">
+                <h2 class="glow-text" style="font-size: 1.3rem; letter-spacing: 2px;">ELITE <span style="color: #fff; text-shadow: none;">REWARDS</span></h2>
                 
-                <div class="highlight-bonus">
-                    <p class="balance-label">TOTAL BONUS POINTS READY</p>
-                    <p class="balance-value">800 ABP</p>
+                <p class="sub-text" style="font-size: 8px; margin-top: 5px; color: #aaa;">Proof-of-Activity: Testing Phase Rewards</p>
+
+                <div style="margin: 20px 0; background: rgba(173, 255, 47, 0.05); padding: 12px; border-radius: 15px; border: 1px dashed var(--parrot-green);">
+                    <p class="sub-text" style="font-size: 11px;">WELCOME BONUS: <span class="glow-text" style="font-size: 18px;">800 ABP</span></p>
                 </div>
 
                 <div class="task-card">
-                    <p class="reward-summary">STEP 01: TELEGRAM HUB</p>
+                    <p class="reward-summary">STEP 01: COMMUNITY VALIDATION</p>
                     <div class="social-grid">
                         <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
                             <span class="unit-reward">+200 ABP</span>
@@ -173,7 +126,7 @@
                 </div>
 
                 <div class="task-card">
-                    <p class="reward-summary">STEP 02: X COMMAND</p>
+                    <p class="reward-summary">STEP 02: X-COMMAND PROTOCOL</p>
                     <div class="social-grid">
                         <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
                             <span class="unit-reward">+200 ABP</span>
@@ -186,18 +139,119 @@
                     </div>
                 </div>
 
-                <button id="connect-wallet-btn" class="btn-primary-vibe" onclick="connectWeb3()" style="margin-top: 30px; opacity: 0.15; pointer-events: none; transition: 0.5s;">CONNECT WEB3 WALLET</button>
-                <p id="lock-msg">[!] COMPLETE ALL 4 TASKS TO UNLOCK NODE</p>
+                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="margin-top: 25px; opacity: 0.2; pointer-events: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; background: var(--parrot-green); color: #000; border: none; letter-spacing: 1px;">CONNECT WEB3 WALLET</button>
+                <p id="lock-msg">[!] COMPLETE ALL 4 STEPS TO AUTHENTICATE</p>
+                
+                <p class="sub-text" style="font-size: 8px; color: #555; margin-top: 15px; font-style: italic;">Activity points (ABP) determine eligibility for future Mainnet distributions.</p>
             </div>
         </section>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <script>
     const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e";
-    // ... apka firebase config aur web3 logic script ...
+    const firebaseConfig = {
+      apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+      authDomain: "adamas-protocol-v2.firebaseapp.com",
+      databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+      projectId: "adamas-protocol-v2",
+      storageBucket: "adamas-protocol-v2.firebasestorage.app",
+      messagingSenderId: "197711342782",
+      appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
+      measurementId: "G-FKP19J67TT"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const logoText = "ADAMAS PROTOCOL";
+    let charIndex = 0;
+    function typeEffect() {
+        if (charIndex < logoText.length) {
+            document.getElementById("typing-logo").innerHTML += logoText.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeEffect, 100);
+        }
+    }
+
+    window.onload = () => {
+        typeEffect();
+        if (localStorage.getItem('adamas_user')) {
+            window.location.href = "dashboard.html";
+            return;
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const refCode = urlParams.get('ref');
+        if (refCode) localStorage.setItem('adamas_referrer', refCode);
+    };
+
+    function startJourney() {
+        document.getElementById('phase-intro').classList.remove('active-phase');
+        document.getElementById('phase-social').classList.add('active-phase');
+    }
+
+    let completedTasks = 0;
+    function verifyTask(btn) {
+        if(!btn.classList.contains('verified')) {
+            btn.classList.add('verified');
+            btn.querySelector('.btn-label').innerText = "CLAIMED ✅";
+            completedTasks++;
+            if(completedTasks >= 4) {
+                const connectBtn = document.getElementById('connect-wallet-btn');
+                const lockMsg = document.getElementById('lock-msg');
+                connectBtn.style.opacity = "1";
+                connectBtn.style.pointerEvents = "all";
+                connectBtn.style.boxShadow = "0 0 30px var(--parrot-green)";
+                lockMsg.innerText = "AUTHENTICATION READY ✅";
+                lockMsg.style.color = "var(--parrot-green)";
+            }
+        }
+    }
+
+    async function connectWeb3() {
+        if (typeof window.ethereum !== 'undefined') {
+            try {
+                const btn = document.getElementById('connect-wallet-btn');
+                btn.innerText = "AUTHORIZING NODE...";
+                btn.disabled = true;
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const wallet = accounts[0];
+                const isAdmin = wallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
+                const userRef = database.ref('users/' + wallet);
+
+                userRef.once('value').then((snapshot) => {
+                    if (!snapshot.exists()) {
+                        const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                        let welcomeBonus = isAdmin ? 1000000 : 800;
+                        userRef.set({
+                            balance: welcomeBonus,
+                            referredBy: referrer,
+                            streak: 0,
+                            lastClaim: "NEVER",
+                            role: isAdmin ? "FOUNDER" : "USER",
+                            joinedAt: new Date().toISOString(),
+                            currentMultiplier: isAdmin ? 5.0 : 1.0,
+                            miningStatus: false
+                        }).then(() => {
+                            if (referrer !== "DIRECT" && !isAdmin) {
+                                database.ref('users/' + referrer + '/balance').transaction(b => (b || 0) + 100);
+                            }
+                        });
+                    }
+                    localStorage.setItem('adamas_user', wallet);
+                    btn.innerText = "SECURE ✅";
+                    setTimeout(() => { window.location.href = "dashboard.html"; }, 800);
+                });
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerText = "RETRY CONNECTION";
+            }
+        } else {
+            alert("Use Trust Wallet/MetaMask Browser.");
+        }
+    }
     </script>
 </body>
 </html>
-
