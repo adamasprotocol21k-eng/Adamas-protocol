@@ -1,4 +1,4 @@
-/* ADAMAS PROTOCOL - PRO-ELITE CYBER-SYSTEM (V12.1 - FLOATING NAV UPDATE) */
+/* ADAMAS PROTOCOL - PRO-ELITE CYBER-SYSTEM (V12.2 - BRANDING UPDATE) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
@@ -25,9 +25,84 @@ body {
     font-family: 'Rajdhani', sans-serif; 
     overflow-x: hidden; 
     min-height: 100vh;
-    padding-bottom: 120px; /* Space for Floating Nav */
+    padding-bottom: 120px; 
 }
 
+/* --- BRANDING LOGIC (NEW) --- */
+.brand-identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.logo-wrapper {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--cyan), var(--neon-purple));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px var(--cyan-glow);
+    animation: logoFloat 3s infinite ease-in-out;
+}
+
+.main-logo-icon {
+    font-family: 'Orbitron';
+    font-weight: 900;
+    font-size: 18px;
+    color: #000;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.protocol-name {
+    font-family: 'Orbitron';
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    background: linear-gradient(to right, #fff, var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.protocol-sub {
+    font-size: 7px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    font-weight: bold;
+    margin-top: 3px;
+    opacity: 0.7;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 15px var(--cyan-glow); }
+    50% { transform: translateY(-3px); box-shadow: 0 0 25px var(--cyan-glow); }
+}
+
+/* --- HEADER FIX --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+/* --- REMAINING ORIGINAL CODE --- */
 @keyframes breathing {
     0% { filter: drop-shadow(0 0 5px var(--cyan-glow)); }
     50% { filter: drop-shadow(0 0 15px var(--cyan-glow)); }
@@ -38,15 +113,6 @@ body {
     0% { opacity: 0.5; width: 12px; }
     50% { opacity: 1; width: 22px; }
     100% { opacity: 0.5; width: 12px; }
-}
-
-.main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: rgba(0,0,0,0.3);
-    border-bottom: 1px solid var(--glass-border);
 }
 
 .premium-card { 
@@ -80,7 +146,6 @@ body {
     letter-spacing: 1px;
 }
 
-/* --- 🔥 NEW: PREMIUM NAVIGATION SYNC --- */
 .bottom-nav {
     position: fixed; 
     bottom: 25px; 
@@ -100,46 +165,23 @@ body {
 }
 
 .nav-item { 
-    text-decoration: none; 
-    color: #555; 
-    font-size: 8px; 
-    font-family: 'Orbitron'; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 5px;
+    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    width: 65px;
+    position: relative; width: 65px;
 }
 
-/* Active State: Slide Up & Glow */
-.nav-item.active { 
-    color: var(--cyan); 
-    transform: translateY(-8px);
-}
+.nav-item.active { color: var(--cyan); transform: translateY(-8px); }
+.nav-item.active .icon { font-size: 1.4rem; filter: drop-shadow(0 0 10px var(--cyan-glow)); }
 
-.nav-item.active .icon {
-    font-size: 1.4rem;
-    filter: drop-shadow(0 0 10px var(--cyan-glow));
-}
-
-/* Neon Indicator Line */
 .nav-item.active::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    width: 18px;
-    height: 3px;
-    background: var(--cyan);
-    border-radius: 10px;
-    box-shadow: 0 0 15px var(--cyan);
+    content: ""; position: absolute; bottom: -10px; width: 18px; height: 3px;
+    background: var(--cyan); border-radius: 10px; box-shadow: 0 0 15px var(--cyan);
     animation: indicatorPulse 2s infinite;
 }
 
 .nav-item .icon { font-size: 1.2rem; transition: 0.3s; }
 
-/* --- REMAINING ELEMENTS --- */
 .progress-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--neon-purple)); box-shadow: 0 0 15px var(--cyan-glow); transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
