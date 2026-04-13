@@ -21,60 +21,30 @@
         }
         .btn-entry:hover { background: var(--parrot-green); color: #000; box-shadow: 0 0 30px var(--parrot-green); }
 
-        /* 🔥 CRYSTAL HIGHLIGHT TASK CARDS */
+        /* 🔥 HIGHLIGHTED TASK CARDS */
         .task-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 15px;
-            text-align: left;
-            transition: 0.3s ease;
+            background: rgba(10, 10, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px); border-radius: 24px; padding: 20px; margin-top: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); text-align: left;
         }
 
-        .reward-tag {
-            background: var(--parrot-green);
-            color: #000;
-            font-size: 10px;
-            font-weight: 900;
-            padding: 2px 8px;
-            border-radius: 5px;
-            float: right;
-            box-shadow: 0 0 10px var(--parrot-green);
-        }
+        .reward-summary { font-family: 'Orbitron'; color: var(--parrot-green); font-size: 13px; font-weight: 900; margin-bottom: 12px; }
 
-        /* PREMIUM BUTTONS */
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
         .btn-social-action {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--cyan);
-            color: #fff;
-            text-decoration: none;
-            font-family: 'Orbitron';
-            font-size: 10px;
-            border-radius: 12px;
-            font-weight: bold;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: inset 0 0 10px rgba(0, 242, 255, 0.1);
+            display: flex; flex-direction: column; align-items: center; padding: 12px 5px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 14px; text-decoration: none; transition: 0.3s;
         }
 
-        .btn-social-action:active, .btn-social-action:hover {
-            background: var(--cyan);
-            color: #000;
-            box-shadow: 0 0 20px var(--cyan-glow);
-        }
+        .unit-reward { font-size: 8px; color: var(--parrot-green); font-weight: 900; font-family: 'Orbitron'; margin-bottom: 3px; }
+        .btn-label { font-size: 9px; color: #fff; font-weight: bold; letter-spacing: 1px; }
 
-        .btn-social-action.verified {
-            background: var(--parrot-green) !important;
-            border-color: var(--parrot-green) !important;
-            color: #000 !important;
-            box-shadow: 0 0 20px var(--parrot-green) !important;
-        }
+        .btn-social-action.verified { border-color: var(--parrot-green); background: rgba(173, 255, 47, 0.1); box-shadow: 0 0 15px rgba(173, 255, 47, 0.2); }
+        .btn-social-action.verified .btn-label { color: var(--parrot-green); }
+        
+        #lock-msg { font-size: 9px; color: #ff0033; margin-top: 10px; font-weight: bold; font-family: 'Orbitron'; }
     </style>
 </head>
 <body>
@@ -92,33 +62,42 @@
 
         <section id="phase-social">
             <div class="premium-card" style="width: 92%; max-width: 400px; text-align: center;">
-                <h2 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px; letter-spacing: 1px;">ELITE <span style="color: var(--parrot-green);">REWARDS</span></h2>
-                <p style="font-size: 10px; color: #666; margin-bottom: 20px;">CLAIM 800 ABP TO ACTIVATE NODE</p>
+                <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px;">ELITE <span style="color: var(--parrot-green);">REWARDS</span></h2>
                 
-                <div class="task-list" style="margin-bottom: 30px;">
-                    <div class="task-card">
-                        <span class="reward-tag">+400 ABP</span>
-                        <span style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron';">STEP 01</span>
-                        <p style="font-weight: bold; font-size: 14px; color: #eee; margin-top: 5px;">JOIN TELEGRAM HUB</p>
-                        <div style="display: flex; gap: 10px;">
-                            <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">CHANNEL</a>
-                            <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="verifyTask(this)">COMMUNITY</a>
-                        </div>
-                    </div>
+                <div style="margin: 15px 0; background: rgba(173, 255, 47, 0.05); padding: 8px; border-radius: 12px; border: 1px dashed var(--parrot-green);">
+                    <p style="font-family: 'Orbitron'; font-size: 11px; color: #fff;">WELCOME BONUS: <span style="color: var(--parrot-green); font-size: 16px;">800 ABP</span></p>
+                </div>
 
-                    <div class="task-card">
-                        <span class="reward-tag">+400 ABP</span>
-                        <span style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron';">STEP 02</span>
-                        <p style="font-weight: bold; font-size: 14px; color: #eee; margin-top: 5px;">FOLLOW X COMMAND</p>
-                        <div style="display: flex; gap: 10px;">
-                            <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">FOLLOW X1</a>
-                            <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" onclick="verifyTask(this)">FOLLOW X2</a>
-                        </div>
+                <div class="task-card">
+                    <p class="reward-summary">STEP 01: TELEGRAM HUB</p>
+                    <div class="social-grid">
+                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
+                            <span class="unit-reward">+200 ABP</span>
+                            <span class="btn-label">CHANNEL</span>
+                        </a>
+                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
+                            <span class="unit-reward">+200 ABP</span>
+                            <span class="btn-label">COMMUNITY</span>
+                        </a>
                     </div>
                 </div>
 
-                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="letter-spacing: 1px; opacity: 0.5;">CONNECT WEB3 WALLET</button>
-                <p style="font-size: 9px; color: #444; margin-top: 15px; font-style: italic;">*Bonus points required for node authorization.</p>
+                <div class="task-card">
+                    <p class="reward-summary">STEP 02: X COMMAND</p>
+                    <div class="social-grid">
+                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
+                            <span class="unit-reward">+200 ABP</span>
+                            <span class="btn-label">FOLLOW X1</span>
+                        </a>
+                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
+                            <span class="unit-reward">+200 ABP</span>
+                            <span class="btn-label">FOLLOW X2</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="margin-top: 25px; opacity: 0.2; pointer-events: none;">CONNECT WEB3 WALLET</button>
+                <p id="lock-msg">[!] COMPLETE ALL 4 TASKS TO UNLOCK</p>
             </div>
         </section>
     </div>
@@ -128,7 +107,6 @@
 
     <script>
     const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e";
-
     const firebaseConfig = {
       apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
       authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -153,14 +131,12 @@
         }
     }
 
-    // 🔥 FIX: Redirect if already logged in
     window.onload = () => {
         typeEffect();
         if (localStorage.getItem('adamas_user')) {
             window.location.href = "dashboard.html";
             return;
         }
-        
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
         if (refCode) localStorage.setItem('adamas_referrer', refCode);
@@ -173,13 +149,19 @@
 
     let completedTasks = 0;
     function verifyTask(btn) {
-        btn.classList.add('verified');
-        btn.innerText = "VERIFIED ✅";
-        completedTasks++;
-        if(completedTasks >= 2) {
-            const connectBtn = document.getElementById('connect-wallet-btn');
-            connectBtn.style.opacity = "1";
-            connectBtn.style.boxShadow = "0 0 20px var(--purple-glow)";
+        if(!btn.classList.contains('verified')) {
+            btn.classList.add('verified');
+            btn.querySelector('.btn-label').innerText = "CLAIMED ✅";
+            completedTasks++;
+            if(completedTasks >= 4) {
+                const connectBtn = document.getElementById('connect-wallet-btn');
+                const lockMsg = document.getElementById('lock-msg');
+                connectBtn.style.opacity = "1";
+                connectBtn.style.pointerEvents = "all";
+                connectBtn.style.boxShadow = "0 0 30px var(--purple-glow)";
+                lockMsg.innerText = "ACCESS GRANTED: 800 ABP READY ✅";
+                lockMsg.style.color = "var(--parrot-green)";
+            }
         }
     }
 
@@ -189,19 +171,16 @@
                 const btn = document.getElementById('connect-wallet-btn');
                 btn.innerText = "AUTHORIZING...";
                 btn.disabled = true;
-                
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0];
-
                 const isAdmin = wallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
                 const userRef = database.ref('users/' + wallet);
 
                 userRef.once('value').then((snapshot) => {
                     if (!snapshot.exists()) {
                         const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
-                        // 💎 800 ABP WELCOME BONUS
+                        // 🔥 800 ABP UPDATED
                         let welcomeBonus = isAdmin ? 1000000 : 800;
-
                         userRef.set({
                             balance: welcomeBonus,
                             referredBy: referrer,
@@ -217,7 +196,6 @@
                             }
                         });
                     }
-                    // 🔥 SAVE WALLET BEFORE REDIRECT
                     localStorage.setItem('adamas_user', wallet);
                     btn.innerText = "SECURE ✅";
                     setTimeout(() => { window.location.href = "dashboard.html"; }, 800);
@@ -227,7 +205,7 @@
                 btn.innerText = "RETRY CONNECTION";
             }
         } else {
-            alert("Please use Trust Wallet or MetaMask Browser.");
+            alert("Use Trust Wallet/MetaMask Browser.");
         }
     }
     </script>
