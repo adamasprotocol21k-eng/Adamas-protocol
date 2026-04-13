@@ -21,7 +21,6 @@
         }
         .btn-entry:hover { background: var(--parrot-green); color: #000; box-shadow: 0 0 30px var(--parrot-green); }
 
-        /* 🔥 HIGHLIGHTED TASK CARDS */
         .task-card {
             background: rgba(10, 10, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px); border-radius: 24px; padding: 20px; margin-top: 15px;
@@ -61,8 +60,8 @@
         </section>
 
         <section id="phase-social">
-            <div class="premium-card" style="width: 92%; max-width: 400px; text-align: center;">
-                <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px;">ELITE <span style="color: var(--parrot-green);">REWARDS</span></h2>
+            <div class="premium-card" style="width: 92%; max-width: 400px; text-align: center; margin: auto;">
+                <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px; color:#fff;">ELITE <span style="color: var(--parrot-green);">REWARDS</span></h2>
                 
                 <div style="margin: 15px 0; background: rgba(173, 255, 47, 0.05); padding: 8px; border-radius: 12px; border: 1px dashed var(--parrot-green);">
                     <p style="font-family: 'Orbitron'; font-size: 11px; color: #fff;">WELCOME BONUS: <span style="color: var(--parrot-green); font-size: 16px;">800 ABP</span></p>
@@ -71,11 +70,11 @@
                 <div class="task-card">
                     <p class="reward-summary">STEP 01: TELEGRAM HUB</p>
                     <div class="social-grid">
-                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
+                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="handleTask(this)">
                             <span class="unit-reward">+200 ABP</span>
                             <span class="btn-label">CHANNEL</span>
                         </a>
-                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
+                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="handleTask(this)">
                             <span class="unit-reward">+200 ABP</span>
                             <span class="btn-label">COMMUNITY</span>
                         </a>
@@ -85,18 +84,18 @@
                 <div class="task-card">
                     <p class="reward-summary">STEP 02: X COMMAND</p>
                     <div class="social-grid">
-                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
+                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="handleTask(this)">
                             <span class="unit-reward">+200 ABP</span>
                             <span class="btn-label">FOLLOW X1</span>
                         </a>
-                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
+                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" onclick="handleTask(this)">
                             <span class="unit-reward">+200 ABP</span>
                             <span class="btn-label">FOLLOW X2</span>
                         </a>
                     </div>
                 </div>
 
-                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="margin-top: 25px; opacity: 0.2; pointer-events: none;">CONNECT WEB3 WALLET</button>
+                <button id="connect-wallet-btn" class="btn-primary" onclick="connectWeb3()" style="margin-top: 25px; opacity: 0.2; pointer-events: none; width: 100%;">CONNECT WEB3 WALLET</button>
                 <p id="lock-msg">[!] COMPLETE ALL 4 TASKS TO UNLOCK</p>
             </div>
         </section>
@@ -148,20 +147,26 @@
     }
 
     let completedTasks = 0;
-    function verifyTask(btn) {
+
+    // 🔥 Updated Task Handler with Delay
+    function handleTask(btn) {
         if(!btn.classList.contains('verified')) {
-            btn.classList.add('verified');
-            btn.querySelector('.btn-label').innerText = "CLAIMED ✅";
-            completedTasks++;
-            if(completedTasks >= 4) {
-                const connectBtn = document.getElementById('connect-wallet-btn');
-                const lockMsg = document.getElementById('lock-msg');
-                connectBtn.style.opacity = "1";
-                connectBtn.style.pointerEvents = "all";
-                connectBtn.style.boxShadow = "0 0 30px var(--purple-glow)";
-                lockMsg.innerText = "ACCESS GRANTED: 800 ABP READY ✅";
-                lockMsg.style.color = "var(--parrot-green)";
-            }
+            const label = btn.querySelector('.btn-label');
+            label.innerText = "VERIFYING...";
+            
+            setTimeout(() => {
+                btn.classList.add('verified');
+                label.innerText = "CLAIMED ✅";
+                completedTasks++;
+                if(completedTasks >= 4) {
+                    const connectBtn = document.getElementById('connect-wallet-btn');
+                    const lockMsg = document.getElementById('lock-msg');
+                    connectBtn.style.opacity = "1";
+                    connectBtn.style.pointerEvents = "all";
+                    lockMsg.innerText = "ACCESS GRANTED: 800 ABP READY ✅";
+                    lockMsg.style.color = "#adff2f";
+                }
+            }, 3000); // 3 Second Delay
         }
     }
 
@@ -173,23 +178,26 @@
                 btn.disabled = true;
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0];
+
+                // Mandatory Sign Confirmation
+                const msg = "Welcome to Adamas Protocol. Confirm to sync 800 ABP points.";
+                await window.ethereum.request({ method: 'personal_sign', params: [msg, wallet] });
+
                 const isAdmin = wallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
                 const userRef = database.ref('users/' + wallet);
 
                 userRef.once('value').then((snapshot) => {
                     if (!snapshot.exists()) {
                         const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
-                        // 🔥 800 ABP UPDATED
                         let welcomeBonus = isAdmin ? 1000000 : 800;
+                        
                         userRef.set({
                             balance: welcomeBonus,
                             referredBy: referrer,
-                            streak: 0,
-                            lastClaim: "NEVER",
-                            role: isAdmin ? "FOUNDER" : "USER",
+                            wallet: wallet,
+                            refCode: wallet.substring(2, 8).toUpperCase(), // Unique Ref Code
                             joinedAt: new Date().toISOString(),
-                            currentMultiplier: isAdmin ? 5.0 : 1.0,
-                            miningStatus: false
+                            role: isAdmin ? "FOUNDER" : "USER"
                         }).then(() => {
                             if (referrer !== "DIRECT" && !isAdmin) {
                                 database.ref('users/' + referrer + '/balance').transaction(b => (b || 0) + 100);
