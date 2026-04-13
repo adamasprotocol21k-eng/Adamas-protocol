@@ -1,15 +1,18 @@
-/* ADAMAS PROTOCOL - TOTAL SYSTEM SYNC (V14.5) */
+/* ADAMAS PROTOCOL - PRO-ELITE CYBER-SYSTEM (V12.2 - MASTER SYNC) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
     --cyan: #00f2ff; 
-    --p-green: #adff2f; /* Index Parrot Green */
+    --p-green: #adff2f; /* Added for Index Entry */
     --bg-dark: #000000;
     --card-bg: rgba(255, 255, 255, 0.04);
+    --neon-green: #00ff88;
     --neon-purple: #bc13fe;
+    --neon-gold: #ffcc00;
     --glass-border: rgba(255, 255, 255, 0.1);
     --cyan-glow: rgba(0, 242, 255, 0.4);
-    --green-glow: rgba(173, 255, 47, 0.4);
+    --purple-glow: rgba(188, 19, 254, 0.3);
+    --green-glow: rgba(173, 255, 47, 0.3);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -17,36 +20,30 @@
 body { 
     background: var(--bg-dark); 
     background-image: 
-        radial-gradient(circle at 10% 20%, rgba(173, 255, 47, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.05) 0%, transparent 40%),
         radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
-    color: #eee; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; min-height: 100vh;
+    color: #eee; 
+    font-family: 'Rajdhani', sans-serif; 
+    overflow-x: hidden; 
+    min-height: 100vh;
+    padding-bottom: 120px; 
 }
 
-/* --- SYNCED BRANDING --- */
-.brand-identity { display: flex; align-items: center; gap: 12px; justify-content: center; padding: 20px 0; }
-.logo-wrapper { 
-    width: 42px; height: 42px; 
-    background: linear-gradient(135deg, var(--p-green), var(--cyan)); 
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 20px var(--green-glow); animation: logoFloat 3s infinite ease-in-out;
-}
-.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; color: #000; }
-.protocol-name { 
-    font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 900; letter-spacing: 2px;
-    background: linear-gradient(to right, #fff, var(--p-green));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-
-@keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-/* --- TERMINAL & CARDS --- */
+/* --- INDEX SPECIFIC: TERMINAL BOX (Clean Entry) --- */
 .terminal-box {
-    background: rgba(15, 15, 15, 0.7); border: 1px solid rgba(173, 255, 47, 0.3);
-    border-radius: 25px; width: 90%; padding: 25px; margin: 20px auto;
+    background: rgba(15, 15, 15, 0.7);
+    border: 1px solid rgba(173, 255, 47, 0.3);
+    border-radius: 25px;
+    width: 90%;
+    padding: 25px;
+    margin: 20px auto;
     backdrop-filter: blur(15px);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }
+
 .spec-row { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 0.5px solid rgba(255,255,255,0.05); padding-bottom: 8px; font-size: 10px; }
-.spec-label { color: #888; text-transform: uppercase; }
+.spec-label { color: #888; text-transform: uppercase; letter-spacing: 1px; }
 .spec-value { color: var(--p-green); font-weight: bold; font-family: 'Orbitron'; }
 
 .btn-slanted {
@@ -56,10 +53,81 @@ body {
     box-shadow: 0 0 20px var(--green-glow);
 }
 
-/* --- DASHBOARD ELEMENTS (Aapka Professional Style) --- */
-.premium-card { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; margin-bottom: 18px; backdrop-filter: blur(25px); }
-.balance-count { font-family: 'Orbitron'; font-size: 2.8rem !important; background: linear-gradient(to right, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; }
+/* --- BRANDING LOGIC --- */
+.brand-identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    justify-content: center; /* Centered for Index */
+}
 
-.bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 420px; background: rgba(10, 10, 10, 0.9); padding: 14px 5px; border-radius: 40px; border: 1px solid var(--glass-border); z-index: 10000; }
-.nav-item { text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 65px; }
-.nav-item.active { color: var(--cyan); }
+.logo-wrapper {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--cyan), var(--neon-purple));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 15px var(--cyan-glow);
+    animation: logoFloat 3s infinite ease-in-out;
+}
+
+.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: #000; }
+
+.brand-text { display: flex; flex-direction: column; line-height: 1; }
+
+.protocol-name {
+    font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; letter-spacing: 1.5px;
+    background: linear-gradient(to right, #fff, var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.protocol-sub { font-size: 7px; letter-spacing: 3px; color: var(--cyan); font-weight: bold; margin-top: 3px; opacity: 0.7; }
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 15px var(--cyan-glow); }
+    50% { transform: translateY(-3px); box-shadow: 0 0 25px var(--cyan-glow); }
+}
+
+/* --- DASHBOARD HEADER --- */
+.main-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--glass-border);
+}
+
+/* --- ORIGINAL PREMIUM COMPONENTS --- */
+.premium-card { 
+    background: var(--card-bg); border: 1px solid var(--glass-border); 
+    backdrop-filter: blur(25px); border-radius: 28px; padding: 22px; 
+    margin-bottom: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+.balance-count {
+    font-family: 'Orbitron'; font-size: 2.6rem !important;
+    background: linear-gradient(to right, #fff, var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin: 12px 0; font-weight: 900;
+}
+
+.btn-primary {
+    width: 100%; padding: 16px; 
+    background: linear-gradient(90deg, var(--cyan), var(--neon-purple));
+    color: #fff; border: none; border-radius: 18px; font-weight: 900;
+    font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
+    box-shadow: 0 5px 20px var(--purple-glow);
+}
+
+/* --- NAVIGATION & OTHERS --- */
+.bottom-nav {
+    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 420px; background: rgba(10, 10, 10, 0.85); 
+    backdrop-filter: blur(40px); display: flex; justify-content: space-around;
+    padding: 14px 5px; border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-item { 
+    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
+    display: flex; flex-direction: column; align-items: center; gap: 5px; width: 65px;
+}
+
+.nav-item.active { color: var(--cyan); transform: translateY(-8px); }
