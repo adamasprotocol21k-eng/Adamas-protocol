@@ -1,4 +1,4 @@
-/* ADAMAS PROTOCOL - ULTIMATE CYBER-SYSTEM (V15.0 - INSANE GLOW) */
+/* ADAMAS PROTOCOL - ULTIMATE CYBER-SYSTEM (V15.5 - PIXEL PERFECT) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
@@ -10,135 +10,97 @@
     --glass-border: rgba(255, 255, 255, 0.08);
     --cyan-glow: 0 0 20px rgba(0, 242, 255, 0.5);
     --green-glow: 0 0 20px rgba(173, 255, 47, 0.4);
-    --purple-glow: 0 0 25px rgba(188, 19, 254, 0.4);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
     background: var(--bg-dark); 
-    background-image: 
-        radial-gradient(circle at 5% 5%, rgba(0, 242, 255, 0.08) 0%, transparent 30%),
-        radial-gradient(circle at 95% 95%, rgba(188, 19, 254, 0.08) 0%, transparent 30%),
-        url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); /* Subtle Texture */
-    color: #fff; 
-    font-family: 'Rajdhani', sans-serif; 
-    overflow-x: hidden; 
-    min-height: 100vh;
-    line-height: 1.5;
+    background-image: radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
+    color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; min-height: 100vh;
 }
 
-/* --- THE ULTIMATE TERMINAL BOX --- */
-.terminal-box {
-    background: linear-gradient(145deg, rgba(15, 15, 15, 0.9), rgba(5, 5, 5, 0.95));
-    border: 1px solid rgba(173, 255, 47, 0.2);
-    border-radius: 20px;
-    width: 92%;
-    padding: 25px;
-    margin: 20px auto;
-    backdrop-filter: blur(20px);
-    box-shadow: var(--green-glow), inset 0 0 15px rgba(173, 255, 47, 0.05);
-    position: relative;
-    overflow: hidden;
+/* --- HEADER & LAYOUT FIX (CRITICAL) --- */
+.main-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 18px; background: rgba(0,0,0,0.5); 
+    border-bottom: 1px solid var(--glass-border); width: 100%;
 }
 
-.terminal-box::before {
-    content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--p-green), transparent);
-    animation: scanline 4s linear infinite;
-}
+/* Dashboard par logo ko left rakhne ke liye */
+.brand-identity { display: flex; align-items: center; gap: 10px; flex: 1; }
 
-@keyframes scanline { 0% { left: -100%; } 100% { left: 100%; } }
-
-.spec-row { 
-    display: flex; justify-content: space-between; 
-    padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.05);
-}
-.spec-label { color: #888; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; }
-.spec-value { color: var(--p-green); font-family: 'Orbitron'; font-weight: bold; text-shadow: var(--green-glow); }
-
-/* --- PRO BUTTONS --- */
-.btn-slanted {
-    background: linear-gradient(90deg, var(--p-green), #86cf1b);
-    color: #000; border: none; padding: 20px;
-    font-family: 'Orbitron'; font-weight: 900;
-    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
-    cursor: pointer; width: 88%; display: block; margin: 25px auto;
-    text-transform: uppercase; letter-spacing: 2px;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: var(--green-glow);
-}
-
-.btn-slanted:active { transform: scale(0.95) skewX(-2deg); filter: brightness(1.2); }
-
-/* --- BRANDING & LOGO --- */
-.brand-identity { display: flex; align-items: center; gap: 15px; margin: 30px 0; }
 .logo-wrapper {
-    width: 50px; height: 50px;
+    width: 38px; height: 38px;
     background: linear-gradient(135deg, var(--cyan), var(--neon-purple));
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
     box-shadow: var(--cyan-glow); animation: logoFloat 4s infinite ease-in-out;
+    flex-shrink: 0;
 }
-.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 24px; color: #000; }
 
+.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: #000; }
+
+.brand-text { display: flex; flex-direction: column; line-height: 1; }
 .protocol-name {
-    font-family: 'Orbitron'; font-size: 1.5rem; font-weight: 900; letter-spacing: 3px;
+    font-family: 'Orbitron'; font-size: 1rem; font-weight: 900; letter-spacing: 1px;
     background: linear-gradient(to right, #fff, var(--cyan));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(0,242,255,0.3));
 }
+.protocol-sub { font-size: 7px; color: var(--cyan); letter-spacing: 1px; font-weight: bold; }
 
-@keyframes logoFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(5deg); } }
+/* Right side content (Referral/Wallet) fix */
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 
-/* --- PREMIUM DASHBOARD CARDS --- */
+/* --- TERMINAL & CARDS --- */
+.terminal-box {
+    background: rgba(10, 10, 10, 0.8); border: 1px solid rgba(173, 255, 47, 0.2);
+    border-radius: 20px; width: 92%; padding: 22px; margin: 20px auto;
+    backdrop-filter: blur(20px); box-shadow: var(--green-glow);
+}
+.spec-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); }
+.spec-label { color: #888; font-size: 10px; text-transform: uppercase; }
+.spec-value { color: var(--p-green); font-family: 'Orbitron'; font-weight: bold; }
+
 .premium-card { 
-    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-    border: 1px solid var(--glass-border); 
-    backdrop-filter: blur(30px); border-radius: 30px; padding: 25px; 
-    margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-    transition: 0.3s ease; position: relative;
+    background: var(--card-bg); border: 1px solid var(--glass-border); 
+    border-radius: 25px; padding: 20px; margin-bottom: 15px; backdrop-filter: blur(20px);
 }
-
-.premium-card:hover { border-color: rgba(0, 242, 255, 0.3); transform: translateY(-3px); }
 
 .balance-count {
-    font-family: 'Orbitron'; font-size: 3rem !important;
-    background: linear-gradient(to bottom, #fff 30%, var(--cyan));
+    font-family: 'Orbitron'; font-size: 2.8rem !important; text-align: center;
+    background: linear-gradient(to bottom, #fff, var(--cyan));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin: 15px 0; font-weight: 900; text-align: center;
-    filter: drop-shadow(0 0 15px var(--cyan-glow));
+    filter: drop-shadow(0 0 10px var(--cyan-glow)); margin: 10px 0;
 }
 
-/* --- INSANE NAVIGATION --- */
+/* --- BUTTONS --- */
+.btn-slanted {
+    background: var(--p-green); color: #000; border: none; padding: 18px;
+    font-family: 'Orbitron'; font-weight: 900; clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+    width: 85%; display: block; margin: 20px auto; cursor: pointer;
+}
+
+.btn-primary {
+    width: 100%; padding: 16px; border-radius: 18px; border: none;
+    background: linear-gradient(90deg, var(--cyan), var(--neon-purple));
+    color: #fff; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
+    box-shadow: 0 0 20px rgba(188, 19, 254, 0.3);
+}
+
+/* --- BOTTOM NAV --- */
 .bottom-nav {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 400px; 
-    background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(25px);
-    display: flex; justify-content: space-around; align-items: center;
-    padding: 15px 10px; border-radius: 50px; 
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.05);
-    z-index: 99999;
+    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+    width: 90%; background: rgba(5, 5, 5, 0.9); padding: 12px 5px;
+    border-radius: 40px; border: 1px solid var(--glass-border); display: flex; 
+    justify-content: space-around; z-index: 1000; backdrop-filter: blur(20px);
 }
 
 .nav-item { 
-    text-decoration: none; color: #444; font-size: 9px; font-family: 'Orbitron'; 
-    display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.4s;
+    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
 }
-
-.nav-item .icon { font-size: 1.4rem; transition: 0.4s; }
-
 .nav-item.active { color: var(--cyan); }
-.nav-item.active .icon { transform: translateY(-10px) scale(1.2); filter: drop-shadow(0 0 10px var(--cyan)); }
-.nav-item.active::after {
-    content: ""; position: absolute; bottom: -5px; width: 20px; height: 4px;
-    background: var(--cyan); border-radius: 10px; box-shadow: 0 0 15px var(--cyan);
-}
+.nav-item.active .icon { font-size: 1.3rem; filter: drop-shadow(0 0 8px var(--cyan)); }
 
 /* --- ANIMATIONS --- */
-@keyframes pulseGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-.status-active { 
-    background: rgba(173, 255, 47, 0.15); color: var(--p-green); 
-    border: 1px solid var(--p-green); box-shadow: var(--green-glow);
-    animation: pulseGlow 2s infinite;
-}
+@keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
