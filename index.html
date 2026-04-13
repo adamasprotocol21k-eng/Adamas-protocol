@@ -3,59 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS PROTOCOL | SYSTEM INITIALIZE</title>
+    <title>ADAMAS | Testnet Node</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .phase { display: none; } .active-phase { display: block; }
+    </style>
 </head>
 <body>
 
-<div class="app-container" style="max-width: 500px; margin: auto; height: 100vh;">
-    <section id="phase-intro" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px;">
-        <div class="brand-identity">
-            <div class="logo-wrapper"><span class="main-logo-icon">A</span></div>
-            <div class="brand-text"><span class="protocol-name">ADAMAS</span></div>
-        </div>
-        
-        <div class="terminal-box">
-            <div class="spec-row"><span class="spec-label">Administrator</span><span class="spec-value">PRO-ELITE CYBER</span></div>
-            <div class="spec-row"><span class="spec-label">Environment</span><span class="spec-value">MAINNET V12.8</span></div>
-            <div class="spec-row" style="border:none;"><span class="spec-label">Node Status</span><span class="spec-value" style="color:var(--p-green)">● ONLINE</span></div>
+<div class="app-container" style="max-width: 500px; margin: auto; height: 100vh; overflow-y: auto;">
+    
+    <section id="phase-1" class="phase active-phase" style="padding: 20px; text-align: center; margin-top: 40px;">
+        <div style="margin-bottom: 30px;">
+            <h1 style="font-family:'Orbitron'; color:var(--p-green); font-size: 2.2rem; letter-spacing: 3px;">ADAMAS</h1>
+            <h2 style="font-family:'Orbitron'; color:#fff; font-size: 1.5rem; margin-top: -10px; opacity: 0.8;">PROTOCOL</h2>
+            <div style="background: rgba(173, 255, 47, 0.1); border: 1px solid var(--p-green); padding: 5px 15px; display: inline-block; border-radius: 20px; font-size: 9px; margin-top: 15px; font-weight: bold; color: var(--p-green);">V13.0 TESTNET INITIALIZER</div>
         </div>
 
-        <p style="font-size: 10px; text-align: center; color: #888; margin-bottom: 20px; padding: 0 20px;">
-            Initialize your node to synchronize decentralized infrastructure records.
+        <div class="terminal-box">
+            <div class="spec-row"><span>NODE ACTIVITY</span><span class="spec-value">CALCULATING...</span></div>
+            <div class="spec-row"><span>COMMUNITY TARGET</span><span class="spec-value">500K NODES</span></div>
+            <div class="spec-row"><span>MAINNET STATUS</span><span class="spec-value" style="color:#ff3366">LOCKED</span></div>
+            <div class="spec-row" style="border:none;"><span>NETWORK TIER</span><span class="spec-value">ALPHA NODE</span></div>
+        </div>
+
+        <p style="font-size: 10px; color: #777; padding: 0 20px; line-height: 1.6;">
+            [SYSTEM INFO] Participating in node testing helps secure the protocol. Eligibility for Mainnet Airdrop is based on community growth and node uptime.
         </p>
 
-        <button class="btn-slanted" onclick="goToSocial()">INITIALIZE NODE</button>
+        <button class="btn-slanted" onclick="showPhase(2)">INITIALIZE NODE</button>
     </section>
 
-    <section id="phase-social" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px;">
-        <h2 style="font-family:'Orbitron'; color:var(--p-green); margin-bottom: 5px;">ELITE ACCESS</h2>
-        <p style="font-size: 10px; color:#aaa; margin-bottom: 30px;">COMPLETE TASKS TO EARN 800 ABP</p>
+    <section id="phase-2" class="phase" style="padding: 20px; text-align: center;">
+        <h2 style="font-family:'Orbitron'; color:var(--p-green); margin-bottom: 5px;">ELIGIBILITY CHECK</h2>
+        <p style="font-size: 10px; color: #aaa; margin-bottom: 30px;">SYNC SOCIAL NODE DATA TO PROCEED</p>
 
-        <div style="width: 100%;">
-            <div class="premium-card" id="t1" style="padding: 15px; border-radius: 15px; cursor: pointer;" onclick="handleVerify('t1', 'https://t.me/ADSProtocol')">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div><span style="font-size: 11px; display: block; font-weight: bold;">JOIN TELEGRAM</span><span style="font-size: 9px; color: var(--p-green);">+400 ABP</span></div>
-                    <div id="p-t1" style="font-size: 8px; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">PENDING</div>
-                </div>
-            </div>
-            <div class="premium-card" id="t2" style="padding: 15px; border-radius: 15px; cursor: pointer;" onclick="handleVerify('t2', 'https://x.com/AdamasADS')">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div><span style="font-size: 11px; display: block; font-weight: bold;">FOLLOW X COMMAND</span><span style="font-size: 9px; color: var(--p-green);">+400 ABP</span></div>
-                    <div id="p-t2" style="font-size: 8px; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">PENDING</div>
-                </div>
-            </div>
+        <div class="premium-card" id="task1" onclick="handleTask('task1', 'https://t.me/ADSProtocol')" style="cursor:pointer; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+            <div style="text-align: left;"><span style="font-size:11px; font-weight:bold; display:block;">JOIN TELEGRAM</span><span style="font-size:9px; color:var(--p-green)">+400 ABP</span></div>
+            <div id="stat1" style="font-size:8px; border:1px solid #444; padding: 4px 10px; border-radius: 5px;">PENDING</div>
         </div>
 
-        <button id="auth-btn" class="btn-slanted" style="opacity: 0.2; pointer-events: none; background: #fff;" onclick="connectFinal()">AUTHORIZE WALLET</button>
-        <p id="msg" style="font-size: 9px; color: #ff3366; font-weight: 900; margin-top: 10px;">[!] COMPLETE ALL NODE CHECKS</p>
+        <div class="premium-card" id="task2" onclick="handleTask('task2', 'https://x.com/AdamasADS')" style="cursor:pointer; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+            <div style="text-align: left;"><span style="font-size:11px; font-weight:bold; display:block;">FOLLOW X NODE</span><span style="font-size:9px; color:var(--p-green)">+400 ABP</span></div>
+            <div id="stat2" style="font-size:8px; border:1px solid #444; padding: 4px 10px; border-radius: 5px;">PENDING</div>
+        </div>
+
+        <button id="final-btn" class="btn-slanted" style="opacity: 0.2; pointer-events: none; background: #fff;" onclick="connectWallet()">AUTHORIZE NODE</button>
+        <p id="lock-text" style="font-size: 9px; color: #ff3366; font-weight: bold; margin-top: 10px;">COMPLETE ALL TASKS FOR 800 ABP</p>
     </section>
+
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <script>
+    // --- FIREBASE CONFIG (Aapka Sahi Wala) ---
     const firebaseConfig = {
         apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
         authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -66,53 +69,61 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function goToSocial() {
-        document.getElementById('phase-intro').style.display = 'none';
-        document.getElementById('phase-social').style.display = 'flex';
+    function showPhase(n) {
+        document.querySelectorAll('.phase').forEach(p => p.classList.remove('active-phase'));
+        document.getElementById('phase-' + n).classList.add('active-phase');
     }
 
-    let count = 0;
-    function handleVerify(id, link) {
-        window.open(link, '_blank');
-        const pill = document.getElementById('p-' + id);
-        const card = document.getElementById(id);
-        if(pill.innerText !== "VERIFIED") {
-            pill.innerText = "VERIFYING...";
+    let tasks = 0;
+    function handleTask(id, url) {
+        window.open(url, '_blank');
+        const stat = document.getElementById('stat' + id.slice(-1));
+        if(stat.innerText !== "VERIFIED") {
+            stat.innerText = "VERIFYING...";
             setTimeout(() => {
-                pill.innerText = "VERIFIED";
-                pill.style.background = "var(--p-green)";
-                pill.style.color = "#000";
-                card.style.borderColor = "var(--p-green)";
-                count++;
-                if(count >= 2) {
-                    const btn = document.getElementById('auth-btn');
-                    btn.style.opacity = "1"; btn.style.pointerEvents = "all"; btn.style.background = "var(--p-green)";
-                    document.getElementById('msg').innerText = "NODE VERIFIED: 800 ABP READY";
-                    document.getElementById('msg').style.color = "var(--p-green)";
+                stat.innerText = "VERIFIED";
+                stat.style.background = "var(--p-green)";
+                stat.style.color = "#000";
+                tasks++;
+                if(tasks >= 2) {
+                    const b = document.getElementById('final-btn');
+                    b.style.opacity = "1"; b.style.pointerEvents = "all"; b.style.background = "var(--p-green)";
+                    document.getElementById('lock-text').innerText = "NODE ACCESS GRANTED";
+                    document.getElementById('lock-text').style.color = "var(--p-green)";
                 }
             }, 3000);
         }
     }
 
-    async function connectFinal() {
+    async function connectWallet() {
         if (window.ethereum) {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const wallet = accounts[0];
             const userRef = db.ref('users/' + wallet);
             
-            // 🔥 CRITICAL SYNC: Match with Dashboard.js
-            await userRef.update({
-                balance: 800.0000,
-                abp_balance: 800.0000,
-                wallet: wallet,
-                streak: 1,
-                miningStatus: false,
-                lastClaim: "NEVER",
-                joinedAt: new Date().toISOString()
+            userRef.once('value').then(async (snapshot) => {
+                if (!snapshot.exists()) {
+                    // NEW USER INITIALIZATION (No Balance Loss)
+                    await userRef.set({
+                        balance: 800.0000,
+                        abp_balance: 800.0000,
+                        wallet: wallet,
+                        streak: 1,           // Days Count
+                        activity: 1,         // Activity Count
+                        referrals_count: 0,  // Referral Count
+                        miningStatus: false,
+                        joinedAt: new Date().toISOString()
+                    });
+                } else {
+                    // OLD USER UPDATE (Protecting your 1M Points)
+                    await userRef.update({
+                        lastLogin: new Date().toISOString(),
+                        activity: (snapshot.val().activity || 0) + 1
+                    });
+                }
+                localStorage.setItem('adamas_user', wallet);
+                window.location.href = "dashboard.html";
             });
-
-            localStorage.setItem('adamas_user', wallet);
-            window.location.href = "dashboard.html";
         }
     }
 </script>
