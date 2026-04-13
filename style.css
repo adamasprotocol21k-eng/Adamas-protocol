@@ -1,175 +1,133 @@
-/**
- * ADAMAS PROTOCOL - DASHBOARD CORE (V11.4 - MILLION & SYNC OPTIMIZED)
- * Status: Production Ready
- */
+/* ADAMAS PROTOCOL - V12.4 - CLEAN NEON FIX */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
-// 1. FIREBASE INITIALIZATION
-const firebaseConfig = {
-  apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
-  authDomain: "adamas-protocol-v2.firebaseapp.com",
-  databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
-  projectId: "adamas-protocol-v2",
-  storageBucket: "adamas-protocol-v2.firebasestorage.app",
-  messagingSenderId: "197711342782",
-  appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
-  measurementId: "G-FKP19J67TT"
-};
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const database = firebase.database();
-
-// --- CONFIGURATION ---
-const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e"; 
-const GENESIS_SUPPLY = 21000; 
-let userWallet = localStorage.getItem('adamas_user') || "0xADAMAS_GUEST_USER";
-let balance = 0;
-let miningActive = false;
-let currentStreak = 0;
-let l1Count = 0;
-let currentMultiplier = 1.0;
-
-// 2. DASHBOARD STARTUP
-window.onload = () => {
-    if(userWallet === "0xADAMAS_GUEST_USER") {
-        window.location.href = "index.html";
-        return;
-    }
-
-    // Display Wallet (Sync with New CSS Header)
-    const addressEl = document.getElementById('user-address');
-    if (addressEl) {
-        addressEl.innerText = userWallet.slice(0, 6) + "..." + userWallet.slice(-4);
-    }
-
-    // Referral Link
-    const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html');
-    const refInput = document.getElementById('ref-link-input');
-    if (refInput) refInput.value = `${baseUrl}?ref=${userWallet}`;
-
-    // REAL-TIME DATA SYNC
-    database.ref('users/' + userWallet).on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            balance = data.balance || 0;
-            currentStreak = data.streak || 0;
-            currentMultiplier = data.currentMultiplier || 1.0;
-            
-            updateDisplay();
-            calculateTrustScore(data);
-            loadNetworkStats(); // Sync L1 & L2
-            calculateEliteTier(balance, currentStreak, l1Count, data.role);
-            updateScarcityMeter(balance);
-        }
-    });
-};
-
-// 💎 FORMATTING ENGINE (MILLION LOGIC)
-function formatBalance(num) {
-    if (num >= 1000000) {
-        // 10 Lakh = 1 Million
-        return (num / 1000000).toFixed(3) + " M"; 
-    }
-    return num.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+:root { 
+    --cyan: #00f2ff; 
+    --bg-dark: #000000;
+    --card-bg: rgba(255, 255, 255, 0.06); 
+    --neon-purple: #bc13fe;
+    --neon-red: #ff0033;
+    --parrot-green: #adff2f; /* Naya Parrot Green */
+    --neon-blue: #0077ff;
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --cyan-glow: rgba(0, 242, 255, 0.4);
+    --purple-glow: rgba(188, 19, 254, 0.3);
 }
 
-function updateDisplay() {
-    const balEl = document.getElementById('total-balance');
-    const streakDash = document.getElementById('streak-info-dash');
-    const streakText = document.getElementById('streak-text');
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    if (balEl) balEl.innerText = formatBalance(balance);
-    if (streakDash) streakDash.innerText = `${currentStreak} DAYS`;
-    if (streakText) streakText.innerText = `Streak active: ${currentMultiplier.toFixed(1)}x Multiplier`;
+body { 
+    background: var(--bg-dark); 
+    /* 🔥 MULTI-COLOR GLOW BACKGROUND (Stays in background, doesn't break layout) */
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(188, 19, 254, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(255, 0, 51, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
+    background-attachment: fixed;
+    color: #eee; 
+    font-family: 'Rajdhani', sans-serif; 
+    overflow-x: hidden; 
+    min-height: 100vh;
+    padding-bottom: 120px; 
 }
 
-// 🔥 NETWORK SYNC (L1 & L2)
-function loadNetworkStats() {
-    database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
-        const l1Data = snapshot.val();
-        l1Count = l1Data ? Object.keys(l1Data).length : 0;
-        
-        // Sync Dashboard Node Count
-        const nodeEl = document.getElementById('active-nodes-count'); // Check this ID in HTML
-        const refEl = document.getElementById('ref-count');
-        if(nodeEl) nodeEl.innerText = l1Count;
-        if(refEl) refEl.innerText = l1Count;
+/* --- BRANDING LOGIC --- */
+.brand-identity { display: flex; align-items: center; gap: 12px; cursor: pointer; }
 
-        // L2 Calculation
-        let l2Total = 0;
-        if(l1Data) {
-            const promises = Object.keys(l1Data).map(refKey => {
-                return database.ref('users/' + refKey + '/myReferrals').once('value');
-            });
-            Promise.all(promises).then(snapshots => {
-                snapshots.forEach(s => { if(s.exists()) l2Total += Object.keys(s.val()).length; });
-                const l2El = document.getElementById('l2-count');
-                if(l2El) l2El.innerText = l2Total;
-            });
-        }
-    });
+.logo-wrapper {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 15px var(--purple-glow);
+    animation: logoFloat 3s infinite ease-in-out;
 }
 
-// 🛡️ TRUST SCORE
-function calculateTrustScore(data) {
-    const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
-    let score = isAdmin ? 100 : 0; 
-    if (!isAdmin) {
-        if (data.balance > 100) score += 20;
-        if (data.streak >= 1) score += 20;
-        if (data.streak >= 5) score += 20;
-        if (data.myReferrals) score += 20;
-        if (data.lastClaim === new Date().toDateString()) score += 20;
-    }
-    const fill = document.getElementById('trust-fill');
-    const status = document.getElementById('eligibility-status');
-    if(fill) fill.style.width = score + "%";
-    if(status) status.innerText = score >= 80 ? "NODE SECURE" : "SCANNING...";
+.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: #fff; }
+
+.protocol-name {
+    font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; letter-spacing: 1.5px;
+    background: linear-gradient(to right, #fff, var(--parrot-green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(173, 255, 47, 0.5));
 }
 
-// 📉 SCARCITY METER
-function updateScarcityMeter(bal) {
-    let percent = (bal / GENESIS_SUPPLY) * 100;
-    if (percent > 100) percent = 100;
-    const fill = document.getElementById('scarcity-fill');
-    const txt = document.getElementById('scarcity-percent');
-    if (fill) fill.style.width = percent + "%";
-    if (txt) txt.innerText = percent.toFixed(2) + "%";
+.protocol-sub { font-size: 7px; letter-spacing: 3px; color: var(--parrot-green); font-weight: bold; margin-top: 3px; opacity: 0.8; }
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 15px var(--purple-glow); }
+    50% { transform: translateY(-3px); box-shadow: 0 0 25px var(--purple-glow); }
 }
 
-// ⛏️ MINING ENGINE
-window.toggleMining = function() {
-    miningActive = !miningActive;
-    const btn = document.getElementById('mining-btn');
-    if(btn) {
-        btn.innerText = miningActive ? "MINING ACTIVE" : "INITIALIZE MINING";
-        btn.style.boxShadow = miningActive ? "0 0 20px var(--cyan)" : "none";
-    }
-    if (miningActive) mineLoop();
-};
-
-function mineLoop() {
-    if (!miningActive) return;
-    const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
-    let mineStep = isAdmin ? 0.0005 : (0.000025 * currentMultiplier); 
-    balance += mineStep;
-    updateDisplay();
-    if (Math.random() > 0.98) {
-        database.ref('users/' + userWallet).update({ balance: balance });
-    }
-    setTimeout(mineLoop, 3000);
+/* --- HEADER FIX --- */
+.main-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 20px; background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border);
 }
 
-// 🎁 CLAIM BONUS
-window.claimDailyBonus = function() {
-    const today = new Date().toDateString();
-    database.ref('users/' + userWallet).once('value').then((snapshot) => {
-        const data = snapshot.val() || {};
-        if (data.lastClaim === today) return alert("Already Synced Today!");
-        let newStreak = (data.streak || 0) + 1;
-        let reward = 5.0 + (newStreak * 0.5);
-        database.ref('users/' + userWallet).update({ balance: (data.balance || 0) + reward, streak: newStreak, lastClaim: today });
-        alert(`System Synced! +${reward.toFixed(2)} ABP`);
-    });
-};
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+/* --- PREMIUM CARDS (Structure preserved, Colors updated) --- */
+.premium-card { 
+    background: var(--card-bg); 
+    border: 1px solid var(--glass-border); 
+    backdrop-filter: blur(25px); 
+    border-radius: 28px; 
+    padding: 22px; margin-bottom: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+.balance-count {
+    font-family: 'Orbitron';
+    font-size: 2.6rem !important;
+    background: linear-gradient(to right, #fff, var(--parrot-green)); /* Parrot Green Glow */
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin: 12px 0; font-weight: 900;
+    filter: drop-shadow(0 0 12px rgba(173, 255, 47, 0.4));
+}
+
+/* --- BUTTON (Red to Purple) --- */
+.btn-primary {
+    width: 100%; padding: 16px; 
+    background: linear-gradient(90deg, var(--neon-red), var(--neon-purple));
+    color: #fff; border: none; border-radius: 18px; font-weight: 900;
+    font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
+    box-shadow: 0 5px 20px var(--purple-glow);
+    transition: 0.3s; letter-spacing: 1px;
+}
+
+/* --- NAVIGATION --- */
+.bottom-nav {
+    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 420px;
+    background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(40px);
+    display: flex; justify-content: space-around;
+    padding: 14px 5px; border-radius: 40px; 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.9);
+    z-index: 10000;
+}
+
+.nav-item { 
+    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    transition: 0.4s; position: relative; width: 65px;
+}
+
+.nav-item.active { color: var(--parrot-green); transform: translateY(-8px); }
+.nav-item.active .icon { font-size: 1.4rem; filter: drop-shadow(0 0 10px var(--parrot-green)); }
+
+.nav-item.active::after {
+    content: ""; position: absolute; bottom: -10px; width: 18px; height: 3px;
+    background: var(--parrot-green); border-radius: 10px; box-shadow: 0 0 15px var(--parrot-green);
+}
+
+.nav-item .icon { font-size: 1.2rem; transition: 0.3s; }
+
+/* --- PROGRESS --- */
+.progress-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--parrot-green), var(--neon-blue)); box-shadow: 0 0 15px rgba(173, 255, 47, 0.3); transition: 1.5s; }
+
+#eligibility-status { color: var(--parrot-green); text-shadow: 0 0 5px var(--parrot-green); }
