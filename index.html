@@ -130,109 +130,74 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
-            authDomain: "adamas-protocol-v2.firebaseapp.com",
-            databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
-            projectId: "adamas-protocol-v2",
-            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+    // ... Firebase Config (Wahi rahegi jo aapne di hai) ...
+    const firebaseConfig = {
+        apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+        authDomain: "adamas-protocol-v2.firebaseapp.com",
+        databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+        projectId: "adamas-protocol-v2",
+        appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-        // [SYSTEM LOGIC] Referral & Auth Check
-        window.onload = function() {
-            // 1. Referral Capture
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            if(ref) {
-                localStorage.setItem('adamas_referrer', ref);
-                console.log("Referrer Captured: " + ref);
-            }
-
-            // 2. Auto-Login
-            const savedUser = localStorage.getItem('adamas_user');
-            if(savedUser) {
-                window.location.href = "dashboard.html";
-            }
+    window.onload = function() {
+        // 1. Referral Capture (Wallet Address capture karega)
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get('ref');
+        if(ref) {
+            // Lowercase isliye taaki 0xAbC aur 0xabc mein error na aaye
+            localStorage.setItem('adamas_referrer', ref.toLowerCase());
+            console.log("Referrer Wallet Captured: " + ref);
         }
 
-        function startJourney() {
-            document.getElementById('phase-intro').classList.remove('active-phase');
-            document.getElementById('phase-social').classList.add('active-phase');
-        }
+        const savedUser = localStorage.getItem('adamas_user');
+        if(savedUser) { window.location.href = "dashboard.html"; }
+    }
 
-        let tasksDone = 0;
-        const totalTasks = 1; // Testing ke liye 1 rakha hai, isse 4 kar dena baad mein
+    // ... startJourney aur handleVerify functions same rahenge ...
 
-        function handleVerify(id) {
-            const pill = document.getElementById('pill-' + id);
-            const card = document.getElementById('card-' + id);
-            
-            if(pill.innerText !== "VERIFIED") {
-                pill.innerText = "CHECKING...";
-                setTimeout(() => {
-                    pill.innerText = "VERIFIED";
-                    card.classList.add('verified');
-                    tasksDone++;
-                    if(tasksDone >= totalTasks) {
-                        enableWalletBtn();
-                    }
-                }, 3000);
-            }
-        }
+    async function connectWeb3() {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const wallet = accounts[0].toLowerCase();
+                const userRef = db.ref('users/' + wallet);
+                
+                userRef.once('value').then(async (snapshot) => {
+                    if (!snapshot.exists()) {
+                        const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                        
+                        // [NEW LOGIC] User data mein refCode ki zarurat nahi, wallet hi ID hai
+                        await userRef.set({
+                            balance: 800,
+                            wallet: wallet,
+                            referredBy: referrer,
+                            joinedAt: new Date().toISOString(),
+                            lastLogin: new Date().toISOString()
+                        });
 
-        function enableWalletBtn() {
-            const wb = document.getElementById('wallet-btn');
-            wb.style.opacity = "1";
-            wb.style.pointerEvents = "all";
-            wb.style.background = "var(--p-green)";
-            document.getElementById('lock-msg').innerText = "NODE VERIFIED: 800 ABP READY";
-            document.getElementById('lock-msg').style.color = "var(--p-green)";
-        }
-
-        async function connectWeb3() {
-            if (window.ethereum) {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    const wallet = accounts[0].toLowerCase(); // Case-sensitive issues avoid karne ke liye
-                    
-                    const userRef = db.ref('users/' + wallet);
-                    
-                    userRef.once('value').then(async (snapshot) => {
-                        if (!snapshot.exists()) {
-                            const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
-                            
-                            await userRef.set({
-                                balance: 800,
-                                abp_balance: 800,
-                                wallet: wallet,
-                                refCode: wallet.substring(2, 8).toUpperCase(),
-                                referredBy: referrer,
-                                joinedAt: new Date().toISOString(),
-                                lastLogin: new Date().toISOString()
+                        // [NEW REFERRAL BONUS] Seedha referrer ke wallet address par bonus bhejna
+                        if(referrer !== "DIRECT") {
+                            // Check if the referrer address actually exists
+                            db.ref('users/' + referrer).once('value', snap => {
+                                if(snap.exists()) {
+                                    db.ref('users/' + referrer).child('balance').transaction(b => (b || 0) + 100);
+                                    console.log("Bonus sent to referrer: " + referrer);
+                                }
                             });
-
-                            // Referral Bonus logic with safety transaction
-                            if(referrer !== "DIRECT") {
-                                db.ref('users').orderByChild('refCode').equalTo(referrer).once('value', snap => {
-                                    if(snap.exists()) {
-                                        const refWallet = Object.keys(snap.val())[0];
-                                        db.ref('users/' + refWallet).child('balance').transaction(b => (b || 0) + 100);
-                                    }
-                                });
-                            }
-                        } else {
-                            await userRef.update({ lastLogin: new Date().toISOString() });
                         }
+                    } else {
+                        await userRef.update({ lastLogin: new Date().toISOString() });
+                    }
 
-                        localStorage.setItem('adamas_user', wallet);
-                        window.location.href = "dashboard.html";
-                    });
+                    localStorage.setItem('adamas_user', wallet);
+                    window.location.href = "dashboard.html";
+                });
 
-                } catch (e) { console.error(e); }
-            } else { alert("Please use Trust Wallet or MetaMask browser."); }
-        }
-    </script>
+            } catch (e) { console.error(e); }
+        } else { alert("Please use Trust Wallet or MetaMask browser."); }
+    }
+</script>
 </body>
 </html>
