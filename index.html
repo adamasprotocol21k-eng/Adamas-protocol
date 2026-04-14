@@ -48,23 +48,30 @@
         .task-card:active { transform: scale(0.98); background: rgba(0, 242, 255, 0.08); }
         .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.06); }
         
-        /* STATUS PILL ALIGNMENT */
+        /* GLOWING FOLLOW BUTTON */
         .status-pill { 
             font-size: 10px; 
-            background: rgba(255,255,255,0.07); 
+            background: rgba(0, 242, 255, 0.1); 
             padding: 8px 14px; 
             border-radius: 10px; 
-            color: #aaa; 
+            color: var(--cyan); 
             font-family: 'Orbitron';
             min-width: 80px;
             text-align: center;
+            border: 1px solid var(--cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+            animation: glowPulse 1.5s infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            from { box-shadow: 0 0 5px rgba(0, 242, 255, 0.2); transform: scale(1); }
+            to { box-shadow: 0 0 15px rgba(0, 242, 255, 0.6); transform: scale(1.05); }
         }
         
         /* LOGO & LAYOUT SPACING */
         .logo-container { position: relative; display: inline-block; margin-bottom: 5px; }
         .main-logo { font-size: clamp(2.8rem, 12vw, 4rem); font-family: 'Orbitron'; font-weight: 900; background: linear-gradient(180deg, #fff 20%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--cyan-glow)); }
         
-        /* VERIFICATION PAGE TOP MARGIN TO AVOID WALLET OVERLAP */
         #phase-social { margin-top: 60px; }
 
         .logo-scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); animation: scanMove 3s infinite linear; opacity: 0.4; }
@@ -116,7 +123,7 @@
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">JOIN TELEGRAM CHANNEL</span>
                             <span style="font-size: 10px; color: var(--p-green);">REWARD: +200 ABP</span>
                         </div>
-                        <div id="pill-t1" class="status-pill">PENDING</div>
+                        <div id="pill-t1" class="status-pill">FOLLOW</div>
                     </div>
                 </div>
 
@@ -126,7 +133,7 @@
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">JOIN COMMUNITY GROUP</span>
                             <span style="font-size: 10px; color: var(--p-green);">REWARD: +200 ABP</span>
                         </div>
-                        <div id="pill-t2" class="status-pill">PENDING</div>
+                        <div id="pill-t2" class="status-pill">FOLLOW</div>
                     </div>
                 </div>
 
@@ -136,7 +143,7 @@
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">FOLLOW DIAMO ON X</span>
                             <span style="font-size: 10px; color: var(--p-green);">REWARD: +200 ABP</span>
                         </div>
-                        <div id="pill-t3" class="status-pill">PENDING</div>
+                        <div id="pill-t3" class="status-pill">FOLLOW</div>
                     </div>
                 </div>
 
@@ -146,13 +153,13 @@
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">FOLLOW ADAMAS ON X</span>
                             <span style="font-size: 10px; color: var(--p-green);">REWARD: +200 ABP</span>
                         </div>
-                        <div id="pill-t4" class="status-pill">PENDING</div>
+                        <div id="pill-t4" class="status-pill">FOLLOW</div>
                     </div>
                 </div>
             </div>
 
-            <button id="wallet-btn" class="btn-primary" style="margin-top: 35px; opacity: 0.2; pointer-events: none;" onclick="finalRegistration()">UNLOCK YOUR DASHBOARD</button>
-            <p id="lock-msg" style="font-size: 10px; color: #444; margin-top: 15px; font-family: 'Orbitron'; letter-spacing: 1px;">0/4 NODES SYNCED</p>
+            <button id="wallet-btn" class="btn-primary" style="margin-top: 35px; opacity: 1; pointer-events: all; background: linear-gradient(90deg, var(--cyan), #8e2de2); box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);" onclick="finalRegistration()">UNLOCK YOUR DASHBOARD</button>
+            <p id="lock-msg" style="font-size: 10px; color: var(--p-green); margin-top: 15px; font-family: 'Orbitron'; letter-spacing: 1px;">NODES READY FOR ACCESS</p>
         </section>
     </div>
 
@@ -161,8 +168,6 @@
     <script src="config.js"></script> 
     
     <script>
-        let completedTasks = 0;
-        const totalRequired = 4;
         let activeWallet = null;
 
         window.onload = function() {
@@ -174,33 +179,21 @@
                 return;
             }
 
-            // LOOP FIX: If wallet connected in this session, show social phase
             if(sessionWallet) {
                 activeWallet = sessionWallet;
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
                 switchToSocialPhase();
-            } else {
-                document.getElementById('phase-intro').style.display = 'flex';
-                document.getElementById('phase-social').style.display = 'none';
             }
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase());
-            
             restoreTaskState();
         }
 
         function restoreTaskState() {
-            let count = 0;
             for(let i=1; i<=4; i++) {
                 if(localStorage.getItem('adamas_task_t'+i) === 'verified') {
                     markVerifiedUI('t'+i);
-                    count++;
                 }
             }
-            updateLockMessage();
-            if(count >= totalRequired) enableDashboardButton();
         }
 
         async function handleEntry() {
@@ -208,12 +201,9 @@
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
-                
-                // Set session to prevent redirect on back button
                 sessionStorage.setItem('active_session_wallet', activeWallet);
                 
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
-                document.getElementById('core-status').innerText = "WALLET_CONNECTED";
                 
                 const snapshot = await db.ref('users/' + activeWallet).once('value');
                 if (snapshot.exists()) {
@@ -222,23 +212,22 @@
                 } else {
                     switchToSocialPhase();
                 }
-            } catch (e) { alert("Please connect your wallet to continue."); }
+            } catch (e) { alert("Connection failed."); }
         }
 
         function switchToSocialPhase() {
             document.getElementById('phase-intro').style.display = 'none';
             document.getElementById('phase-social').style.display = 'flex';
             document.getElementById('phase-social').classList.add('active-phase');
-            window.scrollTo(0,0);
         }
 
-        // --- UPDATED 12-SECOND TIMER LOGIC ---
         function handleVerify(id, link) {
-            if(!activeWallet) return alert("Please connect wallet first!");
+            if(!activeWallet) return alert("Connect wallet first!");
             if(localStorage.getItem('adamas_task_'+id) === 'verified') return;
 
             window.open(link, "_blank");
             const pill = document.getElementById('pill-' + id);
+            pill.style.animation = "none"; 
             
             let secondsLeft = 12;
             pill.innerHTML = `<span class="sync-spinner"></span> ${secondsLeft}s`;
@@ -251,8 +240,6 @@
                     clearInterval(timer);
                     localStorage.setItem('adamas_task_'+id, 'verified');
                     markVerifiedUI(id);
-                    updateLockMessage();
-                    if(document.querySelectorAll('.task-card.verified').length >= totalRequired) enableDashboardButton();
                 }
             }, 1000);
         }
@@ -261,53 +248,28 @@
             const card = document.getElementById('card-' + id);
             const pill = document.getElementById('pill-' + id);
             if(card && pill) {
-                pill.innerText = "FOLLOWED"; // Updated text as requested
+                pill.innerText = "FOLLOWED";
                 pill.style.background = "var(--p-green)";
                 pill.style.color = "#000";
+                pill.style.animation = "none";
                 pill.style.boxShadow = "0 0 10px rgba(173, 255, 47, 0.3)";
                 card.classList.add('verified');
             }
         }
 
-        function updateLockMessage() {
-            const current = document.querySelectorAll('.task-card.verified').length;
-            document.getElementById('lock-msg').innerText = current + "/4 NODES SYNCED";
-        }
-
-        function enableDashboardButton() {
-            const wb = document.getElementById('wallet-btn');
-            wb.style.opacity = "1";
-            wb.style.pointerEvents = "all";
-            wb.style.background = "linear-gradient(90deg, var(--cyan), #8e2de2)";
-            wb.style.boxShadow = "0 0 20px rgba(0, 242, 255, 0.4)";
-            document.getElementById('lock-msg').style.color = "var(--p-green)";
-            document.getElementById('lock-msg').innerText = "ALL NODES SYNCED - READY";
-        }
-
         async function finalRegistration() {
-            if(!activeWallet) return;
+            if(!activeWallet) return alert("Please connect wallet first.");
             try {
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 await db.ref('users/' + activeWallet).set({
                     balance: 800,
                     wallet: activeWallet,
                     referredBy: referrer,
-                    referralCount: 0,
-                    joinedAt: new Date().toISOString(),
-                    role: "USER"
+                    joinedAt: new Date().toISOString()
                 });
-                
-                if(referrer !== "DIRECT") {
-                    db.ref('users/' + referrer).transaction(u => {
-                        if(u) { u.balance = (u.balance || 0) + 100; u.referralCount = (u.referralCount || 0) + 1; }
-                        return u;
-                    });
-                }
-                
                 localStorage.setItem('adamas_user', activeWallet);
-                sessionStorage.removeItem('active_session_wallet');
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration Failed: " + e.message); }
+            } catch (e) { alert("Registration Failed."); }
         }
     </script>
 </body>
