@@ -3,57 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Dashboard</title>
+    <title>ADAMAS | Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .mining-power-card {
-            background: linear-gradient(135deg, rgba(0, 242, 255, 0.1) 0%, rgba(0,0,0,0.5) 100%);
-            border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; text-align: center;
+        /* Modern Glass-Card Design for your existing structure */
+        .hero-balance-card {
+            background: linear-gradient(145deg, rgba(10,10,10,0.9) 0%, rgba(5,5,5,1) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px; padding: 30px 20px; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); margin-bottom: 25px;
         }
-        .mining-btn {
-            width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--cyan);
-            background: rgba(0,0,0,0.6); color: white; font-family: 'Orbitron'; font-weight: 900;
-            font-size: 14px; cursor: pointer; transition: 0.3s; margin: 20px auto;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); display: flex; align-items: center; justify-content: center;
+        
+        .mining-engine-vessel {
+            width: 180px; height: 180px; margin: 20px auto;
+            position: relative; display: flex; align-items: center; justify-content: center;
         }
-        .mining-btn.active { animation: pulse-mining 1.5s infinite; border-color: var(--p-green); color: var(--p-green); }
-        @keyframes pulse-mining { 0% { box-shadow: 0 0 0 0 rgba(173, 255, 47, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(173, 255, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(173, 255, 47, 0); } }
+
+        .engine-glow {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; border: 2px dashed rgba(0, 242, 255, 0.2);
+            animation: spin 15s linear infinite;
+        }
+
+        .mining-trigger-btn {
+            width: 140px; height: 140px; border-radius: 50%;
+            background: #000; border: 3px solid var(--cyan);
+            color: #fff; font-family: 'Orbitron'; font-weight: 900;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+            cursor: pointer; z-index: 5; transition: 0.3s;
+        }
+
+        .mining-trigger-btn.active {
+            border-color: var(--p-green);
+            box-shadow: 0 0 40px rgba(173, 255, 47, 0.2);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse-green { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        .copy-btn {
+            background: var(--cyan); color: #000; border: none;
+            padding: 0 15px; border-radius: 12px; font-family: 'Orbitron';
+            font-size: 10px; font-weight: 900; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-wrapper" style="padding: 15px;">
-        <header class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <div>
-                <span style="font-size: 10px; color: #666; letter-spacing: 1px;">TOTAL_ABP</span>
-                <span id="main-balance" style="display:block; color:white; font-family:'Orbitron'; font-size: 1.5rem; font-weight: 900;">0.00</span>
+    <div class="dashboard-wrapper">
+        <header class="main-header" style="padding: 15px 20px;">
+            <div class="brand-identity" onclick="window.location.href='profile.html'">
+                <div class="logo-wrapper"><div class="main-logo-icon">A</div></div>
+                <div class="brand-text">
+                    <span class="protocol-name">ADAMAS</span>
+                    <span class="protocol-sub">PROTOCOL</span>
+                </div>
             </div>
-            <div id="user-rank" class="status-pill" style="border: 1px solid var(--neon-gold); color: var(--neon-gold);">BRONZE</div>
+
+            <div class="header-right">
+                <div id="user-address" class="wallet-pill" style="font-family: monospace; font-size: 10px;">0x...</div>
+                <div id="eligibility-status" style="font-size: 8px; color: var(--p-green); margin-top: 4px; font-family: 'Orbitron';">NODE_ACTIVE ✅</div>
+            </div>
         </header>
 
-        <section class="mining-power-card">
-            <h3 style="font-family: 'Orbitron'; font-size: 12px; color: var(--cyan); letter-spacing: 1px;">CORE_MINER_V12</h3>
-            <button id="mining-btn" class="mining-btn" onclick="startMining()">START<br>MINING</button>
-            <div id="mining-status" style="font-size: 10px; color: #555; font-family: 'Orbitron';">READY TO SYNC</div>
-        </section>
+        <main class="engine-room" style="padding: 15px; padding-bottom: 120px;">
+            
+            <section class="hero-balance-card">
+                <p style="font-size: 10px; letter-spacing: 3px; color: #555; font-family: 'Orbitron';">TOTAL_MINED_POINTS</p>
+                <h1 id="total-balance" style="font-family: 'Orbitron'; font-size: 3rem; margin: 15px 0; font-weight: 900;">0.0000</h1>
+                <div style="color: var(--cyan); font-family: 'Orbitron'; font-size: 12px; letter-spacing: 4px;">ABP_UNITS</div>
+                
+                <div class="scarcity-meter" style="margin-top: 25px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 20px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 8px; font-family: 'Orbitron';">
+                        <span>GENESIS_PHASE</span>
+                        <span id="scarcity-percent">0%</span>
+                    </div>
+                    <div class="progress-bar" style="height: 8px;"><div id="scarcity-fill" class="progress-fill" style="width: 0%;"></div></div>
+                </div>
+            </section>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-            <div class="stat-box" style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 15px; border: 1px solid var(--glass-border); text-align: center;">
-                <span style="font-size: 9px; color: #666;">SPEED</span>
-                <span style="display:block; font-family:'Orbitron'; color:var(--p-green); font-size: 12px;">1.2x ABP/h</span>
+            <div class="mining-engine-vessel">
+                <div class="engine-glow"></div>
+                <button class="mining-trigger-btn" onclick="toggleMining()" id="mining-btn">INITIALIZE</button>
             </div>
-            <div class="stat-box" style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 15px; border: 1px solid var(--glass-border); text-align: center;">
-                <span style="font-size: 9px; color: #666;">SESSION</span>
-                <span id="session-gain" style="display:block; font-family:'Orbitron'; color:white; font-size: 12px;">+0.00</span>
+
+            <div style="display: flex; gap: 12px; margin-bottom: 25px;">
+                <div class="premium-card" style="flex: 1; text-align: center; padding: 15px;">
+                    <span style="font-size: 9px; color: #555; font-family: 'Orbitron';">ACTIVE_NODES</span>
+                    <span id="ref-count" style="display: block; font-size: 18px; font-family: 'Orbitron'; color: #fff; margin-top: 5px;">0</span>
+                </div>
+                <div class="premium-card" style="flex: 1; text-align: center; padding: 15px;">
+                    <span style="font-size: 9px; color: #555; font-family: 'Orbitron';">STREAK</span>
+                    <span id="streak-info-dash" style="display: block; font-size: 18px; font-family: 'Orbitron'; color: #fff; margin-top: 5px;">1</span>
+                </div>
             </div>
-        </div>
+
+            <div class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-color: rgba(173, 255, 47, 0.2);">
+                <div>
+                    <h3 style="font-size: 13px; font-family: 'Orbitron'; color: var(--p-green);">DAILY_PROTOCOL_SYNC</h3>
+                    <p id="streak-text" style="font-size: 10px; color: #666; margin-top: 3px;">Claim daily bonus rewards</p>
+                </div>
+                <button class="btn-primary" id="daily-claim-btn" style="width: auto; padding: 10px 18px; font-size: 11px;" onclick="claimDailyBonus()">SYNC</button>
+            </div>
+
+            <div class="premium-card">
+                <p style="font-size: 9px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; letter-spacing: 1px;">NETWORK_INVITE_LINK</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="ref-link-input" readonly value="LOADING..." 
+                           style="flex: 1; background: #000; border: 1px solid #222; color: #888; padding: 12px; border-radius: 12px; font-size: 10px; font-family: monospace;">
+                    <button class="copy-btn" onclick="copyRefLink()">COPY</button>
+                </div>
+            </div>
+        </main>
 
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item active">🏠<br>HOME</a>
-            <a href="vault.html" class="nav-item">🔒<br>VAULT</a>
-            <a href="missions.html" class="nav-item">⚡<br>TASKS</a>
-            <a href="referral.html" class="nav-item">👥<br>NETWORK</a>
-            <a href="profile.html" class="nav-item">🏆<br>RANK</a>
+            <a href="dashboard.html" class="nav-item active">🏠 HOME</a>
+            <a href="vault.html" class="nav-item">🔒 VAULT</a>
+            <a href="missions.html" class="nav-item">⚡ TASKS</a>
+            <a href="referral.html" class="nav-item">👥 NETWORK</a>
+            <a href="profile.html" class="nav-item">🏆 RANK</a>
         </nav>
     </div>
 
@@ -70,45 +139,92 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
         const userWallet = localStorage.getItem('adamas_user');
+        if (!userWallet) { window.location.href = "index.html"; }
 
+        const userRef = db.ref('users/' + userWallet);
+        let currentBalance = 0;
         let isMining = false;
-        let sessionEarned = 0;
 
-        window.onload = () => {
-            if(!userWallet) window.location.href = "index.html";
-            
-            // Real-time Balance Fetch
-            db.ref('users/' + userWallet).on('value', snap => {
-                const data = snap.val();
-                if(data) {
-                    document.getElementById('main-balance').innerText = parseFloat(data.balance || 0).toFixed(2);
-                    document.getElementById('user-rank').innerText = data.role === "FOUNDER" ? "FOUNDER" : (data.rank || "BRONZE");
-                }
-            });
-        };
+        userRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                currentBalance = parseFloat(data.balance || 0);
+                if(!isMining) updateBalanceUI(currentBalance);
+                
+                document.getElementById('user-address').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
+                
+                const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html');
+                document.getElementById('ref-link-input').value = baseUrl + "?ref=" + (data.refCode || "NODE");
+                
+                db.ref('users').orderByChild('referredBy').equalTo(data.refCode).once('value', (refSnap) => {
+                    document.getElementById('ref-count').innerText = refSnap.numChildren() || 0;
+                });
 
-        function startMining() {
+                updateScarcity(currentBalance);
+                checkClaimStatus(data.lastClaim);
+            }
+        });
+
+        function updateBalanceUI(val) {
+            document.getElementById('total-balance').innerText = val.toLocaleString(undefined, {minimumFractionDigits: 4, maximumFractionDigits: 4});
+        }
+
+        function updateScarcity(bal) {
+            const progress = Math.min((bal / 21000) * 100, 100).toFixed(2);
+            document.getElementById('scarcity-percent').innerText = progress + "%";
+            document.getElementById('scarcity-fill').style.width = progress + "%";
+        }
+
+        function toggleMining() {
             if(isMining) return;
-            
             isMining = true;
             const btn = document.getElementById('mining-btn');
-            const status = document.getElementById('mining-status');
-            
+            btn.innerText = "MINING...";
             btn.classList.add('active');
-            btn.innerHTML = "MINING...";
-            status.innerText = "PROTOCOL SYNC ACTIVE";
-            status.style.color = "var(--p-green)";
 
-            // Sem waisa hi function: Har 3 second mein balance badhega
-            setInterval(async () => {
-                const increase = 0.05; // Aap isse change kar sakte ho
-                sessionEarned += increase;
-                document.getElementById('session-gain').innerText = "+" + sessionEarned.toFixed(2);
-                
-                // Update Firebase
-                await db.ref('users/' + userWallet + '/balance').transaction(b => (b || 0) + increase);
-            }, 3000);
+            setInterval(() => {
+                currentBalance += 0.0001;
+                updateBalanceUI(currentBalance);
+            }, 1000);
+
+            setInterval(() => {
+                userRef.update({ balance: currentBalance });
+                // Update Global Forge Sync
+                db.ref('global_stats/total_forged').transaction(t => (t || 0) + 0.003); 
+            }, 30000);
+        }
+
+        function checkClaimStatus(lastClaimTime) {
+            const btn = document.getElementById('daily-claim-btn');
+            if (!lastClaimTime) return;
+            const now = new Date().getTime();
+            const last = new Date(lastClaimTime).getTime();
+            const hoursPassed = (now - last) / (1000 * 60 * 60);
+            if (hoursPassed < 24) {
+                btn.innerText = "LOCKED";
+                btn.style.opacity = "0.3";
+                btn.style.pointerEvents = "none";
+                document.getElementById('streak-text').innerText = "Next sync in " + (24 - hoursPassed).toFixed(1) + "h";
+            }
+        }
+
+        async function claimDailyBonus() {
+            try {
+                await userRef.update({
+                    balance: firebase.database.ServerValue.increment(10),
+                    lastClaim: new Date().toISOString()
+                });
+                alert("Daily Sync Complete! +10 ABP credited.");
+            } catch (e) { console.error(e); }
+        }
+
+        function copyRefLink() {
+            const copyText = document.getElementById("ref-link-input");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("Invite Link Copied!");
         }
     </script>
 </body>
