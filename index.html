@@ -105,26 +105,54 @@
     <script src="config.js"></script> 
     
     <script>
-        let completedTasks = 0;
+        // Use localStorage to maintain state across refreshes
+        let completedTasks = parseInt(localStorage.getItem('adamas_tasks_done')) || 0;
         const totalRequired = 4;
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
+            
+            // ACTION: If new referral link, wipe previous session to avoid address overlap
             if(ref) { 
-                localStorage.setItem('adamas_referrer', ref.toLowerCase()); 
-                console.log("Referrer Saved:", ref.toLowerCase());
+                const savedRef = localStorage.getItem('adamas_referrer');
+                if(savedRef !== ref.toLowerCase()) {
+                    localStorage.clear(); 
+                    localStorage.setItem('adamas_referrer', ref.toLowerCase());
+                    completedTasks = 0;
+                    console.log("Session Reset for New Referral");
+                }
             }
             
-            if(localStorage.getItem('adamas_user')) { 
+            // Auto-redirect if already logged in (and no new ref link)
+            if(!ref && localStorage.getItem('adamas_user')) { 
                 window.location.href = "dashboard.html"; 
                 return;
             }
 
-            // Back Button Protection
+            // Restore tasks UI if user refreshed during verification
+            restoreTaskState();
+
             if(window.location.hash === "#verification" || localStorage.getItem('on_social_phase') === 'true') {
                 switchToSocialPhase();
             }
+        }
+
+        function restoreTaskState() {
+            for(let i=1; i<=4; i++) {
+                if(localStorage.getItem('adamas_task_t' + i) === 'verified') {
+                    const card = document.getElementById('card-t' + i);
+                    const pill = document.getElementById('pill-t' + i);
+                    if(card) card.classList.add('verified');
+                    if(pill) {
+                        pill.innerText = "VERIFIED";
+                        pill.style.background = "var(--p-green)";
+                        pill.style.color = "#000";
+                    }
+                }
+            }
+            updateLockMessage();
+            if(completedTasks >= totalRequired) enableWalletButton();
         }
 
         async function handleEntry() {
@@ -160,31 +188,46 @@
             const pill = document.getElementById('pill-' + id);
             pill.innerHTML = `<span class="sync-spinner"></span> SYNCING`;
 
-            const checkFocus = setInterval(() => {
-                if (document.hasFocus()) {
-                    clearInterval(checkFocus);
-                    setTimeout(() => {
-                        pill.innerText = "VERIFIED";
-                        pill.style.background = "var(--p-green)";
-                        pill.style.color = "#000";
-                        card.classList.add('verified');
-                        completedTasks++;
-                        document.getElementById('lock-msg').innerText = completedTasks + "/4 NODES VERIFIED";
-                        if(completedTasks === totalRequired) {
-                            localStorage.removeItem('on_social_phase');
-                            enableWalletButton();
-                        }
-                    }, 2500); 
+            // Backup timer for mobile browsers (8 seconds auto-verify)
+            let isDone = false;
+            const finalize = () => {
+                if(isDone) return;
+                isDone = true;
+                
+                pill.innerText = "VERIFIED";
+                pill.style.background = "var(--p-green)";
+                pill.style.color = "#000";
+                card.classList.add('verified');
+                
+                // Save task state
+                localStorage.setItem('adamas_task_' + id, 'verified');
+                completedTasks = document.querySelectorAll('.task-card.verified').length;
+                localStorage.setItem('adamas_tasks_done', completedTasks);
+                
+                updateLockMessage();
+                if(completedTasks >= totalRequired) {
+                    localStorage.removeItem('on_social_phase');
+                    enableWalletButton();
                 }
-            }, 1000);
+            };
+
+            // Detect focus return or use timeout
+            window.addEventListener('focus', () => setTimeout(finalize, 2000), { once: true });
+            setTimeout(finalize, 8000); 
+        }
+
+        function updateLockMessage() {
+            const msg = document.getElementById('lock-msg');
+            if(msg) msg.innerText = completedTasks + "/4 NODES VERIFIED";
         }
 
         function enableWalletButton() {
             const wb = document.getElementById('wallet-btn');
             wb.style.opacity = "1";
             wb.style.pointerEvents = "all";
-            document.getElementById('lock-msg').innerText = "ELIGIBILITY SCAN COMPLETE";
-            document.getElementById('lock-msg').style.color = "var(--p-green)";
+            const msg = document.getElementById('lock-msg');
+            msg.innerText = "ELIGIBILITY SCAN COMPLETE";
+            msg.style.color = "var(--p-green)";
         }
 
         async function connectWeb3() {
@@ -193,29 +236,32 @@
                 const wallet = accounts[0].toLowerCase();
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 
-                // 1. SAVE NEW USER
                 await db.ref('users/' + wallet).set({
                     balance: 800,
                     wallet: wallet,
                     referredBy: referrer,
-                    referralCount: 0, // Inka khud ka count shuruat mein 0
+                    referralCount: 0,
                     joinedAt: new Date().toISOString(),
                     role: (wallet === "0xc9267828a11db4cb32f0a5ea5fc29b38ff0ff25e") ? "FOUNDER" : "USER"
                 });
                 
-                // 2. REWARD REFERRER (Balance + Count Dono Update)
                 if(referrer !== "DIRECT" && referrer !== wallet) {
                     const refRef = db.ref('users/' + referrer);
                     refRef.transaction((data) => {
                         if (data) {
                             data.balance = (data.balance || 0) + 100;
-                            data.referralCount = (data.referralCount || 0) + 1; // Ye update missing tha!
+                            data.referralCount = (data.referralCount || 0) + 1;
                         }
                         return data;
                     });
                 }
                 
+                // Final session setup
                 localStorage.setItem('adamas_user', wallet);
+                // Clear temporary verification memory
+                for(let i=1; i<=4; i++) { localStorage.removeItem('adamas_task_t' + i); }
+                localStorage.removeItem('adamas_tasks_done');
+
                 window.location.href = "dashboard.html";
             } catch (e) { alert("Error: " + e.message); }
         }
