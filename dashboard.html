@@ -6,81 +6,118 @@
     <title>ADAMAS | Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Sirf Dashboard ke liye specific animations */
+        /* PREMIUM LOGO & HEADER STYLES */
+        .brand-identity {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .brand-identity:active { transform: scale(0.95); }
+
+        .logo-box {
+            background: linear-gradient(135deg, var(--cyan) 0%, #0088ff 100%);
+            width: 38px; height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 18px;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .logo-box::after {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%; background: rgba(255,255,255,0.2);
+            transform: rotate(45deg); animation: shine 3s infinite;
+        }
+
+        .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+        .brand-name {
+            font-family: 'Orbitron'; font-size: 16px; font-weight: 900;
+            color: #fff; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+        .brand-sub {
+            font-size: 8.5px; color: var(--cyan); letter-spacing: 1.5px;
+            font-weight: 700; font-family: 'Orbitron'; opacity: 0.8;
+        }
+
+        /* EXISTING ANIMATIONS & CARDS */
         .hero-balance-card {
-            background: linear-gradient(145deg, rgba(10,10,10,0.9) 0%, rgba(5,5,5,1) 100%);
-            border: 1px solid rgba(130, 71, 229, 0.2); 
+            background: linear-gradient(145deg, rgba(15,15,15,0.9) 0%, rgba(5,5,5,1) 100%);
+            border: 1px solid rgba(0, 242, 255, 0.15); 
             border-radius: 30px; padding: 30px 20px; text-align: center;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5); margin-bottom: 25px;
-            overflow: hidden;
         }
         
         .mining-engine-vessel {
             width: 180px; height: 180px; margin: 20px auto;
             position: relative; display: flex; align-items: center; justify-content: center;
         }
-
         .engine-glow {
             position: absolute; width: 100%; height: 100%;
             border-radius: 50%; border: 2px dashed rgba(0, 242, 255, 0.2);
             animation: spin 15s linear infinite;
         }
-
         .mining-trigger-btn {
-            width: 140px; height: 140px; border-radius: 50%;
+            width: 130px; height: 130px; border-radius: 50%;
             background: #000; border: 3px solid var(--cyan);
             color: #fff; font-family: 'Orbitron'; font-weight: 900;
             box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
             cursor: pointer; z-index: 5; transition: 0.3s; outline: none;
         }
-
         .mining-trigger-btn.active {
             border-color: var(--p-green);
-            box-shadow: 0 0 40px rgba(173, 255, 47, 0.2);
             animation: pulse-green 2s infinite;
         }
 
-        .copy-btn {
-            background: var(--cyan); color: #000; border: none;
-            padding: 0 15px; border-radius: 12px; font-family: 'Orbitron';
-            font-size: 10px; font-weight: 900; cursor: pointer;
-        }
-
+        @keyframes shine { 0% { left: -150%; } 100% { left: 150%; } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes pulse-green { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        .copy-btn {
+            background: var(--cyan); color: #000; border: none;
+            padding: 0 18px; border-radius: 12px; font-family: 'Orbitron';
+            font-size: 10px; font-weight: 900; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
     <div class="dashboard-wrapper">
-        <header class="main-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <div class="brand-identity" style="display: flex; align-items: center; gap: 10px;" onclick="window.location.href='profile.html'">
-                <div style="background: var(--cyan); width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #000; font-family: 'Orbitron'; font-weight: 900;">A</div>
-                <div style="display: flex; flex-direction: column;">
-                    <span style="font-family: 'Orbitron'; font-size: 14px; color: #fff; letter-spacing: 2px;">ADAMAS</span>
-                    <span style="font-size: 8px; color: #555; letter-spacing: 1px;">PROTOCOL</span>
+        <header class="main-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 5px 2px;">
+            <div class="brand-identity" onclick="window.location.href='profile.html'">
+                <div class="logo-box">A</div>
+                <div class="brand-text">
+                    <span class="brand-name">ADAMAS</span>
+                    <span class="brand-sub">QUANTUM PROTOCOL</span>
                 </div>
             </div>
 
             <div style="text-align: right;">
-                <div id="user-address" style="font-family: monospace; font-size: 10px; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px;">0x...</div>
-                <div style="font-size: 8px; color: var(--p-green); margin-top: 4px; font-family: 'Orbitron';">POLYGON_AMOY_V2 ✅</div>
+                <div id="user-address" style="font-family: monospace; font-size: 10px; background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">0x...</div>
+                <div style="font-size: 8px; color: var(--p-green); margin-top: 5px; font-family: 'Orbitron'; letter-spacing: 1px;">NETWORK_SECURE ✅</div>
             </div>
         </header>
 
         <main>
             <section class="hero-balance-card">
-                <p style="font-size: 10px; letter-spacing: 3px; color: #555; font-family: 'Orbitron';">TOTAL_MINED_POINTS</p>
-                <h1 id="total-balance" style="font-family: 'Orbitron'; font-size: 2.8rem; margin: 15px 0; font-weight: 900; color: #fff;">0.00</h1>
-                <div style="color: var(--cyan); font-family: 'Orbitron'; font-size: 12px; letter-spacing: 4px;">ABP_UNITS</div>
+                <p style="font-size: 9px; letter-spacing: 3px; color: #666; font-family: 'Orbitron';">NODE_REWARD_BALANCE</p>
+                <h1 id="total-balance" style="font-family: 'Orbitron'; font-size: 3rem; margin: 12px 0; font-weight: 900; color: #fff; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));">0.0000</h1>
+                <div style="color: var(--cyan); font-family: 'Orbitron'; font-size: 11px; letter-spacing: 5px;">ABP_TOKENS</div>
                 
-                <div style="margin-top: 25px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 20px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 8px; font-family: 'Orbitron';">
-                        <span>GENESIS_SUPPLY_FILL</span>
+                <div style="margin-top: 25px; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.03);">
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 10px; font-family: 'Orbitron';">
+                        <span>PROTOCOL_FILL_RATE</span>
                         <span id="scarcity-percent">0%</span>
                     </div>
-                    <div style="height: 8px; background: #111; border-radius: 10px; overflow: hidden;">
-                        <div id="scarcity-fill" style="width: 0%; height: 100%; background: var(--p-green); transition: 0.5s;"></div>
+                    <div style="height: 6px; background: #111; border-radius: 10px; overflow: hidden;">
+                        <div id="scarcity-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--p-green)); transition: 1s ease-in-out;"></div>
                     </div>
                 </div>
             </section>
@@ -90,30 +127,30 @@
                 <button class="mining-trigger-btn" onclick="toggleMining()" id="mining-btn">INITIALIZE</button>
             </div>
 
-            <div style="display: flex; gap: 12px; margin-bottom: 25px;">
-                <div class="premium-card" style="flex: 1; text-align: center;">
-                    <span style="font-size: 9px; color: #555; font-family: 'Orbitron';">ACTIVE_NODES</span>
-                    <span id="ref-count" style="display: block; font-size: 18px; font-family: 'Orbitron'; color: #fff; margin-top: 5px;">0</span>
+            <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+                <div class="premium-card" style="flex: 1; text-align: center; background: rgba(255,255,255,0.02);">
+                    <span style="font-size: 8px; color: #555; font-family: 'Orbitron'; letter-spacing: 1px;">ACTIVE_NODES</span>
+                    <span id="ref-count" style="display: block; font-size: 20px; font-family: 'Orbitron'; color: #fff; margin-top: 8px;">0</span>
                 </div>
-                <div class="premium-card" style="flex: 1; text-align: center;">
-                    <span style="font-size: 9px; color: #555; font-family: 'Orbitron';">STREAK</span>
-                    <span id="streak-info-dash" style="display: block; font-size: 18px; font-family: 'Orbitron'; color: #fff; margin-top: 5px;">1</span>
+                <div class="premium-card" style="flex: 1; text-align: center; background: rgba(255,255,255,0.02);">
+                    <span style="font-size: 8px; color: #555; font-family: 'Orbitron'; letter-spacing: 1px;">SYNC_STREAK</span>
+                    <span id="streak-info-dash" style="display: block; font-size: 20px; font-family: 'Orbitron'; color: #fff; margin-top: 8px;">1</span>
                 </div>
             </div>
 
-            <div class="premium-card" style="display: flex; justify-content: space-between; align-items: center; border-color: rgba(173, 255, 47, 0.2);">
+            <div class="premium-card" style="display: flex; justify-content: space-between; align-items: center; border-color: rgba(173, 255, 47, 0.15); background: rgba(173, 255, 47, 0.02);">
                 <div>
-                    <h3 style="font-size: 12px; font-family: 'Orbitron'; color: var(--p-green); margin: 0;">DAILY_PROTOCOL_SYNC</h3>
-                    <p id="streak-text" style="font-size: 10px; color: #666; margin-top: 5px;">Claim daily bonus rewards</p>
+                    <h3 style="font-size: 11px; font-family: 'Orbitron'; color: var(--p-green); margin: 0; letter-spacing: 1px;">DAILY_REWARD_CLAIM</h3>
+                    <p id="streak-text" style="font-size: 10px; color: #555; margin-top: 5px;">Secure 10 ABP daily sync bonus</p>
                 </div>
-                <button class="btn-primary" id="daily-claim-btn" style="width: auto; padding: 10px 18px; font-size: 11px; background: var(--p-green); color: #000;" onclick="claimDailyBonus()">SYNC</button>
+                <button class="btn-primary" id="daily-claim-btn" style="width: auto; padding: 10px 20px; font-size: 10px; background: var(--p-green); color: #000; font-weight: 900;" onclick="claimDailyBonus()">SYNC</button>
             </div>
 
-            <div class="premium-card" style="background: rgba(255,255,255,0.03);">
-                <p style="font-size: 9px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; letter-spacing: 1px;">NETWORK_INVITE_LINK</p>
+            <div class="premium-card" style="background: rgba(255,255,255,0.03); margin-top: 20px;">
+                <p style="font-size: 8px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; letter-spacing: 2px;">UNIQUE_INVITE_IDENTIFIER</p>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="ref-link-input" readonly value="LOADING..." 
-                           style="flex: 1; background: #000; border: 1px solid #222; color: #888; padding: 12px; border-radius: 12px; font-size: 10px; font-family: monospace; outline: none;">
+                    <input type="text" id="ref-link-input" readonly value="GENERATING..." 
+                           style="flex: 1; background: #000; border: 1px solid #1a1a1a; color: #666; padding: 14px; border-radius: 14px; font-size: 10px; font-family: monospace; outline: none;">
                     <button class="copy-btn" onclick="copyRefLink()">COPY</button>
                 </div>
             </div>
@@ -156,12 +193,20 @@
             document.getElementById('user-address').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
             document.getElementById('streak-info-dash').innerText = data.streak || 1;
             
-            const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html');
-            document.getElementById('ref-link-input').value = baseUrl + "?ref=" + userWallet;
+            // Correct Referral Link Generation
+            const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+            document.getElementById('ref-link-input').value = baseUrl + "/index.html?ref=" + userWallet;
             
-            db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', (refSnap) => {
-                document.getElementById('ref-count').innerText = refSnap.numChildren() || 0;
-            });
+            // Sync Referral Count from field or query
+            if(data.referralCount !== undefined) {
+                document.getElementById('ref-count').innerText = data.referralCount;
+            } else {
+                db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', (snap) => {
+                    const count = snap.numChildren() || 0;
+                    document.getElementById('ref-count').innerText = count;
+                    userRef.update({ referralCount: count });
+                });
+            }
 
             updateScarcity(currentBalance);
             checkClaimStatus(data.lastClaim);
@@ -173,7 +218,7 @@
     }
 
     function updateScarcity(bal) {
-        const progress = Math.min((bal / 21000) * 100, 100).toFixed(2);
+        const progress = Math.min((bal / 1000000) * 100, 100).toFixed(2);
         document.getElementById('scarcity-percent').innerText = progress + "%";
         document.getElementById('scarcity-fill').style.width = progress + "%";
     }
@@ -193,7 +238,7 @@
         setInterval(() => {
             userRef.update({ balance: currentBalance });
             db.ref('global_stats/total_forged').transaction(t => (t || 0) + 0.003); 
-        }, 30000);
+        }, 20000); // Faster sync
     }
 
     function checkClaimStatus(lastClaimTime) {
@@ -225,6 +270,7 @@
     function copyRefLink() {
         const copyText = document.getElementById("ref-link-input");
         copyText.select();
+        copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
         alert("Invite Link Copied!");
     }
