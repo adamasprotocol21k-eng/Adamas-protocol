@@ -52,10 +52,10 @@
 </head>
 <body>
 
-    <div class="network-wrapper" style="padding: 15px;">
+    <div class="network-wrapper">
         <header class="premium-card" style="margin-bottom: 20px; text-align: center; border-color: rgba(188, 19, 254, 0.3);">
             <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; letter-spacing: 2px; color: #fff;">NETWORK <span style="color: var(--cyan);">NODES</span></h2>
-            <p style="font-size: 9px; color: #555; margin-top: 5px; letter-spacing: 1px;">SYSTEM-ID: PRO-ELITE-V12</p>
+            <p style="font-size: 9px; color: #555; margin-top: 5px; letter-spacing: 1px; font-family: 'Orbitron';">SYSTEM-ID: PRO-ELITE-V12</p>
         </header>
 
         <div class="node-stats-grid">
@@ -71,11 +71,11 @@
 
         <section class="premium-card" style="background: rgba(0,242,255,0.03); margin-bottom: 20px;">
             <div class="earning-row">
-                <span class="earning-label">L1 Commission (100)</span>
+                <span class="earning-label">L1 Commission</span>
                 <span id="l1-earnings" class="earning-value">0 ABP</span>
             </div>
             <div class="earning-row">
-                <span class="earning-label">L2 Multiplier (30)</span>
+                <span class="earning-label">L2 Multiplier</span>
                 <span id="l2-earnings" class="earning-value">0 ABP</span>
             </div>
             <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 12px 0;">
@@ -115,23 +115,14 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
 
     <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
-        authDomain: "adamas-protocol-v2.firebaseapp.com",
-        databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
-        projectId: "adamas-protocol-v2",
-        appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
     const userWallet = localStorage.getItem('adamas_user');
 
     window.onload = () => {
         if(!userWallet) { window.location.href = "index.html"; return; }
         
-        // [NEW LOGIC] User ka wallet hi uska invite code hai
         const baseUrl = window.location.origin + window.location.pathname.replace('referral.html', 'index.html');
         document.getElementById('ref-link-input').value = `${baseUrl}?ref=${userWallet}`;
         
@@ -139,7 +130,6 @@
     };
 
     function loadNetworkNodes(myWallet) {
-        // [L1 Check] Dhundo kis-kis user ka 'referredBy' mere wallet address ke barabar hai
         db.ref('users').orderByChild('referredBy').equalTo(myWallet).on('value', (snapshot) => {
             const container = document.getElementById('nodes-container');
             const l1CountEl = document.getElementById('l1-count');
@@ -160,26 +150,24 @@
             let processedL1 = 0;
 
             Object.keys(users).forEach(wallet => {
-                const node = users[wallet];
                 const nodeBox = document.createElement('div');
                 nodeBox.className = 'node-item';
                 nodeBox.innerHTML = `
                     <div class="node-info">
-                        <span class="node-addr">${wallet.substring(0,10)}...${wallet.slice(-6)}</span>
+                        <span class="node-addr">${wallet.substring(0,8)}...${wallet.slice(-4)}</span>
                         <span class="node-role">Level 1 Partner</span>
                     </div>
-                    <span class="status-badge" style="color:var(--p-green); border: 1px solid var(--p-green); padding: 4px 10px; border-radius: 8px; font-size: 8px; font-weight:bold;">ACTIVE</span>
+                    <span class="status-badge" style="color:var(--p-green); border: 1px solid var(--p-green); padding: 4px 10px; border-radius: 8px; font-size: 8px; font-weight:bold; font-family:'Orbitron';">ACTIVE</span>
                 `;
                 container.appendChild(nodeBox);
 
-                // [L2 Check] Ab check karo ki is L1 user ne kis-kis ko refer kiya hai
+                // Level 2 Lookup
                 db.ref('users').orderByChild('referredBy').equalTo(wallet).once('value', s => {
                     processedL1++;
                     if(s.exists()) {
                         l2TotalCount += Object.keys(s.val()).length;
                     }
                     
-                    // Jab saare L1 check ho jayein tab UI update karo
                     if(processedL1 === l1Count) {
                         document.getElementById('l2-count').innerText = l2TotalCount;
                         updateEarningDisplay(l1Count, l2TotalCount);
