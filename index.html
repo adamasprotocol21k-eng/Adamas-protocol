@@ -26,10 +26,11 @@
         .typewriter-text {
             display: inline-block; overflow: hidden; border-right: 2px solid var(--cyan);
             white-space: nowrap; margin: 0 auto; letter-spacing: 5px;
-            animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
+            width: 0;
+            animation: typing 3s steps(20, end) forwards, blink-caret .75s step-end infinite;
         }
 
-        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes typing { from { width: 0 } to { width: 220px } } /* Width adjusted for text size */
         @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--cyan); } }
 
         .task-container { width: 100%; margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
@@ -75,7 +76,7 @@
                 </div>
             </div>
             
-            <button id="entry-btn" class="btn-primary" style="margin-top: 20px;" onclick="handleEntry()">UNLOCK YOUR FUTURE</button>
+            <button id="entry-btn" class="btn-primary" style="margin-top: 20px;" onclick="handleEntry()">DEPLOY NODE ENGINE</button>
         </section>
 
         <section id="phase-social">
@@ -139,15 +140,20 @@
         let activeWallet = null;
 
         window.onload = function() {
+            // Force reset view on refresh so it always starts at Landing Page
+            document.getElementById('phase-intro').style.display = 'flex';
+            document.getElementById('phase-social').style.display = 'none';
+
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
             if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase());
             
-            // Check if user is already logged in
             const savedUser = localStorage.getItem('adamas_user');
             if(savedUser) {
                 activeWallet = savedUser;
                 document.getElementById('connect-trigger').innerText = savedUser.substring(0,6) + "..." + savedUser.slice(-4);
+                // If already logged in, skip everything
+                window.location.href = "dashboard.html";
             }
         }
 
@@ -157,7 +163,6 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
                 
-                // Update UI to show wallet is connected
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
                 document.getElementById('core-status').innerText = "WALLET_CONNECTED";
                 
@@ -168,7 +173,7 @@
                 } else {
                     switchToSocialPhase();
                 }
-            } catch (e) { alert("Connection Error: " + e.message); }
+            } catch (e) { alert("Please connect your wallet to continue."); }
         }
 
         function switchToSocialPhase() {
@@ -176,6 +181,7 @@
             document.getElementById('phase-intro').style.display = 'none';
             document.getElementById('phase-social').classList.add('active-phase');
             document.getElementById('phase-social').style.display = 'flex';
+            window.scrollTo(0,0);
         }
 
         function handleVerify(id, link) {
@@ -187,7 +193,7 @@
             const pill = document.getElementById('pill-' + id);
             pill.innerHTML = `<span class="sync-spinner"></span> SYNCING`;
 
-            // Logic: 5 seconds after clicking, mark as verified
+            // Verification timer
             setTimeout(() => {
                 pill.innerText = "VERIFIED";
                 pill.style.background = "var(--p-green)";
@@ -226,7 +232,6 @@
                     role: "USER"
                 });
                 
-                // Bonus for referrer
                 if(referrer !== "DIRECT") {
                     db.ref('users/' + referrer).transaction(u => {
                         if(u) { u.balance = (u.balance || 0) + 100; u.referralCount = (u.referralCount || 0) + 1; }
@@ -236,7 +241,7 @@
                 
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration Failed: " + e.message); }
+            } catch (e) { alert("Registration Failed."); }
         }
     </script>
 </body>
