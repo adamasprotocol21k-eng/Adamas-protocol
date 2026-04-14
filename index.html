@@ -19,7 +19,6 @@
             font-family: 'Orbitron', sans-serif; overflow: hidden;
         }
 
-        /* Ambient Background */
         body::before {
             content: ""; position: absolute; width: 100%; height: 100%;
             background: radial-gradient(circle at 50% 50%, rgba(173, 255, 47, 0.08) 0%, transparent 70%);
@@ -33,7 +32,6 @@
 
         @keyframes scanIn { from { opacity: 0; filter: brightness(2); } to { opacity: 1; filter: brightness(1); } }
 
-        /* Screenshot UI Elements */
         .auth-badge {
             background: rgba(173, 255, 47, 0.1); border: 1px solid var(--p-green);
             color: var(--p-green); padding: 4px 15px; border-radius: 20px;
@@ -47,36 +45,30 @@
 
         .sub-heading { font-size: 10px; color: #fff; letter-spacing: 2px; margin-bottom: 30px; opacity: 0.8; }
 
-        /* The Terminal Box from Screenshot */
         .terminal-box {
             background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(173, 255, 47, 0.4);
             border-radius: 25px; width: 90%; padding: 25px; margin-bottom: 30px;
-            backdrop-filter: blur(10px); position: relative;
+            backdrop-filter: blur(10px);
         }
 
         .spec-row { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 0.5px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
         .spec-label { font-size: 9px; color: #888; text-transform: uppercase; }
         .spec-value { font-size: 10px; font-weight: bold; color: var(--neon-blue); letter-spacing: 1px; }
 
-        /* Slanted Button from Screenshot */
         .btn-slanted {
             background: var(--p-green); color: #000; border: none;
             padding: 18px 50px; font-family: 'Orbitron'; font-weight: 900;
-            clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
             cursor: pointer; transition: 0.3s; width: 85%; font-size: 14px; letter-spacing: 2px;
         }
 
-        /* Social Task Cards - Premium Design */
-        .task-container { width: 100%; margin-top: 20px; }
         .task-card {
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(173, 255, 47, 0.2);
             border-radius: 15px; padding: 15px; margin-bottom: 12px; transition: 0.3s;
         }
         .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
 
-        .social-link {
-            text-decoration: none; display: flex; justify-content: space-between; align-items: center;
-        }
+        .social-link { text-decoration: none; display: flex; justify-content: space-between; align-items: center; }
         .task-info { text-align: left; }
         .task-title { font-size: 10px; color: #fff; font-weight: bold; }
         .task-points { font-size: 9px; color: var(--p-green); display: block; margin-top: 4px; }
@@ -97,26 +89,18 @@
 
             <div class="terminal-box">
                 <div class="spec-row">
-                    <span class="spec-label">Administrator</span>
-                    <span class="spec-value" style="color:var(--neon-blue)">PRO-ELITE CYBER-SYSTEM</span>
+                    <span class="spec-label">Admin</span>
+                    <span class="spec-value">PRO-ELITE SYSTEM</span>
                 </div>
                 <div class="spec-row">
-                    <span class="spec-label">Environment</span>
-                    <span class="spec-value">TESTNET PHASE 1.0</span>
-                </div>
-                <div class="spec-row">
-                    <span class="spec-label">System Status</span>
+                    <span class="spec-label">Status</span>
                     <span class="spec-value" style="color:var(--p-green)">● ACTIVE NODE</span>
                 </div>
                 <div class="spec-row" style="border:none; margin-bottom:0;">
-                    <span class="spec-label">Network Tier</span>
-                    <span class="spec-value">MAINNET ALPHA (V12.0)</span>
+                    <span class="spec-label">Network</span>
+                    <span class="spec-value">MAINNET V12</span>
                 </div>
             </div>
-
-            <p style="font-size: 10px; color: #888; line-height: 1.6; margin-bottom: 30px; padding: 0 10px;">
-                Participate in node testing. Your activity records and opinions will determine future eligibility.
-            </p>
 
             <button class="btn-slanted" onclick="startJourney()">INITIALIZE NODE</button>
         </section>
@@ -125,7 +109,7 @@
             <h2 style="color:var(--p-green); font-size: 1.5rem; margin-bottom: 5px;">ELITE ACCESS</h2>
             <p style="font-size: 9px; color: #aaa; margin-bottom: 25px;">SYNC SOCIAL DATA TO RECEIVE 800 ABP</p>
 
-            <div class="task-container">
+            <div class="task-container" style="width: 100%;">
                 <div class="task-card" id="card-t1">
                     <a href="https://t.me/ADSProtocol" target="_blank" class="social-link" onclick="handleVerify('t1')">
                         <div class="task-info">
@@ -135,37 +119,7 @@
                         <div class="status-pill" id="pill-t1">PENDING</div>
                     </a>
                 </div>
-
-                <div class="task-card" id="card-t2">
-                    <a href="https://t.me/adsprotocolcommunity" target="_blank" class="social-link" onclick="handleVerify('t2')">
-                        <div class="task-info">
-                            <span class="task-title">JOIN GLOBAL COMMUNITY</span>
-                            <span class="task-points">+200 ABP REWARD</span>
-                        </div>
-                        <div class="status-pill" id="pill-t2">PENDING</div>
-                    </a>
                 </div>
-
-                <div class="task-card" id="card-t3">
-                    <a href="https://x.com/DiamoProtocol" target="_blank" class="social-link" onclick="handleVerify('t3')">
-                        <div class="task-info">
-                            <span class="task-title">FOLLOW X COMMAND (01)</span>
-                            <span class="task-points">+200 ABP REWARD</span>
-                        </div>
-                        <div class="status-pill" id="pill-t3">PENDING</div>
-                    </a>
-                </div>
-
-                <div class="task-card" id="card-t4">
-                    <a href="https://x.com/AdamasADS" target="_blank" class="social-link" onclick="handleVerify('t4')">
-                        <div class="task-info">
-                            <span class="task-title">FOLLOW X COMMAND (02)</span>
-                            <span class="task-points">+200 ABP REWARD</span>
-                        </div>
-                        <div class="status-pill" id="pill-t4">PENDING</div>
-                    </a>
-                </div>
-            </div>
 
             <button id="wallet-btn" class="btn-slanted" style="margin-top: 20px; opacity: 0.2; pointer-events: none; background: #fff;" onclick="connectWeb3()">AUTHORIZE WALLET</button>
             <p id="lock-msg">[!] COMPLETE ALL NODE CHECKS</p>
@@ -175,7 +129,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
-        <script>
+    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -186,8 +140,17 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // [AUTO-LOGIN CHECK] Agar user pehle se logged in hai toh seedha bhej do
+        // [SYSTEM LOGIC] Referral & Auth Check
         window.onload = function() {
+            // 1. Referral Capture
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if(ref) {
+                localStorage.setItem('adamas_referrer', ref);
+                console.log("Referrer Captured: " + ref);
+            }
+
+            // 2. Auto-Login
             const savedUser = localStorage.getItem('adamas_user');
             if(savedUser) {
                 window.location.href = "dashboard.html";
@@ -200,6 +163,8 @@
         }
 
         let tasksDone = 0;
+        const totalTasks = 1; // Testing ke liye 1 rakha hai, isse 4 kar dena baad mein
+
         function handleVerify(id) {
             const pill = document.getElementById('pill-' + id);
             const card = document.getElementById('card-' + id);
@@ -210,37 +175,34 @@
                     pill.innerText = "VERIFIED";
                     card.classList.add('verified');
                     tasksDone++;
-                    if(tasksDone >= 4) {
-                        const wb = document.getElementById('wallet-btn');
-                        wb.style.opacity = "1";
-                        wb.style.pointerEvents = "all";
-                        wb.style.background = "var(--p-green)";
-                        document.getElementById('lock-msg').innerText = "NODE VERIFIED: 800 ABP READY";
-                        document.getElementById('lock-msg').style.color = "var(--p-green)";
+                    if(tasksDone >= totalTasks) {
+                        enableWalletBtn();
                     }
                 }, 3000);
             }
+        }
+
+        function enableWalletBtn() {
+            const wb = document.getElementById('wallet-btn');
+            wb.style.opacity = "1";
+            wb.style.pointerEvents = "all";
+            wb.style.background = "var(--p-green)";
+            document.getElementById('lock-msg').innerText = "NODE VERIFIED: 800 ABP READY";
+            document.getElementById('lock-msg').style.color = "var(--p-green)";
         }
 
         async function connectWeb3() {
             if (window.ethereum) {
                 try {
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    const wallet = accounts[0];
+                    const wallet = accounts[0].toLowerCase(); // Case-sensitive issues avoid karne ke liye
                     
-                    // Simple Sign (Optional but good for Web3 feel)
-                    await window.ethereum.request({ 
-                        method: 'personal_sign', 
-                        params: ["Authorize Adamas Node Sync", wallet] 
-                    });
-
                     const userRef = db.ref('users/' + wallet);
                     
-                    // [CRITICAL FIX]: Check if user exists BEFORE resetting balance
                     userRef.once('value').then(async (snapshot) => {
                         if (!snapshot.exists()) {
-                            // NAYA USER HAI - Tabhi 800 do
                             const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                            
                             await userRef.set({
                                 balance: 800,
                                 abp_balance: 800,
@@ -251,28 +213,26 @@
                                 lastLogin: new Date().toISOString()
                             });
 
-                            // Referral Bonus
+                            // Referral Bonus logic with safety transaction
                             if(referrer !== "DIRECT") {
-                                const rRef = db.ref('users/' + referrer);
-                                rRef.child('balance').transaction(b => (b || 0) + 100);
-                                rRef.child('abp_balance').transaction(b => (b || 0) + 100);
+                                db.ref('users').orderByChild('refCode').equalTo(referrer).once('value', snap => {
+                                    if(snap.exists()) {
+                                        const refWallet = Object.keys(snap.val())[0];
+                                        db.ref('users/' + refWallet).child('balance').transaction(b => (b || 0) + 100);
+                                    }
+                                });
                             }
                         } else {
-                            // PURANA USER HAI - Sirf last login update karo
-                            await userRef.update({
-                                lastLogin: new Date().toISOString()
-                            });
+                            await userRef.update({ lastLogin: new Date().toISOString() });
                         }
 
-                        // Save in browser memory and redirect
                         localStorage.setItem('adamas_user', wallet);
                         window.location.href = "dashboard.html";
                     });
 
-                } catch (e) { alert("Auth Failed: " + e.message); }
-            } else { alert("Install Trust Wallet / MetaMask / OKX Wallet"); }
+                } catch (e) { console.error(e); }
+            } else { alert("Please use Trust Wallet or MetaMask browser."); }
         }
     </script>
-
 </body>
 </html>
