@@ -4,58 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ADAMAS | Quantum Node Infrastructure</title>
-    <link rel="stylesheet" href="style.css?v=1.2">
+    <link rel="stylesheet" href="style.css?v=2.0">
     <style>
-        /* Landing Page Specific temporary fixes */
+        /* Landing Specific Enhancements */
         .app-container {
             max-width: 480px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            overflow: hidden;
         }
-        section { display: none; }
-        section.active-phase { display: block; animation: fadeIn 0.5s ease; }
         
-        .auth-badge {
-            background: rgba(0, 242, 255, 0.1);
-            color: var(--cyan);
-            border: 1px solid var(--cyan);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 10px;
-            display: inline-block;
-            font-family: 'Orbitron';
-            margin-bottom: 20px;
+        section { display: none; }
+        section.active-phase { display: flex; flex-direction: column; animation: fadeIn 0.8s ease; }
+
+        /* Animated Logo System */
+        .logo-container { position: relative; display: inline-block; margin-bottom: 5px; }
+        .main-logo { 
+            font-size: clamp(2.8rem, 12vw, 4rem); 
+            font-family: 'Orbitron'; 
+            font-weight: 900; 
+            margin: 0;
+            background: linear-gradient(180deg, #fff 20%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px var(--cyan-glow));
+            position: relative;
         }
-        .main-logo { font-size: 4rem; font-family: 'Orbitron'; font-weight: 900; margin: 0; }
+        
+        .logo-scan-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--cyan); box-shadow: 0 0 15px var(--cyan);
+            animation: scanMove 3s infinite linear; opacity: 0.5;
+        }
+
+        .protocol-title {
+            font-family: 'Orbitron'; font-size: 10px; letter-spacing: 5px;
+            color: var(--cyan); margin-top: 8px; text-transform: uppercase;
+            animation: textGlitch 4s infinite; font-weight: bold;
+        }
+
+        /* Status Terminal Box */
         .terminal-box {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 24px;
+            padding: 25px;
             margin: 30px 0;
             text-align: left;
+            position: relative;
         }
-        .spec-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; }
-        .spec-label { color: #555; font-family: 'Orbitron'; }
-        .spec-value { color: #fff; font-family: 'Orbitron'; font-weight: bold; }
-        
-        .task-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            text-align: left;
-            transition: 0.3s;
+
+        .spec-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .status-dot { 
+            width: 6px; height: 6px; background: var(--p-green); 
+            border-radius: 50%; display: inline-block; margin-right: 8px;
+            box-shadow: 0 0 8px var(--p-green); animation: pulse 1.5s infinite;
         }
-        .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Animations */
+        @keyframes scanMove { 0% { top: 0%; } 100% { top: 100%; } }
+        @keyframes textGlitch { 0%, 90%, 100% { opacity: 1; } 92% { opacity: 0.5; } 95% { opacity: 0.8; } }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -63,13 +78,27 @@
     <div class="app-container">
         <section id="phase-intro" class="active-phase">
             <div class="auth-badge">POLYGON AMOY TESTNET</div>
-            <h1 class="main-logo">ADAMAS</h1>
-            <p style="font-size: 11px; letter-spacing: 3px; color: #888; margin-top: 10px;">QUANTUM NODE INFRASTRUCTURE</p>
+            
+            <div class="logo-container">
+                <div class="logo-scan-line"></div>
+                <h1 class="main-logo">ADAMAS</h1>
+            </div>
+            <div class="protocol-title">ADAMAS PROTOCOL</div>
+            <p style="font-size: 10px; color: #555; margin-top: 5px; letter-spacing: 1px;">QUANTUM NODE INFRASTRUCTURE V2.0</p>
             
             <div class="terminal-box">
-                <div class="spec-row"><span class="spec-label">Environment</span><span class="spec-value">POLYGON_AMOY_V2</span></div>
-                <div class="spec-row"><span class="spec-label">Status</span><span class="spec-value" style="color: var(--p-green);">OPEN_FOR_SYNC</span></div>
-                <div class="spec-row" style="margin-bottom:0;"><span class="spec-label">Reward Tier</span><span class="spec-value">EARLY_ADOPTER_L1</span></div>
+                <div class="spec-row">
+                    <span class="spec-label">ENVIRONMENT</span>
+                    <span class="spec-value">POLYGON_AMOY_V2</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">CORE_STATUS</span>
+                    <span class="spec-value" style="color: var(--p-green);"><span class="status-dot"></span>READY_TO_SYNC</span>
+                </div>
+                <div class="spec-row" style="margin-bottom:0;">
+                    <span class="spec-label">REWARD_TIER</span>
+                    <span class="spec-value">EARLY_ADOPTER_L1</span>
+                </div>
             </div>
             
             <button class="btn-primary" onclick="startJourney()">DEPLOY NODE ENGINE</button>
@@ -89,47 +118,35 @@
                         <div id="pill-t1" style="font-size: 8px; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 5px; color: #888;">PENDING</div>
                     </div>
                 </div>
-
                 <div class="task-card" id="card-t2" onclick="handleVerify('t2', 'https://t.me/adsprotocolcommunity')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-size: 12px; font-weight: bold; color: #fff;">JOIN COMMUNITY GROUP</div>
-                            <div style="font-size: 9px; color: var(--p-green);">REWARD: +200 ABP</div>
-                        </div>
+                        <div><div style="font-size: 12px; font-weight: bold; color: #fff;">JOIN COMMUNITY GROUP</div><div style="font-size: 9px; color: var(--p-green);">REWARD: +200 ABP</div></div>
                         <div id="pill-t2" style="font-size: 8px; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 5px; color: #888;">PENDING</div>
                     </div>
                 </div>
-
                 <div class="task-card" id="card-t3" onclick="handleVerify('t3', 'https://x.com/DiamoProtocol')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-size: 12px; font-weight: bold; color: #fff;">FOLLOW DIAMO ON X</div>
-                            <div style="font-size: 9px; color: var(--p-green);">REWARD: +200 ABP</div>
-                        </div>
+                        <div><div style="font-size: 12px; font-weight: bold; color: #fff;">FOLLOW DIAMO ON X</div><div style="font-size: 9px; color: var(--p-green);">REWARD: +200 ABP</div></div>
                         <div id="pill-t3" style="font-size: 8px; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 5px; color: #888;">PENDING</div>
                     </div>
                 </div>
-
                 <div class="task-card" id="card-t4" onclick="handleVerify('t4', 'https://x.com/AdamasADS')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-size: 12px; font-weight: bold; color: #fff;">FOLLOW ADAMAS ON X</div>
-                            <div style="font-size: 9px; color: var(--p-green);">REWARD: +200 ABP</div>
-                        </div>
+                        <div><div style="font-size: 12px; font-weight: bold; color: #fff;">FOLLOW ADAMAS ON X</div><div style="font-size: 9px; color: var(--p-green);">REWARD: +200 ABP</div></div>
                         <div id="pill-t4" style="font-size: 8px; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 5px; color: #888;">PENDING</div>
                     </div>
                 </div>
             </div>
 
             <button id="wallet-btn" class="btn-primary" style="margin-top: 15px; opacity: 0.15; pointer-events: none;" onclick="connectWeb3()">AUTHORIZE WALLET</button>
-            <p id="lock-msg" style="font-size: 10px; color: #444; margin-top: 10px; font-family: 'Orbitron';">SYSTEM LOCKED: 0/4 NODES VERIFIED</p>
+            <p id="lock-msg" style="font-size: 10px; color: #444; margin-top: 10px; font-family: 'Orbitron'; text-transform: uppercase; letter-spacing: 1px;">SYSTEM LOCKED: 0/4 NODES VERIFIED</p>
         </section>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
     <script>
+        // ... (Same script logic as provided in your last message)
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -139,27 +156,22 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
         let completedTasks = 0;
         const totalRequired = 4;
-
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
             if(ref) { localStorage.setItem('adamas_referrer', ref.toLowerCase()); }
             if(localStorage.getItem('adamas_user')) { window.location.href = "dashboard.html"; }
         }
-
         function startJourney() {
             document.getElementById('phase-intro').classList.remove('active-phase');
             document.getElementById('phase-social').classList.add('active-phase');
         }
-
         function handleVerify(id, link) {
             window.open(link, "_blank");
             const pill = document.getElementById('pill-' + id);
             const card = document.getElementById('card-' + id);
-            
             if(!card.classList.contains('verified')) {
                 pill.innerText = "VERIFIED";
                 pill.style.background = "var(--p-green)";
@@ -168,7 +180,6 @@
                 completedTasks++;
                 document.getElementById('lock-msg').innerText = completedTasks + "/4 NODES VERIFIED";
             }
-            
             if(completedTasks === totalRequired) {
                 const wb = document.getElementById('wallet-btn');
                 wb.style.opacity = "1";
@@ -177,14 +188,12 @@
                 document.getElementById('lock-msg').style.color = "var(--p-green)";
             }
         }
-
         async function connectWeb3() {
             if (window.ethereum) {
                 try {
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const wallet = accounts[0].toLowerCase();
                     const userRef = db.ref('users/' + wallet);
-                    
                     userRef.once('value').then(async (snapshot) => {
                         if (!snapshot.exists()) {
                             const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
