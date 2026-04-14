@@ -6,22 +6,7 @@
     <title>ADAMAS | Missions</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body { background-color: #050505; color: #fff; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
-        
-        .mission-wrapper { 
-            padding: 15px; 
-            padding-bottom: 100px; 
-            max-width: 480px; 
-            margin: auto; 
-            box-sizing: border-box;
-        }
-        
-        .premium-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(130, 71, 229, 0.2);
-            border-radius: 20px; padding: 15px; margin-bottom: 15px;
-        }
-
+        /* Specific Styles for Missions & Game */
         .mission-card {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
@@ -29,38 +14,11 @@
         }
 
         .status-pill {
-            background: #00f2ff; color: #000; border: none;
+            background: var(--cyan); color: #000; border: none;
             padding: 8px 15px; border-radius: 8px; font-size: 10px;
             font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
-            min-width: 80px;
+            min-width: 80px; transition: 0.3s;
         }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            justify-content: space-around;
-            background: rgba(5, 5, 5, 0.98);
-            padding: 18px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            z-index: 9999;
-            box-sizing: border-box;
-        }
-
-        .nav-item {
-            text-decoration: none;
-            color: #555;
-            font-size: 10px;
-            font-family: 'Orbitron';
-            text-align: center;
-            transition: 0.3s;
-        }
-
-        .nav-item.active { color: #adff2f; }
 
         .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
         .mine-tile { 
@@ -69,13 +27,8 @@
             align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer;
         }
         .mine-tile.revealed { pointer-events: none; }
-        .mine-tile.win { background: rgba(173, 255, 47, 0.15); border-color: #adff2f; color: #adff2f; }
+        .mine-tile.win { background: rgba(173, 255, 47, 0.15); border-color: var(--p-green); color: var(--p-green); }
         .mine-tile.loss { background: rgba(255, 51, 102, 0.15); border-color: #ff3366; color: #ff3366; }
-        
-        .btn-elite {
-            background: #00f2ff; color: #000; border: none; width: 100%;
-            padding: 15px; border-radius: 12px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -86,7 +39,7 @@
                 <span style="font-size: 9px; color: #666; letter-spacing: 1px; font-family: 'Orbitron';">AVAILABLE ABP</span>
                 <span id="header-balance" style="display:block; color:#fff; font-family:'Orbitron'; font-size: 1.2rem; font-weight: 900;">0.00</span>
             </div>
-            <div style="background: rgba(173, 255, 47, 0.1); color: #adff2f; border: 1px solid #adff2f; font-size: 9px; padding: 4px 8px; border-radius: 5px;">● HUB ONLINE</div>
+            <div style="background: rgba(173, 255, 47, 0.1); color: var(--p-green); border: 1px solid var(--p-green); font-size: 9px; padding: 4px 8px; border-radius: 5px; font-family: 'Orbitron';">● HUB ONLINE</div>
         </header>
 
         <h2 style="font-family: 'Orbitron'; font-size: 11px; color: #fff; margin: 20px 0 15px 0; letter-spacing: 2px;">⚡ DAILY MISSIONS</h2>
@@ -123,12 +76,12 @@
         </div>
 
         <section class="game-section" style="margin-top: 30px;">
-            <h2 style="font-family: 'Orbitron'; font-size: 11px; color: #00f2ff; letter-spacing: 2px;">💎 DIAMOND HUNT</h2>
+            <h2 style="font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); letter-spacing: 2px;">💎 DIAMOND HUNT</h2>
             <div class="premium-card">
                 <div id="mines-grid" class="mines-grid"></div>
-                <button id="mine-start-btn" class="btn-elite" onclick="initMines()">INITIALIZE HUNT</button>
+                <button id="mine-start-btn" class="btn-primary" onclick="initMines()">INITIALIZE HUNT (50 ABP)</button>
                 <div id="game-controls" style="display:none; gap: 10px;">
-                    <button class="btn-elite" style="background: #adff2f;" onclick="cashout()">CASHOUT</button>
+                    <button class="btn-primary" style="background: var(--p-green); color: #000;" onclick="cashout()">CASHOUT</button>
                 </div>
             </div>
         </section>
@@ -143,23 +96,13 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
-            authDomain: "adamas-protocol-v2.firebaseapp.com",
-            databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
-            projectId: "adamas-protocol-v2",
-            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
         const userWallet = localStorage.getItem('adamas_user');
         if (!userWallet) window.location.href = "index.html";
         const userRef = db.ref('users/' + userWallet);
 
-        // --- NEW: Number Formatting Function ---
         function formatABP(num) {
             if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
             if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
@@ -170,7 +113,6 @@
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
-                // Formatting applied here
                 document.getElementById('header-balance').innerText = formatABP(data.balance || 0);
                 
                 const today = new Date().toDateString();
@@ -196,13 +138,19 @@
             window.open(link, '_blank');
             const btn = document.getElementById('btn-' + mId);
             btn.innerText = "VERIFYING...";
+            btn.disabled = true;
+            
             setTimeout(async () => {
                 try {
                     await userRef.update({
                         balance: firebase.database.ServerValue.increment(reward)
                     });
                     await userRef.child('completedMissions').child(mId).set(true);
-                } catch(e) { console.error(e); }
+                } catch(e) { 
+                    console.error(e); 
+                    btn.innerText = "START";
+                    btn.disabled = false;
+                }
             }, 5000);
         }
 
@@ -213,13 +161,15 @@
 
         async function initMines() {
             const snap = await userRef.child('balance').get();
-            if((snap.val() || 0) < 50) { alert("Insufficient ABP!"); return; }
+            const currentBal = snap.val() || 0;
+            if(currentBal < 50) { alert("Insufficient ABP! Need 50 ABP to start."); return; }
 
             const grid = document.getElementById('mines-grid');
             grid.innerHTML = '';
             gameActive = true;
             diamondsFound = 0;
             
+            // Generate Grid
             mines = Array(25).fill('💎');
             let mCount = 0;
             while(mCount < 5) {
@@ -244,6 +194,7 @@
             if(mines[idx] === '💣') {
                 el.innerText = '💣'; el.classList.add('loss');
                 gameActive = false;
+                // Instant deduction on hit
                 await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
                 alert('CRASH! -50 ABP lost.');
                 setTimeout(resetGame, 1000);
