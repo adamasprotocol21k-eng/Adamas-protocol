@@ -1,13 +1,12 @@
-/* ADAMAS PROTOCOL - CYBER-ELITE V19.0 (ULTRA-GLOW EDITION) */
+/* ADAMAS PROTOCOL - BLOOD-MOON V20.0 (PREMIUM GLOW) */
 @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap');
 
 :root { 
-    --cyan: #00f2ff; 
-    --p-green: #adff2f;
-    --neon-purple: #bc13fe;
-    --deep-bg: #020202;
-    --card-glow: rgba(0, 242, 255, 0.15);
-    --border-light: rgba(255, 255, 255, 0.12);
+    --primary-glow: #ff0055; /* Hot Crimson */
+    --secondary-glow: #8e2de2; /* Deep Purple */
+    --accent-green: #00ffaa; /* Electric Mint for Success */
+    --bg-dark: #050005;
+    --border-glass: rgba(255, 0, 85, 0.2);
 }
 
 * { 
@@ -16,7 +15,7 @@
 }
 
 body { 
-    background: var(--deep-bg); 
+    background: var(--bg-dark); 
     color: #fff; 
     font-family: 'Rajdhani', sans-serif; 
     overflow-x: hidden;
@@ -24,144 +23,134 @@ body {
     padding-bottom: 120px;
 }
 
-/* --- BACKLIT DYNAMIC LIGHTING (MAZEDAAR BACKGROUND) --- */
+/* --- AMBIENT LIGHTING --- */
 body::before {
     content: "";
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: 
-        radial-gradient(circle at 20% 30%, rgba(0, 242, 255, 0.2) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(188, 19, 254, 0.15) 0%, transparent 50%);
+        radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(142, 45, 226, 0.15) 0%, transparent 40%);
     z-index: -1;
-    animation: lightFlow 8s infinite alternate ease-in-out;
+    animation: pulseBG 6s infinite alternate;
 }
 
-@keyframes lightFlow {
-    0% { filter: hue-rotate(0deg) blur(50px); transform: scale(1); }
-    100% { filter: hue-rotate(45deg) blur(80px); transform: scale(1.2); }
+@keyframes pulseBG {
+    0% { opacity: 0.6; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.1); }
 }
 
-/* --- APP CONTAINER --- */
-.app-container {
-    width: 100%; max-width: 450px; margin: 0 auto; padding: 20px;
-}
-
-/* --- GLOWING LOGO SYSTEM --- */
+/* --- LOGO SYSTEM (GLOWING RUBY) --- */
 .main-logo {
     font-family: 'Orbitron';
     font-weight: 900;
     font-size: clamp(3rem, 14vw, 4.5rem);
     text-align: center;
-    color: #fff;
-    text-shadow: 
-        0 0 10px var(--cyan),
-        0 0 20px var(--cyan),
-        0 0 40px rgba(0, 242, 255, 0.5);
-    letter-spacing: 8px;
+    background: linear-gradient(to bottom, #fff, var(--primary-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 25px rgba(255, 0, 85, 0.6));
+    letter-spacing: 10px;
     margin-bottom: 5px;
 }
 
 .protocol-title {
     font-family: 'Syncopate', sans-serif;
     font-size: 10px; text-align: center;
-    color: var(--cyan); letter-spacing: 6px;
-    text-transform: uppercase; margin-bottom: 30px;
-    opacity: 0.9;
+    color: var(--primary-glow); letter-spacing: 6px;
+    text-transform: uppercase; margin-bottom: 35px;
+    text-shadow: 0 0 10px var(--primary-glow);
 }
 
-/* --- GLOWING FEATURE CARDS (THE FIX) --- */
+/* --- NEON-TRACING CARDS --- */
 .terminal-box, .task-card, .rank-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border-light);
-    backdrop-filter: blur(15px);
-    border-radius: 28px;
+    background: rgba(15, 0, 10, 0.7);
+    border: 1px solid var(--border-glass);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
     padding: 25px;
     margin-bottom: 25px;
     position: relative;
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.02);
-    transition: 0.4s;
+    overflow: hidden; /* Important for glow tracing */
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Electric Border Glow on Active */
-.task-card:active, .task-card:hover {
-    border-color: var(--cyan);
-    box-shadow: 
-        0 0 20px var(--card-glow),
-        inset 0 0 10px var(--card-glow);
-    transform: translateY(-3px);
+/* Animated Border Highlight */
+.task-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 85, 0.1), transparent);
+    transition: 0.5s;
 }
 
-/* Task Status Pill with Inner Glow */
+.task-card:active {
+    border-color: var(--primary-glow);
+    transform: scale(0.98);
+    box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
+}
+
+.task-card:active::after {
+    left: 100%;
+}
+
+/* --- STATUS PILL --- */
 .status-pill {
-    background: rgba(0, 242, 255, 0.05);
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    font-family: 'Orbitron';
-    font-size: 9px; font-weight: 700;
-    padding: 6px 15px; border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+    background: rgba(255, 0, 85, 0.1);
+    border: 1px solid var(--primary-glow);
+    color: var(--primary-glow);
+    font-family: 'Orbitron'; font-size: 9px; font-weight: 700;
+    padding: 7px 15px; border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.2);
 }
 
 .verified .status-pill {
-    background: var(--p-green);
+    background: var(--accent-green);
     color: #000;
-    border-color: var(--p-green);
-    box-shadow: 0 0 20px var(--p-green);
+    border-color: var(--accent-green);
+    box-shadow: 0 0 20px var(--accent-green);
 }
 
-/* --- NEON PRIMARY BUTTON --- */
+/* --- THE ULTIMATE CRIMSON BUTTON --- */
 .btn-primary {
     width: 100%; padding: 22px;
-    background: linear-gradient(45deg, var(--cyan), var(--neon-purple));
+    background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
     color: #fff;
-    border: none; border-radius: 24px;
+    border: none; border-radius: 25px;
     font-family: 'Orbitron'; font-weight: 900;
-    font-size: 14px; letter-spacing: 3px;
+    font-size: 13px; letter-spacing: 3px;
     cursor: pointer;
-    box-shadow: 0 10px 40px rgba(188, 19, 254, 0.3);
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(255, 0, 85, 0.4);
+    text-transform: uppercase;
 }
 
-.btn-primary::after {
-    content: ""; position: absolute; top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: linear-gradient(transparent, rgba(255,255,255,0.2), transparent);
-    transform: rotate(45deg);
-    animation: btnShine 3s infinite;
+.btn-primary:active {
+    filter: brightness(1.3);
+    transform: translateY(2px);
 }
 
-@keyframes btnShine {
-    0% { left: -100%; } 100% { left: 100%; }
-}
-
-/* --- FLOATING CYBER NAV --- */
+/* --- PREMIUM FLOATING NAV --- */
 .bottom-nav {
     position: fixed; bottom: 25px; left: 50%; 
     transform: translateX(-50%);
     width: 90%; max-width: 400px;
-    background: rgba(10, 10, 10, 0.85);
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(0, 242, 255, 0.2);
+    background: rgba(5, 0, 5, 0.9);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 35px;
-    padding: 18px;
+    padding: 20px;
     display: flex; justify-content: space-around;
     z-index: 9999;
-    box-shadow: 0 0 30px rgba(0,0,0,1), 0 0 15px rgba(0, 242, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,1);
 }
 
-/* --- BADGE GLOW --- */
+/* --- SYSTEM BADGE --- */
 .auth-badge {
-    background: rgba(0, 242, 255, 0.05);
-    color: var(--cyan);
+    background: rgba(255, 0, 85, 0.05);
+    color: var(--primary-glow);
     font-family: 'Orbitron'; font-size: 10px;
-    padding: 8px 25px; border-radius: 50px;
-    border: 1px solid var(--cyan);
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+    padding: 10px 30px; border-radius: 50px;
+    border: 1px solid var(--primary-glow);
     margin-bottom: 30px;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    letter-spacing: 2px;
 }
