@@ -6,8 +6,6 @@
     <title>ADAMAS | Identity Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body { background-color: #050505; color: #fff; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
-
         .rank-card {
             background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(5,5,5,1) 100%);
             border: 1px solid var(--glass-border); border-radius: 30px; padding: 30px;
@@ -29,7 +27,6 @@
             border: 1px solid var(--glass-border); text-align: center;
         }
 
-        /* Leaderboard Sleek Design */
         .leaderboard-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 18px; background: rgba(255,255,255,0.02);
@@ -37,10 +34,7 @@
             transition: 0.3s;
         }
         
-        .rank-1 { border-color: var(--neon-gold); background: rgba(255, 204, 0, 0.05); box-shadow: 0 0 15px rgba(255,204,0,0.1); }
-        .rank-2 { border-color: #e5e5e5; }
-        .rank-3 { border-color: #cd7f32; }
-        
+        .rank-1 { border-color: var(--neon-gold); background: rgba(255, 204, 0, 0.05); }
         .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 30px; color: var(--cyan); font-size: 14px; }
         .rank-addr { font-size: 11px; color: #aaa; flex: 1; margin-left: 10px; font-family: 'Orbitron'; letter-spacing: 0.5px; }
         .rank-pts { font-family: 'Orbitron'; font-size: 12px; color: #fff; font-weight: bold; }
@@ -51,37 +45,11 @@
             border-radius: 15px; font-family: 'Orbitron'; font-size: 10px;
             letter-spacing: 2px; cursor: pointer; transition: 0.3s;
         }
-
-        /* NAVIGATION FIXED */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            justify-content: space-around;
-            background: rgba(5, 5, 5, 0.95);
-            padding: 18px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            z-index: 9999;
-            box-sizing: border-box;
-        }
-
-        .nav-item {
-            text-decoration: none;
-            color: #555;
-            font-size: 10px;
-            font-family: 'Orbitron';
-        }
-
-        .nav-item.active { color: #adff2f; }
     </style>
 </head>
 <body>
 
-    <div class="profile-wrapper" style="padding: 15px; padding-bottom: 110px; max-width: 480px; margin: auto;">
+    <div class="profile-wrapper">
         <header style="text-align: center; margin-bottom: 25px;">
             <div style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; letter-spacing: 3px; margin-bottom: 5px;">PROTOCOL_IDENTITY</div>
             <p id="user-wallet-full" style="font-size: 10px; color: #444; word-break: break-all; font-family: monospace;">0x...</p>
@@ -96,10 +64,10 @@
                     <span style="color: #666;">AIRDROP ELIGIBILITY</span>
                     <span id="score-percent" style="color: var(--p-green);">0%</span>
                 </div>
-                <div class="progress-bar" style="height: 8px; background: #111; border-radius: 10px; overflow: hidden;">
-                    <div id="score-fill" class="progress-fill" style="width: 0%; height: 100%; background: var(--p-green); transition: 0.5s;"></div>
+                <div style="height: 8px; background: #111; border-radius: 10px; overflow: hidden;">
+                    <div id="score-fill" style="width: 0%; height: 100%; background: var(--p-green); transition: 0.5s;"></div>
                 </div>
-                <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 10px; font-weight: bold;">MIN 80% SCORE FOR $ADS CLAIM</p>
+                <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 10px; font-weight: bold; font-family: 'Orbitron';">MIN 80% SCORE FOR $ADS CLAIM</p>
             </div>
         </section>
 
@@ -137,19 +105,11 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    
     <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
-          authDomain: "adamas-protocol-v2.firebaseapp.com",
-          databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
-          projectId: "adamas-protocol-v2",
-          appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
         const userWallet = localStorage.getItem('adamas_user');
 
-        // --- Formatting Function (K, M, B) ---
         function formatABP(num) {
             if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
             if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
@@ -161,17 +121,15 @@
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
 
-            // Load User Profile Data
-            database.ref('users/' + userWallet).on('value', (snapshot) => {
+            db.ref('users/' + userWallet).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
-                    // Applied formatting to Main Balance
                     document.getElementById('stat-balance').innerText = formatABP(data.balance || 0);
                     updateRankUI(data);
                 }
             });
 
-            database.ref('users').orderByChild('referredBy').equalTo(userWallet).on('value', snap => {
+            db.ref('users').orderByChild('referredBy').equalTo(userWallet).on('value', snap => {
                 document.getElementById('stat-refs').innerText = snap.exists() ? Object.keys(snap.val()).length : 0;
             });
 
@@ -179,7 +137,7 @@
         };
 
         function loadLeaderboard() {
-            database.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
+            db.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
                 const container = document.getElementById('leaderboard-container');
                 let users = [];
                 snapshot.forEach(child => {
@@ -192,8 +150,6 @@
                     let rankClass = index === 0 ? "rank-1" : index === 1 ? "rank-2" : index === 2 ? "rank-3" : "";
                     let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
                     let shortAddr = u.wallet.substring(0,8) + "..." + u.wallet.slice(-4);
-                    
-                    // Applied formatting to Leaderboard Points
                     let formattedPts = formatABP(u.balance || 0);
                     
                     html += `
@@ -211,7 +167,6 @@
             let score = 0;
             let bal = data.balance || 0;
             
-            // Score calculation remains same
             if(bal >= 1000) score += 20;
             if(bal >= 5000) score += 30;
             if(bal >= 10000) score += 30;
