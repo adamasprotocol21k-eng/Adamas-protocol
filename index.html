@@ -6,7 +6,6 @@
     <title>ADAMAS | Quantum Node Infrastructure</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Aapka existing CSS */
         .app-container { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
         section { display: none; }
         section.active-phase { display: flex; flex-direction: column; animation: fadeIn 0.8s ease; }
@@ -112,15 +111,17 @@
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
-            if(ref) { localStorage.setItem('adamas_referrer', ref.toLowerCase()); }
+            if(ref) { 
+                localStorage.setItem('adamas_referrer', ref.toLowerCase()); 
+                console.log("Referrer Saved:", ref.toLowerCase());
+            }
             
-            // 1. Existing Session Check
             if(localStorage.getItem('adamas_user')) { 
                 window.location.href = "dashboard.html"; 
                 return;
             }
 
-            // 2. BACK BUTTON / RELOAD FIX: Hash aur Storage check
+            // Back Button Protection
             if(window.location.hash === "#verification" || localStorage.getItem('on_social_phase') === 'true') {
                 switchToSocialPhase();
             }
@@ -128,17 +129,15 @@
 
         async function handleEntry() {
             if (!window.ethereum) return alert("Please open in Trust Wallet or MetaMask.");
-            
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0].toLowerCase();
-
                 const snapshot = await db.ref('users/' + wallet).once('value');
+                
                 if (snapshot.exists()) {
                     localStorage.setItem('adamas_user', wallet);
                     window.location.href = "dashboard.html";
                 } else {
-                    // Start social journey - Lock the state
                     window.location.hash = "verification";
                     localStorage.setItem('on_social_phase', 'true');
                     switchToSocialPhase();
@@ -158,33 +157,26 @@
             if(card.classList.contains('verified')) return;
 
             window.open(link, "_blank");
-
             const pill = document.getElementById('pill-' + id);
             pill.innerHTML = `<span class="sync-spinner"></span> SYNCING`;
-            pill.style.color = "var(--cyan)";
 
-            // Smart detection when user returns to browser
             const checkFocus = setInterval(() => {
                 if (document.hasFocus()) {
                     clearInterval(checkFocus);
-                    
                     setTimeout(() => {
                         pill.innerText = "VERIFIED";
                         pill.style.background = "var(--p-green)";
                         pill.style.color = "#000";
                         card.classList.add('verified');
                         completedTasks++;
-                        
                         document.getElementById('lock-msg').innerText = completedTasks + "/4 NODES VERIFIED";
-                        
                         if(completedTasks === totalRequired) {
-                            // Clear phase memory once done
                             localStorage.removeItem('on_social_phase');
                             enableWalletButton();
                         }
                     }, 2500); 
                 }
-            }, 1000); // Check every 1s for better mobile stability
+            }, 1000);
         }
 
         function enableWalletButton() {
@@ -199,22 +191,28 @@
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_accounts' });
                 const wallet = accounts[0].toLowerCase();
-                const userRef = db.ref('users/' + wallet);
-                
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 
-                // Sabko as a USER gujarna padega flow se
-                await userRef.set({
+                // 1. SAVE NEW USER
+                await db.ref('users/' + wallet).set({
                     balance: 800,
                     wallet: wallet,
                     referredBy: referrer,
+                    referralCount: 0, // Inka khud ka count shuruat mein 0
                     joinedAt: new Date().toISOString(),
-                    lastLogin: new Date().toISOString(),
                     role: (wallet === "0xc9267828a11db4cb32f0a5ea5fc29b38ff0ff25e") ? "FOUNDER" : "USER"
                 });
                 
-                if(referrer !== "DIRECT") {
-                    db.ref('users/' + referrer).child('balance').transaction(b => (b || 0) + 100);
+                // 2. REWARD REFERRER (Balance + Count Dono Update)
+                if(referrer !== "DIRECT" && referrer !== wallet) {
+                    const refRef = db.ref('users/' + referrer);
+                    refRef.transaction((data) => {
+                        if (data) {
+                            data.balance = (data.balance || 0) + 100;
+                            data.referralCount = (data.referralCount || 0) + 1; // Ye update missing tha!
+                        }
+                        return data;
+                    });
                 }
                 
                 localStorage.setItem('adamas_user', wallet);
