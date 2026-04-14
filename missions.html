@@ -6,37 +6,78 @@
     <title>ADAMAS | Missions</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body { background-color: #050505; color: #fff; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; }
-        .mission-wrapper { padding: 15px; padding-bottom: 100px; max-width: 480px; margin: auto; }
+        body { background-color: #050505; color: #fff; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        
+        /* Wrapper fixed to prevent horizontal scroll */
+        .mission-wrapper { 
+            padding: 15px; 
+            padding-bottom: 100px; 
+            max-width: 480px; 
+            margin: auto; 
+            box-sizing: border-box;
+        }
+        
         .premium-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(130, 71, 229, 0.2);
             border-radius: 20px; padding: 15px; margin-bottom: 15px;
         }
+
         .mission-card {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 15px; border-radius: 18px; margin-bottom: 12px;
         }
-        .task-reward { color: #adff2f; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; }
+
         .status-pill {
             background: #00f2ff; color: #000; border: none;
-            padding: 6px 12px; border-radius: 8px; font-size: 10px;
+            padding: 8px 15px; border-radius: 8px; font-size: 10px;
             font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+            min-width: 80px;
         }
+
+        /* NAVIGATION FIXED: Locked to bottom and centered */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            justify-content: space-around;
+            background: rgba(5, 5, 5, 0.98);
+            padding: 18px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 9999;
+            box-sizing: border-box;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #555;
+            font-size: 10px;
+            font-family: 'Orbitron';
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .nav-item.active { color: #adff2f; }
+
+        /* Diamond Game Styling */
         .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
         .mine-tile { 
-            aspect-ratio: 1; background: rgba(255, 255, 255, 0.05); border-radius: 8px; 
+            aspect-ratio: 1; background: rgba(255, 255, 255, 0.05); border-radius: 10px; 
             border: 1px solid rgba(255, 255, 255, 0.1); display: flex; 
-            align-items: center; justify-content: center; font-size: 1rem; cursor: pointer;
-            transition: 0.2s;
+            align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer;
         }
         .mine-tile.revealed { pointer-events: none; }
-        .mine-tile.win { background: rgba(173, 255, 47, 0.2); border-color: #adff2f; color: #adff2f; }
-        .mine-tile.loss { background: rgba(255, 51, 102, 0.2); border-color: #ff3366; color: #ff3366; }
+        .mine-tile.win { background: rgba(173, 255, 47, 0.15); border-color: #adff2f; color: #adff2f; }
+        .mine-tile.loss { background: rgba(255, 51, 102, 0.15); border-color: #ff3366; color: #ff3366; }
+        
         .btn-elite {
             background: #00f2ff; color: #000; border: none; width: 100%;
-            padding: 15px; border-radius: 12px; font-family: 'Orbitron'; font-weight: bold;
+            padding: 15px; border-radius: 12px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
@@ -95,10 +136,11 @@
             </div>
         </section>
 
-        <nav class="bottom-nav" style="position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; background: #050505; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05);">
-            <a href="dashboard.html" style="text-decoration:none; color:#555; font-size:10px; font-family:'Orbitron';">🏠 HOME</a>
-            <a href="missions.html" style="text-decoration:none; color:#adff2f; font-size:10px; font-family:'Orbitron';">⚡ TASKS</a>
-            <a href="referral.html" style="text-decoration:none; color:#555; font-size:10px; font-family:'Orbitron';">👥 NETWORK</a>
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item">🏠 HOME</a>
+            <a href="missions.html" class="nav-item active">⚡ TASKS</a>
+            <a href="referral.html" class="nav-item">👥 NETWORK</a>
+            <a href="profile.html" class="nav-item">🏆 RANK</a>
         </nav>
     </div>
 
@@ -120,19 +162,17 @@
         if (!userWallet) window.location.href = "index.html";
         const userRef = db.ref('users/' + userWallet);
 
-        // Fetch Data & Handle Daily Reset
+        // Balance & Daily Mission Logic
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
                 document.getElementById('header-balance').innerText = parseFloat(data.balance || 0).toFixed(2);
                 
-                // --- Daily Mission Reset Logic ---
                 const today = new Date().toDateString();
                 if(data.lastMissionDate !== today) {
                     userRef.update({ lastMissionDate: today, completedMissions: {} });
                 }
 
-                // UI Update for Missions
                 if(data.completedMissions) {
                     Object.keys(data.completedMissions).forEach(mId => {
                         const btn = document.getElementById('btn-' + mId);
@@ -157,22 +197,18 @@
                         balance: firebase.database.ServerValue.increment(reward)
                     });
                     await userRef.child('completedMissions').child(mId).set(true);
-                    alert(`Sync Complete! +${reward} ABP Added.`);
                 } catch(e) { console.error(e); }
             }, 5000);
         }
 
-        // --- FIXED DIAMOND HUNT ENGINE ---
+        // Diamond Hunt Logic
         let mines = [];
         let gameActive = false;
         let diamondsFound = 0;
 
         async function initMines() {
             const snap = await userRef.child('balance').get();
-            if((snap.val() || 0) < 50) {
-                alert("Insufficient ABP! Need 50 ABP to start.");
-                return;
-            }
+            if((snap.val() || 0) < 50) { alert("Insufficient ABP!"); return; }
 
             const grid = document.getElementById('mines-grid');
             grid.innerHTML = '';
@@ -201,15 +237,13 @@
             el.classList.add('revealed');
             
             if(mines[idx] === '💣') {
-                el.innerText = '💣';
-                el.classList.add('loss');
+                el.innerText = '💣'; el.classList.add('loss');
                 gameActive = false;
                 await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
                 alert('CRASH! -50 ABP lost.');
-                setTimeout(resetGame, 1500);
+                setTimeout(resetGame, 1000);
             } else {
-                el.innerText = '💎';
-                el.classList.add('win');
+                el.innerText = '💎'; el.classList.add('win');
                 diamondsFound++;
             }
         }
@@ -218,7 +252,7 @@
             if(diamondsFound === 0) return;
             const reward = diamondsFound * 15;
             await userRef.update({ balance: firebase.database.ServerValue.increment(reward) });
-            alert(`Extracted ${reward} ABP Successfully!`);
+            alert(`SUCCESS! +${reward} ABP extracted.`);
             resetGame();
         }
 
