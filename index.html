@@ -10,9 +10,9 @@
         section { display: none; }
         section.active-phase { display: flex; flex-direction: column; animation: fadeIn 0.8s ease; }
         
-        /* WALLET BUTTON TOP RIGHT FIX */
+        /* WALLET BUTTON FIX - Z-INDEX HIGH */
         #top-wallet-box {
-            position: fixed; top: 20px; right: 20px; z-index: 2000;
+            position: fixed; top: 20px; right: 20px; z-index: 5000;
         }
         .wallet-connect-btn {
             background: rgba(0, 242, 255, 0.05); border: 1px solid var(--cyan);
@@ -22,7 +22,7 @@
             transition: 0.3s;
         }
 
-        /* TYPEWRITER BLINKING EFFECT */
+        /* TYPEWRITER */
         .typewriter-text {
             display: inline-block; overflow: hidden; border-right: 2px solid var(--cyan);
             white-space: nowrap; margin: 0 auto; letter-spacing: 5px;
@@ -32,23 +32,21 @@
         @keyframes typing { from { width: 0 } to { width: 230px } }
         @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--cyan); } }
 
-        /* TASK CARD DESIGN REFINEMENT */
+        /* TASK CARD DESIGN - ADDED PADDING & CLEARANCE */
         .task-container { width: 100%; margin-top: 25px; display: flex; flex-direction: column; gap: 15px; }
         .task-card { 
             background: rgba(255, 255, 255, 0.03); 
             border: 1px solid var(--glass-border); 
-            padding: 22px 20px; /* Increased Padding for better spacing */
+            padding: 24px 20px; /* High Padding */
             border-radius: 20px; 
             text-align: left; 
             transition: 0.3s; 
             cursor: pointer;
             position: relative;
-            overflow: hidden;
         }
-        .task-card:active { transform: scale(0.98); background: rgba(0, 242, 255, 0.08); }
+        .task-card:active { transform: scale(0.98); background: rgba(0, 242, 255, 0.1); }
         .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.06); }
         
-        /* STATUS PILL ALIGNMENT */
         .status-pill { 
             font-size: 10px; 
             background: rgba(255,255,255,0.07); 
@@ -56,7 +54,7 @@
             border-radius: 10px; 
             color: #aaa; 
             font-family: 'Orbitron';
-            min-width: 80px;
+            min-width: 90px;
             text-align: center;
         }
         
@@ -64,8 +62,8 @@
         .logo-container { position: relative; display: inline-block; margin-bottom: 5px; }
         .main-logo { font-size: clamp(2.8rem, 12vw, 4rem); font-family: 'Orbitron'; font-weight: 900; background: linear-gradient(180deg, #fff 20%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--cyan-glow)); }
         
-        /* VERIFICATION PAGE TOP MARGIN TO AVOID WALLET OVERLAP */
-        #phase-social { margin-top: 60px; }
+        /* SPACE FOR WALLET BUTTON */
+        #phase-social { margin-top: 70px; }
 
         .logo-scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); animation: scanMove 3s infinite linear; opacity: 0.4; }
         .sync-spinner { width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan); border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite; }
@@ -80,7 +78,7 @@
             <button id="connect-trigger" class="wallet-connect-btn" onclick="handleEntry()">CONNECT WALLET</button>
         </div>
 
-        <section id="phase-intro" class="active-phase">
+        <section id="phase-intro">
             <div class="auth-badge" style="margin-bottom: 10px;">POLYGON AMOY TESTNET</div>
             <div class="logo-container">
                 <div class="logo-scan-line"></div>
@@ -107,7 +105,7 @@
 
         <section id="phase-social">
             <h2 style="font-family: 'Orbitron'; color: var(--p-green); font-size: 1.5rem; letter-spacing: 2px;">VERIFICATION</h2>
-            <p style="font-size: 11px; color: #666; margin: 10px 0 25px 0;">Complete 4 syncs to receive 800 ABP allocation.</p>
+            <p style="font-size: 11px; color: #666; margin: 10px 0 25px 0;">Sync nodes to unlock 800 ABP allocation.</p>
 
             <div class="task-container">
                 <div class="task-card" id="card-t1" onclick="handleVerify('t1', 'https://t.me/ADSProtocol')">
@@ -166,30 +164,40 @@
         let activeWallet = null;
 
         window.onload = function() {
-            document.getElementById('phase-intro').style.display = 'flex';
-            document.getElementById('phase-social').style.display = 'none';
+            const savedUser = localStorage.getItem('adamas_user');
+            if(savedUser) {
+                activeWallet = savedUser;
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            // LOOP FIX: Check if wallet was connected in this session
+            const tempWallet = sessionStorage.getItem('temp_wallet');
+            if(tempWallet) {
+                activeWallet = tempWallet;
+                document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
+                switchToSocialPhase();
+            } else {
+                document.getElementById('phase-intro').style.display = 'flex';
+                document.getElementById('phase-intro').classList.add('active-phase');
+            }
 
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
             if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase());
             
-            const savedUser = localStorage.getItem('adamas_user');
-            if(savedUser) {
-                activeWallet = savedUser;
-                document.getElementById('connect-trigger').innerText = savedUser.substring(0,6) + "..." + savedUser.slice(-4);
-                window.location.href = "dashboard.html";
-            }
-            
-            // Clear temporary verify status on full reset but keep current progress during session
             restoreTaskState();
         }
 
         function restoreTaskState() {
+            let count = 0;
             for(let i=1; i<=4; i++) {
                 if(localStorage.getItem('adamas_task_t'+i) === 'verified') {
                     markVerifiedUI('t'+i);
+                    count++;
                 }
             }
+            completedTasks = count;
             updateLockMessage();
             if(completedTasks >= totalRequired) enableDashboardButton();
         }
@@ -199,6 +207,9 @@
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
+                
+                // Save to Session to prevent loops on back-button
+                sessionStorage.setItem('temp_wallet', activeWallet);
                 
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
                 document.getElementById('core-status').innerText = "WALLET_CONNECTED";
@@ -210,11 +221,12 @@
                 } else {
                     switchToSocialPhase();
                 }
-            } catch (e) { alert("Please connect your wallet to continue."); }
+            } catch (e) { alert("Please connect your wallet."); }
         }
 
         function switchToSocialPhase() {
             document.getElementById('phase-intro').style.display = 'none';
+            document.getElementById('phase-intro').classList.remove('active-phase');
             document.getElementById('phase-social').style.display = 'flex';
             document.getElementById('phase-social').classList.add('active-phase');
             window.scrollTo(0,0);
@@ -228,13 +240,12 @@
             const pill = document.getElementById('pill-' + id);
             pill.innerHTML = `<span class="sync-spinner"></span> SYNCING`;
 
-            // Back button handling logic
+            // Auto-Verify after 4 seconds even if user just backs out
             setTimeout(() => {
-                markVerifiedUI(id);
                 localStorage.setItem('adamas_task_'+id, 'verified');
-                completedTasks = document.querySelectorAll('.task-card.verified').length;
+                markVerifiedUI(id);
                 updateLockMessage();
-                if(completedTasks >= totalRequired) enableDashboardButton();
+                if(document.querySelectorAll('.task-card.verified').length >= totalRequired) enableDashboardButton();
             }, 4000); 
         }
 
@@ -245,14 +256,13 @@
                 pill.innerText = "VERIFIED";
                 pill.style.background = "var(--p-green)";
                 pill.style.color = "#000";
-                pill.style.boxShadow = "0 0 10px rgba(173, 255, 47, 0.3)";
                 card.classList.add('verified');
             }
         }
 
         function updateLockMessage() {
-            completedTasks = document.querySelectorAll('.task-card.verified').length;
-            document.getElementById('lock-msg').innerText = completedTasks + "/4 NODES SYNCED";
+            const current = document.querySelectorAll('.task-card.verified').length;
+            document.getElementById('lock-msg').innerText = current + "/4 NODES SYNCED";
         }
 
         function enableDashboardButton() {
@@ -260,9 +270,7 @@
             wb.style.opacity = "1";
             wb.style.pointerEvents = "all";
             wb.style.background = "linear-gradient(90deg, var(--cyan), #8e2de2)";
-            wb.style.boxShadow = "0 0 20px rgba(0, 242, 255, 0.4)";
             document.getElementById('lock-msg').style.color = "var(--p-green)";
-            document.getElementById('lock-msg').innerText = "ALL NODES SYNCED - READY";
         }
 
         async function finalRegistration() {
@@ -270,26 +278,19 @@
             try {
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 await db.ref('users/' + activeWallet).set({
-                    balance: 800,
-                    wallet: activeWallet,
-                    referredBy: referrer,
-                    referralCount: 0,
-                    joinedAt: new Date().toISOString(),
-                    role: "USER"
+                    balance: 800, wallet: activeWallet, referredBy: referrer, referralCount: 0,
+                    joinedAt: new Date().toISOString(), role: "USER"
                 });
-                
                 if(referrer !== "DIRECT") {
                     db.ref('users/' + referrer).transaction(u => {
                         if(u) { u.balance = (u.balance || 0) + 100; u.referralCount = (u.referralCount || 0) + 1; }
                         return u;
                     });
                 }
-                
-                // Clear task memory to avoid double points on next session if needed
-                for(let i=1; i<=4; i++) { localStorage.removeItem('adamas_task_t'+i); }
                 localStorage.setItem('adamas_user', activeWallet);
+                sessionStorage.removeItem('temp_wallet');
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration Failed: " + e.message); }
+            } catch (e) { alert("Failed to register."); }
         }
     </script>
 </body>
