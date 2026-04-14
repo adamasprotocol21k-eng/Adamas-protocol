@@ -3,112 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Network</title>
+    <title>ADAMAS | Network Hub</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .node-stats-grid { display: flex; gap: 10px; margin-bottom: 20px; }
+        .node-stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
         .stat-box { 
             flex: 1; background: var(--card-bg); border: 1px solid var(--glass-border); 
-            padding: 15px; border-radius: 15px; text-align: center;
+            padding: 15px; border-radius: 20px; text-align: center;
+            backdrop-filter: blur(10px);
         }
-        .stat-value { display: block; font-family: 'Orbitron'; font-size: 1.5rem; color: var(--cyan); margin-top: 5px; }
+        .stat-value { display: block; font-family: 'Orbitron'; font-size: 1.6rem; color: var(--cyan); font-weight: 900; margin-top: 5px; }
         
         .referral-input-group {
-            display: flex; gap: 10px; background: rgba(0,0,0,0.5); 
-            padding: 5px; border-radius: 12px; border: 1px solid #222;
+            display: flex; gap: 10px; background: rgba(0,0,0,0.4); 
+            padding: 8px; border-radius: 15px; border: 1px solid var(--glass-border);
         }
         .referral-input-group input {
             flex: 1; background: none; border: none; color: #fff; 
-            padding: 10px; font-size: 11px; outline: none; font-family: 'Rajdhani';
+            padding: 5px 10px; font-size: 12px; outline: none; font-family: 'Rajdhani';
         }
 
-        .earning-row { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
-        .earning-label { font-size: 11px; color: #888; }
-        .earning-value { font-size: 11px; color: #fff; font-family: 'Orbitron'; }
+        .earning-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+        .earning-label { font-size: 11px; color: #666; font-family: 'Orbitron'; }
+        .earning-value { font-size: 11px; color: #fff; font-family: 'Orbitron'; font-weight: bold; }
 
-        .node-list { margin-top: 20px; padding-bottom: 20px; }
+        .node-list { margin-top: 25px; padding-bottom: 40px; }
         .node-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; background: rgba(255,255,255,0.03); 
-            border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--glass-border);
-            animation: slideIn 0.3s ease-out;
+            padding: 15px; background: rgba(255,255,255,0.02); 
+            border-radius: 18px; margin-bottom: 12px; border: 1px solid var(--glass-border);
+            animation: slideIn 0.4s ease-out;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .node-info span { display: block; }
-        .node-addr { font-size: 11px; font-family: 'Orbitron'; color: var(--cyan); }
-        .node-role { font-size: 9px; color: #777; margin-top: 2px; text-transform: uppercase; }
-        .status-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; background: rgba(0,255,136,0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
+        .node-addr { font-size: 11px; font-family: 'Orbitron'; color: var(--cyan); letter-spacing: 1px; }
+        .node-role { font-size: 9px; color: #555; margin-top: 4px; text-transform: uppercase; font-weight: bold; }
+        
+        .pulse-live {
+            width: 8px; height: 8px; background: var(--p-green); border-radius: 50%;
+            display: inline-block; margin-right: 5px;
+            box-shadow: 0 0 10px var(--p-green);
+            animation: pulse-ring 1.5s infinite;
+        }
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.8); opacity: 0.5; } }
     </style>
 </head>
 <body>
 
     <div class="network-wrapper" style="padding: 15px;">
-        <header class="premium-card" style="margin-bottom: 20px; text-align: center;">
-            <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px; color: var(--cyan);">NETWORK NODES</h2>
-            <p style="font-size: 10px; color: #666; margin-top: 5px;">EXPAND YOUR DECENTRALIZED INFRASTRUCTURE</p>
+        <header class="premium-card" style="margin-bottom: 20px; text-align: center; border-color: rgba(188, 19, 254, 0.3);">
+            <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; letter-spacing: 2px; color: #fff;">NETWORK <span style="color: var(--cyan);">NODES</span></h2>
+            <p style="font-size: 9px; color: #555; margin-top: 5px; letter-spacing: 1px;">SYSTEM-ID: PRO-ELITE-V12</p>
         </header>
 
         <div class="node-stats-grid">
             <div class="stat-box">
-                <span style="font-size: 10px; color: #555; font-family: 'Orbitron';">L1 NODES</span>
+                <span style="font-size: 9px; color: #666; font-family: 'Orbitron';">DIRECT (L1)</span>
                 <span id="l1-count" class="stat-value">0</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 10px; color: #555; font-family: 'Orbitron';">L2 NODES</span>
+                <span style="font-size: 9px; color: #666; font-family: 'Orbitron';">NETWORK (L2)</span>
                 <span id="l2-count" class="stat-value">0</span>
             </div>
         </div>
 
-        <section class="premium-card" style="background: linear-gradient(180deg, rgba(0,242,255,0.08) 0%, rgba(0,0,0,0) 100%); margin-bottom: 20px;">
-            <h3 style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-gold); margin-bottom: 15px; text-align: center; letter-spacing: 1px;">ESTIMATED NETWORK REWARDS</h3>
-            
+        <section class="premium-card" style="background: rgba(0,242,255,0.03); margin-bottom: 20px;">
             <div class="earning-row">
-                <span class="earning-label">Direct Rewards (L1 x 100)</span>
+                <span class="earning-label">L1 Commission (100)</span>
                 <span id="l1-earnings" class="earning-value">0 ABP</span>
             </div>
-            
             <div class="earning-row">
-                <span class="earning-label">Indirect Rewards (L2 x 30)</span>
+                <span class="earning-label">L2 Multiplier (30)</span>
                 <span id="l2-earnings" class="earning-value">0 ABP</span>
             </div>
-            
-            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 10px 0;">
-            
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 12px 0;">
             <div class="earning-row">
-                <span style="font-size: 12px; color: #fff; font-weight: bold;">TOTAL EARNED</span>
-                <span id="total-referral-earned" style="font-size: 14px; color: var(--neon-gold); font-family: 'Orbitron'; font-weight: bold; text-shadow: 0 0 10px rgba(255,204,0,0.3);">0 ABP</span>
+                <span style="font-size: 11px; color: #fff; font-family: 'Orbitron';">TOTAL NETWORK REWARDS</span>
+                <span id="total-referral-earned" style="font-size: 16px; color: var(--p-green); font-family: 'Orbitron'; font-weight: 900;">0 ABP</span>
             </div>
         </section>
 
-        <section class="premium-card" style="margin-bottom: 25px; border-style: dashed; border-color: var(--cyan); background: rgba(0,242,255,0.02);">
-            <p style="font-size: 11px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; text-align: center;">SHARE UNIQUE NODE LINK</p>
+        <section class="premium-card" style="margin-bottom: 25px; border: 1px dashed var(--cyan);">
+            <p style="font-size: 10px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; text-align: center; letter-spacing: 1px;">GENERATE INVITE PROTOCOL</p>
             <div class="referral-input-group">
-                <input type="text" id="ref-link-input" readonly value="LOADING LINK...">
-                <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px; cursor: pointer;">COPY</button>
+                <input type="text" id="ref-link-input" readonly value="SYNCHRONIZING...">
+                <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 18px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer;">COPY</button>
             </div>
-            <p style="font-size: 9px; color: #777; margin-top: 12px; text-align: center; line-height: 1.4;">
-                <b style="color: var(--neon-green);">PROMO:</b> You receive <span style="color:#fff;">100 ABP</span> per invite.<br>
-                Invited friend receives <span style="color:#fff;">50 ABP</span> instantly.
-            </p>
         </section>
 
         <section class="node-list">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
-                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: #fff; letter-spacing: 1px;">ACTIVE CONNECTIONS</h3>
-                <span style="font-size: 9px; color: var(--neon-green); font-family: 'Orbitron';">● LIVE SYNC</span>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; padding: 0 5px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: #fff;">ACTIVE CONNECTIONS</h3>
+                <span style="font-size: 9px; color: var(--p-green); font-family: 'Orbitron'; font-weight: bold;">
+                    <span class="pulse-live"></span>LIVE SYNC
+                </span>
             </div>
             <div id="nodes-container">
-                <p style="text-align: center; color: #444; font-size: 11px; margin-top: 30px; font-family: 'Orbitron';">SCANNING FOR ACTIVE NODES...</p>
+                <p style="text-align: center; color: #333; font-size: 10px; margin-top: 30px; font-family: 'Orbitron'; letter-spacing: 1px;">SCANNING FOR PARTNER NODES...</p>
             </div>
         </section>
 
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item">🏠<br>HOME</a>
-            <a href="vault.html" class="nav-item">🔒<br>VAULT</a>
-            <a href="missions.html" class="nav-item">⚡<br>TASKS</a>
-            <a href="referral.html" class="nav-item active">👥<br>NETWORK</a>
-            <a href="profile.html" class="nav-item">🏆<br>RANK</a>
+            <a href="dashboard.html" class="nav-item">🏠 HOME</a>
+            <a href="missions.html" class="nav-item">⚡ TASKS</a>
+            <a href="referral.html" class="nav-item active">👥 NETWORK</a>
+            <a href="profile.html" class="nav-item">🏆 RANK</a>
         </nav>
     </div>
 
@@ -121,58 +122,63 @@
             authDomain: "adamas-protocol-v2.firebaseapp.com",
             databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
             projectId: "adamas-protocol-v2",
-            storageBucket: "adamas-protocol-v2.firebasestorage.app",
-            messagingSenderId: "197711342782",
-            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
-            measurementId: "G-FKP19J67TT"
+            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
         };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
         const userWallet = localStorage.getItem('adamas_user');
 
         window.onload = () => {
             if(!userWallet) { window.location.href = "index.html"; return; }
-            const baseUrl = window.location.origin + window.location.pathname.replace('referral.html', 'index.html');
-            document.getElementById('ref-link-input').value = `${baseUrl}?ref=${userWallet}`;
-            loadNetworkData();
+            
+            // Get user's own refCode to share
+            db.ref('users/' + userWallet).once('value', snap => {
+                const data = snap.val();
+                const code = data.refCode || userWallet.substring(2, 8).toUpperCase();
+                const baseUrl = window.location.origin + window.location.pathname.replace('referral.html', 'index.html');
+                document.getElementById('ref-link-input').value = `${baseUrl}?ref=${code}`;
+                loadL1Nodes(code);
+            });
         };
 
-        function loadNetworkData() {
-            database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
-                const l1Data = snapshot.val();
+        function loadL1Nodes(myCode) {
+            // Find all users who were referred by MY CODE
+            db.ref('users').orderByChild('referredBy').equalTo(myCode).on('value', (snapshot) => {
                 const container = document.getElementById('nodes-container');
                 const l1CountEl = document.getElementById('l1-count');
                 
-                if (!l1Data) {
-                    container.innerHTML = `<p style="text-align: center; color: #333; font-size: 11px; margin-top: 30px;">NO ACTIVE NODES DETECTED</p>`;
+                if (!snapshot.exists()) {
+                    container.innerHTML = `<p style="text-align: center; color: #444; font-size: 10px; margin-top: 30px; font-family: 'Orbitron';">NO PARTNERS FOUND</p>`;
                     return;
                 }
 
-                const wallets = Object.keys(l1Data);
-                const l1Count = wallets.length;
+                const users = snapshot.val();
+                const l1Count = Object.keys(users).length;
                 l1CountEl.innerText = l1Count;
                 container.innerHTML = ""; 
 
-                let l2Total = 0;
-                wallets.forEach(walletAddr => {
+                let l2Count = 0;
+                Object.keys(users).forEach(wallet => {
+                    const node = users[wallet];
                     const nodeBox = document.createElement('div');
                     nodeBox.className = 'node-item';
                     nodeBox.innerHTML = `
                         <div class="node-info">
-                            <span class="node-addr">${walletAddr.slice(0,8)}...${walletAddr.slice(-6)}</span>
+                            <span class="node-addr">${wallet.substring(0,10)}...${wallet.slice(-6)}</span>
                             <span class="node-role">Level 1 Partner</span>
                         </div>
-                        <span class="status-badge">ACTIVE</span>
+                        <span class="status-badge" style="color:var(--p-green); border: 1px solid var(--p-green); padding: 4px 10px; border-radius: 8px; font-size: 8px; font-weight:bold;">ACTIVE</span>
                     `;
                     container.appendChild(nodeBox);
 
-                    database.ref('users/' + walletAddr + '/myReferrals').once('value').then(s => {
+                    // Level 2 Check: Find users referred by this L1 user's code
+                    db.ref('users').orderByChild('referredBy').equalTo(node.refCode).once('value', s => {
                         if(s.exists()) {
-                            l2Total += Object.keys(s.val()).length;
-                            document.getElementById('l2-count').innerText = l2Total;
-                            updateEarningDisplay(l1Count, l2Total); // Update on each fetch
+                            l2Count += Object.keys(s.val()).length;
+                            document.getElementById('l2-count').innerText = l2Count;
+                            updateEarningDisplay(l1Count, l2Count);
                         } else {
-                            updateEarningDisplay(l1Count, l2Total);
+                            updateEarningDisplay(l1Count, l2Count);
                         }
                     });
                 });
@@ -183,17 +189,22 @@
             const l1Earned = l1 * 100;
             const l2Earned = l2 * 30;
             const total = l1Earned + l2Earned;
-
             document.getElementById('l1-earnings').innerText = l1Earned + " ABP";
             document.getElementById('l2-earnings').innerText = l2Earned + " ABP";
             document.getElementById('total-referral-earned').innerText = total + " ABP";
         }
 
-        function copyRefLink() {
+        async function copyRefLink() {
             const copyText = document.getElementById("ref-link-input");
-            copyText.select();
-            document.execCommand("copy");
-            alert("Protocol Link Copied!");
+            try {
+                await navigator.clipboard.writeText(copyText.value);
+                alert("Invite Protocol Copied!");
+            } catch (err) {
+                // Fallback for older devices
+                copyText.select();
+                document.execCommand("copy");
+                alert("Invite Protocol Copied!");
+            }
         }
     </script>
 </body>
