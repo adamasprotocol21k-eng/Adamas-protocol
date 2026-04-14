@@ -6,7 +6,7 @@
     <title>ADAMAS | Quantum Node Infrastructure</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Sirf wo styles jo sirf is page ke liye zaroori hain */
+        /* Styles remain identical to maintain your design */
         .app-container {
             min-height: 100vh; display: flex; flex-direction: column;
             justify-content: center; text-align: center;
@@ -41,7 +41,6 @@
             animation: scanMove 3s infinite linear; opacity: 0.4;
         }
 
-        /* Spinner animation for Syncing feel */
         .sync-spinner {
             width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan);
             border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite;
@@ -133,9 +132,7 @@
     <script src="config.js"></script> 
     
     <script>
-        // --- 1. FOUNDER BYPASS CONFIG ---
         const FOUNDER_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e".toLowerCase();
-
         let completedTasks = 0;
         const totalRequired = 4;
 
@@ -144,13 +141,18 @@
             const ref = urlParams.get('ref');
             if(ref) { localStorage.setItem('adamas_referrer', ref.toLowerCase()); }
             
-            // Auto Login if user exists
+            // 1. Existing User Login
             if(localStorage.getItem('adamas_user')) { 
                 window.location.href = "dashboard.html"; 
+                return;
+            }
+
+            // 2. BACK BUTTON FIX: Check if user was already on social phase
+            if(localStorage.getItem('on_social_phase') === 'true') {
+                switchToSocialPhase();
             }
         }
 
-        // --- 2. ENTRY HANDLER (With Bypass) ---
         async function handleEntry() {
             if (!window.ethereum) return alert("Please use Trust Wallet or MetaMask.");
             
@@ -158,45 +160,47 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0].toLowerCase();
 
-                // Check if FOUNDER
+                // Founder Bypass
                 if (wallet === FOUNDER_WALLET) {
                     localStorage.setItem('adamas_user', wallet);
                     window.location.href = "dashboard.html";
                     return;
                 }
 
-                // Check Database
+                // Database Check
                 const snapshot = await db.ref('users/' + wallet).once('value');
                 if (snapshot.exists()) {
                     localStorage.setItem('adamas_user', wallet);
                     window.location.href = "dashboard.html";
                 } else {
-                    // Go to social phase for new users
-                    document.getElementById('phase-intro').classList.remove('active-phase');
-                    document.getElementById('phase-social').classList.add('active-phase');
+                    // Start social journey and SAVE state
+                    localStorage.setItem('on_social_phase', 'true');
+                    switchToSocialPhase();
                 }
             } catch (e) { alert("Access Denied: " + e.message); }
         }
 
-        // --- 3. ADVANCED VERIFICATION LOGIC ---
+        function switchToSocialPhase() {
+            document.getElementById('phase-intro').classList.remove('active-phase');
+            document.getElementById('phase-intro').style.display = 'none';
+            document.getElementById('phase-social').classList.add('active-phase');
+            document.getElementById('phase-social').style.display = 'flex';
+        }
+
         function handleVerify(id, link) {
             const card = document.getElementById('card-' + id);
             if(card.classList.contains('verified')) return;
 
-            // 1. Open social link in new tab
             window.open(link, "_blank");
 
-            // 2. Start Syncing Visuals
             const pill = document.getElementById('pill-' + id);
             pill.innerHTML = `<span class="sync-spinner"></span> SYNCING`;
             pill.style.color = "var(--cyan)";
 
-            // 3. Smart Detection: User wapas aaya tab verified karo
             const checkFocus = setInterval(() => {
                 if (document.hasFocus()) {
                     clearInterval(checkFocus);
                     
-                    // Artificial Delay to feel like real "Verification"
                     setTimeout(() => {
                         pill.innerText = "VERIFIED";
                         pill.style.background = "var(--p-green)";
@@ -207,9 +211,11 @@
                         document.getElementById('lock-msg').innerText = completedTasks + "/4 NODES VERIFIED";
                         
                         if(completedTasks === totalRequired) {
+                            // Clear phase memory once done
+                            localStorage.removeItem('on_social_phase');
                             enableWalletButton();
                         }
-                    }, 2500); // 2.5 seconds syncing animation
+                    }, 2500); 
                 }
             }, 500);
         }
@@ -223,27 +229,28 @@
         }
 
         async function connectWeb3() {
-            // Already connected in handleEntry, so just save & redirect
-            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-            const wallet = accounts[0].toLowerCase();
-            const userRef = db.ref('users/' + wallet);
-            
-            const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
-            await userRef.set({
-                balance: 800,
-                wallet: wallet,
-                referredBy: referrer,
-                joinedAt: new Date().toISOString(),
-                lastLogin: new Date().toISOString(),
-                role: "USER"
-            });
-            
-            if(referrer !== "DIRECT") {
-                db.ref('users/' + referrer).child('balance').transaction(b => (b || 0) + 100);
-            }
-            
-            localStorage.setItem('adamas_user', wallet);
-            window.location.href = "dashboard.html";
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                const wallet = accounts[0].toLowerCase();
+                const userRef = db.ref('users/' + wallet);
+                
+                const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                await userRef.set({
+                    balance: 800,
+                    wallet: wallet,
+                    referredBy: referrer,
+                    joinedAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    role: "USER"
+                });
+                
+                if(referrer !== "DIRECT") {
+                    db.ref('users/' + referrer).child('balance').transaction(b => (b || 0) + 100);
+                }
+                
+                localStorage.setItem('adamas_user', wallet);
+                window.location.href = "dashboard.html";
+            } catch (e) { alert("Error: " + e.message); }
         }
     </script>
 </body>
