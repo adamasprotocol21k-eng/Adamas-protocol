@@ -1,22 +1,85 @@
-<div class="app-container">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Quantum Node Infrastructure</title>
+    <link rel="stylesheet" href="style.css?v=1.2">
+    <style>
+        /* Landing Page Specific temporary fixes */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        section { display: none; }
+        section.active-phase { display: block; animation: fadeIn 0.5s ease; }
+        
+        .auth-badge {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 10px;
+            display: inline-block;
+            font-family: 'Orbitron';
+            margin-bottom: 20px;
+        }
+        .main-logo { font-size: 4rem; font-family: 'Orbitron'; font-weight: 900; margin: 0; }
+        .terminal-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .spec-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; }
+        .spec-label { color: #555; font-family: 'Orbitron'; }
+        .spec-value { color: #fff; font-family: 'Orbitron'; font-weight: bold; }
+        
+        .task-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            text-align: left;
+            transition: 0.3s;
+        }
+        .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
         <section id="phase-intro" class="active-phase">
             <div class="auth-badge">POLYGON AMOY TESTNET</div>
             <h1 class="main-logo">ADAMAS</h1>
             <p style="font-size: 11px; letter-spacing: 3px; color: #888; margin-top: 10px;">QUANTUM NODE INFRASTRUCTURE</p>
+            
             <div class="terminal-box">
                 <div class="spec-row"><span class="spec-label">Environment</span><span class="spec-value">POLYGON_AMOY_V2</span></div>
                 <div class="spec-row"><span class="spec-label">Status</span><span class="spec-value" style="color: var(--p-green);">OPEN_FOR_SYNC</span></div>
                 <div class="spec-row" style="margin-bottom:0;"><span class="spec-label">Reward Tier</span><span class="spec-value">EARLY_ADOPTER_L1</span></div>
             </div>
-            <button class="btn-elite" onclick="startJourney()">DEPLOY NODE ENGINE</button>
+            
+            <button class="btn-primary" onclick="startJourney()">DEPLOY NODE ENGINE</button>
         </section>
 
         <section id="phase-social">
             <h2 style="font-family: 'Orbitron'; color: var(--p-green); font-size: 1.5rem; margin: 0;">VERIFICATION</h2>
             <p style="font-size: 12px; color: #666; margin: 10px 0 20px 0; text-align: center;">Complete 4 syncs to receive 800 ABP allocation.</p>
 
-            <div class="task-container" style="width: 100%; max-height: 380px; overflow-y: auto;">
-                
+            <div class="task-container" style="width: 100%; max-height: 380px; overflow-y: auto; padding: 5px;">
                 <div class="task-card" id="card-t1" onclick="handleVerify('t1', 'https://t.me/ADSProtocol')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -56,11 +119,10 @@
                         <div id="pill-t4" style="font-size: 8px; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 5px; color: #888;">PENDING</div>
                     </div>
                 </div>
-
             </div>
 
-            <button id="wallet-btn" class="btn-elite" style="margin-top: 15px; opacity: 0.15; pointer-events: none;" onclick="connectWeb3()">AUTHORIZE WALLET</button>
-            <p id="lock-msg">SYSTEM LOCKED: 0/4 NODES VERIFIED</p>
+            <button id="wallet-btn" class="btn-primary" style="margin-top: 15px; opacity: 0.15; pointer-events: none;" onclick="connectWeb3()">AUTHORIZE WALLET</button>
+            <p id="lock-msg" style="font-size: 10px; color: #444; margin-top: 10px; font-family: 'Orbitron';">SYSTEM LOCKED: 0/4 NODES VERIFIED</p>
         </section>
     </div>
 
@@ -68,7 +130,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Config (Same as your database)
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -105,7 +166,6 @@
                 pill.style.color = "#000";
                 card.classList.add('verified');
                 completedTasks++;
-                
                 document.getElementById('lock-msg').innerText = completedTasks + "/4 NODES VERIFIED";
             }
             
@@ -133,7 +193,8 @@
                                 wallet: wallet,
                                 referredBy: referrer,
                                 joinedAt: new Date().toISOString(),
-                                lastLogin: new Date().toISOString()
+                                lastLogin: new Date().toISOString(),
+                                role: "USER"
                             });
                             if(referrer !== "DIRECT") {
                                 db.ref('users/' + referrer).child('balance').transaction(b => (b || 0) + 100);
