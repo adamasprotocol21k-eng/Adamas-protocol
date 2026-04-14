@@ -11,9 +11,7 @@
     <div class="dashboard-wrapper">
         <header class="main-header">
             <div class="brand-identity" onclick="window.location.href='profile.html'">
-                <div class="logo-wrapper">
-                    <div class="main-logo-icon">A</div> 
-                </div>
+                <div class="logo-wrapper"><div class="main-logo-icon">A</div></div>
                 <div class="brand-text">
                     <span class="protocol-name">ADAMAS</span>
                     <span class="protocol-sub">PROTOCOL</span>
@@ -42,19 +40,7 @@
                         <span>GENESIS TARGET: 21,000 $ADS</span>
                         <span id="scarcity-percent">0%</span>
                     </div>
-                    <div class="progress-bar">
-                        <div id="scarcity-fill" class="progress-fill" style="width: 0%;"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="premium-card" style="margin-bottom: 20px; border-left: 3px solid var(--cyan);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <p style="font-size: 11px; font-weight: bold; color: #555;">AIRDROP READINESS</p>
-                    <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 11px; color: var(--cyan);">BRONZE NODE</span>
-                </div>
-                <div class="progress-bar">
-                    <div id="tier-progress-fill" class="progress-fill" style="width: 10%;"></div>
+                    <div class="progress-bar"><div id="scarcity-fill" class="progress-fill" style="width: 0%;"></div></div>
                 </div>
             </section>
 
@@ -68,7 +54,7 @@
                     </div>
                     <div class="premium-card" style="flex: 1; padding: 12px; text-align: center;">
                         <span style="font-size: 10px; color: #555;">STREAK</span>
-                        <span id="streak-info-dash" style="display: block; font-size: 1.2rem; font-weight: bold;">0</span>
+                        <span id="streak-info-dash" style="display: block; font-size: 1.2rem; font-weight: bold;">1</span>
                     </div>
                 </div>
             </section>
@@ -79,7 +65,7 @@
                         <h3 style="font-size: 14px; font-family: 'Orbitron';">DAILY SYNC</h3>
                         <p id="streak-text" style="font-size: 11px; color: #666;">Sync daily for multipliers</p>
                     </div>
-                    <button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 12px;" onclick="claimDailyBonus()">CLAIM</button>
+                    <button class="btn-primary" id="daily-claim-btn" style="width: auto; padding: 10px 20px; font-size: 12px;" onclick="claimDailyBonus()">CLAIM</button>
                 </div>
 
                 <div class="premium-card">
@@ -105,7 +91,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -116,38 +101,70 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 1. Check if user is logged in
         const userWallet = localStorage.getItem('adamas_user');
-        if (!userWallet) {
-            window.location.href = "index.html"; // Agar login nahi hai toh piche bhejo
-        }
+        if (!userWallet) { window.location.href = "index.html"; }
 
-        // 2. Load Real-time Data from Firebase
         const userRef = db.ref('users/' + userWallet);
+
+        // --- 1. Real-time Data Sync (Referral Fix Included) ---
         userRef.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                // Update Balance
                 document.getElementById('total-balance').innerText = parseFloat(data.balance || 0).toFixed(4);
-                
-                // Update Wallet Pill
                 document.getElementById('user-address').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
+                document.getElementById('ref-link-input').value = window.location.origin + "/index.html?ref=" + userWallet;
                 
-                // Update Referral Link
-                const refLink = window.location.origin + "/index.html?ref=" + userWallet;
-                document.getElementById('ref-link-input').value = refLink;
+                // REFERRAL FIX: Ham "referrals" node ko count karenge
+                db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', (refSnap) => {
+                    const count = refSnap.numChildren() || 0;
+                    document.getElementById('ref-count').innerText = count;
+                });
 
-                // Update Referral Count
-                document.getElementById('ref-count').innerText = data.referralCount || 0;
-
-                // Update Progress Bar
                 const progress = Math.min((data.balance / 21000) * 100, 100).toFixed(2);
                 document.getElementById('scarcity-percent').innerText = progress + "%";
                 document.getElementById('scarcity-fill').style.width = progress + "%";
+
+                // --- 2. 24-Hour Lock Check ---
+                checkClaimStatus(data.lastClaim);
             }
         });
 
-        // 3. Mining Logic
+        function checkClaimStatus(lastClaimTime) {
+            const btn = document.getElementById('daily-claim-btn');
+            if (!lastClaimTime) return;
+
+            const now = new Date().getTime();
+            const last = new Date(lastClaimTime).getTime();
+            const hoursPassed = (now - last) / (1000 * 60 * 60);
+
+            if (hoursPassed < 24) {
+                btn.innerText = "LOCKED";
+                btn.style.opacity = "0.5";
+                btn.style.pointerEvents = "none";
+                btn.style.background = "#222";
+                document.getElementById('streak-text').innerText = "Next sync available in " + (24 - hoursPassed).toFixed(1) + "h";
+            } else {
+                btn.innerText = "CLAIM";
+                btn.style.opacity = "1";
+                btn.style.pointerEvents = "all";
+                btn.style.background = "var(--cyan)";
+            }
+        }
+
+        // --- 3. Claim Bonus with Timestamp ---
+        async function claimDailyBonus() {
+            const btn = document.getElementById('daily-claim-btn');
+            try {
+                await userRef.update({
+                    balance: firebase.database.ServerValue.increment(10),
+                    lastClaim: new Date().toISOString()
+                });
+                alert("Daily Sync Complete! +10 ABP credited.");
+            } catch (e) {
+                alert("Sync Error");
+            }
+        }
+
         function toggleMining() {
             const btn = document.getElementById('mining-btn');
             btn.innerText = "MINING ACTIVE...";
@@ -156,19 +173,11 @@
             alert("Node Synchronized! Mining started.");
         }
 
-        // 4. Copy Referral
         function copyRefLink() {
             const copyText = document.getElementById("ref-link-input");
-            if(copyText.value.includes("LOADING")) return;
             copyText.select();
             navigator.clipboard.writeText(copyText.value);
-            alert("Node Invite Link Copied!");
-        }
-
-        // 5. Daily Bonus
-        function claimDailyBonus() {
-            userRef.child('balance').transaction((b) => (b || 0) + 10);
-            alert("Daily Sync Complete! +10 ABP credited.");
+            alert("Invite Link Copied!");
         }
     </script>
 </body>
