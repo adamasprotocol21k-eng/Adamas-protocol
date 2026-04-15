@@ -6,48 +6,19 @@
     <title>ADAMAS | Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* PREMIUM LOGO & HEADER STYLES */
-        .brand-identity {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .brand-identity:active { transform: scale(0.95); }
-
+        /* BRAND IDENTITY */
+        .brand-identity { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.3s; }
         .logo-box {
             background: linear-gradient(135deg, var(--cyan) 0%, #0088ff 100%);
-            width: 38px; height: 38px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #000;
-            font-family: 'Orbitron';
-            font-weight: 900;
-            font-size: 18px;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
-            position: relative;
-            overflow: hidden;
+            width: 38px; height: 38px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: #000; font-family: 'Orbitron'; font-weight: 900; font-size: 18px;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); position: relative; overflow: hidden;
         }
-        .logo-box::after {
-            content: ''; position: absolute; top: -50%; left: -50%;
-            width: 200%; height: 200%; background: rgba(255,255,255,0.2);
-            transform: rotate(45deg); animation: shine 3s infinite;
-        }
+        .brand-name { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; color: #fff; letter-spacing: 2px; }
+        .brand-sub { font-size: 8.5px; color: var(--cyan); letter-spacing: 1.5px; font-family: 'Orbitron'; }
 
-        .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
-        .brand-name {
-            font-family: 'Orbitron'; font-size: 16px; font-weight: 900;
-            color: #fff; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,255,255,0.2);
-        }
-        .brand-sub {
-            font-size: 8.5px; color: var(--cyan); letter-spacing: 1.5px;
-            font-weight: 700; font-family: 'Orbitron'; opacity: 0.8;
-        }
-
-        /* UI IMPROVEMENTS */
+        /* HERO CARD & MINING */
         .hero-balance-card {
             background: linear-gradient(145deg, rgba(15,15,15,0.9) 0%, rgba(5,5,5,1) 100%);
             border: 1px solid rgba(0, 242, 255, 0.15); 
@@ -67,29 +38,20 @@
         .mining-trigger-btn {
             width: 130px; height: 130px; border-radius: 50%;
             background: #000; border: 3px solid var(--cyan);
-            color: #fff; font-family: 'Orbitron'; font-weight: 900;
+            color: #fff; font-family: 'Orbitron'; font-weight: 900; font-size: 12px;
             box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
             cursor: pointer; z-index: 5; transition: 0.3s; outline: none;
         }
-        .mining-trigger-btn.active {
-            border-color: var(--p-green);
-            animation: pulse-green 2s infinite;
-        }
+        .mining-trigger-btn.active { border-color: #ffaa00; animation: pulse-orange 2s infinite; color: #ffaa00; }
+        .mining-trigger-btn.ready { border-color: var(--p-green); animation: pulse-green 2s infinite; color: var(--p-green); }
 
-        /* BOTTOM SPACING FIX - To prevent Navigation Overlap */
-        main {
-            padding-bottom: 100px; /* Isse content Nav bar ke piche nahi chupega */
-        }
+        main { padding-bottom: 100px; }
 
-        @keyframes shine { 0% { left: -150%; } 100% { left: 150%; } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulse-green { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes pulse-green { 0% { transform: scale(1); box-shadow: 0 0 10px var(--p-green); } 50% { transform: scale(1.05); box-shadow: 0 0 30px var(--p-green); } 100% { transform: scale(1); } }
+        @keyframes pulse-orange { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         
-        .copy-btn {
-            background: var(--cyan); color: #000; border: none;
-            padding: 0 18px; border-radius: 12px; font-family: 'Orbitron';
-            font-size: 10px; font-weight: 900; cursor: pointer;
-        }
+        .copy-btn { background: var(--cyan); color: #000; border: none; padding: 0 18px; border-radius: 12px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -103,33 +65,32 @@
                     <span class="brand-sub">QUANTUM PROTOCOL</span>
                 </div>
             </div>
-
             <div style="text-align: right;">
                 <div id="user-address" style="font-family: monospace; font-size: 10px; background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">0x...</div>
-                <div style="font-size: 8px; color: var(--p-green); margin-top: 5px; font-family: 'Orbitron'; letter-spacing: 1px;">NETWORK_SECURE ✅</div>
+                <div style="font-size: 8px; color: var(--p-green); margin-top: 5px; font-family: 'Orbitron'; letter-spacing: 1px;">MINING_SECURE ✅</div>
             </div>
         </header>
 
         <main>
             <section class="hero-balance-card">
                 <p style="font-size: 9px; letter-spacing: 3px; color: #666; font-family: 'Orbitron';">NODE_REWARD_BALANCE</p>
-                <h1 id="total-balance" style="font-family: 'Orbitron'; font-size: 3rem; margin: 12px 0; font-weight: 900; color: #fff; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));">0.0000</h1>
-                <div style="color: var(--cyan); font-family: 'Orbitron'; font-size: 11px; letter-spacing: 5px;">ABP_TOKENS</div>
+                <h1 id="total-balance" style="font-family: 'Orbitron'; font-size: 3rem; margin: 12px 0; font-weight: 900; color: #fff;">0.0000</h1>
+                <div style="color: var(--cyan); font-family: 'Orbitron'; font-size: 11px; letter-spacing: 5px;">ABP_POINTS</div>
                 
                 <div style="margin-top: 25px; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.03);">
                     <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 10px; font-family: 'Orbitron';">
-                        <span>PROTOCOL_FILL_RATE</span>
+                        <span id="mining-status-text">MINING_PROGRESS</span>
                         <span id="scarcity-percent">0%</span>
                     </div>
                     <div style="height: 6px; background: #111; border-radius: 10px; overflow: hidden;">
-                        <div id="scarcity-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--p-green)); transition: 1s ease-in-out;"></div>
+                        <div id="scarcity-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--p-green)); transition: 0.5s;"></div>
                     </div>
                 </div>
             </section>
 
             <div class="mining-engine-vessel">
                 <div class="engine-glow"></div>
-                <button class="mining-trigger-btn" onclick="toggleMining()" id="mining-btn">INITIALIZE</button>
+                <button class="mining-trigger-btn" onclick="handleMiningAction()" id="mining-btn">START MINING</button>
             </div>
 
             <div style="display: flex; gap: 15px; margin-bottom: 25px;">
@@ -151,11 +112,10 @@
                 <button class="btn-primary" id="daily-claim-btn" style="width: auto; padding: 10px 20px; font-size: 10px; background: var(--p-green); color: #000; font-weight: 900;" onclick="claimDailyBonus()">SYNC</button>
             </div>
 
-            <div class="premium-card" style="background: rgba(255,255,255,0.03); margin-top: 20px; margin-bottom: 40px;">
+            <div class="premium-card" style="background: rgba(255,255,255,0.03); margin-top: 20px;">
                 <p style="font-size: 8px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; letter-spacing: 2px;">UNIQUE_INVITE_IDENTIFIER</p>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="ref-link-input" readonly value="GENERATING..." 
-                           style="flex: 1; background: #000; border: 1px solid #1a1a1a; color: #666; padding: 14px; border-radius: 14px; font-size: 10px; font-family: monospace; outline: none;">
+                    <input type="text" id="ref-link-input" readonly value="GENERATING..." style="flex: 1; background: #000; border: 1px solid #1a1a1a; color: #666; padding: 14px; border-radius: 14px; font-size: 10px; font-family: monospace; outline: none;">
                     <button class="copy-btn" onclick="copyRefLink()">COPY</button>
                 </div>
             </div>
@@ -179,102 +139,131 @@
     if (!userWallet) { window.location.href = "index.html"; }
 
     const userRef = db.ref('users/' + userWallet);
-    let currentBalance = 0;
-    let isMining = false;
+    const HOURLY_REWARD = 500; // 1 ghante ka reward
+    let miningTimer;
 
     function formatABP(num) {
         if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
         if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
         if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-        return parseFloat(num).toFixed(4);
+        return parseFloat(num).toFixed(2);
     }
 
     userRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-            currentBalance = parseFloat(data.balance || 0);
-            if(!isMining) updateBalanceUI(currentBalance);
-            
+            document.getElementById('total-balance').innerText = formatABP(data.balance || 0);
             document.getElementById('user-address').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
             document.getElementById('streak-info-dash').innerText = data.streak || 1;
             
-            // ACTION: Referral Link always points to index.html with ref param
             const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
             document.getElementById('ref-link-input').value = baseUrl + "/index.html?ref=" + userWallet;
             
-            if(data.referralCount !== undefined) {
-                document.getElementById('ref-count').innerText = data.referralCount;
-            } else {
-                db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', (snap) => {
-                    const count = snap.numChildren() || 0;
-                    document.getElementById('ref-count').innerText = count;
-                    userRef.update({ referralCount: count });
-                });
-            }
+            // Active Nodes Count
+            db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', (snap) => {
+                document.getElementById('ref-count').innerText = snap.numChildren() || 0;
+            });
 
-            updateScarcity(currentBalance);
+            checkMiningStatus(data.lastMiningStart);
             checkClaimStatus(data.lastClaim);
         }
     });
 
-    function updateBalanceUI(val) {
-        document.getElementById('total-balance').innerText = formatABP(val);
-    }
-
-    function updateScarcity(bal) {
-        const progress = Math.min((bal / 1000000) * 100, 100).toFixed(2);
-        document.getElementById('scarcity-percent').innerText = progress + "%";
-        document.getElementById('scarcity-fill').style.width = progress + "%";
-    }
-
-    function toggleMining() {
-        if(isMining) return;
-        isMining = true;
+    function checkMiningStatus(startTimeStr) {
         const btn = document.getElementById('mining-btn');
-        btn.innerText = "MINING...";
-        btn.classList.add('active');
+        const fill = document.getElementById('scarcity-fill');
+        const percentText = document.getElementById('scarcity-percent');
+        
+        if (!startTimeStr) {
+            resetMiningUI();
+            return;
+        }
 
-        setInterval(() => {
-            currentBalance += 0.0001;
-            updateBalanceUI(currentBalance);
-        }, 1000);
+        const start = new Date(startTimeStr).getTime();
+        const now = new Date().getTime();
+        const elapsedSecs = (now - start) / 1000;
+        const totalSecs = 3600; // 1 Hour
 
-        setInterval(() => {
-            userRef.update({ balance: currentBalance });
-            db.ref('global_stats/total_forged').transaction(t => (t || 0) + 0.003); 
-        }, 20000); 
+        if (elapsedSecs < totalSecs) {
+            // MINING IN PROGRESS
+            const remaining = totalSecs - elapsedSecs;
+            const minutes = Math.floor(remaining / 60);
+            const seconds = Math.floor(remaining % 60);
+            
+            btn.innerText = `${minutes}:${seconds < 10 ? '0'+seconds : seconds}`;
+            btn.classList.add('active');
+            btn.classList.remove('ready');
+            btn.disabled = true;
+
+            // Update Progress Bar (1% every ~36 seconds, or 8.3% every 5 mins)
+            const progress = (elapsedSecs / totalSecs) * 100;
+            fill.style.width = progress + "%";
+            percentText.innerText = Math.floor(progress) + "%";
+
+            // Refresh timer every second
+            clearTimeout(miningTimer);
+            miningTimer = setTimeout(() => checkMiningStatus(startTimeStr), 1000);
+        } else {
+            // MINING FINISHED -> READY TO CLAIM
+            btn.innerText = `CLAIM ${HOURLY_REWARD}`;
+            btn.classList.remove('active');
+            btn.classList.add('ready');
+            btn.disabled = false;
+            fill.style.width = "100%";
+            percentText.innerText = "100%";
+        }
+    }
+
+    async function handleMiningAction() {
+        const btn = document.getElementById('mining-btn');
+        
+        if (btn.classList.contains('ready')) {
+            // CLAIM LOGIC
+            try {
+                await userRef.update({
+                    balance: firebase.database.ServerValue.increment(HOURLY_REWARD),
+                    lastMiningStart: null // Reset mining
+                });
+                alert(`Success! ${HOURLY_REWARD} ABP Points added to balance.`);
+            } catch (e) { alert("Claim Error: " + e.message); }
+        } else {
+            // START MINING LOGIC
+            await userRef.update({ lastMiningStart: new Date().toISOString() });
+        }
+    }
+
+    function resetMiningUI() {
+        const btn = document.getElementById('mining-btn');
+        btn.innerText = "START MINING";
+        btn.classList.remove('active', 'ready');
+        btn.disabled = false;
+        document.getElementById('scarcity-fill').style.width = "0%";
+        document.getElementById('scarcity-percent').innerText = "0%";
     }
 
     function checkClaimStatus(lastClaimTime) {
         const btn = document.getElementById('daily-claim-btn');
         if (!lastClaimTime) return;
-        const now = new Date().getTime();
-        const last = new Date(lastClaimTime).getTime();
-        const hoursPassed = (now - last) / (1000 * 60 * 60);
-        
+        const hoursPassed = (new Date().getTime() - new Date(lastClaimTime).getTime()) / 3600000;
         if (hoursPassed < 24) {
             btn.innerText = "SYNCED";
             btn.style.opacity = "0.3";
-            btn.style.background = "#222";
             btn.style.pointerEvents = "none";
             document.getElementById('streak-text').innerText = "Next sync in " + (24 - hoursPassed).toFixed(1) + "h";
         }
     }
 
     async function claimDailyBonus() {
-        try {
-            await userRef.update({
-                balance: firebase.database.ServerValue.increment(10),
-                lastClaim: new Date().toISOString()
-            });
-            alert("Daily Sync Complete! +10 ABP credited.");
-        } catch (e) { alert("Sync Failed: " + e.message); }
+        await userRef.update({
+            balance: firebase.database.ServerValue.increment(10),
+            lastClaim: new Date().toISOString()
+        });
+        alert("Daily Sync Complete! +10 ABP credited.");
     }
 
     function copyRefLink() {
         const copyText = document.getElementById("ref-link-input");
         copyText.select();
-        copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
         alert("Invite Link Copied!");
     }
