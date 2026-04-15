@@ -6,50 +6,39 @@
     <title>ADAMAS | The Vault</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* FIX: Content overlap with bottom nav */
-        .vault-wrapper {
-            padding-bottom: 120px; /* Space for bottom nav */
-        }
-
+        .vault-wrapper { padding-bottom: 120px; }
         .vault-container {
             text-align: center; padding: 30px 20px;
             background: radial-gradient(circle at center, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
             border-radius: 30px; border: 1px solid var(--glass-border);
             margin-bottom: 25px; position: relative;
         }
-        
         .network-badge {
             position: absolute; top: 15px; right: 15px;
             background: rgba(130, 71, 229, 0.2); border: 1px solid #8247e5;
             color: #fff; font-size: 8px; padding: 4px 8px; border-radius: 20px;
             font-family: 'Orbitron'; letter-spacing: 1px;
         }
-
         .vault-lock-icon {
             font-size: 3.5rem; margin-bottom: 15px;
             filter: drop-shadow(0 0 15px var(--cyan-glow));
             animation: pulse-glow 2s infinite;
         }
-
         .scarcity-tag {
             background: var(--neon-gold); color: #000;
             font-family: 'Orbitron'; font-weight: 900;
             font-size: 10px; padding: 4px 12px; border-radius: 6px;
             letter-spacing: 1px;
         }
-
         .check-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 18px; background: rgba(255,255,255,0.02);
             border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--glass-border);
         }
-
         .check-label { font-size: 13px; color: #aaa; font-weight: 600; }
         .check-status { font-family: 'Orbitron'; font-size: 11px; font-weight: bold; }
-        
         .status-completed { color: var(--p-green); text-shadow: 0 0 10px rgba(173, 255, 47, 0.3); }
         .status-waiting { color: #555; }
-
         @keyframes pulse-glow {
             0%, 100% { transform: scale(1); opacity: 0.8; }
             50% { transform: scale(1.1); opacity: 1; }
@@ -67,16 +56,12 @@
 
         <section class="vault-container">
             <div class="network-badge">🟣 POLYGON_AMOY</div>
-            
             <div class="vault-lock-icon" id="vault-icon">🔒</div>
-            <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 12px; color: var(--neon-gold); margin-bottom: 25px; letter-spacing: 2px;">
-                MINTING ENCRYPTED
-            </div>
-            
+            <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 12px; color: var(--neon-gold); margin-bottom: 25px; letter-spacing: 2px;">MINTING ENCRYPTED</div>
             <div style="text-align: left;">
                 <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'Orbitron'; margin-bottom: 10px;">
                     <span style="color: #666;">COMMUNITY TARGET: <span style="color:#fff;">21K ABP</span></span>
-                    <span id="genesis-percent" style="color: var(--cyan);">0%</span>
+                    <span id="genesis-percent">0%</span>
                 </div>
                 <div style="height: 14px; background: #000; border-radius: 7px; overflow: hidden;">
                     <div id="genesis-fill" style="width: 0%; height: 100%; background: var(--cyan); transition: 1s ease-in-out;"></div>
@@ -93,20 +78,10 @@
                 <h3 style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold); letter-spacing: 1px;">AIRDROP PATHWAY</h3>
                 <span id="target-rank-name" style="font-size: 9px; font-family: 'Orbitron'; color: #fff; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px;">VALIDATOR ELIGIBILITY</span>
             </div>
-            
             <div id="rank-checklist">
-                <div class="check-item">
-                    <span class="check-label">ABP Points</span>
-                    <span id="check-points" class="check-status status-waiting">0/5,000</span>
-                </div>
-                <div class="check-item">
-                    <span class="check-label">Active Nodes</span>
-                    <span id="check-refs" class="check-status status-waiting">0/5</span>
-                </div>
-                <div class="check-item">
-                    <span class="check-label">Uptime Streak</span>
-                    <span id="check-streak" class="check-status status-waiting">0/7 DAYS</span>
-                </div>
+                <div class="check-item"><span class="check-label">ABP Points</span><span id="check-points" class="check-status status-waiting">0/5,000</span></div>
+                <div class="check-item"><span class="check-label">Active Nodes</span><span id="check-refs" class="check-status status-waiting">0/5</span></div>
+                <div class="check-item"><span class="check-label">Uptime Streak</span><span id="check-streak" class="check-status status-waiting">0/7 DAYS</span></div>
             </div>
         </section>
 
@@ -125,57 +100,52 @@
     
     <script>
         const userWallet = localStorage.getItem('adamas_user');
+        if(!userWallet) { window.location.href = "index.html"; }
 
-        window.onload = () => {
-            if(!userWallet) {
-                window.location.href = "index.html";
-                return;
-            }
-            
-            // User Data for Checklist - Real-time Sync
-            db.ref('users/' + userWallet).on('value', snap => {
-                const data = snap.val();
-                if(data) {
-                    // 1. Balance Check
-                    const balance = data.balance || 0;
-                    const ptEl = document.getElementById('check-points');
-                    ptEl.innerText = `${Math.floor(balance).toLocaleString()}/5,000`;
-                    ptEl.className = balance >= 5000 ? "check-status status-completed" : "check-status status-waiting";
+        // Core Vault Logic
+        db.ref('users/' + userWallet).on('value', snap => {
+            const data = snap.val();
+            if(data) {
+                // 1. Balance Sync
+                const balance = data.balance || 0;
+                const ptEl = document.getElementById('check-points');
+                ptEl.innerText = `${Math.floor(balance).toLocaleString()}/5,000`;
+                ptEl.className = balance >= 5000 ? "check-status status-completed" : "check-status status-waiting";
 
-                    // 2. Streak Check
-                    const streak = data.streak || 0;
-                    const streakEl = document.getElementById('check-streak');
-                    streakEl.innerText = `${streak}/7 DAYS`;
-                    streakEl.className = streak >= 7 ? "check-status status-completed" : "check-status status-waiting";
+                // 2. Streak Sync (Fixed from Dashboard Logic)
+                const streak = data.streak || 1;
+                const streakEl = document.getElementById('check-streak');
+                streakEl.innerText = `${streak}/7 DAYS`;
+                streakEl.className = streak >= 7 ? "check-status status-completed" : "check-status status-waiting";
 
-                    // 3. Referral Count Check (Fast logic)
-                    if(data.referralCount !== undefined) {
-                        const count = data.referralCount;
-                        const refEl = document.getElementById('check-refs');
+                // 3. Referral Sync (Corrected Field & Fallback)
+                const refEl = document.getElementById('check-refs');
+                if(data.referralCount !== undefined) {
+                    refEl.innerText = `${data.referralCount}/5`;
+                    refEl.className = data.referralCount >= 5 ? "check-status status-completed" : "check-status status-waiting";
+                } else {
+                    // If field missing, fetch real-time
+                    db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', rSnap => {
+                        const count = rSnap.numChildren() || 0;
                         refEl.innerText = `${count}/5`;
                         refEl.className = count >= 5 ? "check-status status-completed" : "check-status status-waiting";
-                    }
+                    });
                 }
-            });
+            }
+        });
 
-            // Global Genesis Supply Progress
-            db.ref('global_stats/total_forged').on('value', snap => {
-                const total = snap.val() || 0; 
-                const percent = Math.min((total / 21000) * 100, 100).toFixed(1);
-                document.getElementById('genesis-percent').innerText = percent + "%";
-                document.getElementById('genesis-fill').style.width = percent + "%";
-                
-                if(percent >= 100) {
-                    const icon = document.getElementById('vault-icon');
-                    const text = document.getElementById('vault-status-text');
-                    if(icon) icon.innerText = "🔓";
-                    if(text) {
-                        text.innerText = "MINTING LIVE";
-                        text.style.color = "var(--p-green)";
-                    }
-                }
-            });
-        };
+        // Global Stats logic remains the same
+        db.ref('global_stats/total_forged').on('value', snap => {
+            const total = snap.val() || 0; 
+            const percent = Math.min((total / 21000) * 100, 100).toFixed(1);
+            document.getElementById('genesis-percent').innerText = percent + "%";
+            document.getElementById('genesis-fill').style.width = percent + "%";
+            if(percent >= 100) {
+                document.getElementById('vault-icon').innerText = "🔓";
+                document.getElementById('vault-status-text').innerText = "MINTING LIVE";
+                document.getElementById('vault-status-text').style.color = "var(--p-green)";
+            }
+        });
     </script>
 </body>
 </html>
