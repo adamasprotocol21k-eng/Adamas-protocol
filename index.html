@@ -45,7 +45,6 @@
             animation: followGlow 1.5s infinite alternate;
         }
 
-        /* --- Naya Style for Verify Button --- */
         .status-pill.verify-mode { background: #ffcc00; color: #000; border-color: #ffcc00; animation: none; box-shadow: 0 0 15px rgba(255, 204, 0, 0.4); font-weight: bold; }
 
         @keyframes followGlow {
@@ -61,7 +60,6 @@
         .sync-spinner { width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan); border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Locked State for Dashboard Button */
         .locked-btn { opacity: 0.3 !important; pointer-events: none !important; filter: grayscale(1); }
     </style>
 </head>
@@ -154,16 +152,15 @@
     
     <script>
         let activeWallet = null;
-        // Tracking task states taaki page refresh par data na jaye
         let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1: 'init', t2: 'init', t3: 'init', t4: 'init' };
 
         window.onload = function() {
+            // Priority 1: Check if already logged in
             const savedUser = localStorage.getItem('adamas_user');
-            const sessionWallet = sessionStorage.getItem('active_session_wallet');
-
             if(savedUser) { window.location.href = "dashboard.html"; return; }
 
-            // Restore Wallet from Session (Anti-reset)
+            // Priority 2: Restore from active session if returning from social app
+            const sessionWallet = sessionStorage.getItem('active_session_wallet');
             if(sessionWallet) {
                 activeWallet = sessionWallet;
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
@@ -184,7 +181,7 @@
                 sessionStorage.setItem('active_session_wallet', activeWallet);
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
                 
-                // Old User Check - Agar user registered hai toh seedha dashboard
+                // Old User Check - Purane users ka fund yahan se check hoga
                 const snapshot = await db.ref('users/' + activeWallet).once('value');
                 if (snapshot.exists()) {
                     localStorage.setItem('adamas_user', activeWallet);
@@ -201,7 +198,6 @@
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
-        // --- Naya handleTaskAction (Two-Step Verification) ---
         function handleTaskAction(id, link) {
             if(!activeWallet) return alert("Connect wallet first!");
             const pill = document.getElementById('pill-' + id);
@@ -266,7 +262,6 @@
             }
         }
 
-        // Aapka Fixed Referral Logic (200 L1 / 50 L2)
         async function finalRegistration() {
             if(!activeWallet) return;
             try {
@@ -286,10 +281,9 @@
                         if(u) {
                             u.balance = (u.balance || 0) + 200;
                             u.referralCount = (u.referralCount || 0) + 1;
-                            
-                            const level2Referrer = u.referredBy;
-                            if(level2Referrer && level2Referrer !== "DIRECT") {
-                                db.ref('users/' + level2Referrer).transaction(l2 => {
+                            const l2Ref = u.referredBy;
+                            if(l2Ref && l2Ref !== "DIRECT") {
+                                db.ref('users/' + l2Ref).transaction(l2 => {
                                     if(l2) l2.balance = (l2.balance || 0) + 50;
                                     return l2;
                                 });
@@ -302,7 +296,7 @@
                 localStorage.setItem('adamas_user', activeWallet);
                 sessionStorage.removeItem('active_session_wallet');
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration error."); }
+            } catch (e) { alert("Error saving data."); }
         }
     </script>
 </body>
