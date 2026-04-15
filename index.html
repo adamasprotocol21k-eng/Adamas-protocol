@@ -10,15 +10,23 @@
         body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
         .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
 
-        /* Top Bar */
-        #top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .network-badge { font-size: 9px; color: var(--cyan); border: 1px solid var(--cyan); padding: 5px 10px; border-radius: 20px; letter-spacing: 1px; }
-        .wallet-btn {
-            background: rgba(0, 242, 255, 0.05); border: 1px solid var(--cyan);
-            color: var(--cyan); padding: 10px 18px; border-radius: 12px;
-            font-size: 10px; cursor: pointer; box-shadow: 0 0 15px var(--cyan-glow);
-            backdrop-filter: blur(10px); transition: 0.3s;
+        /* FIXED: Added relative positioning and high z-index to ensure clickability */
+        #top-bar { 
+            width: 100%; display: flex; justify-content: space-between; 
+            align-items: center; margin-bottom: 30px; 
+            position: relative; z-index: 9999; 
         }
+        .network-badge { font-size: 9px; color: var(--cyan); border: 1px solid var(--cyan); padding: 5px 10px; border-radius: 20px; letter-spacing: 1px; }
+        
+        .wallet-btn {
+            background: rgba(0, 242, 255, 0.1); border: 1px solid var(--cyan);
+            color: var(--cyan); padding: 12px 20px; border-radius: 12px;
+            font-size: 10px; cursor: pointer !important; box-shadow: 0 0 15px var(--cyan-glow);
+            backdrop-filter: blur(10px); transition: 0.3s;
+            position: relative; z-index: 10000; /* Ensuring it's above everything */
+            font-family: 'Orbitron'; font-weight: bold;
+        }
+        .wallet-btn:active { transform: scale(0.95); background: var(--cyan); color: #000; }
 
         section { display: none; width: 100%; max-width: 440px; flex-direction: column; }
         section.active-phase { display: flex; animation: fadeIn 0.8s ease; }
@@ -91,7 +99,7 @@
     <div class="app-container">
         <div id="top-bar">
             <div class="network-badge">POLYGON AMOY TESTNET</div>
-            <button id="connect-trigger" class="wallet-btn" onclick="handleEntry()">CONNECT WALLET</button>
+            <button id="connect-trigger" class="wallet-btn">CONNECT WALLET</button>
         </div>
 
         <section id="phase-intro" class="active-phase">
@@ -158,6 +166,9 @@
         let tasksDone = 0;
         let taskStates = { t1:'init', t2:'init', t3:'init', t4:'init' };
 
+        // FIXED: Using high-priority event listener for the button
+        document.getElementById('connect-trigger').addEventListener('click', handleEntry);
+
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
@@ -168,8 +179,11 @@
             if (!window.ethereum) return alert("Please use Trust Wallet/MetaMask browser.");
             
             try {
-                // Force Handshake
-                await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+                // FIXED: Force Metamask to open and ask for permission every time
+                await window.ethereum.request({ 
+                    method: 'wallet_requestPermissions', 
+                    params: [{ eth_accounts: {} }] 
+                });
                 
                 document.getElementById('loader-line').style.display = 'block';
                 document.getElementById('auth-label').innerText = "SCANNING...";
@@ -179,7 +193,6 @@
                 activeWallet = accounts[0].toLowerCase();
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
 
-                // Check Database
                 const snap = await db.ref('users/' + activeWallet).once('value');
                 
                 if(snap.exists()) {
@@ -197,12 +210,14 @@
             } catch (e) {
                 document.getElementById('loader-line').style.display = 'none';
                 document.getElementById('auth-label').innerText = "CANCELLED";
+                console.error("Wallet connection error:", e);
             }
         }
 
         function switchToSocial() {
             document.getElementById('phase-intro').classList.remove('active-phase');
             document.getElementById('phase-social').classList.add('active-phase');
+            window.scrollTo(0,0);
         }
 
         function handleTask(id, link) {
@@ -246,13 +261,11 @@
             if(tasksDone < 4) return;
             const ref = localStorage.getItem('adamas_referrer') || "DIRECT";
             try {
-                // Save New User
                 await db.ref('users/' + activeWallet).set({
                     balance: 800, wallet: activeWallet, referredBy: ref,
                     referralCount: 0, joinedAt: new Date().toISOString()
                 });
 
-                // Instant Referral Reward
                 if(ref !== "DIRECT") {
                     const rSnap = await db.ref('users/' + ref).once('value');
                     if(rSnap.exists()) {
