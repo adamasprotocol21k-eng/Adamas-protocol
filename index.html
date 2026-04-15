@@ -10,8 +10,7 @@
         .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
         #top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; position: relative; z-index: 9999; }
         .network-badge { font-size: 9px; color: var(--cyan); border: 1px solid var(--cyan); padding: 5px 10px; border-radius: 20px; letter-spacing: 1px; }
-        .wallet-btn { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 12px 20px; border-radius: 12px; font-size: 10px; cursor: pointer !important; box-shadow: 0 0 15px var(--cyan-glow); backdrop-filter: blur(10px); transition: 0.3s; position: relative; z-index: 10000; font-family: 'Orbitron'; font-weight: bold; }
-        .wallet-btn:active { transform: scale(0.95); background: var(--cyan); color: #000; }
+        .wallet-btn { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 12px 20px; border-radius: 12px; font-size: 10px; cursor: pointer; box-shadow: 0 0 15px var(--cyan-glow); backdrop-filter: blur(10px); transition: 0.3s; position: relative; z-index: 10000; font-family: 'Orbitron'; font-weight: bold; }
         section { display: none; width: 100%; max-width: 440px; flex-direction: column; }
         section.active-phase { display: flex; animation: fadeIn 0.8s ease; }
         .hero-section { text-align: center; margin-top: 10%; }
@@ -54,14 +53,8 @@
                 <div class="hero-tag">QUANTUM_NODE_PROTOCOL</div>
             </div>
             <div class="info-grid">
-                <div class="info-card">
-                    <h3>What is Adamas?</h3>
-                    <p>A next-generation decentralized reward protocol built on Polygon. We empower community-led node infrastructure.</p>
-                </div>
-                <div class="info-card">
-                    <h3>Incentivized Testnet</h3>
-                    <p>Early contributors receive ADAMAS Bonus Points (ABP) for verifying node addresses.</p>
-                </div>
+                <div class="info-card"><h3>What is Adamas?</h3><p>A next-generation decentralized reward protocol built on Polygon.</p></div>
+                <div class="info-card"><h3>Incentivized Testnet</h3><p>Early contributors receive ADAMAS Bonus Points (ABP).</p></div>
             </div>
             <div class="terminal-box">
                 <div class="term-row"><span style="color:#666">CORE_STATUS</span><span style="color:var(--p-green)">ENCRYPTED</span></div>
@@ -90,25 +83,22 @@
     <script src="config.js"></script> 
 
     <script>
-        let activeWallet = null;
-        let tasksDone = 0;
-        let taskStates = { t1:'init', t2:'init', t3:'init', t4:'init' };
+        let activeWallet = localStorage.getItem('adamas_temp_wallet') || null;
+        let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
+        let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
 
         document.getElementById('connect-trigger').addEventListener('click', handleEntry);
 
         window.onload = function() {
-            // Referral Detection
+            // Capture Referral
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
-            if(ref) {
-                localStorage.setItem('adamas_referrer', ref.toLowerCase().trim());
-            }
+            if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase().trim());
 
-            // AUTO-RECONNECT LOGIC: Check if user was already in sync process
-            const savedWallet = sessionStorage.getItem('temp_wallet');
-            if(savedWallet) {
-                activeWallet = savedWallet;
+            // 100% RECOVERY: Agar wallet connected hai toh direct Social Page par le jao
+            if(activeWallet) {
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
+                restoreSyncProgress();
                 switchToSocial();
             }
         }
@@ -118,22 +108,20 @@
             try {
                 await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
                 document.getElementById('loader-line').style.display = 'block';
-                document.getElementById('auth-label').innerText = "SCANNING...";
-                
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase().trim();
+                
+                // Persistent Memory Save
+                localStorage.setItem('adamas_temp_wallet', activeWallet);
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
 
                 const snap = await db.ref('users/' + activeWallet).once('value');
                 if(snap.exists()) {
-                    document.getElementById('auth-label').innerText = "VERIFIED";
                     localStorage.setItem('adamas_user', activeWallet);
-                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
+                    localStorage.removeItem('adamas_temp_wallet');
+                    window.location.href = "dashboard.html";
                 } else {
-                    // Save to Session so it persists through social back-clicks
-                    sessionStorage.setItem('temp_wallet', activeWallet);
-                    document.getElementById('auth-label').innerText = "NEW_NODE";
-                    setTimeout(() => { switchToSocial(); }, 1500);
+                    switchToSocial();
                 }
             } catch (e) { document.getElementById('loader-line').style.display = 'none'; }
         }
@@ -141,7 +129,6 @@
         function switchToSocial() {
             document.getElementById('phase-intro').classList.remove('active-phase');
             document.getElementById('phase-social').classList.add('active-phase');
-            window.scrollTo(0,0);
         }
 
         function handleTask(id, link) {
@@ -149,6 +136,7 @@
             if(taskStates[id] === 'init') {
                 window.open(link, '_blank');
                 taskStates[id] = 'awaiting';
+                saveState();
                 pill.innerText = "VERIFY"; pill.classList.add('verify-mode');
             } else if(taskStates[id] === 'awaiting') {
                 pill.style.pointerEvents = 'none';
@@ -160,20 +148,39 @@
                         clearInterval(timer);
                         taskStates[id] = 'done';
                         tasksDone++;
+                        saveState();
                         markDone(id);
-                        checkMasterButton();
+                        updateMasterButton();
                     }
                 }, 1000);
             }
         }
 
-        function markDone(id) {
-            const pill = document.getElementById('pill-' + id);
-            pill.innerText = "SYNCED"; pill.style.background = "var(--p-green)"; pill.style.color = "#000";
-            document.getElementById('card-' + id).classList.add('done');
+        function restoreSyncProgress() {
+            Object.keys(taskStates).forEach(id => {
+                if(taskStates[id] === 'done') markDone(id);
+                else if(taskStates[id] === 'awaiting') {
+                    const p = document.getElementById('pill-' + id);
+                    p.innerText = "VERIFY"; p.classList.add('verify-mode');
+                }
+            });
+            updateMasterButton();
         }
 
-        function checkMasterButton() {
+        function saveState() {
+            localStorage.setItem('adamas_task_states', JSON.stringify(taskStates));
+            localStorage.setItem('adamas_tasks_count', tasksDone);
+        }
+
+        function markDone(id) {
+            const pill = document.getElementById('pill-' + id);
+            if(pill) {
+                pill.innerText = "SYNCED"; pill.style.background = "var(--p-green)"; pill.style.color = "#000";
+                document.getElementById('card-' + id).classList.add('done');
+            }
+        }
+
+        function updateMasterButton() {
             if(tasksDone >= 4) {
                 document.getElementById('final-btn').classList.remove('locked');
                 document.getElementById('lock-msg').innerText = "ALL SYNCS COMPLETE";
@@ -190,29 +197,25 @@
 
             try {
                 await db.ref('users/' + activeWallet).set({
-                    balance: 800,
-                    wallet: activeWallet,
-                    referredBy: ref,
-                    referralCount: 0,
-                    activityCount: 4,
-                    engagementPoints: 200, 
-                    joinedAt: new Date().toISOString()
+                    balance: 800, wallet: activeWallet, referredBy: ref,
+                    referralCount: 0, activityCount: 4, engagementPoints: 200, joinedAt: new Date().toISOString()
                 });
 
                 if(ref !== "DIRECT") {
-                    const referrerRef = db.ref('users/' + ref);
-                    const rSnap = await referrerRef.once('value');
+                    const rSnap = await db.ref('users/' + ref).once('value');
                     if(rSnap.exists()) {
-                        const data = rSnap.val();
-                        await referrerRef.update({
-                            balance: (data.balance || 0) + 200,
-                            referralCount: (data.referralCount || 0) + 1,
-                            engagementPoints: (data.engagementPoints || 0) + 50
+                        await db.ref('users/' + ref).update({
+                            balance: (rSnap.val().balance || 0) + 200,
+                            referralCount: (rSnap.val().referralCount || 0) + 1,
+                            engagementPoints: (rSnap.val().engagementPoints || 0) + 50
                         });
                     }
                 }
                 
-                sessionStorage.removeItem('temp_wallet'); // Clear session after success
+                // Final Cleanup
+                localStorage.removeItem('adamas_temp_wallet');
+                localStorage.removeItem('adamas_task_states');
+                localStorage.removeItem('adamas_tasks_count');
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
             } catch (e) { alert("Registration Error"); }
