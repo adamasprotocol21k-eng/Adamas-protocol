@@ -39,6 +39,19 @@
         .check-status { font-family: 'Orbitron'; font-size: 11px; font-weight: bold; }
         .status-completed { color: var(--p-green); text-shadow: 0 0 10px rgba(173, 255, 47, 0.3); }
         .status-waiting { color: #555; }
+
+        .wallet-card {
+            margin-top: 20px; padding: 20px;
+            background: rgba(0,0,0,0.3); border: 1px dashed #444;
+            border-radius: 20px; text-align: center;
+        }
+        .btn-lock {
+            background: #222; color: #666; cursor: not-allowed;
+            border: 1px solid #333; padding: 12px 20px; width: 100%;
+            border-radius: 10px; font-family: 'Orbitron'; font-size: 10px;
+            transition: 0.3s;
+        }
+
         @keyframes pulse-glow {
             0%, 100% { transform: scale(1); opacity: 0.8; }
             50% { transform: scale(1.1); opacity: 1; }
@@ -58,10 +71,11 @@
             <div class="network-badge">🟣 POLYGON_AMOY</div>
             <div class="vault-lock-icon" id="vault-icon">🔒</div>
             <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 12px; color: var(--neon-gold); margin-bottom: 25px; letter-spacing: 2px;">MINTING ENCRYPTED</div>
+            
             <div style="text-align: left;">
                 <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'Orbitron'; margin-bottom: 10px;">
-                    <span style="color: #666;">COMMUNITY TARGET: <span style="color:#fff;">21K ABP</span></span>
-                    <span id="genesis-percent">0%</span>
+                    <span style="color: #666;">COMMUNITY TARGET: <span style="color:#fff;" id="target-label">21K ADS</span></span>
+                    <span id="genesis-percent" style="color: var(--cyan);">0%</span>
                 </div>
                 <div style="height: 14px; background: #000; border-radius: 7px; overflow: hidden;">
                     <div id="genesis-fill" style="width: 0%; height: 100%; background: var(--cyan); transition: 1s ease-in-out;"></div>
@@ -71,6 +85,11 @@
                     MAINNET UNLOCKS AT <span style="color: var(--cyan);">100% PROTOCOL SYNC.</span>
                 </p>
             </div>
+
+            <div class="wallet-card" id="wallet-section">
+                <p style="font-size: 9px; color: #777; margin-bottom: 10px; font-family: 'Orbitron';">ADS TOKEN MAINNET ADDRESS</p>
+                <button class="btn-lock" id="wallet-btn" disabled>🔒 LINK WALLET (LOCKED)</button>
+            </div>
         </section>
 
         <section class="premium-card" style="border-color: rgba(255,204,0,0.1);">
@@ -78,8 +97,9 @@
                 <h3 style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold); letter-spacing: 1px;">AIRDROP PATHWAY</h3>
                 <span id="target-rank-name" style="font-size: 9px; font-family: 'Orbitron'; color: #fff; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px;">VALIDATOR ELIGIBILITY</span>
             </div>
+            
             <div id="rank-checklist">
-                <div class="check-item"><span class="check-label">ABP Points</span><span id="check-points" class="check-status status-waiting">0/5,000</span></div>
+                <div class="check-item"><span class="check-label">ADS Points</span><span id="check-points" class="check-status status-waiting">0/5,000</span></div>
                 <div class="check-item"><span class="check-label">Active Nodes</span><span id="check-refs" class="check-status status-waiting">0/5</span></div>
                 <div class="check-item"><span class="check-label">Uptime Streak</span><span id="check-streak" class="check-status status-waiting">0/7 DAYS</span></div>
             </div>
@@ -102,48 +122,52 @@
         const userWallet = localStorage.getItem('adamas_user');
         if(!userWallet) { window.location.href = "index.html"; }
 
-        // Core Vault Logic
+        // User Data Sync Logic
         db.ref('users/' + userWallet).on('value', snap => {
             const data = snap.val();
             if(data) {
-                // 1. Balance Sync
+                // 1. Points (ADS)
                 const balance = data.balance || 0;
                 const ptEl = document.getElementById('check-points');
                 ptEl.innerText = `${Math.floor(balance).toLocaleString()}/5,000`;
                 ptEl.className = balance >= 5000 ? "check-status status-completed" : "check-status status-waiting";
 
-                // 2. Streak Sync (Fixed from Dashboard Logic)
+                // 2. Streak
                 const streak = data.streak || 1;
                 const streakEl = document.getElementById('check-streak');
                 streakEl.innerText = `${streak}/7 DAYS`;
                 streakEl.className = streak >= 7 ? "check-status status-completed" : "check-status status-waiting";
 
-                // 3. Referral Sync (Corrected Field & Fallback)
+                // 3. Referral Nodes
+                const count = data.referralCount || 0;
                 const refEl = document.getElementById('check-refs');
-                if(data.referralCount !== undefined) {
-                    refEl.innerText = `${data.referralCount}/5`;
-                    refEl.className = data.referralCount >= 5 ? "check-status status-completed" : "check-status status-waiting";
-                } else {
-                    // If field missing, fetch real-time
-                    db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', rSnap => {
-                        const count = rSnap.numChildren() || 0;
-                        refEl.innerText = `${count}/5`;
-                        refEl.className = count >= 5 ? "check-status status-completed" : "check-status status-waiting";
-                    });
-                }
+                refEl.innerText = `${count}/5`;
+                refEl.className = count >= 5 ? "check-status status-completed" : "check-status status-waiting";
             }
         });
 
-        // Global Stats logic remains the same
+        // Global Target & Wallet Unlock Logic
         db.ref('global_stats/total_forged').on('value', snap => {
             const total = snap.val() || 0; 
-            const percent = Math.min((total / 21000) * 100, 100).toFixed(1);
+            const target = 21000;
+            const percent = Math.min((total / target) * 100, 100).toFixed(1);
+            
             document.getElementById('genesis-percent').innerText = percent + "%";
             document.getElementById('genesis-fill').style.width = percent + "%";
+            
             if(percent >= 100) {
                 document.getElementById('vault-icon').innerText = "🔓";
-                document.getElementById('vault-status-text').innerText = "MINTING LIVE";
-                document.getElementById('vault-status-text').style.color = "var(--p-green)";
+                const statusText = document.getElementById('vault-status-text');
+                statusText.innerText = "ADS MINTING LIVE";
+                statusText.style.color = "var(--p-green)";
+
+                const walletBtn = document.getElementById('wallet-btn');
+                walletBtn.disabled = false;
+                walletBtn.innerText = "🔗 LINK ADS MAINNET WALLET";
+                walletBtn.style.background = "var(--cyan)";
+                walletBtn.style.color = "#000";
+                walletBtn.style.cursor = "pointer";
+                walletBtn.style.border = "none";
             }
         });
     </script>
