@@ -138,8 +138,8 @@
     };
 
     function loadNetworkNodes(myWallet) {
-        // Real-time listener: Hum direct 'users' list se count nikalenge taaki data miss na ho
-        db.ref('users').orderByChild('referredBy').equalTo(myWallet).on('value', async (snapshot) => {
+        // Direct users listener - Manual filter taaki Capital/Small letters ka fark na pade
+        db.ref('users').on('value', (snapshot) => {
             const container = document.getElementById('nodes-container');
             let l1Count = 0;
             let l2TotalCount = 0;
@@ -153,42 +153,52 @@
                 return;
             }
 
-            const users = snapshot.val();
-            const wallets = Object.keys(users);
-            l1Count = wallets.length; // Jitne users mile, wahi L1 count hai
-            document.getElementById('l1-count').innerText = l1Count;
-            
+            const allUsers = snapshot.val();
             container.innerHTML = ""; 
 
-            // Loop through Level 1 Partners
-            for (const wallet of wallets) {
-                const nodeBox = document.createElement('div');
-                nodeBox.className = 'node-item';
-                const displayWallet = wallet.substring(0,10) + "..." + wallet.slice(-6);
+            // STEP 1: Pehle Level 1 filter karein (jo log mere referral se aaye hain)
+            Object.keys(allUsers).forEach(wallet => {
+                const user = allUsers[wallet];
                 
-                nodeBox.innerHTML = `
-                    <div class="node-info">
-                        <span class="node-addr">${displayWallet}</span>
-                        <span class="node-role">Level 1 Partner</span>
-                    </div>
-                    <span class="status-badge" style="color:var(--p-green); border: 1px solid var(--p-green); padding: 4px 10px; border-radius: 8px; font-size: 8px; font-weight:bold; font-family:'Orbitron';">ACTIVE</span>
-                `;
-                container.appendChild(nodeBox);
+                // Address lower case match (Capital/Small mismatch fix)
+                // Saath hi check karein ki user apna hi address refer na dikhaye
+                if (user.referredBy && user.referredBy.toLowerCase() === myWallet.toLowerCase() && wallet.toLowerCase() !== myWallet.toLowerCase()) {
+                    l1Count++;
+                    l1TotalBalance += (parseFloat(user.balance) || 0);
 
-                // Balance for Yield
-                l1TotalBalance += (parseFloat(users[wallet].balance) || 0);
+                    // List mein add karein
+                    const nodeBox = document.createElement('div');
+                    nodeBox.className = 'node-item';
+                    const displayWallet = wallet.substring(0,10) + "..." + wallet.slice(-6);
+                    
+                    nodeBox.innerHTML = `
+                        <div class="node-info">
+                            <span class="node-addr">${displayWallet}</span>
+                            <span class="node-role">Level 1 Partner</span>
+                        </div>
+                        <span class="status-badge" style="color:var(--p-green); border: 1px solid var(--p-green); padding: 4px 10px; border-radius: 8px; font-size: 8px; font-weight:bold; font-family:'Orbitron';">ACTIVE</span>
+                    `;
+                    container.appendChild(nodeBox);
 
-                // Level 2 logic
-                const l2Snap = await db.ref('users').orderByChild('referredBy').equalTo(wallet).once('value');
-                if(l2Snap.exists()) {
-                    l2TotalCount += Object.keys(l2Snap.val()).length;
+                    // STEP 2: Level 2 count karein (in referrals ne jinhe refer kiya)
+                    Object.keys(allUsers).forEach(subWallet => {
+                        if (allUsers[subWallet].referredBy && allUsers[subWallet].referredBy.toLowerCase() === wallet.toLowerCase()) {
+                            l2TotalCount++;
+                        }
+                    });
                 }
-            }
+            });
 
+            // Ginti update karein
+            document.getElementById('l1-count').innerText = l1Count;
             document.getElementById('l2-count').innerText = l2TotalCount;
-            const dailyYield = l1TotalBalance * 0.10;
             
+            const dailyYield = l1TotalBalance * 0.10;
             updateEarningDisplay(l1Count, l2TotalCount, dailyYield);
+
+            if (l1Count === 0) {
+                container.innerHTML = `<p style="text-align: center; color: #444; font-size: 10px; margin-top: 30px; font-family: 'Orbitron';">NO PARTNERS FOUND</p>`;
+            }
         });
     }
 
