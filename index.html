@@ -79,8 +79,7 @@
                     <span style="color: #666;">CORE_STATUS</span><span id="core-status" style="color: var(--p-green);">READY_TO_SYNC</span>
                 </div>
             </div>
-            
-            </section>
+        </section>
 
         <section id="phase-social">
             <h2 style="font-family: 'Orbitron'; color: var(--p-green); font-size: 1.5rem; letter-spacing: 2px;">VERIFICATION</h2>
@@ -149,19 +148,22 @@
             blockExplorerUrls: ['https://amoy.polygonscan.com']
         };
 
-        window.onload = function() {
+        window.onload = async function() {
             const savedUser = localStorage.getItem('adamas_user');
             if(savedUser) { window.location.href = "dashboard.html"; return; }
 
+            // Handle referral
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
             if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase());
-            for(let i=1; i<=4; i++) localStorage.removeItem('adamas_task_t'+i);
+            
+            // Auto-detect if wallet is already connected
+            if (window.ethereum && window.ethereum.selectedAddress) {
+                handleEntry(); 
+            }
         }
 
-        // Improved Network Switch Logic
         async function ensureNetwork() {
-            if (!window.ethereum) throw new Error("No Wallet Found");
             try {
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
@@ -180,23 +182,27 @@
         async function handleEntry() {
             if (!window.ethereum) return alert("Please use Trust Wallet or MetaMask browser.");
             try {
-                // Step 1: Force Chain Switch
+                // 1. Force Network Switch
                 await ensureNetwork();
                 
-                // Step 2: Connect Wallet
+                // 2. Small delay to let provider catch up
+                await new Promise(r => setTimeout(r, 800));
+
+                // 3. Connect Wallet
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
                 
-                // Step 3: Candidate Capture
+                // 4. Instant Candidate Capture
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 if(referrer !== "DIRECT") {
                     await db.ref('candidates/' + referrer + '/' + activeWallet).set({
                         joinedAt: new Date().toISOString(),
-                        status: "PENDING"
+                        status: "CONNECTED"
                     });
                 }
 
+                // 5. Final check and FORCE Redirection to social phase
                 const snapshot = await db.ref('users/' + activeWallet).once('value');
                 if (snapshot.exists()) {
                     localStorage.setItem('adamas_user', activeWallet);
@@ -206,7 +212,7 @@
                 }
             } catch (e) { 
                 console.error(e);
-                alert("Network Switch required to proceed."); 
+                alert("Please switch to Amoy Network to proceed."); 
             }
         }
 
@@ -214,6 +220,7 @@
             document.getElementById('phase-intro').style.display = 'none';
             document.getElementById('phase-social').style.display = 'flex';
             document.getElementById('phase-social').classList.add('active-phase');
+            window.scrollTo(0,0);
         }
 
         function handleVerify(id, link) {
@@ -257,6 +264,8 @@
             if(tasksVerifiedCount < 4) return;
             try {
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                
+                // Registration Entry
                 await db.ref('users/' + activeWallet).set({
                     balance: 800,
                     wallet: activeWallet,
@@ -265,6 +274,7 @@
                     joinedAt: new Date().toISOString()
                 });
                 
+                // Referral Logic
                 if(referrer !== "DIRECT") {
                     const refSnap = await db.ref('users/' + referrer).once('value');
                     if(refSnap.exists()) {
@@ -273,16 +283,16 @@
                             balance: (refData.balance || 0) + 200,
                             referralCount: (refData.referralCount || 0) + 1
                         });
-
                         await db.ref('referrals/' + referrer + '/' + activeWallet).set({
                             status: "ACTIVE",
                             timestamp: new Date().toISOString()
                         });
                     }
                 }
+                
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Error: " + e.message); }
+            } catch (e) { alert("Registration Error."); }
         }
     </script>
 </body>
