@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ADAMAS | Quantum Node Infrastructure</title>
+
+    <meta property="og:title" content="ADAMAS | Quantum Node Infrastructure">
+    <meta property="og:description" content="Join the 21,000 Scarcity Protocol. Mine ABP tokens on Polygon.">
+    <meta property="og:image" content="https://adamas-protocol.vercel.app/assets/logo-preview.png"> 
+    <meta property="og:url" content="https://adamas-protocol.vercel.app">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
     <style>
         :root { --cyan: #00f2ff; --cyan-glow: rgba(0, 242, 255, 0.4); --p-green: #adff2f; --glass: rgba(255, 255, 255, 0.03); }
         body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
@@ -193,18 +201,22 @@
             if(ref === activeWallet) ref = "DIRECT"; 
 
             try {
-                // 1. New User Creation
+                // 1. New User Creation (Using Server Timestamp)
                 await db.ref('users/' + activeWallet).set({
-                    balance: 800, wallet: activeWallet, referredBy: ref,
-                    referralCount: 0, activityCount: 4, engagementPoints: 200, joinedAt: new Date().toISOString()
+                    balance: 800, 
+                    wallet: activeWallet, 
+                    referredBy: ref,
+                    referralCount: 0, 
+                    activityCount: 4, 
+                    engagementPoints: 200, 
+                    joinedAt: firebase.database.ServerValue.TIMESTAMP
                 });
 
-                // 2. REFERRAL COMMISSION LOGIC (Fixed with Transaction)
+                // 2. REFERRAL COMMISSION LOGIC
                 if(ref !== "DIRECT") {
                     const referrerRef = db.ref('users/' + ref);
                     await referrerRef.transaction((currentData) => {
                         if (currentData) {
-                            // Sahi se numbers ko add karne ke liye parseInt use kiya hai
                             currentData.balance = (parseInt(currentData.balance) || 0) + 200;
                             currentData.referralCount = (parseInt(currentData.referralCount) || 0) + 1;
                             currentData.engagementPoints = (parseInt(currentData.engagementPoints) || 0) + 50;
