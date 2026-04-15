@@ -76,12 +76,16 @@
 
         <section class="premium-card" style="background: rgba(0,242,255,0.03); margin-bottom: 20px;">
             <div class="earning-row">
-                <span class="earning-label">L1 Commission</span>
+                <span class="earning-label">L1 Commission (200/Ref)</span>
                 <span id="l1-earnings" class="earning-value">0 ABP</span>
             </div>
             <div class="earning-row">
-                <span class="earning-label">L2 Multiplier</span>
+                <span class="earning-label">L2 Multiplier (50/Ref)</span>
                 <span id="l2-earnings" class="earning-value">0 ABP</span>
+            </div>
+            <div class="earning-row">
+                <span class="earning-label">Daily Yield (10% Network)</span>
+                <span id="daily-yield" class="earning-value" style="color: var(--cyan);">0.00 ABP</span>
             </div>
             <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 12px 0;">
             <div class="earning-row">
@@ -106,7 +110,7 @@
                 </span>
             </div>
             <div id="nodes-container">
-                </div>
+            </div>
         </section>
 
         <nav class="bottom-nav">
@@ -134,20 +138,19 @@
     };
 
     function loadNetworkNodes(myWallet) {
-        // Listen to YOUR user record for real-time L1 count
+        // Real-time update based on user's own referralCount in DB
         db.ref('users/' + myWallet).on('value', (userSnap) => {
             const userData = userSnap.val();
             const l1Count = userData ? (userData.referralCount || 0) : 0;
             document.getElementById('l1-count').innerText = l1Count;
             
-            // Now fetch the actual L1 users list
             db.ref('users').orderByChild('referredBy').equalTo(myWallet).on('value', async (snapshot) => {
                 const container = document.getElementById('nodes-container');
                 
                 if (!snapshot.exists()) {
                     container.innerHTML = `<p style="text-align: center; color: #444; font-size: 10px; margin-top: 30px; font-family: 'Orbitron';">NO PARTNERS FOUND</p>`;
                     document.getElementById('l2-count').innerText = "0";
-                    updateEarningDisplay(l1Count, 0);
+                    updateEarningDisplay(l1Count, 0, 0);
                     return;
                 }
 
@@ -156,8 +159,10 @@
                 container.innerHTML = ""; 
 
                 let l2TotalCount = 0;
+                let l1TotalEarnings = 0;
 
                 for (const wallet of wallets) {
+                    // Add to UI
                     const nodeBox = document.createElement('div');
                     nodeBox.className = 'node-item';
                     nodeBox.innerHTML = `
@@ -169,7 +174,10 @@
                     `;
                     container.appendChild(nodeBox);
 
-                    // Sync L2 count from each L1 partner
+                    // Track L1 total balance to calculate 10% daily yield
+                    l1TotalEarnings += (users[wallet].balance || 0);
+
+                    // Count L2
                     const l2Snap = await db.ref('users').orderByChild('referredBy').equalTo(wallet).once('value');
                     if(l2Snap.exists()) {
                         l2TotalCount += Object.keys(l2Snap.val()).length;
@@ -177,18 +185,24 @@
                 }
 
                 document.getElementById('l2-count').innerText = l2TotalCount;
-                updateEarningDisplay(l1Count, l2TotalCount);
+                
+                // 10% Daily Commission Logic (Calculated from L1's total balance)
+                const dailyYield = l1TotalEarnings * 0.10;
+                
+                updateEarningDisplay(l1Count, l2TotalCount, dailyYield);
             });
         });
     }
 
-    function updateEarningDisplay(l1, l2) {
-        const l1Earned = l1 * 100;
-        const l2Earned = l2 * 30;
-        const total = l1Earned + l2Earned;
+    function updateEarningDisplay(l1, l2, daily) {
+        const l1Earned = l1 * 200; // Updated to 200 ABP
+        const l2Earned = l2 * 50;  // Updated to 50 ABP
+        const total = l1Earned + l2Earned + daily;
+
         document.getElementById('l1-earnings').innerText = l1Earned + " ABP";
         document.getElementById('l2-earnings').innerText = l2Earned + " ABP";
-        document.getElementById('total-referral-earned').innerText = total + " ABP";
+        document.getElementById('daily-yield').innerText = daily.toFixed(2) + " ABP";
+        document.getElementById('total-referral-earned').innerText = total.toFixed(2) + " ABP";
     }
 
     async function copyRefLink() {
