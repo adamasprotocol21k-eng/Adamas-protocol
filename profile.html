@@ -130,24 +130,27 @@
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
 
-            db.ref('users/' + userWallet).on('value', (snapshot) => {
+            // REAL-TIME SYNC FROM FIREBASE
+            db.ref('users/' + userWallet.toLowerCase()).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
-                    // Update Stats
+                    // 1. Update ABP Balance
                     document.getElementById('stat-balance').innerText = formatABP(data.balance || 0);
                     
-                    // Update Social Percentage
-                    const tasksDone = data.completedMissions ? Object.keys(data.completedMissions).length : 0;
+                    // 2. Update Social Engagement (%)
+                    // Check for tasks verified in localStorage to match index.html logic
+                    let tasksDone = 0;
+                    for(let i=1; i<=4; i++) {
+                        if(localStorage.getItem('adamas_task_t'+i) === 'verified') tasksDone++;
+                    }
                     document.getElementById('stat-social').innerText = Math.round((tasksDone / 4) * 100) + "%";
 
-                    // Call Original Rank Logic
+                    // 3. Update Network Nodes count
+                    document.getElementById('stat-refs').innerText = data.referralCount || 0;
+
+                    // 4. Update Rank UI
                     updateRankUI(data);
                 }
-            });
-
-            // Update Referral Count Node
-            db.ref('users').orderByChild('referredBy').equalTo(userWallet).on('value', snap => {
-                document.getElementById('stat-refs').innerText = snap.exists() ? Object.keys(snap.val()).length : 0;
             });
 
             loadLeaderboard();
@@ -178,14 +181,18 @@
             });
         }
 
-        // --- ORIGINAL RANK LOGIC (AS PER YOUR REQUEST) ---
         function updateRankUI(data) {
             let score = 0;
             let bal = data.balance || 0;
             
+            // Score based on balance logic
             if(bal >= 1000) score += 20;
             if(bal >= 5000) score += 30;
             if(bal >= 10000) score += 30;
+            
+            // Add score based on referrals
+            const refs = data.referralCount || 0;
+            if(refs >= 1) score += 20;
 
             document.getElementById('score-fill').style.width = Math.min(score, 100) + "%";
             document.getElementById('score-percent').innerText = Math.min(score, 100) + "%";
