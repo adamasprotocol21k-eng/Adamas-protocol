@@ -6,7 +6,6 @@
     <title>ADAMAS | Quantum Node Infrastructure</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Pehle wala CSS same rahega */
         .app-container { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; position: relative; padding: 20px; }
         section { display: none; opacity: 0; transition: opacity 0.5s ease; }
         section.active-phase { display: flex !important; flex-direction: column; opacity: 1; animation: fadeIn 0.8s ease; }
@@ -20,35 +19,47 @@
             transition: 0.3s;
         }
 
+        /* New Follow Task Button Style */
         .btn-follow-task {
             display: none; margin-top: 30px; background: var(--cyan); color: #000;
             padding: 15px; border-radius: 12px; font-family: 'Orbitron';
-            font-weight: bold; border: none; cursor: pointer;
+            font-weight: bold; text-decoration: none; border: none; cursor: pointer;
             box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); animation: pulse 2s infinite;
         }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .typewriter-text {
+            display: inline-block; overflow: hidden; border-right: 2px solid var(--cyan);
+            white-space: nowrap; margin: 0 auto; letter-spacing: 5px;
+            width: 0;
+            animation: typing 3s steps(20, end) forwards, blink-caret .75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0 } to { width: 230px } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--cyan); } }
 
         .task-container { width: 100%; margin-top: 25px; display: flex; flex-direction: column; gap: 15px; }
         .task-card { 
             background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); 
             padding: 22px 20px; border-radius: 20px; text-align: left; 
-            transition: 0.3s; position: relative; overflow: hidden;
+            transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
         }
-        .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.06); }
+        .task-card:active { transform: scale(0.98); background: rgba(0, 242, 255, 0.08); }
+        .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.06); pointer-events: none; }
         
         .status-pill { 
             font-size: 10px; background: rgba(0, 242, 255, 0.1); padding: 8px 14px; 
             border-radius: 10px; color: var(--cyan); font-family: 'Orbitron';
-            min-width: 90px; text-align: center; border: 1px solid var(--cyan);
-            cursor: pointer; transition: 0.3s;
+            min-width: 80px; text-align: center; border: 1px solid var(--cyan);
         }
-        .status-pill.verify-mode { background: #ffcc00; color: #000; border-color: #ffcc00; }
-        .status-pill.loading-mode { background: rgba(255,255,255,0.1); border-color: #666; color: #fff; cursor: wait; }
 
         .btn-primary.locked { opacity: 0.4; filter: grayscale(1); pointer-events: none; }
         .main-logo { font-size: clamp(2.8rem, 12vw, 4rem); font-family: 'Orbitron'; font-weight: 900; background: linear-gradient(180deg, #fff 20%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--cyan-glow)); }
-        .sync-spinner { width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan); border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite; vertical-align: middle; }
+        .sync-spinner { width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan); border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -61,56 +72,70 @@
 
         <section id="phase-intro" class="active-phase">
             <div class="auth-badge" style="margin-bottom: 10px;">POLYGON AMOY TESTNET</div>
-            <div class="logo-container"><h1 class="main-logo">ADAMAS</h1></div>
+            <div class="logo-container">
+                <h1 class="main-logo">ADAMAS</h1>
+            </div>
+            
             <div style="width: 100%; text-align: center;">
                 <div class="typewriter-text" style="font-family: 'Orbitron'; font-size: 14px; color: var(--cyan);">ADAMAS_PROTOCOL_V2</div>
             </div>
+            
             <p style="font-size: 10px; color: #555; margin-top: 10px; letter-spacing: 1px;">QUANTUM NODE INFRASTRUCTURE</p>
+            
+            <div class="terminal-box" style="text-align: left; margin-top: 25px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px;">
+                    <span style="color: #666;">ENVIRONMENT</span><span style="color: #fff;">POLYGON_AMOY_V2</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px;">
+                    <span style="color: #666;">CORE_STATUS</span><span id="core-status" style="color: var(--p-green);">READY_TO_SYNC</span>
+                </div>
+            </div>
+
             <button id="start-task-btn" class="btn-follow-task" onclick="switchToSocialPhase()">FOLLOW OUR SOCIAL TASK</button>
         </section>
 
         <section id="phase-social">
             <h2 style="font-family: 'Orbitron'; color: var(--p-green); font-size: 1.5rem; letter-spacing: 2px;">VERIFICATION</h2>
-            <p style="font-size: 11px; color: #666; margin: 10px 0 25px 0;">Complete syncs to receive 800 ABP allocation.</p>
+            <p style="font-size: 11px; color: #666; margin: 10px 0 25px 0;">Complete 4 syncs to receive 800 ABP allocation.</p>
 
             <div class="task-container">
-                <div class="task-card" id="card-t1">
+                <div class="task-card" id="card-t1" onclick="handleVerify('t1', 'https://t.me/ADSProtocol')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; flex-direction: column; gap: 4px;">
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">JOIN TELEGRAM CHANNEL</span>
                             <span style="font-size: 10px; color: var(--p-green);">REWARD: +200 ABP</span>
                         </div>
-                        <div id="pill-t1" class="status-pill" onclick="processTask('t1', 'https://t.me/ADSProtocol')">FOLLOW</div>
+                        <div id="pill-t1" class="status-pill">FOLLOW</div>
                     </div>
                 </div>
 
-                <div class="task-card" id="card-t2">
+                <div class="task-card" id="card-t2" onclick="handleVerify('t2', 'https://t.me/adsprotocolcommunity')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; flex-direction: column; gap: 4px;">
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">JOIN COMMUNITY GROUP</span>
                             <span style="font-size: 10px; color: var(--p-green);">REWARD: +200 ABP</span>
                         </div>
-                        <div id="pill-t2" class="status-pill" onclick="processTask('t2', 'https://t.me/adsprotocolcommunity')">FOLLOW</div>
+                        <div id="pill-t2" class="status-pill">FOLLOW</div>
                     </div>
                 </div>
 
-                <div class="task-card" id="card-t3">
+                <div class="task-card" id="card-t3" onclick="handleVerify('t3', 'https://x.com/DiamoProtocol')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; flex-direction: column; gap: 4px;">
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">FOLLOW DIAMO ON X</span>
                             <span style="font-size: 10px; color: var(--p-green);">REWARD: +200 ABP</span>
                         </div>
-                        <div id="pill-t3" class="status-pill" onclick="processTask('t3', 'https://x.com/DiamoProtocol')">FOLLOW</div>
+                        <div id="pill-t3" class="status-pill">FOLLOW</div>
                     </div>
                 </div>
 
-                <div class="task-card" id="card-t4">
+                <div class="task-card" id="card-t4" onclick="handleVerify('t4', 'https://x.com/AdamasADS')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; flex-direction: column; gap: 4px;">
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">FOLLOW ADAMAS ON X</span>
                             <span style="font-size: 10px; color: var(--p-green);">REWARD: +200 ABP</span>
                         </div>
-                        <div id="pill-t4" class="status-pill" onclick="processTask('t4', 'https://x.com/AdamasADS')">FOLLOW</div>
+                        <div id="pill-t4" class="status-pill">FOLLOW</div>
                     </div>
                 </div>
             </div>
@@ -127,84 +152,141 @@
     <script>
         let tasksVerifiedCount = 0;
         let activeWallet = null;
-        let taskStates = { t1: 'init', t2: 'init', t3: 'init', t4: 'init' };
 
-        // Handle Task Process
-        function processTask(id, link) {
-            if(!activeWallet) return alert("Connect wallet first!");
-            const pill = document.getElementById('pill-' + id);
+        const AMOY_PARAMS = {
+            chainId: '0x13882',
+            chainName: 'Polygon Amoy Testnet',
+            nativeCurrency: { name: 'POL', symbol: 'POL', decimals: 18 },
+            rpcUrls: ['https://rpc-amoy.polygon.technology'],
+            blockExplorerUrls: ['https://amoy.polygonscan.com']
+        };
 
-            // Step 1: Initial Click (Open Link)
-            if(taskStates[id] === 'init') {
-                window.open(link, "_blank");
-                taskStates[id] = 'awaiting';
-                pill.innerText = "VERIFY";
-                pill.classList.add('verify-mode');
-            } 
-            // Step 2: Verification Click (Start Timer)
-            else if(taskStates[id] === 'awaiting') {
-                taskStates[id] = 'verifying';
-                pill.classList.remove('verify-mode');
-                pill.classList.add('loading-mode');
-                
-                let secondsLeft = 10;
-                const timer = setInterval(() => {
-                    secondsLeft--;
-                    if(secondsLeft > 0) {
-                        pill.innerHTML = `<span class="sync-spinner"></span> ${secondsLeft}s`;
-                    } else {
-                        clearInterval(timer);
-                        finalizeTask(id);
-                    }
-                }, 1000);
-            }
+        window.onload = function() {
+            const savedUser = localStorage.getItem('adamas_user');
+            if(savedUser) { window.location.href = "dashboard.html"; return; }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase());
         }
 
-        function finalizeTask(id) {
-            const pill = document.getElementById('pill-' + id);
-            const card = document.getElementById('card-' + id);
-            
-            taskStates[id] = 'done';
-            pill.innerText = "VERIFIED";
-            pill.className = "status-pill"; // reset classes
-            pill.style.background = "var(--p-green)";
-            pill.style.color = "#000";
-            pill.style.borderColor = "var(--p-green)";
-            card.classList.add('verified');
-            
-            tasksVerifiedCount++;
-            if(tasksVerifiedCount >= 4) {
-                const btn = document.getElementById('wallet-btn');
-                btn.classList.remove('locked');
-                document.getElementById('lock-msg').innerText = "NODES READY - ACCESS GRANTED";
-                document.getElementById('lock-msg').style.color = "var(--p-green)";
-            }
-        }
-
-        // --- Wallet & System Functions (Unchanged) ---
-        async function handleEntry() {
-            if (!window.ethereum) return alert("Use DApp Browser");
+        async function ensureNetwork() {
+            if (!window.ethereum) return;
             try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: AMOY_PARAMS.chainId }],
+                });
+            } catch (err) {
+                if (err.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [AMOY_PARAMS],
+                    });
+                }
+            }
+        }
+
+        async function handleEntry() {
+            if (!window.ethereum) return alert("Please use Trust Wallet or MetaMask browser.");
+            try {
+                // Force permission to ensure fresh signature request
+                await window.ethereum.request({
+                    method: 'wallet_requestPermissions',
+                    params: [{ eth_accounts: {} }]
+                });
+
+                await ensureNetwork();
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
-                document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
+                
+                document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
+                
+                // Show the "Follow Social Task" button once connected
                 document.getElementById('start-task-btn').style.display = 'block';
-            } catch (e) { console.log(e); }
+                document.getElementById('core-status').innerText = "CONNECTED_WAITING_FOR_TASKS";
+
+                const snapshot = await db.ref('users/' + activeWallet).once('value');
+                if (snapshot.exists()) {
+                    localStorage.setItem('adamas_user', activeWallet);
+                    window.location.href = "dashboard.html";
+                }
+            } catch (e) { console.error(e); }
         }
 
         function switchToSocialPhase() {
+            if(!activeWallet) return alert("Please connect wallet first!");
+            
+            document.getElementById('phase-intro').classList.remove('active-phase');
             document.getElementById('phase-intro').style.display = 'none';
+            
             document.getElementById('phase-social').classList.add('active-phase');
+            document.getElementById('phase-social').style.display = 'flex';
+            window.scrollTo(0,0);
+        }
+
+        function handleVerify(id, link) {
+            if(!activeWallet) return alert("Connect wallet first!");
+            if(localStorage.getItem('adamas_task_'+id) === 'verified') return;
+            
+            window.open(link, "_blank");
+            const pill = document.getElementById('pill-' + id);
+            let secondsLeft = 12;
+            
+            const timer = setInterval(() => {
+                secondsLeft--;
+                if(secondsLeft > 0) {
+                    pill.innerHTML = `<span class="sync-spinner"></span> ${secondsLeft}s`;
+                } else {
+                    clearInterval(timer);
+                    localStorage.setItem('adamas_task_'+id, 'verified');
+                    markVerifiedUI(id);
+                    tasksVerifiedCount++;
+                    
+                    if(tasksVerifiedCount >= 4) {
+                        const btn = document.getElementById('wallet-btn');
+                        btn.classList.remove('locked');
+                        document.getElementById('lock-msg').innerText = "NODES READY - ACCESS GRANTED";
+                        document.getElementById('lock-msg').style.color = "var(--p-green)";
+                    }
+                }
+            }, 1000);
+        }
+
+        function markVerifiedUI(id) {
+            const card = document.getElementById('card-' + id);
+            const pill = document.getElementById('pill-' + id);
+            if(card && pill) {
+                pill.innerText = "VERIFIED"; pill.style.background = "var(--p-green)";
+                pill.style.color = "#000"; card.classList.add('verified');
+            }
         }
 
         async function finalRegistration() {
             if(tasksVerifiedCount < 4) return;
-            const ref = localStorage.getItem('adamas_referrer') || "DIRECT";
-            await db.ref('users/' + activeWallet).set({
-                balance: 800, wallet: activeWallet, referredBy: ref, referralCount: 0, joinedAt: new Date().toISOString()
-            });
-            localStorage.setItem('adamas_user', activeWallet);
-            window.location.href = "dashboard.html";
+            try {
+                const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                await db.ref('users/' + activeWallet).set({
+                    balance: 800,
+                    wallet: activeWallet,
+                    referredBy: referrer,
+                    referralCount: 0,
+                    joinedAt: new Date().toISOString()
+                });
+                
+                if(referrer !== "DIRECT") {
+                    const refSnap = await db.ref('users/' + referrer).once('value');
+                    if(refSnap.exists()) {
+                        let refData = refSnap.val();
+                        await db.ref('users/' + referrer).update({
+                            balance: (refData.balance || 0) + 200,
+                            referralCount: (refData.referralCount || 0) + 1
+                        });
+                    }
+                }
+                localStorage.setItem('adamas_user', activeWallet);
+                window.location.href = "dashboard.html";
+            } catch (e) { alert("Error finishing registration."); }
         }
     </script>
 </body>
