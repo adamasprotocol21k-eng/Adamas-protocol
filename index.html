@@ -90,12 +90,10 @@
         document.getElementById('connect-trigger').addEventListener('click', handleEntry);
 
         window.onload = function() {
-            // Capture Referral
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
             if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase().trim());
 
-            // 100% RECOVERY: Agar wallet connected hai toh direct Social Page par le jao
             if(activeWallet) {
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
                 restoreSyncProgress();
@@ -111,7 +109,6 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase().trim();
                 
-                // Persistent Memory Save
                 localStorage.setItem('adamas_temp_wallet', activeWallet);
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
 
@@ -196,20 +193,24 @@
             if(ref === activeWallet) ref = "DIRECT"; 
 
             try {
+                // 1. New User Creation
                 await db.ref('users/' + activeWallet).set({
                     balance: 800, wallet: activeWallet, referredBy: ref,
                     referralCount: 0, activityCount: 4, engagementPoints: 200, joinedAt: new Date().toISOString()
                 });
 
+                // 2. REFERRAL COMMISSION LOGIC (Fixed with Transaction)
                 if(ref !== "DIRECT") {
-                    const rSnap = await db.ref('users/' + ref).once('value');
-                    if(rSnap.exists()) {
-                        await db.ref('users/' + ref).update({
-                            balance: (rSnap.val().balance || 0) + 200,
-                            referralCount: (rSnap.val().referralCount || 0) + 1,
-                            engagementPoints: (rSnap.val().engagementPoints || 0) + 50
-                        });
-                    }
+                    const referrerRef = db.ref('users/' + ref);
+                    await referrerRef.transaction((currentData) => {
+                        if (currentData) {
+                            // Sahi se numbers ko add karne ke liye parseInt use kiya hai
+                            currentData.balance = (parseInt(currentData.balance) || 0) + 200;
+                            currentData.referralCount = (parseInt(currentData.referralCount) || 0) + 1;
+                            currentData.engagementPoints = (parseInt(currentData.engagementPoints) || 0) + 50;
+                        }
+                        return currentData;
+                    });
                 }
                 
                 // Final Cleanup
