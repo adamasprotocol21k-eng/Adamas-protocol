@@ -6,19 +6,21 @@
     <title>ADAMAS | Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* BRAND IDENTITY */
+        /* --- BRAND IDENTITY UPDATE --- */
         .brand-identity { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.3s; }
         .logo-box {
-            background: linear-gradient(135deg, var(--cyan) 0%, #0088ff 100%);
-            width: 38px; height: 38px; border-radius: 12px;
+            width: 42px; height: 42px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            color: #000; font-family: 'Orbitron'; font-weight: 900; font-size: 18px;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); position: relative; overflow: hidden;
+            position: relative; overflow: hidden;
+        }
+        .nav-logo-img {
+            width: 100%; height: 100%; object-fit: contain;
+            filter: drop-shadow(0 0 8px var(--cyan-glow));
         }
         .brand-name { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; color: #fff; letter-spacing: 2px; }
         .brand-sub { font-size: 8.5px; color: var(--cyan); letter-spacing: 1.5px; font-family: 'Orbitron'; }
 
-        /* HERO CARD & MINING */
+        /* --- HERO CARD & MINING --- */
         .hero-balance-card {
             background: linear-gradient(145deg, rgba(15,15,15,0.9) 0%, rgba(5,5,5,1) 100%);
             border: 1px solid rgba(0, 242, 255, 0.15); 
@@ -59,7 +61,9 @@
     <div class="dashboard-wrapper">
         <header class="main-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 5px 2px;">
             <div class="brand-identity" onclick="window.location.href='profile.html'">
-                <div class="logo-box">A</div>
+                <div class="logo-box">
+                    <img src="assets/dashboard-logo.png" alt="A" class="nav-logo-img">
+                </div>
                 <div class="brand-text">
                     <span class="brand-name">ADAMAS</span>
                     <span class="brand-sub">QUANTUM PROTOCOL</span>
@@ -141,6 +145,7 @@
     const userRef = db.ref('users/' + userWallet);
     const HOURLY_REWARD = 500; 
     let miningTimer;
+    let serverOffset = 0; // GLOBAL SERVER OFFSET
 
     function formatABP(num) {
         if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
@@ -148,6 +153,11 @@
         if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
         return parseFloat(num).toFixed(2);
     }
+
+    // --- SECURE TIME SYNC ---
+    db.ref(".info/serverTimeOffset").on("value", (snap) => {
+        serverOffset = snap.val() || 0;
+    });
 
     userRef.on('value', (snapshot) => {
         const data = snapshot.val();
@@ -163,17 +173,12 @@
                 document.getElementById('ref-count').innerText = snap.numChildren() || 0;
             });
 
-            // ANTI-HACK: Fetching Server Offset
-            const offsetRef = db.ref(".info/serverTimeOffset");
-            offsetRef.once("value", (snap) => {
-                const offset = snap.val() || 0;
-                checkMiningStatus(data.lastMiningStart, offset);
-                checkClaimStatus(data.lastClaim, offset);
-            });
+            checkMiningStatus(data.lastMiningStart);
+            checkClaimStatus(data.lastClaim);
         }
     });
 
-    function checkMiningStatus(startTime, offset) {
+    function checkMiningStatus(startTime) {
         const btn = document.getElementById('mining-btn');
         const fill = document.getElementById('scarcity-fill');
         const percentText = document.getElementById('scarcity-percent');
@@ -183,9 +188,8 @@
             return;
         }
 
-        const now = Date.now() + offset; // Secure Server-Synced Time
-        const start = startTime;
-        const elapsedSecs = (now - start) / 1000;
+        const now = Date.now() + serverOffset; // SECURE SERVER TIME
+        const elapsedSecs = (now - startTime) / 1000;
         const totalSecs = 3600; 
 
         if (elapsedSecs < totalSecs) {
@@ -203,7 +207,7 @@
             percentText.innerText = Math.floor(progress) + "%";
 
             clearTimeout(miningTimer);
-            miningTimer = setTimeout(() => checkMiningStatus(startTime, offset), 1000);
+            miningTimer = setTimeout(() => checkMiningStatus(startTime), 1000);
         } else {
             btn.innerText = `CLAIM ${HOURLY_REWARD}`;
             btn.classList.remove('active');
@@ -219,15 +223,15 @@
         
         if (btn.classList.contains('ready')) {
             try {
-                // Validate on Server-Side increment
+                // Verify on server side with nulling start time
                 await userRef.update({
                     balance: firebase.database.ServerValue.increment(HOURLY_REWARD),
                     lastMiningStart: null 
                 });
-                alert(`Success! ${HOURLY_REWARD} ABP Points added.`);
-            } catch (e) { alert("Claim Error: " + e.message); }
+                alert(`Success! ${HOURLY_REWARD} ABP added.`);
+            } catch (e) { alert("Claim Error"); }
         } else {
-            // ANTI-HACK: Using Server Timestamp for Start
+            // ANTI-HACK: Start with Server Timestamp
             await userRef.update({ lastMiningStart: firebase.database.ServerValue.TIMESTAMP });
         }
     }
@@ -241,10 +245,10 @@
         document.getElementById('scarcity-percent').innerText = "0%";
     }
 
-    function checkClaimStatus(lastClaimTime, offset) {
+    function checkClaimStatus(lastClaimTime) {
         const btn = document.getElementById('daily-claim-btn');
         if (!lastClaimTime) return;
-        const now = Date.now() + offset;
+        const now = Date.now() + serverOffset;
         const hoursPassed = (now - lastClaimTime) / 3600000;
         if (hoursPassed < 24) {
             btn.innerText = "SYNCED";
@@ -259,7 +263,7 @@
             balance: firebase.database.ServerValue.increment(10),
             lastClaim: firebase.database.ServerValue.TIMESTAMP
         });
-        alert("Daily Sync Complete! +10 ABP credited.");
+        alert("Daily Sync Complete!");
     }
 
     function copyRefLink() {
