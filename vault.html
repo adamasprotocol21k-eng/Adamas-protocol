@@ -6,103 +6,121 @@
     <title>ADAMAS | The Vault</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .vault-wrapper { padding-bottom: 120px; }
+        /* BRAND IDENTITY SYNC */
+        .brand-identity { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 15px; }
+        .nav-logo-img { width: 35px; height: 35px; filter: drop-shadow(0 0 8px var(--cyan-glow)); }
+
+        .vault-wrapper { padding: 15px; padding-bottom: 120px; }
         .vault-container {
             text-align: center; padding: 30px 20px;
             background: radial-gradient(circle at center, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
             border-radius: 30px; border: 1px solid var(--glass-border);
-            margin-bottom: 25px; position: relative;
+            margin-bottom: 25px; position: relative; overflow: hidden;
         }
-        .network-badge {
-            position: absolute; top: 15px; right: 15px;
-            background: rgba(130, 71, 229, 0.2); border: 1px solid #8247e5;
-            color: #fff; font-size: 8px; padding: 4px 8px; border-radius: 20px;
-            font-family: 'Orbitron'; letter-spacing: 1px;
+        
+        /* SHIMMER EFFECT FOR UNLOCKED STATE */
+        .unlocked-shimmer {
+            animation: shimmer 2s infinite linear;
+            background: linear-gradient(to right, transparent, rgba(0, 242, 255, 0.1), transparent);
+            background-size: 200% 100%;
         }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
         .vault-lock-icon {
             font-size: 3.5rem; margin-bottom: 15px;
             filter: drop-shadow(0 0 15px var(--cyan-glow));
-            animation: pulse-glow 2s infinite;
+            transition: 0.5s;
         }
         .scarcity-tag {
             background: var(--neon-gold); color: #000;
             font-family: 'Orbitron'; font-weight: 900;
-            font-size: 10px; padding: 4px 12px; border-radius: 6px;
-            letter-spacing: 1px;
+            font-size: 9px; padding: 4px 12px; border-radius: 6px;
+            letter-spacing: 1px; display: inline-block;
         }
+
+        /* ELIGIBILITY CHECKLIST */
         .check-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 18px; background: rgba(255,255,255,0.02);
             border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--glass-border);
-        }
-        .check-label { font-size: 13px; color: #aaa; font-weight: 600; }
-        .check-status { font-family: 'Orbitron'; font-size: 11px; font-weight: bold; }
-        .status-completed { color: var(--p-green); text-shadow: 0 0 10px rgba(173, 255, 47, 0.3); }
-        .status-waiting { color: #555; }
-
-        .wallet-card {
-            margin-top: 20px; padding: 20px;
-            background: rgba(0,0,0,0.3); border: 1px dashed #444;
-            border-radius: 20px; text-align: center;
-        }
-        .btn-lock {
-            background: #222; color: #666; cursor: not-allowed;
-            border: 1px solid #333; padding: 12px 20px; width: 100%;
-            border-radius: 10px; font-family: 'Orbitron'; font-size: 10px;
             transition: 0.3s;
         }
+        .check-label { font-size: 11px; color: #777; font-family: 'Orbitron'; letter-spacing: 0.5px; }
+        .check-status { font-family: 'Orbitron'; font-size: 10px; font-weight: bold; }
+        .status-completed { color: var(--p-green); text-shadow: 0 0 8px rgba(173, 255, 47, 0.4); }
+        .status-waiting { color: #444; }
 
-        @keyframes pulse-glow {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
+        .btn-lock {
+            background: rgba(255,255,255,0.05); color: #555; cursor: not-allowed;
+            border: 1px solid rgba(255,255,255,0.05); padding: 14px; width: 100%;
+            border-radius: 15px; font-family: 'Orbitron'; font-size: 10px;
+            font-weight: 900; transition: 0.4s;
+        }
+        .btn-unlocked {
+            background: var(--cyan) !important; color: #000 !important;
+            cursor: pointer !important; box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
         }
     </style>
 </head>
 <body>
 
     <div class="vault-wrapper">
-        <header class="premium-card" style="text-align: center; border-color: var(--cyan);">
-            <div class="scarcity-tag">GENESIS PHASE V1</div>
-            <h1 style="font-family: 'Orbitron'; font-size: 1.6rem; letter-spacing: 3px; margin-top: 15px;">THE <span style="color: var(--cyan);">VAULT</span></h1>
-            <p style="font-size: 10px; color: #555; margin-top: 5px; letter-spacing: 1px;">FORGING DECENTRALIZED ASSETS</p>
+        <div class="brand-identity">
+            <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
+        </div>
+
+        <header class="premium-card" style="text-align: center; border-color: var(--cyan); margin-bottom: 20px;">
+            <div class="scarcity-tag">GENESIS PROTOCOL V1</div>
+            <h1 style="font-family: 'Orbitron'; font-size: 1.5rem; letter-spacing: 3px; margin-top: 15px; color: #fff;">THE <span style="color: var(--cyan);">VAULT</span></h1>
+            <p style="font-size: 8px; color: #555; margin-top: 5px; letter-spacing: 2px; font-family: 'Orbitron';">ENCRYPTED ASSET FORGING</p>
         </header>
 
-        <section class="vault-container">
-            <div class="network-badge">🟣 POLYGON_AMOY</div>
+        <section class="vault-container" id="vault-main-box">
+            <div style="position: absolute; top: 15px; right: 15px; background: rgba(130, 71, 229, 0.15); border: 1px solid #8247e5; color: #fff; font-size: 7px; padding: 4px 10px; border-radius: 20px; font-family: 'Orbitron';">POLYGON_AMOY</div>
+            
             <div class="vault-lock-icon" id="vault-icon">🔒</div>
-            <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 12px; color: var(--neon-gold); margin-bottom: 25px; letter-spacing: 2px;">MINTING ENCRYPTED</div>
+            <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold); margin-bottom: 25px; letter-spacing: 2px;">PROTOCOL_LOCKED</div>
             
             <div style="text-align: left;">
-                <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'Orbitron'; margin-bottom: 10px;">
-                    <span style="color: #666;">COMMUNITY TARGET: <span style="color:#fff;" id="target-label">21K ADS</span></span>
+                <div style="display: flex; justify-content: space-between; font-size: 9px; font-family: 'Orbitron'; margin-bottom: 8px;">
+                    <span style="color: #666;">COMMUNITY SYNC: <span style="color:#fff;" id="target-label">21K ADS</span></span>
                     <span id="genesis-percent" style="color: var(--cyan);">0%</span>
                 </div>
-                <div style="height: 14px; background: #000; border-radius: 7px; overflow: hidden;">
-                    <div id="genesis-fill" style="width: 0%; height: 100%; background: var(--cyan); transition: 1s ease-in-out;"></div>
+                <div style="height: 10px; background: #000; border-radius: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                    <div id="genesis-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--p-green)); transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);"></div>
                 </div>
-                <p style="font-size: 9px; color: #444; margin-top: 15px; text-align: center; line-height: 1.6; font-family: 'Orbitron';">
-                    PROJECT DEPLOYMENT: <span style="color:#8247e5;">POLYGON LAYER-2</span><br>
-                    MAINNET UNLOCKS AT <span style="color: var(--cyan);">100% PROTOCOL SYNC.</span>
+                <p style="font-size: 8px; color: #444; margin-top: 15px; text-align: center; line-height: 1.6; font-family: 'Orbitron';">
+                    MAINNET MINTING ACTIVATES AT <span style="color: var(--cyan);">100% SYNC.</span>
                 </p>
             </div>
 
-            <div class="wallet-card" id="wallet-section">
-                <p style="font-size: 9px; color: #777; margin-bottom: 10px; font-family: 'Orbitron';">ADS TOKEN MAINNET ADDRESS</p>
-                <button class="btn-lock" id="wallet-btn" disabled>🔒 LINK WALLET (LOCKED)</button>
+            <div style="margin-top: 25px;">
+                <p style="font-size: 8px; color: #555; margin-bottom: 12px; font-family: 'Orbitron'; letter-spacing: 1px;">WITHDRAWAL_ADDRESS_LINK</p>
+                <button class="btn-lock" id="wallet-btn" disabled>LOCKED BY PROTOCOL</button>
             </div>
         </section>
 
-        <section class="premium-card" style="border-color: rgba(255,204,0,0.1);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold); letter-spacing: 1px;">AIRDROP PATHWAY</h3>
-                <span id="target-rank-name" style="font-size: 9px; font-family: 'Orbitron'; color: #fff; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px;">VALIDATOR ELIGIBILITY</span>
+        <section class="premium-card" style="border-color: rgba(255,204,0,0.15); background: rgba(255,204,0,0.02);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-gold); letter-spacing: 1px;">ELIGIBILITY_LEDGER</h3>
+                <span id="eligibility-status" style="font-size: 8px; font-family: 'Orbitron'; color: #ff3366; background: rgba(255,51,102,0.1); padding: 4px 10px; border-radius: 6px;">NOT ELIGIBLE</span>
             </div>
             
             <div id="rank-checklist">
-                <div class="check-item"><span class="check-label">ADS Points</span><span id="check-points" class="check-status status-waiting">0/5,000</span></div>
-                <div class="check-item"><span class="check-label">Active Nodes</span><span id="check-refs" class="check-status status-waiting">0/5</span></div>
-                <div class="check-item"><span class="check-label">Uptime Streak</span><span id="check-streak" class="check-status status-waiting">0/7 DAYS</span></div>
+                <div class="check-item">
+                    <span class="check-label">MINING VOLUME</span>
+                    <span id="check-points" class="check-status status-waiting">0/5,000 ABP</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-label">ACTIVE NODES (L1)</span>
+                    <span id="check-refs" class="check-status status-waiting">0/3 NODES</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-label">LOYALTY STREAK</span>
+                    <span id="check-streak" class="check-status status-waiting">0/5 DAYS</span>
+                </div>
             </div>
+            <p style="font-size: 8px; color: #444; text-align: center; margin-top: 12px; font-family: 'Orbitron';">Complete all parameters for Genesis Airdrop.</p>
         </section>
 
         <nav class="bottom-nav">
@@ -122,34 +140,54 @@
         const userWallet = localStorage.getItem('adamas_user');
         if(!userWallet) { window.location.href = "index.html"; }
 
-        // User Data Sync Logic with Anti-Drift
-        db.ref('users/' + userWallet).on('value', snap => {
+        const userRef = db.ref('users/' + userWallet);
+
+        // Sync Personal Eligibility
+        userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
-                // 1. Points (ADS) - Formatting fixed
+                let criteriaMet = 0;
+
+                // 1. Points (Need 5000)
                 const balance = Math.floor(parseFloat(data.balance) || 0);
                 const ptEl = document.getElementById('check-points');
-                ptEl.innerText = `${balance.toLocaleString()}/5,000`;
-                ptEl.className = balance >= 5000 ? "check-status status-completed" : "check-status status-waiting";
+                ptEl.innerText = `${balance.toLocaleString()}/5,000 ABP`;
+                if(balance >= 5000) { ptEl.className = "check-status status-completed"; criteriaMet++; }
 
-                // 2. Streak
+                // 2. Streak (Need 5)
                 const streak = parseInt(data.streak) || 1;
                 const streakEl = document.getElementById('check-streak');
-                streakEl.innerText = `${streak}/7 DAYS`;
-                streakEl.className = streak >= 7 ? "check-status status-completed" : "check-status status-waiting";
+                streakEl.innerText = `${streak}/5 DAYS`;
+                if(streak >= 5) { streakEl.className = "check-status status-completed"; criteriaMet++; }
 
-                // 3. Referral Nodes
-                const count = parseInt(data.referralCount) || 0;
-                const refEl = document.getElementById('check-refs');
-                refEl.innerText = `${count}/5`;
-                refEl.className = count >= 5 ? "check-status status-completed" : "check-status status-waiting";
+                // 3. Referral Nodes (Need 3)
+                // Fetching real-time L1 count
+                db.ref('users').orderByChild('referredBy').equalTo(userWallet.toLowerCase()).once('value', refSnap => {
+                    const count = refSnap.numChildren() || 0;
+                    const refEl = document.getElementById('check-refs');
+                    refEl.innerText = `${count}/3 NODES`;
+                    if(count >= 3) { 
+                        refEl.className = "check-status status-completed"; 
+                        criteriaMet++;
+                    }
+
+                    // Update Global Eligibility Status
+                    const statusBadge = document.getElementById('eligibility-status');
+                    if(criteriaMet >= 3) {
+                        statusBadge.innerText = "VERIFIED ELIGIBLE";
+                        statusBadge.style.color = "var(--p-green)";
+                        statusBadge.style.background = "rgba(173, 255, 47, 0.1)";
+                    } else {
+                        statusBadge.innerText = "INCOMPLETE DATA";
+                    }
+                });
             }
         });
 
-        // Global Target Logic - Stable Sync
+        // Global Sync for Protocol Unlock
         db.ref('global_stats/total_forged').on('value', snap => {
             const total = parseFloat(snap.val()) || 0; 
-            const target = 21000;
+            const target = 21000; // Community Target
             const percent = Math.min((total / target) * 100, 100).toFixed(1);
             
             document.getElementById('genesis-percent').innerText = percent + "%";
@@ -157,18 +195,15 @@
             
             if(percent >= 100) {
                 document.getElementById('vault-icon').innerText = "🔓";
+                document.getElementById('vault-main-box').classList.add('unlocked-shimmer');
                 const statusText = document.getElementById('vault-status-text');
-                statusText.innerText = "ADS MINTING LIVE";
+                statusText.innerText = "PROTOCOL_UNLOCKED";
                 statusText.style.color = "var(--p-green)";
 
                 const walletBtn = document.getElementById('wallet-btn');
                 walletBtn.disabled = false;
-                walletBtn.innerText = "🔗 LINK ADS MAINNET WALLET";
-                walletBtn.style.background = "var(--cyan)";
-                walletBtn.style.color = "#000";
-                walletBtn.style.cursor = "pointer";
-                walletBtn.style.border = "none";
-                walletBtn.style.boxShadow = "0 0 15px var(--cyan-glow)";
+                walletBtn.innerText = "LINK MAINNET WALLET";
+                walletBtn.className = "btn-lock btn-unlocked";
             }
         });
     </script>
