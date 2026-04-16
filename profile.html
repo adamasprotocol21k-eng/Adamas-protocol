@@ -6,112 +6,157 @@
     <title>ADAMAS | Identity Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .brand-identity { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        .nav-logo-img { width: 35px; height: 35px; filter: drop-shadow(0 0 8px var(--cyan-glow)); }
-
-        .profile-wrapper { padding: 15px; padding-bottom: 120px; }
+        /* Audit: Added Smooth Fade-in & Profile Protection */
+        .profile-wrapper { padding-bottom: 140px; animation: fadeIn 0.8s ease-out; }
 
         .rank-card {
-            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(5,5,5,1) 100%);
-            border: 1px solid var(--glass-border); border-radius: 30px; padding: 30px;
+            background: linear-gradient(145deg, rgba(15,15,20,0.9) 0%, rgba(5,5,5,1) 100%);
+            border: 1px solid var(--glass-border); border-radius: 35px; padding: 35px 25px;
             text-align: center; position: relative; overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+        }
+
+        /* Subtle Glow for the Card */
+        .rank-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0,242,255,0.03) 0%, transparent 70%);
+            pointer-events: none;
         }
         
         .rank-badge {
-            width: 85px; height: 85px; margin: 0 auto 15px;
-            background: rgba(255,255,255,0.03); border: 2px solid var(--cyan);
+            width: 100px; height: 100px; margin: 0 auto 15px;
+            background: rgba(255,255,255,0.02); border: 2px solid var(--cyan);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 2.2rem; box-shadow: 0 0 25px var(--cyan-glow);
+            font-size: 2.8rem; box-shadow: 0 0 30px var(--cyan-glow);
             transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; z-index: 2;
         }
 
-        /* GAUGE METER */
-        .gauge-container { position: relative; width: 180px; height: 100px; margin: 20px auto 0; overflow: hidden; }
-        .gauge-svg { width: 100%; height: 100%; }
+        /* Gauge Enhancements */
+        .gauge-container { position: relative; width: 220px; height: 130px; margin: 15px auto 0; overflow: hidden; }
+        .gauge-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
         .gauge-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 10; stroke-linecap: round; }
-        .gauge-track { fill: none; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 251; stroke-dashoffset: 251; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .gauge-track { fill: none; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 251; stroke-dashoffset: 251; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); }
         
         .needle {
-            position: absolute; bottom: 5px; left: 50%; width: 3px; height: 60px;
-            background: #fff; transform-origin: bottom center;
-            transform: translateX(-50%) rotate(-90deg); transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute; bottom: 15px; left: 50%; width: 3px; height: 75px;
+            background: linear-gradient(to top, #fff, var(--cyan)); transform-origin: bottom center;
+            transform: translateX(-50%) rotate(-90deg); transition: 2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px; z-index: 4;
         }
-        .needle-pivot { position: absolute; bottom: -4px; left: 50%; width: 10px; height: 10px; background: #fff; border-radius: 50%; transform: translateX(-50%); }
+        .needle::before {
+            content: ''; position: absolute; top: -8px; left: 50%;
+            transform: translateX(-50%); border-left: 5px solid transparent;
+            border-right: 5px solid transparent; border-bottom: 10px solid #fff;
+        }
+        .needle-pivot {
+            position: absolute; bottom: 5px; left: 50%; width: 16px; height: 16px;
+            background: #fff; border-radius: 50%; transform: translate(-50%, 0);
+            box-shadow: 0 0 15px rgba(255,255,255,0.5); z-index: 5;
+        }
 
-        .score-display { margin-top: -5px; }
-        .score-value { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; color: #fff; display: block; }
-        .score-label { font-size: 8px; color: #555; font-family: 'Orbitron'; letter-spacing: 1px; }
+        .score-display { margin-top: -15px; position: relative; z-index: 10; }
+        .score-value { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .score-label { font-size: 8px; color: #555; font-family: 'Orbitron'; letter-spacing: 2px; text-transform: uppercase; }
 
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
         .stat-box { 
-            background: rgba(255,255,255,0.02); padding: 15px; border-radius: 20px; 
+            background: rgba(255,255,255,0.03); padding: 18px 10px; border-radius: 22px; 
             border: 1px solid var(--glass-border); text-align: center;
+            transition: 0.3s;
         }
+        .stat-box:active { transform: scale(0.95); background: rgba(255,255,255,0.05); }
 
         .leaderboard-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 15px; background: rgba(255,255,255,0.02);
-            border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border);
+            padding: 16px 20px; background: rgba(255,255,255,0.02);
+            border-radius: 20px; margin-bottom: 12px; border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
         }
-        .rank-num { font-family: 'Orbitron'; font-weight: 900; color: var(--cyan); font-size: 12px; }
-        .rank-addr { font-size: 10px; color: #777; font-family: monospace; }
-        .rank-pts { font-family: 'Orbitron'; font-size: 11px; color: #fff; }
+        
+        .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 35px; color: var(--cyan); font-size: 14px; }
+        .rank-addr { font-size: 11px; color: #888; flex: 1; margin-left: 10px; font-family: 'Orbitron'; letter-spacing: 0.5px; }
+        .rank-pts { font-family: 'Orbitron'; font-size: 12px; color: #fff; font-weight: bold; background: rgba(0,242,255,0.1); padding: 4px 10px; border-radius: 8px; }
 
         .logout-btn {
-            width: 100%; margin-top: 30px; background: rgba(255,51,102,0.05); 
-            border: 1px solid rgba(255,51,102,0.2); color: #ff3366; padding: 12px; 
-            border-radius: 12px; font-family: 'Orbitron'; font-size: 9px; cursor: pointer;
+            width: 100%; margin-top: 35px; background: rgba(255,255,255,0.02); 
+            border: 1px solid rgba(255,255,255,0.05); color: #444; padding: 18px; 
+            border-radius: 20px; font-family: 'Orbitron'; font-size: 10px;
+            letter-spacing: 3px; cursor: pointer; transition: 0.3s;
         }
+        .logout-btn:hover { color: #ff3e3e; border-color: rgba(255,62,62,0.2); background: rgba(255,62,62,0.02); }
+
+        /* Smooth Entry Animation */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="profile-wrapper">
-        <div class="brand-identity">
-            <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
-        </div>
+        <header style="text-align: center; margin-bottom: 30px;">
+            <div style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; letter-spacing: 4px; margin-bottom: 8px; text-shadow: 0 0 10px var(--cyan-glow);">PROTOCOL_IDENTITY</div>
+            <p id="user-wallet-full" style="font-size: 10px; color: #555; word-break: break-all; font-family: monospace; letter-spacing: 0.5px;">0x...</p>
+        </header>
 
         <section class="rank-card">
             <div id="rank-glow" class="rank-badge">🎖️</div>
-            <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; margin-bottom: 5px; font-size: 1.1rem;">SYNCING...</h2>
+            <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; margin-bottom: 10px; font-size: 1.3rem; letter-spacing: 1.5px; text-transform: uppercase;">INITIALIZING...</h2>
             
             <div class="gauge-container">
                 <svg class="gauge-svg" viewBox="0 0 100 60">
                     <path class="gauge-bg" d="M10 50 A40 40 0 0 1 90 50" />
-                    <path id="gauge-fill" class="gauge-track" d="M10 50 A40 40 0 0 1 90 50" stroke="var(--cyan)" />
+                    <path id="gauge-fill" class="gauge-track" d="M10 50 A40 40 0 0 1 90 50" stroke="#ff3e3e" />
                 </svg>
                 <div id="gauge-needle" class="needle"></div>
                 <div class="needle-pivot"></div>
             </div>
 
             <div class="score-display">
-                <span id="credit-score-val" class="score-value">000</span>
-                <span class="score-label">LOYALTY ELIGIBILITY SCORE</span>
+                <span id="credit-score-val" class="score-value">300</span>
+                <span class="score-label">LOYALTY_SYNC_SCORE</span>
+                <div id="score-trend" style="font-family: 'Orbitron'; font-size: 9px; margin-top: 8px;">
+                    <span style="color: #ff3e3e; letter-spacing: 1px;">▼ ANALYZING STATUS...</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+                <p id="eligibility-note" style="font-size: 8px; color: #444; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase; letter-spacing: 1px;">
+                    Min 550 Score & 5 Refs for $ADS Claim
+                </p>
             </div>
         </section>
 
         <div class="stat-grid">
             <div class="stat-box">
-                <span style="font-size: 8px; color: #555; font-family: 'Orbitron';">TOTAL ABP</span>
-                <span id="stat-balance" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0</span>
+                <span style="font-size: 8px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 8px; letter-spacing: 1px;">ABP POINTS</span>
+                <span id="stat-balance" style="font-family: 'Orbitron'; font-size: 15px; font-weight: 900; color: #fff;">0.00</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 8px; color: #555; font-family: 'Orbitron';">NODES</span>
-                <span id="stat-refs" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0</span>
+                <span style="font-size: 8px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 8px; letter-spacing: 1px;">NETWORK NODES</span>
+                <span id="stat-refs" style="font-family: 'Orbitron'; font-size: 15px; font-weight: 900; color: #fff;">0</span>
+            </div>
+            <div class="stat-box">
+                <span style="font-size: 8px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 8px; letter-spacing: 1px;">ACTIVITY</span>
+                <span id="stat-activity" style="font-family: 'Orbitron'; font-size: 13px; font-weight: 900; color: var(--p-green);">ONLINE</span>
+            </div>
+            <div class="stat-box">
+                <span style="font-size: 8px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 8px; letter-spacing: 1px;">ENGAGEMENT</span>
+                <span id="stat-social" style="font-family: 'Orbitron'; font-size: 15px; font-weight: 900; color: #fff;">0%</span>
             </div>
         </div>
 
-        <section class="leaderboard-section" style="margin-top: 30px;">
-            <h3 style="font-family: 'Orbitron'; font-size: 10px; color: #fff; letter-spacing: 2px; margin-bottom: 15px;">GLOBAL_LEADERBOARD</h3>
+        <section class="leaderboard-section" style="margin-top: 40px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 12px; color: #fff; letter-spacing: 2px;">GLOBAL_RANKING</h3>
+                <span style="font-size: 9px; color: var(--p-green); font-family: 'Orbitron'; letter-spacing: 1px; font-weight: bold;">LIVE FEED</span>
+            </div>
             <div id="leaderboard-container"></div>
         </section>
 
-        <button class="logout-btn" onclick="logout()">TERMINATE_SESSION</button>
+        <button class="logout-btn" onclick="logout()">TERMINATE SESSION</button>
 
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item">🏠 HOME</a>
-            <a href="vault.html" class="nav-item">🔒 VAULT</a>
             <a href="missions.html" class="nav-item">⚡ TASKS</a>
             <a href="referral.html" class="nav-item">👥 NETWORK</a>
             <a href="profile.html" class="nav-item active">🏆 RANK</a>
@@ -125,72 +170,132 @@
     <script>
         const userWallet = localStorage.getItem('adamas_user');
 
+        function formatABP(num) {
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return parseFloat(num).toFixed(2);
+        }
+
         window.onload = () => {
             if(!userWallet) window.location.href = "index.html";
-            
-            db.ref('users/' + userWallet.toLowerCase()).on('value', snap => {
-                const data = snap.val();
+            document.getElementById('user-wallet-full').innerText = userWallet;
+
+            db.ref('users/' + userWallet.toLowerCase()).on('value', (snapshot) => {
+                const data = snapshot.val();
                 if(data) {
-                    document.getElementById('stat-balance').innerText = Math.floor(data.balance || 0);
+                    document.getElementById('stat-balance').innerText = formatABP(data.balance || 0);
                     
-                    // Fetch real L1 Node Count
-                    db.ref('users').orderByChild('referredBy').equalTo(userWallet.toLowerCase()).once('value', refSnap => {
-                        const refs = refSnap.numChildren() || 0;
-                        document.getElementById('stat-refs').innerText = refs;
-                        calculateLoyaltyScore(data, refs);
-                    });
+                    let tasksDone = 0;
+                    for(let i=1; i<=4; i++) {
+                        if(localStorage.getItem('adamas_task_t'+i) === 'verified') tasksDone++;
+                    }
+                    const engagement = Math.round((tasksDone / 4) * 100);
+                    document.getElementById('stat-social').innerText = engagement + "%";
+                    document.getElementById('stat-refs').innerText = data.referralCount || 0;
+
+                    calculateAdvanceScore(data, engagement);
+                    updateRankUI(data);
                 }
             });
             loadLeaderboard();
         };
 
-        function calculateLoyaltyScore(data, refs) {
-            let baseScore = 300;
-            // Reward for balance (max 200 pts)
-            let balancePts = Math.min((data.balance / 5000) * 200, 200);
-            // Reward for nodes (max 300 pts)
-            let nodePts = Math.min(refs * 60, 300);
-            // Reward for streak (max 100 pts)
-            let streakPts = Math.min((data.streak || 0) * 20, 100);
-
-            let total = Math.floor(baseScore + balancePts + nodePts + streakPts);
-            updateGauge(total);
-            updateRankTitle(total, data.role);
-        }
-
-        function updateGauge(score) {
-            document.getElementById('credit-score-val').innerText = score;
-            const percent = (score - 300) / 600;
-            const rotation = (percent * 180) - 90;
-            document.getElementById('gauge-needle').style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+        function calculateAdvanceScore(data, engagement) {
+            const minScore = 300;
+            const maxScore = 900;
+            const refs = data.referralCount || 0;
             
-            const fill = document.getElementById('gauge-fill');
-            fill.style.strokeDashoffset = 251 - (percent * 125);
-            fill.style.stroke = score > 700 ? "var(--p-green)" : (score > 500 ? "var(--cyan)" : "#ff3366");
+            let socialPoints = Math.min(refs * 60, 300); 
+            let miningPoints = (engagement / 100) * 200;
+            let stabilityPoints = 100;
+
+            const lastActive = data.joinedAt ? new Date(data.joinedAt).getTime() : Date.now(); 
+            const hoursSince = (Date.now() - lastActive) / (1000 * 60 * 60);
+            
+            if(hoursSince > 24) {
+                stabilityPoints -= Math.min(hoursSince * 0.5, 100);
+                document.getElementById('score-trend').innerHTML = `<span style="color: #ff3e3e; letter-spacing: 1px;">▼ DECAYING (-${Math.round(hoursSince*0.1)})</span>`;
+            } else {
+                document.getElementById('score-trend').innerHTML = `<span style="color: var(--p-green); letter-spacing: 1px;">▲ STABLE (+12)</span>`;
+            }
+
+            let totalScore = minScore + socialPoints + miningPoints + stabilityPoints;
+
+            // 55% BARRIER CHECK (Strict Compliance)
+            if (refs < 5 && totalScore > 550) {
+                totalScore = 550;
+            }
+
+            totalScore = Math.floor(Math.min(totalScore, maxScore));
+
+            const scoreVal = document.getElementById('credit-score-val');
+            const gaugeFill = document.getElementById('gauge-fill');
+            const needle = document.getElementById('gauge-needle');
+            
+            scoreVal.innerText = totalScore;
+
+            const percent = (totalScore - 300) / (900 - 300);
+            const rotation = (percent * 180) - 90;
+            needle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+
+            const offset = 251 - (percent * 125);
+            gaugeFill.style.strokeDashoffset = offset;
+
+            // Deep Audit: Adaptive Colors
+            if(totalScore >= 750) {
+                gaugeFill.style.stroke = "var(--p-green)";
+                scoreVal.style.color = "var(--p-green)";
+                scoreVal.style.textShadow = "0 0 15px rgba(173, 255, 47, 0.4)";
+            } else if (totalScore >= 550) {
+                gaugeFill.style.stroke = "var(--cyan)";
+                scoreVal.style.color = "var(--cyan)";
+                scoreVal.style.textShadow = "0 0 15px var(--cyan-glow)";
+            } else {
+                gaugeFill.style.stroke = "#ff3e3e";
+                scoreVal.style.color = "#ff3e3e";
+                scoreVal.style.textShadow = "0 0 15px rgba(255, 62, 62, 0.4)";
+            }
         }
 
-        function updateRankTitle(score, role) {
+        function updateRankUI(data) {
             const title = document.getElementById('rank-title');
             const badge = document.getElementById('rank-glow');
-            if(role === "FOUNDER") { title.innerText = "DIAMOND FOUNDER"; badge.innerText = "💎"; }
-            else if(score > 750) { title.innerText = "ELITE VALIDATOR"; badge.innerText = "💠"; }
-            else if(score > 550) { title.innerText = "ACTIVE NODE"; badge.innerText = "⚡"; }
-            else { title.innerText = "BRONZE CITIZEN"; badge.innerText = "🥉"; }
+            const score = parseInt(document.getElementById('credit-score-val').innerText);
+
+            if(data.role === "FOUNDER") {
+                title.innerText = "DIAMOND FOUNDER";
+                badge.innerText = "💎";
+                badge.style.borderColor = "var(--cyan)";
+            } else if(score >= 750) {
+                title.innerText = "GOLD VALIDATOR";
+                badge.innerText = "🥇";
+                badge.style.borderColor = "var(--p-green)";
+            } else if(score >= 550) {
+                title.innerText = "SILVER NODE";
+                badge.innerText = "🥈";
+                badge.style.borderColor = "var(--cyan)";
+            } else {
+                title.innerText = "BRONZE NODE";
+                badge.innerText = "🥉";
+                badge.style.borderColor = "#cd7f32";
+            }
         }
 
         function loadLeaderboard() {
-            db.ref('users').orderByChild('balance').limitToLast(10).once('value', snap => {
+            db.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
                 const container = document.getElementById('leaderboard-container');
-                let list = [];
-                snap.forEach(u => list.push({wallet: u.key, bal: u.val().balance}));
-                list.reverse();
-                container.innerHTML = list.map((u, i) => `
-                    <div class="leaderboard-item">
-                        <span class="rank-num">#${i+1}</span>
-                        <span class="rank-addr">${u.wallet.substring(0,12)}...</span>
-                        <span class="rank-pts">${Math.floor(u.bal)} ABP</span>
-                    </div>
-                `).join('');
+                let users = [];
+                snapshot.forEach(child => { users.push({ wallet: child.key, ...child.val() }); });
+                users.reverse();
+                let html = "";
+                users.forEach((u, index) => {
+                    let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
+                    html += `<div class="leaderboard-item">
+                                <div class="rank-num">${medal}</div>
+                                <div class="rank-addr">${u.wallet.substring(0,8)}...${u.wallet.slice(-4)}</div>
+                                <div class="rank-pts">${formatABP(u.balance || 0)}</div>
+                             </div>`;
+                });
+                container.innerHTML = html;
             });
         }
 
