@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ADAMAS | Quantum Node Infrastructure</title>
 
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
     <meta property="og:title" content="ADAMAS | Quantum Node Infrastructure">
     <meta property="og:description" content="Join the 21,000 Scarcity Protocol. Mine ABP tokens on Polygon.">
     <meta property="og:image" content="https://adamas-protocol.vercel.app/assets/logo-preview.png"> 
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
     <meta property="og:url" content="https://adamas-protocol.vercel.app">
     <meta property="og:type" content="website">
+
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://adamas-protocol.vercel.app/assets/logo-preview.png">
+    <meta name="twitter:title" content="ADAMAS | Quantum Node Infrastructure">
 
     <style>
         :root { --cyan: #00f2ff; --cyan-glow: rgba(0, 242, 255, 0.4); --p-green: #adff2f; --glass: rgba(255, 255, 255, 0.03); }
@@ -201,7 +208,6 @@
             if(ref === activeWallet) ref = "DIRECT"; 
 
             try {
-                // 1. New User Creation (Using Server Timestamp)
                 await db.ref('users/' + activeWallet).set({
                     balance: 800, 
                     wallet: activeWallet, 
@@ -212,7 +218,6 @@
                     joinedAt: firebase.database.ServerValue.TIMESTAMP
                 });
 
-                // 2. REFERRAL COMMISSION LOGIC
                 if(ref !== "DIRECT") {
                     const referrerRef = db.ref('users/' + ref);
                     await referrerRef.transaction((currentData) => {
@@ -225,7 +230,6 @@
                     });
                 }
                 
-                // Final Cleanup
                 localStorage.removeItem('adamas_temp_wallet');
                 localStorage.removeItem('adamas_task_states');
                 localStorage.removeItem('adamas_tasks_count');
