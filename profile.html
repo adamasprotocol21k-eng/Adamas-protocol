@@ -6,154 +6,142 @@
     <title>ADAMAS | Identity Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Audit: Added Smooth Fade-in & Profile Protection */
-        .profile-wrapper { padding-bottom: 140px; animation: fadeIn 0.8s ease-out; }
+        /* --- PRO PROFILE STYLING --- */
+        .profile-wrapper { padding: 15px; padding-bottom: 140px; animation: fadeIn 0.8s ease-out; }
 
         .rank-card {
             background: linear-gradient(145deg, rgba(15,15,20,0.9) 0%, rgba(5,5,5,1) 100%);
-            border: 1px solid var(--glass-border); border-radius: 35px; padding: 35px 25px;
+            border: 1px solid var(--glass-border); border-radius: 35px; padding: 40px 25px;
             text-align: center; position: relative; overflow: hidden;
             box-shadow: 0 25px 50px rgba(0,0,0,0.8);
         }
 
-        /* Subtle Glow for the Card */
-        .rank-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(0,242,255,0.03) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        
         .rank-badge {
-            width: 100px; height: 100px; margin: 0 auto 15px;
-            background: rgba(255,255,255,0.02); border: 2px solid var(--cyan);
+            width: 100px; height: 100px; margin: 0 auto 20px;
+            background: rgba(0,0,0,0.4); border: 2.5px solid var(--cyan);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-size: 2.8rem; box-shadow: 0 0 30px var(--cyan-glow);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative; z-index: 2;
         }
 
-        /* Gauge Enhancements */
-        .gauge-container { position: relative; width: 220px; height: 130px; margin: 15px auto 0; overflow: hidden; }
-        .gauge-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
-        .gauge-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 10; stroke-linecap: round; }
-        .gauge-track { fill: none; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 251; stroke-dashoffset: 251; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* --- GAUGE SYSTEM --- */
+        .gauge-container { position: relative; width: 220px; height: 130px; margin: 20px auto 0; overflow: hidden; }
+        .gauge-svg { width: 100%; height: 100%; }
+        .gauge-bg { fill: none; stroke: rgba(255,255,255,0.03); stroke-width: 8; stroke-linecap: round; }
+        .gauge-track { 
+            fill: none; stroke-width: 8; stroke-linecap: round; 
+            stroke-dasharray: 251; stroke-dashoffset: 251; 
+            transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
         
         .needle {
             position: absolute; bottom: 15px; left: 50%; width: 3px; height: 75px;
             background: linear-gradient(to top, #fff, var(--cyan)); transform-origin: bottom center;
-            transform: translateX(-50%) rotate(-90deg); transition: 2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%) rotate(-90deg); transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 10px; z-index: 4;
         }
-        .needle::before {
-            content: ''; position: absolute; top: -8px; left: 50%;
-            transform: translateX(-50%); border-left: 5px solid transparent;
-            border-right: 5px solid transparent; border-bottom: 10px solid #fff;
-        }
-        .needle-pivot {
-            position: absolute; bottom: 5px; left: 50%; width: 16px; height: 16px;
-            background: #fff; border-radius: 50%; transform: translate(-50%, 0);
-            box-shadow: 0 0 15px rgba(255,255,255,0.5); z-index: 5;
+        .needle::after {
+            content: ''; position: absolute; top: -5px; left: 50%;
+            transform: translateX(-50%); width: 8px; height: 8px;
+            background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff;
         }
 
-        .score-display { margin-top: -15px; position: relative; z-index: 10; }
-        .score-value { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .score-label { font-size: 8px; color: #555; font-family: 'Orbitron'; letter-spacing: 2px; text-transform: uppercase; }
+        .score-display { margin-top: -10px; position: relative; z-index: 10; }
+        .score-value { font-family: 'Orbitron'; font-size: 2.4rem; font-weight: 900; color: #fff; letter-spacing: -1px; }
+        .score-label { font-size: 7.5px; color: #444; font-family: 'Orbitron'; letter-spacing: 2px; text-transform: uppercase; display: block; margin-top: 5px; }
 
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        /* --- STAT GRID UPGRADE --- */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
         .stat-box { 
-            background: rgba(255,255,255,0.03); padding: 18px 10px; border-radius: 22px; 
+            background: rgba(255,255,255,0.02); padding: 18px 10px; border-radius: 20px; 
             border: 1px solid var(--glass-border); text-align: center;
-            transition: 0.3s;
         }
-        .stat-box:active { transform: scale(0.95); background: rgba(255,255,255,0.05); }
+        .stat-box .val { font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #eee; display: block; margin-top: 5px; }
+        .stat-box .lbl { font-size: 7px; color: #555; font-family: 'Orbitron'; letter-spacing: 1px; }
 
+        /* --- LEADERBOARD --- */
         .leaderboard-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 20px; background: rgba(255,255,255,0.02);
-            border-radius: 20px; margin-bottom: 12px; border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
+            padding: 16px 20px; background: rgba(255,255,255,0.01);
+            border-radius: 20px; margin-bottom: 10px; border: 1px solid var(--glass-border);
         }
-        
-        .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 35px; color: var(--cyan); font-size: 14px; }
-        .rank-addr { font-size: 11px; color: #888; flex: 1; margin-left: 10px; font-family: 'Orbitron'; letter-spacing: 0.5px; }
-        .rank-pts { font-family: 'Orbitron'; font-size: 12px; color: #fff; font-weight: bold; background: rgba(0,242,255,0.1); padding: 4px 10px; border-radius: 8px; }
+        .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 30px; color: var(--cyan); font-size: 13px; }
+        .rank-addr { font-size: 10px; color: #666; flex: 1; margin-left: 10px; font-family: 'Orbitron'; }
+        .rank-pts { font-family: 'Orbitron'; font-size: 11px; color: #fff; font-weight: bold; }
 
         .logout-btn {
-            width: 100%; margin-top: 35px; background: rgba(255,255,255,0.02); 
-            border: 1px solid rgba(255,255,255,0.05); color: #444; padding: 18px; 
-            border-radius: 20px; font-family: 'Orbitron'; font-size: 10px;
-            letter-spacing: 3px; cursor: pointer; transition: 0.3s;
+            width: 100%; margin-top: 40px; background: rgba(255, 62, 62, 0.05); 
+            border: 1px solid rgba(255, 62, 62, 0.1); color: #ff3e3e; padding: 18px; 
+            border-radius: 20px; font-family: 'Orbitron'; font-size: 9px;
+            letter-spacing: 3px; cursor: pointer; transition: 0.3s; font-weight: 900;
         }
-        .logout-btn:hover { color: #ff3e3e; border-color: rgba(255,62,62,0.2); background: rgba(255,62,62,0.02); }
-
-        /* Smooth Entry Animation */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .logout-btn:active { transform: scale(0.95); background: rgba(255, 62, 62, 0.1); }
     </style>
 </head>
 <body>
 
     <div class="profile-wrapper">
-        <header style="text-align: center; margin-bottom: 30px;">
-            <div style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; letter-spacing: 4px; margin-bottom: 8px; text-shadow: 0 0 10px var(--cyan-glow);">PROTOCOL_IDENTITY</div>
-            <p id="user-wallet-full" style="font-size: 10px; color: #555; word-break: break-all; font-family: monospace; letter-spacing: 0.5px;">0x...</p>
+        <header style="text-align: center; margin-bottom: 30px; padding: 0 20px;">
+            <div style="font-size: 8px; color: var(--cyan); font-family: 'Orbitron'; letter-spacing: 5px; margin-bottom: 10px; opacity: 0.7;">TERMINAL_IDENTITY_v.2</div>
+            <p id="user-wallet-full" style="font-size: 9px; color: #333; word-break: break-all; font-family: monospace; letter-spacing: 0.5px; opacity: 0.5;">0x...</p>
         </header>
 
         <section class="rank-card">
             <div id="rank-glow" class="rank-badge">🎖️</div>
-            <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; margin-bottom: 10px; font-size: 1.3rem; letter-spacing: 1.5px; text-transform: uppercase;">INITIALIZING...</h2>
+            <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; margin-bottom: 5px; font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase;">SCANNING...</h2>
             
             <div class="gauge-container">
                 <svg class="gauge-svg" viewBox="0 0 100 60">
                     <path class="gauge-bg" d="M10 50 A40 40 0 0 1 90 50" />
-                    <path id="gauge-fill" class="gauge-track" d="M10 50 A40 40 0 0 1 90 50" stroke="#ff3e3e" />
+                    <path id="gauge-fill" class="gauge-track" d="M10 50 A40 40 0 0 1 90 50" stroke="var(--cyan)" />
                 </svg>
                 <div id="gauge-needle" class="needle"></div>
-                <div class="needle-pivot"></div>
             </div>
 
             <div class="score-display">
                 <span id="credit-score-val" class="score-value">300</span>
                 <span class="score-label">LOYALTY_SYNC_SCORE</span>
-                <div id="score-trend" style="font-family: 'Orbitron'; font-size: 9px; margin-top: 8px;">
-                    <span style="color: #ff3e3e; letter-spacing: 1px;">▼ ANALYZING STATUS...</span>
+                <div id="score-trend" style="font-family: 'Orbitron'; font-size: 8px; margin-top: 10px;">
+                    <span style="color: #444; letter-spacing: 1px;">ANALYZING_NODE_STABILITY...</span>
                 </div>
             </div>
 
-            <div style="margin-top: 20px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px;">
-                <p id="eligibility-note" style="font-size: 8px; color: #444; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase; letter-spacing: 1px;">
-                    Min 550 Score & 5 Refs for $ADS Claim
+            <div style="margin-top: 25px; padding: 12px; background: rgba(0,242,255,0.02); border: 1px solid rgba(0,242,255,0.05); border-radius: 16px;">
+                <p id="eligibility-note" style="font-size: 7.5px; color: var(--cyan); font-weight: 900; font-family: 'Orbitron'; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">
+                    MIN_TARGET: 550_SCORE | 5_ACTIVE_NODES
                 </p>
             </div>
         </section>
 
         <div class="stat-grid">
             <div class="stat-box">
-                <span style="font-size: 8px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 8px; letter-spacing: 1px;">ABP POINTS</span>
-                <span id="stat-balance" style="font-family: 'Orbitron'; font-size: 15px; font-weight: 900; color: #fff;">0.00</span>
+                <span class="lbl">TOTAL_ABP</span>
+                <span id="stat-balance" class="val">0.00</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 8px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 8px; letter-spacing: 1px;">NETWORK NODES</span>
-                <span id="stat-refs" style="font-family: 'Orbitron'; font-size: 15px; font-weight: 900; color: #fff;">0</span>
+                <span class="lbl">NETWORK_L1</span>
+                <span id="stat-refs" class="val">0</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 8px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 8px; letter-spacing: 1px;">ACTIVITY</span>
-                <span id="stat-activity" style="font-family: 'Orbitron'; font-size: 13px; font-weight: 900; color: var(--p-green);">ONLINE</span>
+                <span class="lbl">PROTOCOL_STK</span>
+                <span id="stat-streak" class="val">1 DAY</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 8px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 8px; letter-spacing: 1px;">ENGAGEMENT</span>
-                <span id="stat-social" style="font-family: 'Orbitron'; font-size: 15px; font-weight: 900; color: #fff;">0%</span>
+                <span class="lbl">SYNC_RATE</span>
+                <span id="stat-social" class="val">0%</span>
             </div>
         </div>
 
-        <section class="leaderboard-section" style="margin-top: 40px;">
+        <section class="leaderboard-section" style="margin-top: 45px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 12px; color: #fff; letter-spacing: 2px;">GLOBAL_RANKING</h3>
-                <span style="font-size: 9px; color: var(--p-green); font-family: 'Orbitron'; letter-spacing: 1px; font-weight: bold;">LIVE FEED</span>
+                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: #fff; letter-spacing: 2px; opacity: 0.6;">GLOBAL_LEADERBOARD</h3>
+                <span style="font-size: 8px; color: var(--p-green); font-family: 'Orbitron'; font-weight: 900; letter-spacing: 1px;">LIVE_FEED</span>
             </div>
             <div id="leaderboard-container"></div>
         </section>
 
-        <button class="logout-btn" onclick="logout()">TERMINATE SESSION</button>
+        <button class="logout-btn" onclick="logout()">TERMINATE_SESSION</button>
 
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item">🏠 HOME</a>
@@ -170,11 +158,6 @@
     <script>
         const userWallet = localStorage.getItem('adamas_user');
 
-        function formatABP(num) {
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return parseFloat(num).toFixed(2);
-        }
-
         window.onload = () => {
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
@@ -182,49 +165,42 @@
             db.ref('users/' + userWallet.toLowerCase()).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
-                    document.getElementById('stat-balance').innerText = formatABP(data.balance || 0);
+                    document.getElementById('stat-balance').innerText = formatCurrency(data.balance || 0);
+                    document.getElementById('stat-streak').innerText = (data.streak || 1) + " DAYS";
                     
+                    // Task Sync logic
                     let tasksDone = 0;
                     for(let i=1; i<=4; i++) {
                         if(localStorage.getItem('adamas_task_t'+i) === 'verified') tasksDone++;
                     }
                     const engagement = Math.round((tasksDone / 4) * 100);
                     document.getElementById('stat-social').innerText = engagement + "%";
-                    document.getElementById('stat-refs').innerText = data.referralCount || 0;
-
-                    calculateAdvanceScore(data, engagement);
-                    updateRankUI(data);
+                    
+                    // Fetch real-time referral count
+                    db.ref('users').orderByChild('referredBy').equalTo(userWallet.toLowerCase()).once('value', refSnap => {
+                        const refCount = refSnap.numChildren() || 0;
+                        document.getElementById('stat-refs').innerText = refCount;
+                        calculateAdvanceScore(data, engagement, refCount);
+                        updateRankUI(data);
+                    });
                 }
             });
             loadLeaderboard();
         };
 
-        function calculateAdvanceScore(data, engagement) {
+        function calculateAdvanceScore(data, engagement, refCount) {
             const minScore = 300;
             const maxScore = 900;
-            const refs = data.referralCount || 0;
             
-            let socialPoints = Math.min(refs * 60, 300); 
-            let miningPoints = (engagement / 100) * 200;
-            let stabilityPoints = 100;
+            // Score weightage logic
+            let socialPoints = Math.min(refCount * 60, 350); 
+            let activityPoints = (engagement / 100) * 150;
+            let streakPoints = Math.min((data.streak || 1) * 20, 100);
 
-            const lastActive = data.joinedAt ? new Date(data.joinedAt).getTime() : Date.now(); 
-            const hoursSince = (Date.now() - lastActive) / (1000 * 60 * 60);
-            
-            if(hoursSince > 24) {
-                stabilityPoints -= Math.min(hoursSince * 0.5, 100);
-                document.getElementById('score-trend').innerHTML = `<span style="color: #ff3e3e; letter-spacing: 1px;">▼ DECAYING (-${Math.round(hoursSince*0.1)})</span>`;
-            } else {
-                document.getElementById('score-trend').innerHTML = `<span style="color: var(--p-green); letter-spacing: 1px;">▲ STABLE (+12)</span>`;
-            }
+            let totalScore = minScore + socialPoints + activityPoints + streakPoints;
 
-            let totalScore = minScore + socialPoints + miningPoints + stabilityPoints;
-
-            // 55% BARRIER CHECK (Strict Compliance)
-            if (refs < 5 && totalScore > 550) {
-                totalScore = 550;
-            }
-
+            // Strict barrier: 550 is max without 5 nodes
+            if (refCount < 5 && totalScore > 550) { totalScore = 550; }
             totalScore = Math.floor(Math.min(totalScore, maxScore));
 
             const scoreVal = document.getElementById('credit-score-val');
@@ -233,26 +209,28 @@
             
             scoreVal.innerText = totalScore;
 
-            const percent = (totalScore - 300) / (900 - 300);
+            // Gauge calculations
+            const percent = (totalScore - 300) / (maxScore - 300);
             const rotation = (percent * 180) - 90;
             needle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
 
-            const offset = 251 - (percent * 125);
+            const offset = 251 - (percent * 251);
             gaugeFill.style.strokeDashoffset = offset;
 
-            // Deep Audit: Adaptive Colors
+            // Trend & Color Logic
+            const trend = document.getElementById('score-trend');
             if(totalScore >= 750) {
                 gaugeFill.style.stroke = "var(--p-green)";
                 scoreVal.style.color = "var(--p-green)";
-                scoreVal.style.textShadow = "0 0 15px rgba(173, 255, 47, 0.4)";
+                trend.innerHTML = `<span style="color: var(--p-green);">▲ ELITE_STATUS_ACTIVE</span>`;
             } else if (totalScore >= 550) {
                 gaugeFill.style.stroke = "var(--cyan)";
                 scoreVal.style.color = "var(--cyan)";
-                scoreVal.style.textShadow = "0 0 15px var(--cyan-glow)";
+                trend.innerHTML = `<span style="color: var(--cyan);">▲ GROWTH_PHASE</span>`;
             } else {
                 gaugeFill.style.stroke = "#ff3e3e";
                 scoreVal.style.color = "#ff3e3e";
-                scoreVal.style.textShadow = "0 0 15px rgba(255, 62, 62, 0.4)";
+                trend.innerHTML = `<span style="color: #ff3e3e;">▼ CRITICAL_DATA_MINIMUM</span>`;
             }
         }
 
@@ -262,26 +240,22 @@
             const score = parseInt(document.getElementById('credit-score-val').innerText);
 
             if(data.role === "FOUNDER") {
-                title.innerText = "DIAMOND FOUNDER";
+                title.innerText = "FOUNDER_NODE";
                 badge.innerText = "💎";
-                badge.style.borderColor = "var(--cyan)";
             } else if(score >= 750) {
-                title.innerText = "GOLD VALIDATOR";
+                title.innerText = "EXECUTIVE_VALIDATOR";
                 badge.innerText = "🥇";
-                badge.style.borderColor = "var(--p-green)";
             } else if(score >= 550) {
-                title.innerText = "SILVER NODE";
+                title.innerText = "PRIME_NODE";
                 badge.innerText = "🥈";
-                badge.style.borderColor = "var(--cyan)";
             } else {
-                title.innerText = "BRONZE NODE";
+                title.innerText = "BASE_PARTICLE";
                 badge.innerText = "🥉";
-                badge.style.borderColor = "#cd7f32";
             }
         }
 
         function loadLeaderboard() {
-            db.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
+            db.ref('users').orderByChild('balance').limitToLast(8).on('value', (snapshot) => {
                 const container = document.getElementById('leaderboard-container');
                 let users = [];
                 snapshot.forEach(child => { users.push({ wallet: child.key, ...child.val() }); });
@@ -291,8 +265,8 @@
                     let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
                     html += `<div class="leaderboard-item">
                                 <div class="rank-num">${medal}</div>
-                                <div class="rank-addr">${u.wallet.substring(0,8)}...${u.wallet.slice(-4)}</div>
-                                <div class="rank-pts">${formatABP(u.balance || 0)}</div>
+                                <div class="rank-addr">${u.wallet.substring(0,6)}...${u.wallet.slice(-4)}</div>
+                                <div class="rank-pts">${formatCurrency(u.balance || 0)}</div>
                              </div>`;
                 });
                 container.innerHTML = html;
