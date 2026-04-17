@@ -18,7 +18,7 @@
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .dashboard-wrapper { min-height: 100vh; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; width: 100%; max-width: 440px; margin: 0 auto; }
 
-        /* --- PRO BRANDING & LOGO FIX --- */
+        /* --- PRO BRANDING --- */
         .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 10px 5px; }
         .brand-identity { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .logo-box {
@@ -31,17 +31,17 @@
         .brand-name { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; color: #fff; letter-spacing: 2px; }
         .brand-sub { font-size: 8px; color: var(--cyan); letter-spacing: 1.5px; font-family: 'Orbitron'; display: block; margin-top: -2px; opacity: 0.7; }
 
-        /* --- HERO BALANCE CARD (SYSTEMATIC) --- */
+        /* --- BALANCE CARD --- */
         .hero-balance-card {
             background: linear-gradient(145deg, rgba(15,15,15,0.9) 0%, rgba(5,5,5,1) 100%);
             border: 1px solid rgba(0, 242, 255, 0.15); border-radius: 28px; padding: 30px 20px; text-align: center;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6); margin-bottom: 25px; position: relative; overflow: hidden;
         }
         .balance-label { font-size: 8px; letter-spacing: 4px; color: #555; font-family: 'Orbitron'; margin-bottom: 5px; text-transform: uppercase; }
-        .balance-amount { font-family: 'Orbitron'; font-size: 3rem; margin: 5px 0; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
+        .balance-amount { font-family: 'Orbitron'; font-size: 2.8rem; margin: 5px 0; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
         .balance-sub { color: var(--gold); font-family: 'Orbitron'; font-size: 9px; letter-spacing: 3px; opacity: 0.8; }
 
-        /* --- PRO MINING ENGINE --- */
+        /* --- MINING ENGINE --- */
         .mining-engine-vessel { width: 180px; height: 180px; margin: 25px auto; position: relative; display: flex; align-items: center; justify-content: center; }
         .engine-outer-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px dashed rgba(0, 242, 255, 0.15); animation: spin 20s linear infinite; }
         .engine-glow-aura { position: absolute; width: 140px; height: 140px; background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%); border-radius: 50%; animation: pulseGlow 3s infinite ease-in-out; }
@@ -51,32 +51,29 @@
             background: #000; border: 2px solid var(--cyan);
             color: #fff; font-family: 'Orbitron'; font-weight: 900; font-size: 10px;
             box-shadow: 0 0 25px rgba(0, 242, 255, 0.2);
-            cursor: pointer; z-index: 5; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            cursor: pointer; z-index: 5; transition: 0.4s; 
             backdrop-filter: blur(10px); outline: none;
         }
-        .mining-trigger-btn.active { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 30px rgba(255, 204, 0, 0.2); }
-        .mining-trigger-btn.ready { border-color: var(--p-green); color: var(--p-green); box-shadow: 0 0 30px rgba(173, 255, 47, 0.3); animation: pulse-green 2s infinite; }
+        .mining-trigger-btn.active { border-color: var(--gold); color: var(--gold); }
+        .mining-trigger-btn.ready { border-color: var(--p-green); color: var(--p-green); animation: pulse-green 2s infinite; }
 
-        /* Progress Bar Upgrade */
         .progress-container { margin-top: 25px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.03); }
-        .progress-header { display: flex; justify-content: space-between; font-size: 8px; color: var(--cyan); margin-bottom: 8px; font-family: 'Orbitron'; letter-spacing: 1px; }
-        .progress-bar-bg { height: 6px; background: #0a0a0a; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.02); }
-        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--p-green)); transition: 0.5s; box-shadow: 0 0 10px var(--cyan); }
+        .progress-header { display: flex; justify-content: space-between; font-size: 8px; color: var(--cyan); margin-bottom: 8px; font-family: 'Orbitron'; }
+        .progress-bar-bg { height: 6px; background: #0a0a0a; border-radius: 10px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--p-green)); transition: 0.5s; }
 
-        /* Stats Grid */
         .stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
         .stat-card { flex: 1; background: var(--glass); border: 1px solid rgba(255,255,255,0.05); border-radius: 22px; padding: 15px; text-align: center; }
-        .stat-label { font-size: 7px; color: #555; font-family: 'Orbitron'; letter-spacing: 1.5px; text-transform: uppercase; }
-        .stat-value { display: block; font-size: 20px; font-family: 'Orbitron'; color: #fff; margin-top: 5px; font-weight: 700; }
+        .stat-label { font-size: 7px; color: #555; font-family: 'Orbitron'; letter-spacing: 1px; }
+        .stat-value { display: block; font-size: 18px; font-family: 'Orbitron'; color: #fff; margin-top: 5px; font-weight: 700; }
 
-        /* Bottom Nav Fix */
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 440px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 440px; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
         .nav-item { text-decoration: none; color: #555; font-size: 9px; font-family: 'Orbitron'; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .nav-item.active { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-glow); }
+        .nav-item.active { color: var(--cyan); }
 
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes pulse-green { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.1); } }
+        @keyframes pulseGlow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
     </style>
 </head>
 <body>
@@ -84,9 +81,7 @@
     <div class="dashboard-wrapper">
         <header class="main-header">
             <div class="brand-identity" onclick="window.location.href='profile.html'">
-                <div class="logo-box">
-                    <img src="assets/dashboard-logo.png" alt="A" class="nav-logo-img">
-                </div>
+                <div class="logo-box"><img src="assets/dashboard-logo.png" alt="A" class="nav-logo-img"></div>
                 <div class="brand-text">
                     <span class="brand-name">ADAMAS</span>
                     <span class="brand-sub">QUANTUM TERMINAL</span>
@@ -94,7 +89,6 @@
             </div>
             <div style="text-align: right;">
                 <div id="user-address" style="font-family: monospace; font-size: 10px; color: #888; background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">0x...</div>
-                <div style="font-size: 8px; color: var(--p-green); margin-top: 5px; font-family: 'Orbitron'; letter-spacing: 1px;">NODE_ACTIVE_01</div>
             </div>
         </header>
 
@@ -106,12 +100,10 @@
                 
                 <div class="progress-container">
                     <div class="progress-header">
-                        <span id="mining-status-text">SYNCING_PROTOCOL</span>
+                        <span id="mining-status-text">INITIALIZING...</span>
                         <span id="scarcity-percent">0%</span>
                     </div>
-                    <div class="progress-bar-bg">
-                        <div id="scarcity-fill" class="progress-fill"></div>
-                    </div>
+                    <div class="progress-bar-bg"><div id="scarcity-fill" class="progress-fill"></div></div>
                 </div>
             </section>
 
@@ -163,8 +155,10 @@
     <script src="config.js"></script>
     
     <script>
-    const userWallet = localStorage.getItem('adamas_user');
-    if (!userWallet) { window.location.href = "index.html"; }
+    // --- 1. SESSION & IDENTITY PROTECTION ---
+    const rawWallet = localStorage.getItem('adamas_user');
+    if (!rawWallet) { window.location.href = "index.html"; }
+    const userWallet = rawWallet.toLowerCase(); // Case-sensitivity fix
 
     const userRef = db.ref('users/' + userWallet);
     const HOURLY_REWARD = 500; 
@@ -172,16 +166,17 @@
     let serverOffset = 0;
 
     function formatABP(num) {
-        if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
-        if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-        return parseFloat(num).toFixed(2);
+        const val = parseFloat(num) || 0;
+        if (val >= 1000000) return (val / 1000000).toFixed(2) + 'M';
+        if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
+        return val.toFixed(2);
     }
 
     db.ref(".info/serverTimeOffset").on("value", (snap) => {
         serverOffset = snap.val() || 0;
     });
 
+    // --- 2. CORE DATA SYNC & HEARTBEAT ---
     userRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -192,15 +187,27 @@
             const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
             document.getElementById('ref-link-input').value = baseUrl + "/index.html?ref=" + userWallet;
             
+            // Sync Network Nodes
             db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', (snap) => {
                 document.getElementById('ref-count').innerText = snap.numChildren() || 0;
             });
+
+            // Heartbeat: Automatic Streak Sync
+            const now = Date.now() + serverOffset;
+            const lastActive = data.lastActive || 0;
+            if (now - lastActive > 86400000) { // If last active was more than 24h ago
+                userRef.update({
+                    streak: firebase.database.ServerValue.increment(1),
+                    lastActive: now 
+                });
+            }
 
             checkMiningStatus(data.lastMiningStart);
             checkClaimStatus(data.lastClaim);
         }
     });
 
+    // --- 3. MINING ENGINE LOGIC ---
     function checkMiningStatus(startTime) {
         const btn = document.getElementById('mining-btn');
         const fill = document.getElementById('scarcity-fill');
@@ -228,7 +235,6 @@
             
             btn.innerText = `${minutes}:${seconds < 10 ? '0'+seconds : seconds}`;
             btn.classList.add('active');
-            btn.classList.remove('ready');
             btn.disabled = true;
             statusText.innerText = "MINING_IN_PROGRESS";
 
@@ -245,24 +251,30 @@
             btn.disabled = false;
             fill.style.width = "100%";
             percentText.innerText = "100%";
-            statusText.innerText = "PROTOCOL_COMPLETE";
+            statusText.innerText = "READY_TO_COLLECT";
         }
     }
 
     async function handleMiningAction() {
         const btn = document.getElementById('mining-btn');
+        const now = Date.now() + serverOffset;
         if (btn.classList.contains('ready')) {
             try {
                 await userRef.update({
                     balance: firebase.database.ServerValue.increment(HOURLY_REWARD),
-                    lastMiningStart: null 
+                    lastMiningStart: null,
+                    lastActive: now // Sync activity on claim
                 });
-            } catch (e) { alert("Claim Error"); }
+            } catch (e) { alert("Sync Error"); }
         } else {
-            await userRef.update({ lastMiningStart: firebase.database.ServerValue.TIMESTAMP });
+            await userRef.update({ 
+                lastMiningStart: firebase.database.ServerValue.TIMESTAMP,
+                lastActive: now 
+            });
         }
     }
 
+    // --- 4. DAILY SYNC LOGIC ---
     function checkClaimStatus(lastClaimTime) {
         const btn = document.getElementById('daily-claim-btn');
         if (!lastClaimTime) return;
@@ -271,15 +283,20 @@
         if (hoursPassed < 24) {
             btn.innerText = "SYNCED";
             btn.style.opacity = "0.3";
-            btn.style.pointerEvents = "none";
-            document.getElementById('streak-text').innerText = "Next sync in " + (24 - hoursPassed).toFixed(1) + "h";
+            btn.disabled = true;
+            document.getElementById('streak-text').innerText = "Next sync in " + Math.ceil(24 - hoursPassed) + "h";
+        } else {
+            btn.innerText = "SYNC";
+            btn.style.opacity = "1";
+            btn.disabled = false;
         }
     }
 
     async function claimDailyBonus() {
         await userRef.update({
             balance: firebase.database.ServerValue.increment(10),
-            lastClaim: firebase.database.ServerValue.TIMESTAMP
+            lastClaim: firebase.database.ServerValue.TIMESTAMP,
+            lastActive: Date.now() + serverOffset
         });
     }
 
@@ -287,7 +304,7 @@
         const copyText = document.getElementById("ref-link-input");
         copyText.select();
         navigator.clipboard.writeText(copyText.value);
-        alert("Invite Link Copied!");
+        alert("Invite Protocol Copied!");
     }
     </script>
 </body>
