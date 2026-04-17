@@ -1,5 +1,5 @@
 /* ADAMAS PROTOCOL - CENTRAL CONFIGURATION ENGINE 
-   Core System v2.3 | DATA_INTEGRITY_PROTECTION
+   Core System v2.4 | DATA_INTEGRITY_STRICT_LOCK
 */
 
 const firebaseConfig = {
@@ -10,6 +10,7 @@ const firebaseConfig = {
     appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
 };
 
+// Initialize Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -17,56 +18,77 @@ const db = firebase.database();
 
 const GENESIS_WALLET = "0xcc19036Ad18b761ad25D2cb69Fd3c5EbcB766488".toLowerCase();
 
-// --- IDENTITY FIX: Hamesha lowercase check karega ---
-const rawUser = localStorage.getItem('adamas_user');
-const currentUser = rawUser ? rawUser.toLowerCase() : null;
+// --- SESSION LOCK ---
+// Wallet ko hamesha lowercase mein read karna taaki duplicate ID na bane
+const getSecureUser = () => {
+    const raw = localStorage.getItem('adamas_user');
+    return raw ? raw.toLowerCase().trim() : null;
+};
 
+let currentUser = getSecureUser();
+
+// --- ROUTE GUARDIAN ---
 function protectRoute() {
     const path = window.location.pathname;
-    if (!currentUser && !path.includes('index.html')) {
+    // Agar login nahi hai aur index ke bahar hai, toh seedha landing page
+    if (!getSecureUser() && !path.includes('index.html')) {
         window.location.href = "index.html";
     }
 }
 
-function getReferrer() {
-    const urlParams = new URLSearchParams(window.location.search);
-    let ref = urlParams.get('ref')?.toLowerCase();
-    if (!ref || ref === 'genesis' || ref === currentUser) {
-        return GENESIS_WALLET;
-    }
-    return ref;
+// --- SYSTEM LOGOUT (Add this to your Disconnect Button) ---
+function terminalLogout() {
+    localStorage.clear(); // Pura clean sweep
+    window.location.href = "index.html";
 }
 
-// Session sync logic jo "Naya Account" tabhi banayega jab sach mein naya ho
+// --- GENESIS SYNC ENGINE ---
 async function syncUserSession() {
-    if (!currentUser) return;
+    const wallet = getSecureUser();
+    if (!wallet) return;
     
-    const userRef = db.ref('users/' + currentUser);
-    const snap = await userRef.once('value');
+    const userRef = db.ref('users/' + wallet);
     
-    // YAHAN FIX HAI: Snap exists check
-    if (!snap.exists()) {
-        console.log("CREATING_NEW_NODE_ENTRY...");
-        const assignedRef = localStorage.getItem('adamas_ref') || GENESIS_WALLET;
-
-        await userRef.set({
-            balance: 800, // Initial Bonus
-            streak: 1,
-            referredBy: assignedRef,
-            lastActive: Date.now(),
-            joinedAt: Date.now(),
-            quizDone: false,
-            role: "MEMBER"
-        });
+    try {
+        const snap = await userRef.once('value');
         
-        const refCounter = db.ref('users/' + assignedRef + '/referralCount');
-        refCounter.transaction((c) => (c || 0) + 1);
-    } else {
-        console.log("NODE_RECOGNIZED: Fetching existing data...");
-        // Sirf last active update karo, balance ko touch mat karo
-        userRef.update({ lastActive: Date.now() });
+        if (!snap.exists()) {
+            // NEW USER REGISTRATION
+            console.log("PROTOCOL_ALERT: Creating New Node...");
+            const assignedRef = localStorage.getItem('adamas_ref') || GENESIS_WALLET;
+
+            await userRef.set({
+                balance: 800,
+                streak: 1,
+                referredBy: assignedRef,
+                lastActive: Date.now(),
+                joinedAt: Date.now(),
+                quizDone: false,
+                role: "MEMBER",
+                wallet: wallet // Storing for Ranking consistency
+            });
+            
+            // Increment Referral Network
+            db.ref('users/' + assignedRef + '/referralCount').transaction(c => (c || 0) + 1);
+        } else {
+            // EXISTING USER - ONLY UPDATE HEARTBEAT
+            console.log("PROTOCOL_ALERT: Node Synced. Balance Protected.");
+            userRef.update({ 
+                lastActive: Date.now() 
+            });
+        }
+    } catch (err) {
+        console.error("Sync Error:", err);
     }
 }
 
+// Global Execution
 protectRoute();
-if(currentUser) syncUserSession();
+if (getSecureUser()) {
+    syncUserSession();
+}
+
+// Listening for storage changes (Logout prevention across tabs)
+window.addEventListener('storage', () => {
+    if (!getSecureUser()) window.location.href = "index.html";
+});
