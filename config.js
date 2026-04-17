@@ -1,5 +1,6 @@
 /* ADAMAS PROTOCOL - CENTRAL CONFIGURATION ENGINE 
-   Core System v2.2 | GENESIS_ROOT_INTEGRATION
+   Core System v2.2.1 | GENESIS_ROOT_INTEGRATION
+   Status: STABLE_PRODUCTION_READY
 */
 
 const firebaseConfig = {
@@ -10,17 +11,16 @@ const firebaseConfig = {
     appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
 };
 
+// --- INITIALIZE FIREBASE ---
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-
 const db = firebase.database();
 
-// --- GENESIS CORE CONFIG ---
-const GENESIS_WALLET = "0xcc19036Ad18b761ad25D2cb69Fd3c5EbcB766488"; // Company Master Node
+// --- MASTER NODE IDENTITY ---
+const GENESIS_WALLET = "0xcc19036Ad18b761ad25D2cb69Fd3c5EbcB766488";
 
-// --- SYSTEM UTILITIES ---
-
+// --- UTILITIES ---
 function formatCurrency(num) {
     const val = parseFloat(num) || 0;
     if (val >= 1000000000) return (val / 1000000000).toFixed(2) + 'B';
@@ -29,68 +29,77 @@ function formatCurrency(num) {
     return val.toFixed(2);
 }
 
-// Global Wallet Checker
-const currentUser = localStorage.getItem('adamas_user');
+// Session Identity
+const currentUser = localStorage.getItem('adamas_user')?.toLowerCase() || null;
 
-// Route Guardian
+// --- ROUTE GUARDIAN ---
 function protectRoute() {
-    if (!currentUser && !window.location.pathname.includes('index.html')) {
+    const path = window.location.pathname;
+    // Agar user logged in nahi hai aur index par nahi hai, toh redirect
+    if (!currentUser && !path.includes('index.html') && path !== '/' && !path.endsWith('.html')) {
         window.location.href = "index.html";
     }
 }
 
-// --- GENESIS REFERRAL ENGINE ---
+// --- REFERRAL PROTOCOL ---
 function getReferrer() {
     const urlParams = new URLSearchParams(window.location.search);
-    let ref = urlParams.get('ref');
+    let ref = urlParams.get('ref')?.toLowerCase();
     
-    // Masking Logic: Agar ref khali hai ya 'GENESIS' hai, toh Admin wallet assign karo
-    if (!ref || ref.toUpperCase() === 'GENESIS') {
+    // Guard: Prevent self-referral or empty ref
+    if (!ref || ref === 'genesis' || ref === currentUser) {
         return GENESIS_WALLET.toLowerCase();
     }
-    return ref.toLowerCase();
+    return ref;
 }
 
-// Pehle Referrer save karein fir session sync karein
+// Store Referrer permanently for the session before login
 const activeReferrer = getReferrer();
-if (!localStorage.getItem('adamas_ref')) {
+if (activeReferrer && !localStorage.getItem('adamas_ref')) {
     localStorage.setItem('adamas_ref', activeReferrer);
 }
 
-// --- AUTO-INITIALIZE ENGINE ---
+// --- SESSION SYNC ENGINE ---
 async function syncUserSession() {
     if (!currentUser) return;
     
-    const userRef = db.ref('users/' + currentUser.toLowerCase());
+    const userRef = db.ref('users/' + currentUser);
     const snap = await userRef.once('value');
     
     if (!snap.exists()) {
-        console.log("INITIALIZING_NEW_GENESIS_NODE...");
+        console.log("INITIALIZING_NEW_NODE...");
         
-        // Referrer fetch from storage
+        // Final fallback for referrer
         const assignedRef = localStorage.getItem('adamas_ref') || GENESIS_WALLET.toLowerCase();
 
-        await userRef.set({
+        const newUserPayload = {
             balance: 0,
             streak: 1,
-            referredBy: assignedRef, // Automatically linked to Company or Inviter
+            referredBy: assignedRef,
             lastActive: Date.now(),
             joinedAt: Date.now(),
             quizDone: false,
             loyaltyClaimed: false,
-            role: "MEMBER"
-        });
+            role: (currentUser === GENESIS_WALLET.toLowerCase()) ? "ADMIN" : "MEMBER"
+        };
+
+        await userRef.set(newUserPayload);
         
-        // Update Referrer's count
-        const refCounter = db.ref('users/' + assignedRef + '/referralCount');
-        refCounter.transaction((currentCount) => {
-            return (currentCount || 0) + 1;
-        });
+        // Update Referrer's network count (Atomic Transaction)
+        if (assignedRef) {
+            db.ref('users/' + assignedRef + '/referralCount').transaction((count) => {
+                return (count || 0) + 1;
+            });
+        }
+    } else {
+        // Update Last Active Heartbeat
+        userRef.update({ lastActive: Date.now() });
     }
 }
 
-// Run Protection & Sync
+// --- EXECUTE ---
 protectRoute();
-if(currentUser) syncUserSession();
-
-console.log("ADAMAS_SYSTEM: Genesis Node Online. Role: " + (currentUser === GENESIS_WALLET.toLowerCase() ? "ADMIN" : "NODE"));
+if (currentUser) {
+    syncUserSession();
+    console.log(`%c ADAMAS_PROTOCOL: Node ${currentUser === GENESIS_WALLET.toLowerCase() ? 'ADMIN' : 'ACTIVE'}`, 'color: #00f2ff; font-weight: bold;');
+}
