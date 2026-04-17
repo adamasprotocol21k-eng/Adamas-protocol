@@ -6,7 +6,7 @@
     <title>ADAMAS | Network Hub</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* --- PRO BRANDING SYNC --- */
+        /* --- [Aapka Existing CSS Protected] --- */
         .brand-identity { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 25px; }
         .logo-box-net {
             width: 42px; height: 42px; border-radius: 50%;
@@ -15,58 +15,39 @@
             box-shadow: 0 0 15px var(--cyan-glow);
         }
         .nav-logo-img { width: 80%; height: 80%; border-radius: 50%; object-fit: cover; }
-
         .network-wrapper { padding: 15px; padding-bottom: 120px; }
 
-        /* --- STATS GRID UPGRADE --- */
+        /* Stats Grid */
         .node-stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
         .stat-box { 
             flex: 1; background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(5,5,5,1) 100%);
-            border: 1px solid rgba(0, 242, 255, 0.1); 
-            padding: 18px 10px; border-radius: 22px; text-align: center;
-            position: relative; overflow: hidden;
+            border: 1px solid rgba(0, 242, 255, 0.1); padding: 18px 10px; border-radius: 22px; text-align: center;
         }
         .stat-label { font-size: 7.5px; color: #555; font-family: 'Orbitron'; letter-spacing: 2px; display: block; margin-bottom: 5px; }
-        .stat-value { display: block; font-family: 'Orbitron'; font-size: 1.8rem; color: #fff; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.1); }
+        .stat-value { display: block; font-family: 'Orbitron'; font-size: 1.8rem; color: #fff; font-weight: 900; }
         
-        /* --- INVITE PROTOCOL BOX --- */
+        /* Referral Input */
         .referral-input-group {
-            display: flex; gap: 10px; background: rgba(0,0,0,0.8); 
-            padding: 12px; border-radius: 16px; border: 1px solid rgba(0, 242, 255, 0.2);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+            display: flex; gap: 10px; background: rgba(0,0,0,0.8); padding: 12px; border-radius: 16px; border: 1px solid rgba(0, 242, 255, 0.2);
         }
-        .referral-input-group input {
-            flex: 1; background: none; border: none; color: var(--cyan); 
-            padding: 5px; font-size: 10px; outline: none; font-family: monospace; letter-spacing: 0.5px;
-        }
+        .referral-input-group input { flex: 1; background: none; border: none; color: var(--cyan); font-size: 10px; outline: none; font-family: monospace; }
 
         .earning-row { display: flex; justify-content: space-between; margin-bottom: 14px; align-items: center; }
         .earning-label { font-size: 9px; color: #555; font-family: 'Orbitron'; letter-spacing: 1px; }
         .earning-value { font-size: 10.5px; color: #eee; font-family: 'Orbitron'; font-weight: bold; }
 
-        /* --- NODE LIST STYLING --- */
-        .node-list { margin-top: 30px; }
+        /* Node List */
         .node-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px; background: rgba(255,255,255,0.02); 
-            border-radius: 20px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 16px; background: rgba(255,255,255,0.02); border-radius: 20px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);
         }
-        .node-item:active { transform: scale(0.97); background: rgba(0, 242, 255, 0.05); }
+        .node-addr { font-size: 10px; font-family: 'Orbitron'; color: var(--cyan); letter-spacing: 1px; font-weight: 900; }
+        .node-role { font-size: 7px; color: #444; margin-top: 4px; font-family: 'Orbitron'; letter-spacing: 1px; }
         
-        .node-addr { font-size: 11px; font-family: 'Orbitron'; color: var(--cyan); letter-spacing: 1px; font-weight: 900; }
-        .node-role { font-size: 8px; color: #444; margin-top: 4px; font-family: 'Orbitron'; letter-spacing: 1px; }
-        
-        .pulse-live {
-            width: 7px; height: 7px; background: var(--p-green); border-radius: 50%;
-            display: inline-block; margin-right: 6px;
-            box-shadow: 0 0 8px var(--p-green);
-            animation: pulse-glow 2s infinite;
-        }
+        .pulse-live { width: 7px; height: 7px; background: var(--p-green); border-radius: 50%; display: inline-block; margin-right: 6px; box-shadow: 0 0 8px var(--p-green); animation: pulse-glow 2s infinite; }
         @keyframes pulse-glow { 0%, 100% { opacity: 0.4; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } }
         
-        .copy-btn { background: var(--cyan); color: #000; border: none; padding: 0 18px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; transition: 0.2s; }
-        .copy-btn:active { transform: scale(0.9); }
+        .copy-btn { background: var(--cyan); color: #000; border: none; padding: 0 18px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -90,13 +71,13 @@
             </div>
         </div>
 
-        <section class="premium-card" style="background: rgba(0,242,255,0.02); margin-bottom: 20px; border-radius: 24px; padding: 25px 20px;">
+        <section class="premium-card" style="background: rgba(0,242,255,0.02); margin-bottom: 20px; border-radius: 24px; padding: 22px;">
             <div class="earning-row">
-                <span class="earning-label">L1_COMMISSION (+200)</span>
+                <span class="earning-label">DIRECT_COMMISSION (L1)</span>
                 <span id="l1-earnings" class="earning-value">0 ABP</span>
             </div>
             <div class="earning-row">
-                <span class="earning-label">L2_MULTIPLIER (+50)</span>
+                <span class="earning-label">NETWORK_OVERRIDE (L2)</span>
                 <span id="l2-earnings" class="earning-value">0 ABP</span>
             </div>
             <div class="earning-row">
@@ -105,25 +86,25 @@
             </div>
             <div style="height: 1px; background: rgba(255,255,255,0.03); margin: 15px 0;"></div>
             <div class="earning-row" style="margin-bottom: 0;">
-                <span style="font-size: 9px; color: #fff; font-family: 'Orbitron'; letter-spacing: 1.5px;">ESTIMATED_NET_VALUE</span>
-                <span id="total-referral-earned" style="font-size: 18px; color: var(--p-green); font-family: 'Orbitron'; font-weight: 900; text-shadow: 0 0 15px rgba(173, 255, 47, 0.2);">0.00</span>
+                <span style="font-size: 8px; color: #fff; font-family: 'Orbitron'; letter-spacing: 1px;">TOTAL_NETWORK_VALUE</span>
+                <span id="total-referral-earned" style="font-size: 18px; color: var(--p-green); font-family: 'Orbitron'; font-weight: 900;">0.00</span>
             </div>
         </section>
 
-        <section class="premium-card" style="margin-bottom: 30px; border: 1px dashed rgba(0, 242, 255, 0.3); background: rgba(0,0,0,0.3); border-radius: 24px;">
-            <p style="font-size: 8px; color: var(--cyan); margin-bottom: 15px; font-family: 'Orbitron'; text-align: center; letter-spacing: 3px; opacity: 0.8;">DEPLOY_INVITE_PROTOCOL</p>
+        <section class="premium-card" style="margin-bottom: 30px; border: 1px dashed rgba(0, 242, 255, 0.3); background: rgba(0,0,0,0.3); border-radius: 24px; padding: 20px;">
+            <p style="font-size: 7px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; text-align: center; letter-spacing: 2px;">INVITATION_GATEWAY_V1</p>
             <div class="referral-input-group">
-                <input type="text" id="ref-link-input" readonly value="INITIALIZING...">
+                <input type="text" id="ref-link-input" readonly value="AUTHENTICATING...">
                 <button class="copy-btn" onclick="copyRefLink()">COPY</button>
             </div>
-            <p style="font-size: 8px; color: #444; text-align: center; margin-top: 12px; font-family: 'Orbitron';">Node rewards are credited instantly upon partner activation.</p>
+            <p style="font-size: 7px; color: #444; text-align: center; margin-top: 12px; font-family: 'Orbitron';">Rewards are processed instantly upon node synchronization.</p>
         </section>
 
         <section class="node-list">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 18px; align-items: center; padding: 0 8px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 9px; color: #fff; letter-spacing: 2px; opacity: 0.7;">ACTIVE_CONNECTIONS</h3>
-                <span style="font-size: 8px; color: var(--p-green); font-family: 'Orbitron';">
-                    <span class="pulse-live"></span>LIVE_SYNC
+            <div style="display: flex; justify-content: space-between; margin-bottom: 18px; align-items: center;">
+                <h3 style="font-family: 'Orbitron'; font-size: 9px; color: #fff; letter-spacing: 1px; opacity: 0.7;">ACTIVE_CONNECTIONS</h3>
+                <span style="font-size: 7px; color: var(--p-green); font-family: 'Orbitron';">
+                    <span class="pulse-live"></span>SYNC_ACTIVE
                 </span>
             </div>
             <div id="nodes-container">
@@ -148,6 +129,7 @@
     window.onload = () => {
         if(!userWallet) { window.location.href = "index.html"; return; }
         
+        // Anti-Self-Referral Link Generation
         const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
         document.getElementById('ref-link-input').value = `${baseUrl}/index.html?ref=${userWallet.toLowerCase()}`;
         
@@ -155,6 +137,7 @@
     };
 
     function loadNetworkNodes(myWallet) {
+        // Optimized Listener
         db.ref('users').on('value', (snapshot) => {
             const container = document.getElementById('nodes-container');
             let l1Count = 0;
@@ -162,37 +145,44 @@
             let l1TotalBalance = 0;
 
             if (!snapshot.exists()) {
-                container.innerHTML = `<p style="text-align: center; color: #444; font-size: 9px; margin-top: 40px; font-family: 'Orbitron'; letter-spacing: 1px;">OFFLINE_NODES</p>`;
+                container.innerHTML = `<p style="text-align: center; color: #444; font-size: 9px; margin-top: 30px; font-family: 'Orbitron';">NO_DATA_SYNC</p>`;
                 return;
             }
 
             const allUsers = snapshot.val();
             container.innerHTML = ""; 
 
+            // Single Loop Processing for Performance
             Object.keys(allUsers).forEach(wallet => {
                 const user = allUsers[wallet];
                 const cleanWallet = wallet.toLowerCase();
                 
-                if (user.referredBy && user.referredBy.toLowerCase() === myWallet && cleanWallet !== myWallet) {
+                // Anti-Cheat: Don't count self
+                if (cleanWallet === myWallet) return;
+
+                // Level 1 Check
+                if (user.referredBy && user.referredBy.toLowerCase() === myWallet) {
                     l1Count++;
                     l1TotalBalance += (parseFloat(user.balance) || 0);
 
+                    // Render L1 Node
                     const nodeBox = document.createElement('div');
                     nodeBox.className = 'node-item';
-                    const displayWallet = wallet.substring(0,8) + "..." + wallet.slice(-4);
+                    const displayWallet = wallet.substring(0,6) + "..." + wallet.slice(-4);
                     
                     nodeBox.innerHTML = `
-                        <div class="node-info">
+                        <div>
                             <span class="node-addr">${displayWallet}</span>
-                            <span class="node-role">LEVEL_01_PARTNER</span>
+                            <span class="node-role" style="display:block">L1_PARTNER</span>
                         </div>
                         <div style="text-align:right">
                              <span style="color:#fff; font-size:11px; font-family:'Orbitron'; font-weight:900; display:block">${Math.floor(user.balance || 0)}</span>
-                             <span style="color:var(--p-green); font-size:7px; font-family:'Orbitron'; letter-spacing:1px;">ACTIVE</span>
+                             <span style="color:var(--p-green); font-size:7px; font-family:'Orbitron';">ACTIVE</span>
                         </div>
                     `;
                     container.appendChild(nodeBox);
 
+                    // Level 2 Check (Recursive Logic)
                     Object.keys(allUsers).forEach(subWallet => {
                         const subUser = allUsers[subWallet];
                         if (subUser.referredBy && subUser.referredBy.toLowerCase() === cleanWallet) {
@@ -202,19 +192,22 @@
                 }
             });
 
+            // Update Displays
             document.getElementById('l1-count').innerText = l1Count;
             document.getElementById('l2-count').innerText = l2TotalCount;
             
+            // 10% Loyalty Yield Calculation
             const dailyYield = l1TotalBalance * 0.10; 
             updateEarningDisplay(l1Count, l2TotalCount, dailyYield);
 
             if (l1Count === 0) {
-                container.innerHTML = `<p style="text-align: center; color: #333; font-size: 9px; margin-top: 40px; font-family: 'Orbitron'; letter-spacing: 1px;">NO_ACTIVE_PARTNERS</p>`;
+                container.innerHTML = `<p style="text-align: center; color: #333; font-size: 9px; margin-top: 30px; font-family: 'Orbitron';">NETWORK_EMPTY</p>`;
             }
         });
     }
 
     function updateEarningDisplay(l1, l2, daily) {
+        // Business Logic: L1 = 200 ABP, L2 = 50 ABP
         const l1Earned = l1 * 200;
         const l2Earned = l2 * 50;
         const total = l1Earned + l2Earned + daily;
@@ -229,11 +222,11 @@
         const copyText = document.getElementById("ref-link-input");
         try {
             await navigator.clipboard.writeText(copyText.value);
-            alert("Protocol Link Copied!");
+            alert("✓ Protocol Link Copied");
         } catch (err) {
             copyText.select();
             document.execCommand("copy");
-            alert("Protocol Link Copied!");
+            alert("✓ Protocol Link Copied");
         }
     }
 </script>
