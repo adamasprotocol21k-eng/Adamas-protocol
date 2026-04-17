@@ -1,6 +1,5 @@
 /* ADAMAS PROTOCOL - CENTRAL CONFIGURATION ENGINE 
-   Core System v2.2.1 | GENESIS_ROOT_INTEGRATION
-   Status: STABLE_PRODUCTION_READY
+   Core System v2.3 | DATA_INTEGRITY_PROTECTION
 */
 
 const firebaseConfig = {
@@ -11,95 +10,63 @@ const firebaseConfig = {
     appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
 };
 
-// --- INITIALIZE FIREBASE ---
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.database();
 
-// --- MASTER NODE IDENTITY ---
-const GENESIS_WALLET = "0xcc19036Ad18b761ad25D2cb69Fd3c5EbcB766488";
+const GENESIS_WALLET = "0xcc19036Ad18b761ad25D2cb69Fd3c5EbcB766488".toLowerCase();
 
-// --- UTILITIES ---
-function formatCurrency(num) {
-    const val = parseFloat(num) || 0;
-    if (val >= 1000000000) return (val / 1000000000).toFixed(2) + 'B';
-    if (val >= 1000000) return (val / 1000000).toFixed(2) + 'M';
-    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
-    return val.toFixed(2);
-}
+// --- IDENTITY FIX: Hamesha lowercase check karega ---
+const rawUser = localStorage.getItem('adamas_user');
+const currentUser = rawUser ? rawUser.toLowerCase() : null;
 
-// Session Identity
-const currentUser = localStorage.getItem('adamas_user')?.toLowerCase() || null;
-
-// --- ROUTE GUARDIAN ---
 function protectRoute() {
     const path = window.location.pathname;
-    // Agar user logged in nahi hai aur index par nahi hai, toh redirect
-    if (!currentUser && !path.includes('index.html') && path !== '/' && !path.endsWith('.html')) {
+    if (!currentUser && !path.includes('index.html')) {
         window.location.href = "index.html";
     }
 }
 
-// --- REFERRAL PROTOCOL ---
 function getReferrer() {
     const urlParams = new URLSearchParams(window.location.search);
     let ref = urlParams.get('ref')?.toLowerCase();
-    
-    // Guard: Prevent self-referral or empty ref
     if (!ref || ref === 'genesis' || ref === currentUser) {
-        return GENESIS_WALLET.toLowerCase();
+        return GENESIS_WALLET;
     }
     return ref;
 }
 
-// Store Referrer permanently for the session before login
-const activeReferrer = getReferrer();
-if (activeReferrer && !localStorage.getItem('adamas_ref')) {
-    localStorage.setItem('adamas_ref', activeReferrer);
-}
-
-// --- SESSION SYNC ENGINE ---
+// Session sync logic jo "Naya Account" tabhi banayega jab sach mein naya ho
 async function syncUserSession() {
     if (!currentUser) return;
     
     const userRef = db.ref('users/' + currentUser);
     const snap = await userRef.once('value');
     
+    // YAHAN FIX HAI: Snap exists check
     if (!snap.exists()) {
-        console.log("INITIALIZING_NEW_NODE...");
-        
-        // Final fallback for referrer
-        const assignedRef = localStorage.getItem('adamas_ref') || GENESIS_WALLET.toLowerCase();
+        console.log("CREATING_NEW_NODE_ENTRY...");
+        const assignedRef = localStorage.getItem('adamas_ref') || GENESIS_WALLET;
 
-        const newUserPayload = {
-            balance: 0,
+        await userRef.set({
+            balance: 800, // Initial Bonus
             streak: 1,
             referredBy: assignedRef,
             lastActive: Date.now(),
             joinedAt: Date.now(),
             quizDone: false,
-            loyaltyClaimed: false,
-            role: (currentUser === GENESIS_WALLET.toLowerCase()) ? "ADMIN" : "MEMBER"
-        };
-
-        await userRef.set(newUserPayload);
+            role: "MEMBER"
+        });
         
-        // Update Referrer's network count (Atomic Transaction)
-        if (assignedRef) {
-            db.ref('users/' + assignedRef + '/referralCount').transaction((count) => {
-                return (count || 0) + 1;
-            });
-        }
+        const refCounter = db.ref('users/' + assignedRef + '/referralCount');
+        refCounter.transaction((c) => (c || 0) + 1);
     } else {
-        // Update Last Active Heartbeat
+        console.log("NODE_RECOGNIZED: Fetching existing data...");
+        // Sirf last active update karo, balance ko touch mat karo
         userRef.update({ lastActive: Date.now() });
     }
 }
 
-// --- EXECUTE ---
 protectRoute();
-if (currentUser) {
-    syncUserSession();
-    console.log(`%c ADAMAS_PROTOCOL: Node ${currentUser === GENESIS_WALLET.toLowerCase() ? 'ADMIN' : 'ACTIVE'}`, 'color: #00f2ff; font-weight: bold;');
-}
+if(currentUser) syncUserSession();
