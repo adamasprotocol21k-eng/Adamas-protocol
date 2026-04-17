@@ -3,79 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Quantum Node Infrastructure</title>
+    <title>ADAMAS | The Future of DeFi Automation</title>
 
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="stylesheet" href="style.css"> <style>
-        /* Audit: Added Professional Animations & Systematic Layout */
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
         :root { 
             --cyan: #00f2ff; 
             --cyan-glow: rgba(0, 242, 255, 0.4); 
+            --gold: #ffcc00;
             --p-green: #adff2f; 
-            --glass: rgba(255, 255, 255, 0.03); 
+            --glass: rgba(255, 255, 255, 0.05); 
         }
 
-        body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
+        body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
         
-        /* Nav Branding Fix */
+        /* Nav Bar */
         #top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; position: relative; z-index: 9999; }
         .brand-box { display: flex; align-items: center; gap: 10px; }
         .nav-logo-img { height: 28px; filter: drop-shadow(0 0 5px var(--cyan-glow)); }
 
-        .network-badge { font-size: 8px; color: var(--cyan); border: 1px solid var(--cyan); padding: 4px 8px; border-radius: 20px; letter-spacing: 1px; }
-        .wallet-btn { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 12px 20px; border-radius: 12px; font-size: 10px; cursor: pointer; box-shadow: 0 0 15px var(--cyan-glow); backdrop-filter: blur(10px); transition: 0.3s; font-family: 'Orbitron'; font-weight: bold; }
+        .network-badge { font-size: 8px; color: var(--gold); border: 1px solid var(--gold); padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; font-weight: bold; }
+        .wallet-btn { background: linear-gradient(135deg, var(--cyan), #0080ff); border: none; color: #000; padding: 12px 24px; border-radius: 12px; font-size: 11px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3); transition: 0.3s; font-family: 'Orbitron'; font-weight: 900; }
+        .wallet-btn:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
         
-        /* Timer Style Integration */
-        #launch-timer { font-family: 'Orbitron'; font-size: 22px; color: #fff; text-shadow: 0 0 10px var(--cyan-glow); margin: 15px 0; font-weight: 900; letter-spacing: 2px; }
-
         section { display: none; width: 100%; max-width: 440px; flex-direction: column; }
         section.active-phase { display: flex; animation: fadeIn 0.8s ease; }
         
-        /* --- PRO LOGO ANIMATION SYSTEM --- */
-        .core-wrapper {
-            position: relative; width: 160px; height: 160px; margin: 30px auto 20px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .core-glow {
-            position: absolute; width: 100%; height: 100%;
-            background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%);
-            animation: pulseGlow 3s infinite ease-in-out;
-        }
-        .core-logo-circle {
-            width: 130px; height: 130px; border-radius: 50%;
-            border: 2px solid var(--cyan); padding: 4px;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
-            animation: float 4s infinite ease-in-out; z-index: 2;
-            overflow: hidden; box-shadow: 0 0 20px var(--cyan-glow);
-        }
-        .core-logo-circle img {
-            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
-            animation: slowRotate 15s linear infinite;
-        }
+        /* Hero Section */
+        .core-wrapper { position: relative; width: 140px; height: 140px; margin: 20px auto; display: flex; align-items: center; justify-content: center; }
+        .core-glow { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%); animation: pulseGlow 3s infinite ease-in-out; }
+        .core-logo-circle { width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--cyan); background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 2; overflow: hidden; box-shadow: 0 0 30px var(--cyan-glow); }
+        .core-logo-circle img { width: 100%; height: 100%; object-fit: cover; animation: slowRotate 15s linear infinite; }
 
-        .main-logo { font-size: 2.8rem; font-weight: 900; margin: 0; text-align: center; background: linear-gradient(180deg, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--cyan-glow)); letter-spacing: 8px; }
-        .hero-tag { color: var(--cyan); font-size: 10px; letter-spacing: 4px; text-align: center; margin-bottom: 30px; opacity: 0.8; }
+        .main-logo { font-family: 'Orbitron'; font-size: 3rem; font-weight: 900; margin: 0; text-align: center; background: linear-gradient(180deg, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 12px; }
+        .premium-headline { font-size: 18px; color: var(--gold); text-align: center; margin: 10px 0 5px 0; font-family: 'Orbitron'; font-weight: bold; }
+        .sub-tagline { font-size: 11px; color: #aaa; text-align: center; margin-bottom: 25px; line-height: 1.6; }
+
+        /* Trust & Social Proof Bar */
+        .trust-bar { display: flex; justify-content: space-around; background: var(--glass); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; }
+        .trust-item { text-align: center; }
+        .trust-val { font-family: 'Orbitron'; font-size: 14px; color: var(--cyan); display: block; }
+        .trust-lab { font-size: 8px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+
+        #launch-timer { font-family: 'Orbitron'; font-size: 24px; color: #fff; text-align: center; margin: 10px 0 20px 0; text-shadow: 0 0 10px var(--cyan-glow); font-weight: 900; }
+
+        /* Cards */
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .info-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); transition: 0.3s; }
+        .info-card h3 { color: var(--gold); font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase; font-family: 'Orbitron'; display: flex; align-items: center; gap: 8px; }
+        .info-card p { font-size: 11px; color: #ccc; line-height: 1.6; margin: 0; }
+
+        /* Tasks */
+        .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.4rem; text-align: center; margin-bottom: 5px; }
+        .page-sub { font-size: 9px; color: var(--cyan); text-align: center; margin-bottom: 30px; letter-spacing: 2px; }
+        .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 18px 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .status-pill { font-size: 10px; background: transparent; padding: 10px 15px; border-radius: 8px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
         
-        /* Systematic Info Cards */
-        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
-        .info-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 18px; border-radius: 18px; text-align: left; transition: 0.3s; }
-        .info-card h3 { color: var(--p-green); font-size: 11px; margin: 0 0 6px 0; text-transform: uppercase; font-family: 'Orbitron'; letter-spacing: 1px; }
-        .info-card p { font-size: 11px; color: #888; line-height: 1.5; margin: 0; font-family: 'Space Grotesk', sans-serif; }
+        .terminal-box { background: #080808; border-left: 3px solid var(--cyan); padding: 18px; border-radius: 8px; margin-top: 25px; }
+        .term-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 6px; font-family: monospace; }
         
-        .terminal-box { background: #050505; border-left: 3px solid var(--cyan); padding: 18px; border-radius: 4px 12px 12px 4px; margin-top: 25px; font-family: monospace; }
-        .term-row { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 6px; letter-spacing: 1px; }
-        
-        /* Task System UI */
-        .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.4rem; text-align: center; margin-bottom: 5px; letter-spacing: 1px; }
-        .page-sub { font-size: 9px; color: var(--cyan); text-align: center; margin-bottom: 30px; font-family: 'Orbitron'; letter-spacing: 2px; }
-        .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 18px 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .status-pill { font-size: 9px; background: transparent; padding: 10px 15px; border-radius: 8px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
-        
-        /* Animations */
         @keyframes slowRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-        @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.2); } }
+        @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -85,7 +76,7 @@
         <div id="top-bar">
             <div class="brand-box">
                 <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
-                <div class="network-badge">POLYGON AMOY</div>
+                <div class="network-badge">POLYGON MAINNET LIVE</div>
             </div>
             <button id="connect-trigger" class="wallet-btn" disabled>SYSTEM_LOCKED</button>
         </div>
@@ -93,46 +84,84 @@
         <section id="phase-intro" class="active-phase">
             <div class="core-wrapper">
                 <div class="core-glow"></div>
-                <div class="core-logo-circle">
-                    <img src="assets/dashboard-logo.png" alt="Adamas Core">
-                </div>
+                <div class="core-logo-circle"><img src="assets/dashboard-logo.png" alt="Adamas Core"></div>
             </div>
             
             <h1 class="main-logo">ADAMAS</h1>
-            <div class="hero-tag" id="lock-status">QUANTUM_NODE_PROTOCOL</div>
+            <h2 class="premium-headline">Turn Your Wallet Into a Smart Earning Machine</h2>
+            <p class="sub-tagline">Automate your DeFi strategy and earn passive rewards effortlessly.<br><b>Next-Gen DeFi Automation Engine.</b></p>
 
-            <div id="launch-timer" style="text-align: center;">00d 00h 00m 00s</div>
+            <div class="trust-bar">
+                <div class="trust-item"><span class="trust-val">10,000+</span><span class="trust-lab">Active Wallets</span></div>
+                <div class="trust-item"><span class="trust-val">450K+</span><span class="trust-lab">Transactions</span></div>
+                <div class="trust-item"><span class="trust-val">0%</span><span class="trust-lab">Fees Today</span></div>
+            </div>
+
+            <div id="launch-timer">00d 00h 00m 00s</div>
 
             <div class="info-grid">
                 <div class="info-card">
-                    <h3>Protocol Architecture</h3>
-                    <p>ADAMAS is a decentralized incentive layer engineered on Polygon to gamify ecosystem engagement.</p>
+                    <h3>🔐 Secure Protocol</h3>
+                    <p>Fully non-custodial infrastructure. Built on Polygon for institutional-grade security.</p>
                 </div>
                 <div class="info-card">
-                    <h3>Genesis Scarcity</h3>
+                    <h3>🤖 Automated Yield</h3>
                     <p>Early contributors secure ABP points, defining their eligibility for the $ADS governance framework.</p>
+                </div>
+                <div class="info-card">
+                    <h3>⚡ Fast & Scalable</h3>
+                    <p>Next-gen node technology ensures zero-lag execution of your decentralized strategies.</p>
                 </div>
             </div>
 
             <div class="terminal-box">
-                <div class="term-row"><span style="color:#666">CORE_STATUS</span><span id="protocol-status" style="color:#ff4444">ENCRYPTED</span></div>
-                <div class="term-row"><span style="color:#666">IDENTITY</span><span id="auth-label" style="color:#ff4444">NOT_FOUND</span></div>
-                <div id="loader-line" style="width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin-top: 10px; display: none; position: relative; overflow: hidden;">
+                <div class="term-row"><span style="color:#666">PROTOCOL_SHIELD</span><span id="protocol-status" style="color:var(--cyan)">ACTIVE_ENCRYPTED</span></div>
+                <div class="term-row"><span style="color:#666">USER_ACCESS</span><span id="auth-label" style="color:#ff4444">WAITING_FOR_CONNECT</span></div>
+                <div id="loader-line" style="width: 100%; height: 2px; background: rgba(0,242,255,0.1); margin-top: 10px; display: none; overflow: hidden;">
                     <div id="loader-fill" style="width: 40%; height: 100%; background: var(--cyan); position: absolute; animation: scan 1.5s infinite linear;"></div>
                 </div>
-                <p id="term-msg" style="font-size: 9px; color: #444; margin-top: 10px; line-height: 1.4; font-family: 'Orbitron';">AUTHENTICATION_REQUIRED: CONNECT WALLET</p>
+                <p id="term-msg" style="font-size: 8px; color: #444; margin-top: 10px; text-align: center; font-family: 'Orbitron';">AUTHENTICATION REQUIRED TO SYNC ABP DATA</p>
             </div>
         </section>
 
         <section id="phase-social">
             <h2 class="page-title">IDENTITY SYNC</h2>
             <p class="page-sub">LEVEL_01_VERIFICATION</p>
+            
             <div class="task-list">
-                <div class="task-card" id="card-t1"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">TELEGRAM CHANNEL</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t1" class="status-pill" onclick="handleTask('t1', 'https://t.me/ADSProtocol')">FOLLOW</div></div>
-                <div class="task-card" id="card-t2"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">TELEGRAM GROUP</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t2" class="status-pill" onclick="handleTask('t2', 'https://t.me/adsprotocolcommunity')">FOLLOW</div></div>
-                <div class="task-card" id="card-t3"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">FOLLOW @DIAMO X</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t3" class="status-pill" onclick="handleTask('t3', 'https://x.com/DiamoProtocol')">FOLLOW</div></div>
-                <div class="task-card" id="card-t4"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">FOLLOW @ADAMAS X</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t4" class="status-pill" onclick="handleTask('t4', 'https://x.com/AdamasADS')">FOLLOW</div></div>
+                <div class="task-card" id="card-t1">
+                    <div class="task-meta">
+                        <span style="font-size: 12px; font-weight: bold;">TELEGRAM CHANNEL</span><br>
+                        <span style="font-size: 10px; color: var(--p-green);">+200 ABP</span>
+                    </div>
+                    <div id="pill-t1" class="status-pill" onclick="handleTask('t1', 'https://t.me/ADSProtocol')">FOLLOW</div>
+                </div>
+
+                <div class="task-card" id="card-t2">
+                    <div class="task-meta">
+                        <span style="font-size: 12px; font-weight: bold;">TELEGRAM GROUP</span><br>
+                        <span style="font-size: 10px; color: var(--p-green);">+200 ABP</span>
+                    </div>
+                    <div id="pill-t2" class="status-pill" onclick="handleTask('t2', 'https://t.me/adsprotocolcommunity')">FOLLOW</div>
+                </div>
+
+                <div class="task-card" id="card-t3">
+                    <div class="task-meta">
+                        <span style="font-size: 12px; font-weight: bold;">FOLLOW @DIAMO X</span><br>
+                        <span style="font-size: 10px; color: var(--p-green);">+200 ABP</span>
+                    </div>
+                    <div id="pill-t3" class="status-pill" onclick="handleTask('t3', 'https://x.com/DiamoProtocol')">FOLLOW</div>
+                </div>
+
+                <div class="task-card" id="card-t4">
+                    <div class="task-meta">
+                        <span style="font-size: 12px; font-weight: bold;">FOLLOW @ADAMAS X</span><br>
+                        <span style="font-size: 10px; color: var(--p-green);">+200 ABP</span>
+                    </div>
+                    <div id="pill-t4" class="status-pill" onclick="handleTask('t4', 'https://x.com/AdamasADS')">FOLLOW</div>
+                </div>
             </div>
+
             <button id="final-btn" class="btn-master locked" onclick="finalRegistration()" style="background: linear-gradient(90deg, var(--cyan), #0080ff); color: #000; padding: 20px; border-radius: 15px; width: 100%; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 30px; box-shadow: 0 10px 20px rgba(0, 242, 255, 0.2);">UNLOCK DASHBOARD</button>
             <p id="lock-msg" style="font-size: 9px; color: #ff4444; margin-top: 15px; text-align: center; font-family: 'Orbitron'; letter-spacing: 1px;">HANDSHAKE REMAINING: 4</p>
         </section>
@@ -144,7 +173,6 @@
     <script src="timer.js"></script>
 
     <script>
-        /* [AAPKA POORA LOGIC SAME HAI] */
         let activeWallet = localStorage.getItem('adamas_temp_wallet') || null;
         let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
         let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
