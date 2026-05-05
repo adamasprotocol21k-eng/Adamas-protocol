@@ -12,10 +12,19 @@
             --cyan-glow: rgba(0, 242, 255, 0.4); 
             --p-green: #adff2f; 
             --glass: rgba(255, 255, 255, 0.03); 
+            --poly-purple: #8247e5;
         }
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .profile-wrapper { min-height: 100vh; padding: 15px; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; box-sizing: border-box; }
+
+        /* --- POINT 2: POLYGON IDENTITY --- */
+        .identity-badge {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            background: rgba(130, 71, 229, 0.1); border: 1px solid rgba(130, 71, 229, 0.2);
+            padding: 5px 15px; border-radius: 50px; width: fit-content; margin: 0 auto 20px;
+            font-size: 8px; color: var(--poly-purple); font-family: 'Orbitron'; letter-spacing: 1px;
+        }
 
         /* --- RANK CARD & GAUGE --- */
         .rank-card {
@@ -81,7 +90,11 @@
 <body>
 
     <div class="profile-wrapper">
-        <header style="text-align: center; margin-bottom: 25px;">
+        <header style="text-align: center; margin-bottom: 10px;">
+            <div class="identity-badge">
+                <span style="width: 5px; height: 5px; background: var(--poly-purple); border-radius: 50%;"></span>
+                POLYGON_VALIDATOR_ID
+            </div>
             <div style="font-size: 8px; color: var(--cyan); font-family: 'Orbitron'; letter-spacing: 4px; opacity: 0.6;">IDENTITY_TERMINAL_v2</div>
             <p id="user-wallet-full" style="font-size: 8px; color: #333; word-break: break-all; font-family: monospace; margin-top: 5px;">0x...</p>
         </header>
@@ -112,6 +125,10 @@
                 </p>
             </div>
         </section>
+
+        <p style="font-size: 7px; color: #222; text-align: center; margin-top: 15px; font-family: 'Orbitron';">
+            OFFICIAL RESEARCH TERMINAL - POINTS ARE FOR ECOSYSTEM TESTING ONLY
+        </p>
 
         <div class="stat-grid">
             <div class="stat-box">
@@ -162,13 +179,13 @@
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
 
+            // POINT 5: FIREBASE PERSISTENCE
             db.ref('users/' + userWallet.toLowerCase()).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
                     document.getElementById('stat-balance').innerText = (data.balance || 0).toFixed(2);
                     document.getElementById('stat-streak').innerText = (data.streak || 1) + " DAYS";
                     
-                    // Task Sync Calculation
                     let tasksDone = 0;
                     if(data.completedMissions) {
                         tasksDone = Object.keys(data.completedMissions).length;
@@ -187,6 +204,7 @@
         };
 
         function calculateScore(data, engagement, refCount) {
+            // Complex Score Logic for Scarcity
             let score = 300 + (refCount * 50) + (engagement * 1.5) + ((data.streak || 1) * 10);
             if (refCount < 5 && score > 550) score = 550;
             score = Math.floor(Math.min(score, 900));
