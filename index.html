@@ -73,7 +73,6 @@
         }
         .poly-dot { width: 6px; height: 6px; background: var(--poly-purple); border-radius: 50%; animation: blink 1.2s infinite; box-shadow: 0 0 8px var(--poly-purple); }
 
-        /* Preserving all your original styles exactly */
         #legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .legal-box { background: #0a0a0a; border: 1px solid var(--glass); width: 100%; max-width: 400px; border-radius: 25px; padding: 25px; display: flex; flex-direction: column; max-height: 85vh; }
         .legal-content { overflow-y: auto; margin: 15px 0; padding-right: 10px; font-size: 10px; color: #aaa; line-height: 1.6; font-family: 'Inter', sans-serif; }
@@ -99,10 +98,6 @@
         .trust-item { text-align: center; }
         .trust-val { font-family: 'Orbitron'; font-size: 13px; color: var(--cyan); display: block; }
         .trust-lab { font-size: 7.5px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
-        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .info-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 18px; border-radius: 20px; }
-        .info-card h3 { color: var(--p-green); font-size: 11px; margin: 0 0 6px 0; text-transform: uppercase; font-family: 'Orbitron'; }
-        .info-card p { font-size: 10.5px; color: #777; line-height: 1.5; margin: 0; }
         .terminal-box { background: #050505; border-left: 3px solid var(--cyan); padding: 18px; border-radius: 12px; margin-top: 25px; }
         .term-row { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 8px; font-family: monospace; }
         .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.4rem; text-align: center; margin-bottom: 5px; }
@@ -111,13 +106,7 @@
         .task-card.done { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
         .status-pill { font-size: 9px; background: transparent; padding: 10px 18px; border-radius: 10px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
         
-        /* NEW ANIMATIONS */
-        @keyframes welcomeEffect { 
-            0% { opacity: 0; transform: scale(0.9); filter: blur(10px); } 
-            50% { opacity: 1; transform: scale(1.05); filter: blur(0px); }
-            80% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: translateY(-20px); } 
-        }
+        @keyframes welcomeEffect { 0% { opacity: 0; transform: scale(0.9); filter: blur(10px); } 50% { opacity: 1; transform: scale(1.05); filter: blur(0px); } 80% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: translateY(-20px); } }
         @keyframes binancePulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
@@ -125,20 +114,17 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
         @keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
         <div class="welcome-msg">WELCOME TO ADAMAS PROTOCOL</div>
-        
         <div class="logo-pulse-box">
             <div class="pulse-ring"></div>
             <div class="pulse-ring" style="animation-delay: 0.5s;"></div>
             <img src="assets/dashboard-logo.png" alt="Logo">
         </div>
-
         <div class="splash-footer">
             <div class="sync-text">INITIALIZING POLYGON_AMOY_NODE...</div>
             <div style="display: inline-block; font-size: 9px; color: var(--poly-purple); border: 1px solid rgba(130, 71, 229, 0.4); padding: 6px 15px; border-radius: 20px; background: rgba(130, 71, 229, 0.05);">
@@ -223,7 +209,6 @@
     <script src="config.js"></script> 
 
     <script>
-        // --- UPDATED SPLASH LOGIC (4.5s Total for Smoothness) ---
         setTimeout(() => {
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => {
@@ -236,7 +221,7 @@
         const scrollArea = document.getElementById('legal-scroll-area');
         const acceptBtn = document.getElementById('accept-btn');
         scrollArea.addEventListener('scroll', () => {
-            if (scrollArea.scrollHeight - scrollArea.scrollTop <= scrollArea.clientHeight + 2) {
+            if (scrollArea.scrollHeight - scrollArea.scrollTop <= scrollArea.clientHeight + 5) {
                 acceptBtn.classList.add('ready');
                 acceptBtn.innerText = "I ACCEPT TERMS & PROCEED";
                 acceptBtn.disabled = false;
@@ -246,51 +231,34 @@
         acceptBtn.addEventListener('click', () => {
             if(acceptBtn.classList.contains('ready')) {
                 document.getElementById('legal-modal').style.display = 'none';
-                if(activeWallet) {
-                    db.ref('legal_consents/' + activeWallet).set({
-                        status: "accepted",
-                        timestamp: firebase.database.ServerValue.TIMESTAMP
-                    });
-                }
                 switchToSocial();
             }
         });
 
-        /* --- PRESERVING YOUR ORIGINAL LOGIC (No Changes) --- */
-        let activeWallet = localStorage.getItem('adamas_temp_wallet') || null;
-        let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
-        let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
+        let activeWallet = null;
+        let tasksDone = 0;
+        let taskStates = { t1:'init', t2:'init', t3:'init', t4:'init' };
 
         document.getElementById('connect-trigger').addEventListener('click', handleEntry);
-
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase().trim());
-
-            if(activeWallet) {
-                document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
-                restoreSyncProgress();
-                document.getElementById('legal-modal').style.display = 'flex'; 
-            }
-        }
 
         async function handleEntry() {
             if (!window.ethereum) return alert("Please use Trust Wallet/MetaMask browser.");
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase().trim();
-                localStorage.setItem('adamas_temp_wallet', activeWallet);
-                document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
-
+                
+                // --- CRITICAL FIX: PREVENT OVERWRITE ---
                 const snap = await db.ref('users/' + activeWallet).once('value');
                 if(snap.exists()) {
+                    // Purana user mil gaya! Seedha dashboard bhejo.
                     localStorage.setItem('adamas_user', activeWallet);
                     window.location.href = "dashboard.html";
                 } else {
+                    // Naya user hai, registration process shuru karo
+                    document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
                     document.getElementById('legal-modal').style.display = 'flex'; 
                 }
-            } catch (e) { }
+            } catch (e) { console.error(e); }
         }
 
         function switchToSocial() {
@@ -303,7 +271,6 @@
             if(taskStates[id] === 'init') {
                 window.open(link, '_blank');
                 taskStates[id] = 'awaiting';
-                saveState();
                 pill.innerText = "VERIFY";
             } else if(taskStates[id] === 'awaiting') {
                 pill.style.pointerEvents = 'none';
@@ -315,24 +282,11 @@
                         clearInterval(timer);
                         taskStates[id] = 'done';
                         tasksDone++;
-                        saveState();
                         markDone(id);
                         updateMasterButton();
                     }
                 }, 1000);
             }
-        }
-
-        function restoreSyncProgress() {
-            Object.keys(taskStates).forEach(id => {
-                if(taskStates[id] === 'done') markDone(id);
-            });
-            updateMasterButton();
-        }
-
-        function saveState() {
-            localStorage.setItem('adamas_task_states', JSON.stringify(taskStates));
-            localStorage.setItem('adamas_tasks_count', tasksDone);
         }
 
         function markDone(id) {
@@ -355,14 +309,27 @@
 
         async function finalRegistration() {
             if(tasksDone < 4) return;
+
+            // --- SECONDARY SAFETY CHECK ---
+            const finalSnap = await db.ref('users/' + activeWallet).once('value');
+            if(finalSnap.exists()) {
+                localStorage.setItem('adamas_user', activeWallet);
+                window.location.href = "dashboard.html";
+                return;
+            }
+
             let ref = localStorage.getItem('adamas_referrer') || "DIRECT";
             try {
                 await db.ref('users/' + activeWallet).set({
-                    balance: 800, wallet: activeWallet, referredBy: ref, joinedAt: firebase.database.ServerValue.TIMESTAMP
+                    balance: 800, 
+                    wallet: activeWallet, 
+                    referredBy: ref, 
+                    joinedAt: firebase.database.ServerValue.TIMESTAMP,
+                    streak: 1
                 });
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Error"); }
+            } catch (e) { alert("Error saving data"); }
         }
     </script>
 </body>
