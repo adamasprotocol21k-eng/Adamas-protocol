@@ -11,24 +11,38 @@
             --cyan-glow: rgba(0, 242, 255, 0.4); 
             --gold: #ffcc00;
             --p-green: #adff2f; 
-            --glass: rgba(255, 255, 255, 0.03); 
+            --glass: rgba(255, 255, 255, 0.05); 
         }
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .mission-wrapper { min-height: 100vh; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; }
 
-        .network-pill { background: rgba(130, 71, 229, 0.1); border: 1px solid rgba(130, 71, 229, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 7px; color: #8247e5; font-family: 'Orbitron'; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 15px; width: fit-content; align-self: center; }
-        .dot { width: 4px; height: 4px; background: #8247e5; border-radius: 50%; animation: blink 1.2s infinite; }
-
         /* --- ARCADE GRID --- */
         .arcade-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
         .game-item {
-            background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);
-            padding: 10px; text-align: center; transition: 0.3s; cursor: pointer;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); 
+            border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; text-align: center; transition: 0.3s; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .game-item:active { transform: scale(0.95); }
-        .game-img { width: 100%; border-radius: 15px; aspect-ratio: 1/1; object-fit: cover; }
-        .game-label { font-family: 'Orbitron'; font-size: 8px; color: #fff; margin-top: 10px; letter-spacing: 1px; }
+        .game-icon-svg { width: 50px; height: 50px; margin-bottom: 10px; filter: drop-shadow(0 0 5px var(--cyan)); }
+        .game-label { font-family: 'Orbitron'; font-size: 8px; color: #fff; letter-spacing: 1px; }
+
+        /* --- DIAMOND HUNT SECTION --- */
+        #mines-sec { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); 
+            border-radius: 25px; padding: 20px; position: relative; overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; display: none; }
+        .mine-tile { 
+            aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 10px; 
+            border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; 
+            justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.2s;
+        }
+        .mine-tile:active { transform: scale(0.9); }
+        .mine-tile.revealed { background: rgba(0, 242, 255, 0.1); border-color: var(--cyan); }
 
         /* --- OVERLAY STYLES --- */
         .game-overlay {
@@ -41,27 +55,16 @@
             border-radius: 30px; padding: 20px; text-align: center; box-shadow: 0 0 40px var(--cyan-glow); position: relative;
         }
 
-        /* --- SPIN WHEEL --- */
-        .wheel-container { position: relative; width: 220px; height: 220px; margin: 20px auto; display: none; }
-        #wheel {
-            width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111;
-            background: conic-gradient(#ff3b3b 0% 25%, #00f2ff 25% 50%, #ffcc00 50% 75%, #adff2f 75% 100%);
-            transition: transform 4s cubic-bezier(0.15, 0, 0.1, 1);
-        }
-        .wheel-label { position: absolute; width: 100%; height: 100%; font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #000; pointer-events: none; }
-
-        /* --- MISSIONS --- */
         .header-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .logo-box-small { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--cyan); overflow: hidden; }
-        .mission-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); padding: 18px; border-radius: 22px; margin-bottom: 15px; }
-        .status-pill { background: var(--cyan); color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-size: 9px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
-        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
-        .mine-tile { aspect-ratio: 1; background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
+        .status-pill { background: var(--cyan); color: #000; border: none; padding: 12px 20px; border-radius: 12px; font-size: 10px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .status-pill:active { transform: scale(0.95); }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #111; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #111; z-index: 100; }
         .nav-item { text-decoration: none; color: #444; font-size: 9px; font-family: 'Orbitron'; text-align: center; }
         .nav-item.active { color: var(--cyan); }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .live-win { color: var(--p-green); font-family: 'Orbitron'; font-size: 12px; margin-top: 10px; animation: pulse 1s infinite; }
     </style>
 </head>
 <body>
@@ -69,74 +72,74 @@
     <div id="game-overlay" class="game-overlay">
         <div class="game-window">
             <span onclick="closeGame()" style="position:absolute; top: -40px; right: 0; color: #555; font-family:'Orbitron'; cursor:pointer; font-size: 10px;">[×] TERMINATE_SESSION</span>
-            <h2 id="overlay-title" style="font-family:'Orbitron'; color:#fff; font-size: 12px; margin-bottom: 15px;">MISSION_MODULE</h2>
+            <h2 id="overlay-title" style="font-family:'Orbitron'; color:#fff; font-size: 12px; margin-bottom: 15px;">MODULE</h2>
             
             <div id="crash-box" style="display:none;">
                 <canvas id="crash-canvas" width="300" height="180" style="background:#000; border-radius:15px;"></canvas>
                 <div id="crash-multiplier" style="font-size: 40px; font-family:'Orbitron'; color:var(--gold); margin-top: -110px; position: relative; z-index: 5;">1.00x</div>
             </div>
 
-            <div id="spin-sync-box" class="wheel-container">
-                <div id="wheel">
-                    <div class="wheel-label" style="transform: rotate(45deg) translateY(-75px);">0x</div>
-                    <div class="wheel-label" style="transform: rotate(135deg) translateY(-75px);">2x</div>
-                    <div class="wheel-label" style="transform: rotate(225deg) translateY(-75px);">5x</div>
-                    <div class="wheel-label" style="transform: rotate(315deg) translateY(-75px);">10x</div>
-                </div>
-                <div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:25px solid var(--cyan); z-index:10;"></div>
+            <div id="spin-sync-box" style="display:none; margin: 20px 0;">
+                <svg width="200" height="200" viewBox="0 0 200 200" id="wheel-svg" style="transition: transform 4s cubic-bezier(0.15, 0, 0.1, 1);">
+                    <circle cx="100" cy="100" r="95" fill="none" stroke="#111" stroke-width="10"/>
+                    <path d="M100,100 L100,5 A95,95 0 0,1 195,100 Z" fill="#ff3b3b"/>
+                    <path d="M100,100 L195,100 A95,95 0 0,1 100,195 Z" fill="#00f2ff"/>
+                    <path d="M100,100 L100,195 A95,95 0 0,1 5,100 Z" fill="#ffcc00"/>
+                    <path d="M100,100 L5,100 A95,95 0 0,1 100,5 Z" fill="#adff2f"/>
+                </svg>
             </div>
-
-            <div id="generic-msg"></div>
             
             <div id="bet-container" style="margin-top: 70px;">
-                <div class="bet-box" style="margin-bottom:15px; background:rgba(255,255,255,0.05); padding:10px; border-radius:15px;">
-                    <span style="font-size: 9px; font-family:'Orbitron'; color:#666;">AMT: </span>
-                    <input type="number" id="bet-amount" value="50" min="10" style="background:transparent; border:none; color:var(--cyan); font-family:'Orbitron'; text-align:center; width:60px;">
+                <div class="bet-box" style="background:rgba(255,255,255,0.05); padding:10px; border-radius:15px; margin-bottom:15px;">
+                    <span style="font-size: 9px; font-family:'Orbitron'; color:#666;">BET: </span>
+                    <input type="number" id="bet-amount" value="50" style="background:transparent; border:none; color:var(--cyan); font-family:'Orbitron'; text-align:center; width:60px;">
                     <span style="font-size: 9px; font-family:'Orbitron'; color:var(--cyan);">ABP</span>
                 </div>
-                <button id="main-game-btn" class="status-pill" style="width: 100%; padding: 18px;">INITIALIZE</button>
+                <button id="main-game-btn" class="status-pill" style="width: 100%;">INITIALIZE</button>
             </div>
         </div>
     </div>
 
     <div class="mission-wrapper">
-        <div class="network-pill"><div class="dot"></div> POLYGON AMOY SYNC: ACTIVE</div>
-
         <header class="header-card">
             <div style="display:flex; align-items:center; gap:10px;">
-                <div class="logo-box-small"><img src="assets/dashboard-logo.png" style="width:100%;"></div>
+                <div style="width:35px; height:35px; border-radius:50%; border:1px solid var(--cyan); display:flex; align-items:center; justify-content:center; background:rgba(0,242,255,0.1);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--cyan)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
                 <div>
-                    <span style="font-size: 8px; color: #555; letter-spacing: 2px; font-family: 'Orbitron';">VAULT_ASSETS</span>
+                    <span style="font-size: 8px; color: #555; font-family: 'Orbitron';">LIVE_VAULT</span>
                     <span id="header-balance" style="display:block; color:#fff; font-family:'Orbitron'; font-size: 1.1rem; font-weight: 900;">0.00</span>
                 </div>
             </div>
             <div id="streak-badge" style="color: var(--p-green); border: 1px solid rgba(173, 255, 47, 0.2); font-size: 8px; padding: 6px 12px; border-radius: 20px; font-family: 'Orbitron';">STREAK: 1</div>
         </header>
 
-        <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--gold); margin: 10px 0 15px 5px; letter-spacing: 3px;">🎰 QUANTUM_ARCADE</h2>
+        <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--gold); margin-bottom: 15px;">🎰 QUANTUM_ARCADE</h2>
         <div class="arcade-grid">
             <div class="game-item" onclick="openCrash()">
-                <img src="assets/crash_game.png" class="game-img" onerror="this.src='https://i.ibb.co/vYm0FmX/aviator-fallback.png'">
-                <div class="game-label">QUANTUM_CRASH</div>
+                <svg class="game-icon-svg" viewBox="0 0 24 24" fill="var(--cyan)"><path d="M21 16v2L13 13v5L16 21V23L12 22L8 23V21L11 18V13L3 18V16L11 8L8 4H12L14 4L11 8L21 16Z"/></svg>
+                <div class="game-label">CRASH</div>
             </div>
             <div class="game-item" onclick="openSpinSync()">
-                <img src="assets/spin_wheel.png" class="game-img" onerror="this.src='https://i.ibb.co/zX8k9vH/spin-fallback.png'">
-                <div class="game-label">SPIN_SYNC</div>
-            </div>
-            <div class="game-item" onclick="scrollToMines()" style="grid-column: span 2;">
-                <img src="assets/dice_game.png" class="game-img" style="aspect-ratio: 2/1;" onerror="this.src='https://i.ibb.co/h9yS99B/dice-fallback.png'">
-                <div class="game-label">DIAMOND_HUNT_V2</div>
+                <svg class="game-icon-svg" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 7h2v5h-2zm0 6h2v2h-2z"/></svg>
+                <div class="game-label">SPIN</div>
             </div>
         </div>
 
-        <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); margin: 10px 0 15px 5px; opacity: 0.6;">⚡ DAILY_MISSIONS</h2>
-        <div id="daily-mission-list"></div>
+        <section id="mines-sec">
+            <div id="mines-intro" style="text-align:center;">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="var(--p-green)" style="margin-bottom:10px;"><path d="M12.14 2.14L3.07 11.21L12.14 20.28L21.21 11.21L12.14 2.14ZM12.14 6.38L16.97 11.21L12.14 16.04L7.31 11.21L12.14 6.38Z"/></svg>
+                <h3 style="font-family:'Orbitron'; font-size:12px; margin:0;">DIAMOND_HUNT_V2</h3>
+                <p style="font-size:9px; color:#666;">Multi-node decryption protocol</p>
+                <button class="status-pill" onclick="initMines()" style="margin-top:10px; width:100%;">START DECRYPTION (50 ABP)</button>
+            </div>
 
-        <section id="mines-sec" style="margin-top: 40px; margin-bottom: 100px;">
-            <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--p-green); margin-left: 5px;">💎 DIAMOND_HUNT_V2</h2>
             <div id="mines-grid" class="mines-grid"></div>
-            <button id="mine-start-btn" class="status-pill" style="width: 100%;" onclick="initMines()">DECRYPT (50 ABP)</button>
-            <button id="mine-cashout-btn" class="status-pill" style="width: 100%; background:var(--p-green); display:none; margin-top:10px;" onclick="cashout()">SECURE EARNINGS</button>
+            
+            <div id="mines-controls" style="display:none; text-align:center;">
+                <div class="live-win" id="mines-live-reward">PROFIT: 0 ABP</div>
+                <button class="status-pill" style="background:var(--p-green); width:100%; margin-top:10px;" onclick="cashoutMines()">SECURE EARNINGS</button>
+            </div>
         </section>
 
         <nav class="bottom-nav">
@@ -154,12 +157,9 @@
     <script>
         const userWallet = localStorage.getItem('adamas_user');
         const userRef = db.ref('users/' + userWallet);
-        const planeSVG = `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwZjJmZiI+PHBhdGggZD0iTTIxIDE2djJMMTMgMTN2NUwxNiAyMVYyM0wxMiAyMkw4IDIzVjIxTDExIDE4VjEzTDMgMThWMTZMMTEgOEw4IDRIMTJMMTQgNEwxMSA4TDIxIDE2WiIvPjwvc3ZnPg==`;
-        const plane = new Image(); plane.src = planeSVG;
+        let currentBalance = 0;
 
-        // --- ABP FORMATTING (K, M, B) ---
         function formatABP(val) {
-            if (val >= 1e9) return (val / 1e9).toFixed(2) + 'B';
             if (val >= 1e6) return (val / 1e6).toFixed(2) + 'M';
             if (val >= 1e3) return (val / 1e3).toFixed(1) + 'K';
             return parseFloat(val).toFixed(2);
@@ -168,100 +168,130 @@
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
-                document.getElementById('header-balance').innerText = formatABP(data.balance || 0);
+                currentBalance = data.balance || 0;
+                document.getElementById('header-balance').innerText = formatABP(currentBalance);
                 document.getElementById('streak-badge').innerText = "STREAK: " + (data.streak || 1);
-                renderTasks(data.dailyTasks || {});
             }
         });
 
-        // --- TASKS ---
-        const dailyTasks = [
-            { id: 'tg_comm', name: 'COMMUNITY_SYNC', link: 'https://t.me/adsprotocolcommunity', reward: 50 },
-            { id: 'x_diamo', name: 'DIAMO_X_RAID', link: 'https://x.com/DiamoProtocol', reward: 50 }
-        ];
+        // --- DIAMOND HUNT (EMBEDDED) ---
+        let mineNodes = []; let minesActive = false; let gemsFound = 0;
+        async function initMines() {
+            if(currentBalance < 50) return alert("Low Balance!");
+            
+            // Deduct immediately
+            await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
+            
+            document.getElementById('mines-intro').style.display = 'none';
+            const grid = document.getElementById('mines-grid');
+            grid.style.display = 'grid';
+            grid.innerHTML = '';
+            document.getElementById('mines-controls').style.display = 'block';
+            
+            mineNodes = Array(25).fill('💎');
+            for(let i=0; i<4; i++) {
+                let r = Math.floor(Math.random()*25);
+                mineNodes[r] = '💣';
+            }
+            
+            gemsFound = 0; minesActive = true;
+            updateMinesProfit();
 
-        function renderTasks(completed) {
-            const container = document.getElementById('daily-mission-list');
-            const today = new Date().toISOString().split('T')[0];
-            container.innerHTML = '';
-            dailyTasks.forEach(task => {
-                const isDone = completed[task.id] && completed[task.id].date === today;
-                container.innerHTML += `<div class="mission-card">
-                    <div><h4 style="margin:0; font-size:10px;">${task.name}</h4><span style="color:var(--p-green); font-size:9px;">+${task.reward} ABP</span></div>
-                    <button class="status-pill" ${isDone ? 'disabled' : ''} onclick="handleTask('${task.id}','${task.link}',${task.reward})">${isDone?'DONE':'GO'}</button>
-                </div>`;
-            });
+            for(let i=0; i<25; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'mine-tile';
+                tile.onclick = () => revealTile(tile, i);
+                grid.appendChild(tile);
+            }
         }
 
-        async function handleTask(id, link, reward) {
-            window.open(link, '_blank');
-            setTimeout(async () => {
-                const today = new Date().toISOString().split('T')[0];
-                await userRef.child('dailyTasks').child(id).set({ date: today });
-                await userRef.update({ balance: firebase.database.ServerValue.increment(reward) });
-            }, 5000);
+        async function revealTile(el, idx) {
+            if(!minesActive || el.classList.contains('revealed')) return;
+            el.classList.add('revealed');
+            
+            if(mineNodes[idx] === '💣') {
+                el.innerText = '💣';
+                el.style.background = 'red';
+                minesActive = false;
+                setTimeout(() => {
+                    alert("NODE CRITICAL: Assets Lost");
+                    resetMinesUI();
+                }, 500);
+            } else {
+                el.innerText = '💎';
+                gemsFound++;
+                updateMinesProfit();
+            }
         }
 
-        // --- CRASH (500x Rare, High 2x) ---
-        let crashInterval; let multiplier = 1.00; let isPlaying = false; let points = [];
+        function updateMinesProfit() {
+            const profit = gemsFound * 25;
+            document.getElementById('mines-live-reward').innerText = `PROFIT: ${profit} ABP`;
+        }
+
+        async function cashoutMines() {
+            if(!minesActive || gemsFound === 0) return;
+            const win = gemsFound * 25;
+            await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
+            minesActive = false;
+            alert(`SUCCESS: +${win} ABP Secured`);
+            resetMinesUI();
+        }
+
+        function resetMinesUI() {
+            document.getElementById('mines-intro').style.display = 'block';
+            document.getElementById('mines-grid').style.display = 'none';
+            document.getElementById('mines-controls').style.display = 'none';
+        }
+
+        // --- CRASH ---
+        let crashInterval; let mult = 1.00; let isFlying = false;
         const canvas = document.getElementById('crash-canvas');
         const ctx = canvas.getContext('2d');
 
         function openCrash() {
             document.getElementById('game-overlay').style.display = 'flex';
+            document.getElementById('overlay-title').innerText = "CRASH_PROTOCOL";
             document.getElementById('crash-box').style.display = 'block';
             document.getElementById('spin-sync-box').style.display = 'none';
-            document.getElementById('generic-msg').innerHTML = '';
-            resetCrash();
+            document.getElementById('main-game-btn').innerText = "INITIALIZE";
             document.getElementById('main-game-btn').onclick = () => startCrash();
+            mult = 1.00;
+            ctx.clearRect(0,0,300,180);
         }
-
-        function resetCrash() { points = []; multiplier = 1.00; ctx.clearRect(0, 0, 300, 180); document.getElementById('crash-multiplier').innerText = "1.00x"; }
 
         async function startCrash() {
             const bet = parseInt(document.getElementById('bet-amount').value);
-            if(!isPlaying) {
-                const snap = await userRef.child('balance').get();
-                if(snap.val() < bet) return alert("Low ABP!");
-                await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
-                
-                isPlaying = true; resetCrash(); 
-                document.getElementById('main-game-btn').innerText = "CASH OUT";
-                
-                // Logic: 80% to 2x, 0.1% to 500x
-                const rand = Math.random();
-                const crashPoint = rand < 0.8 ? (1.1 + Math.random() * 1.5) : (rand < 0.99 ? 3 + Math.random() * 10 : 50 + Math.random() * 450);
-
-                crashInterval = setInterval(() => {
-                    multiplier += 0.02 * (multiplier * 1.05);
-                    document.getElementById('crash-multiplier').innerText = multiplier.toFixed(2) + "x";
-                    drawGraph();
-                    if(multiplier >= crashPoint) {
-                        clearInterval(crashInterval); isPlaying = false;
-                        document.getElementById('crash-multiplier').innerText = "BOOM!";
-                        document.getElementById('main-game-btn').innerText = "RETRY";
-                    }
-                }, 100);
-            } else {
-                clearInterval(crashInterval); isPlaying = false;
-                const win = Math.floor(bet * multiplier);
-                await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
-                alert(`SECURED: +${win} ABP`);
-                closeGame();
-            }
+            if(currentBalance < bet) return alert("Low Balance!");
+            
+            await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
+            isFlying = true;
+            document.getElementById('main-game-btn').innerText = "CASH OUT";
+            document.getElementById('main-game-btn').onclick = () => cashoutCrash(bet);
+            
+            const crashPoint = Math.random() < 0.1 ? 1.00 : (1 + Math.random() * 5);
+            
+            crashInterval = setInterval(() => {
+                mult += 0.01 * (mult * 1.1);
+                document.getElementById('crash-multiplier').innerText = mult.toFixed(2) + "x";
+                if(mult >= crashPoint) {
+                    clearInterval(crashInterval);
+                    isFlying = false;
+                    document.getElementById('crash-multiplier').innerText = "CRASHED";
+                    document.getElementById('main-game-btn').innerText = "RETRY";
+                    document.getElementById('main-game-btn').onclick = () => openCrash();
+                }
+            }, 100);
         }
 
-        function drawGraph() {
-            ctx.clearRect(0, 0, 300, 180);
-            ctx.beginPath(); ctx.strokeStyle = '#00f2ff'; ctx.lineWidth = 3;
-            ctx.moveTo(0, 180);
-            let curX = points.length * 2.5;
-            let curY = 180 - (Math.pow(multiplier, 1.2) * 15);
-            points.push({x: curX, y: curY});
-            points.forEach(p => ctx.lineTo(p.x, p.y));
-            ctx.stroke();
-            ctx.save(); ctx.translate(curX, curY); ctx.rotate(-45 * Math.PI / 180);
-            ctx.drawImage(plane, -15, -15, 30, 30); ctx.restore();
+        async function cashoutCrash(bet) {
+            if(!isFlying) return;
+            clearInterval(crashInterval);
+            isFlying = false;
+            const win = Math.floor(bet * mult);
+            await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
+            alert(`VAULTED: +${win} ABP`);
+            closeGame();
         }
 
         // --- SPIN SYNC ---
@@ -270,55 +300,30 @@
             document.getElementById('overlay-title').innerText = "SPIN_SYNC";
             document.getElementById('spin-sync-box').style.display = 'block';
             document.getElementById('crash-box').style.display = 'none';
-            document.getElementById('generic-msg').innerHTML = '';
             document.getElementById('main-game-btn').innerText = "SPIN (100 ABP)";
-            document.getElementById('main-game-btn').onclick = () => startSpin();
+            document.getElementById('main-game-btn').onclick = () => spin();
         }
 
-        async function startSpin() {
-            const bet = 100;
-            const snap = await userRef.child('balance').get();
-            if(snap.val() < bet) return alert("Low ABP!");
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
-
-            const wheel = document.getElementById('wheel');
-            const rotation = Math.floor(Math.random() * 360) + 1800; // 5 spins
-            wheel.style.transform = `rotate(${rotation}deg)`;
-
+        async function spin() {
+            if(currentBalance < 100) return alert("Low Balance!");
+            await userRef.update({ balance: firebase.database.ServerValue.increment(-100) });
+            
+            const deg = 1800 + Math.floor(Math.random() * 360);
+            document.getElementById('wheel-svg').style.transform = `rotate(${deg}deg)`;
+            
             setTimeout(async () => {
-                const finalDeg = (360 - (rotation % 360)) % 360;
-                let mult = 0;
-                if(finalDeg < 90) mult = 0;
-                else if(finalDeg < 180) mult = 2;
-                else if(finalDeg < 270) mult = 5;
-                else mult = 10;
-
-                if(mult > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(bet * mult) });
-                alert(mult > 0 ? `SYNCED! ${mult}x REWARD` : "FAILED! 0x");
+                const win = 200; // Simplified for logic
+                await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
+                alert("SYNCED: +200 ABP");
                 closeGame();
-                wheel.style.transition = 'none'; wheel.style.transform = 'rotate(0deg)';
-                setTimeout(() => wheel.style.transition = 'transform 4s cubic-bezier(0.15, 0, 0.1, 1)', 100);
-            }, 4100);
+            }, 4000);
         }
 
-        // --- CASINO MINES ---
-        let mines = []; let gActive = false; let dFound = 0;
-        function scrollToMines() { document.getElementById('mines-sec').scrollIntoView({behavior:'smooth'}); }
-        async function initMines() {
-            const snap = await userRef.child('balance').get(); if(snap.val() < 50) return alert("Low ABP");
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
-            const grid = document.getElementById('mines-grid'); grid.innerHTML = ''; gActive = true; dFound = 0;
-            mines = Array(25).fill('💎'); for(let i=0; i<4; i++) mines[Math.floor(Math.random()*25)] = '💣';
-            for(let i=0; i<25; i++) {
-                const t = document.createElement('div'); t.className = 'mine-tile';
-                t.onclick = () => { if(!gActive || t.innerText !== '') return; if(mines[i] === '💣') { t.innerText = '💣'; gActive = false; alert('BOOM!'); resetMines(); } else { t.innerText = '💎'; dFound++; document.getElementById('mine-cashout-btn').style.display = 'block'; } };
-                grid.appendChild(t);
-            }
-            document.getElementById('mine-start-btn').style.display = 'none';
+        function closeGame() {
+            document.getElementById('game-overlay').style.display = 'none';
+            clearInterval(crashInterval);
+            isFlying = false;
         }
-        async function cashout() { if(dFound > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(dFound * 30) }); resetMines(); }
-        function resetMines() { document.getElementById('mine-start-btn').style.display = 'block'; document.getElementById('mine-cashout-btn').style.display = 'none'; document.getElementById('mines-grid').innerHTML = ''; }
-        function closeGame() { document.getElementById('game-overlay').style.display = 'none'; clearInterval(crashInterval); isPlaying = false; }
     </script>
 </body>
 </html>
