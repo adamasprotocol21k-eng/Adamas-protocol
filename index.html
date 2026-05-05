@@ -10,7 +10,7 @@
     <style>
         :root { 
             --cyan: #00f2ff; 
-            --cyan-glow: rgba(0, 242, 255, 0.4); 
+            --cyan-glow: rgba(0, 242, 255, 0.6); 
             --p-green: #adff2f; 
             --gold: #ffcc00;
             --poly-purple: #8247e5;
@@ -19,25 +19,39 @@
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow: hidden; } 
         
-        /* --- POINT 1: PREMIUM SPLASH & WELCOME --- */
+        /* --- POINT 1: ULTRA-PREMIUM CENTERED SPLASH --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 99999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; transition: 1s ease;
+            background: #000; z-index: 99999; 
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; /* PERFECT CENTER */
+            text-align: center;
+            transition: 1.2s ease;
         }
 
         .welcome-msg {
-            font-size: 14px; color: var(--cyan); letter-spacing: 5px;
-            text-shadow: 0 0 15px var(--cyan); margin-bottom: 40px;
-            animation: welcomeFade 2s ease-in-out forwards; opacity: 0;
+            font-size: 16px; 
+            font-weight: 900;
+            color: #fff; 
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            /* NEON GLOW EFFECT */
+            text-shadow: 0 0 5px #fff, 0 0 10px var(--cyan), 0 0 20px var(--cyan);
+            margin-bottom: 50px;
+            animation: welcomeEffect 2.5s ease-in-out forwards; 
+            opacity: 0;
         }
 
         .logo-pulse-box {
-            width: 120px; height: 120px; border-radius: 50%;
+            width: 130px; height: 130px; border-radius: 50%;
             position: relative; display: flex; align-items: center; justify-content: center;
-            opacity: 0; animation: fadeIn 1s 1.5s forwards;
+            opacity: 0; animation: fadeIn 1s 1.8s forwards;
         }
-        .logo-pulse-box img { width: 100%; height: 100%; z-index: 10; border-radius: 50%; border: 2px solid var(--cyan); box-shadow: 0 0 20px var(--cyan-glow); }
+        .logo-pulse-box img { 
+            width: 100%; height: 100%; z-index: 10; border-radius: 50%; 
+            border: 2px solid var(--cyan); 
+            box-shadow: 0 0 30px var(--cyan-glow);
+        }
         
         .pulse-ring {
             position: absolute; width: 100%; height: 100%;
@@ -46,10 +60,10 @@
         }
 
         .splash-footer {
-            position: absolute; bottom: 50px; text-align: center;
-            opacity: 0; animation: fadeIn 1s 2s forwards;
+            position: absolute; bottom: 60px; width: 100%; text-align: center;
+            opacity: 0; animation: fadeIn 1s 2.5s forwards;
         }
-        .sync-text { font-size: 8px; color: #555; letter-spacing: 2px; margin-bottom: 10px; }
+        .sync-text { font-size: 9px; color: #666; letter-spacing: 3px; margin-bottom: 12px; }
 
         /* --- POINT 2: POLYGON BLINKING IDENTITY --- */
         .network-badge { 
@@ -57,33 +71,16 @@
             padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; font-weight: bold; 
             background: rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px;
         }
-        .poly-dot { width: 6px; height: 6px; background: var(--poly-purple); border-radius: 50%; animation: blink 1.2s infinite; box-shadow: 0 0 5px var(--poly-purple); }
+        .poly-dot { width: 6px; height: 6px; background: var(--poly-purple); border-radius: 50%; animation: blink 1.2s infinite; box-shadow: 0 0 8px var(--poly-purple); }
 
-        /* --- POINT 3 & 4: LEGAL FIREWALL MODAL --- */
-        #legal-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 100000; display: none;
-            align-items: center; justify-content: center; padding: 20px;
-        }
-        .legal-box {
-            background: #0a0a0a; border: 1px solid var(--glass); width: 100%; max-width: 400px;
-            border-radius: 25px; padding: 25px; display: flex; flex-direction: column; max-height: 85vh;
-        }
-        .legal-content { 
-            overflow-y: auto; margin: 15px 0; padding-right: 10px; 
-            font-size: 10px; color: #aaa; line-height: 1.6; font-family: 'Inter', sans-serif;
-        }
+        /* Preserving all your original styles exactly */
+        #legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .legal-box { background: #0a0a0a; border: 1px solid var(--glass); width: 100%; max-width: 400px; border-radius: 25px; padding: 25px; display: flex; flex-direction: column; max-height: 85vh; }
+        .legal-content { overflow-y: auto; margin: 15px 0; padding-right: 10px; font-size: 10px; color: #aaa; line-height: 1.6; font-family: 'Inter', sans-serif; }
         .legal-content h4 { color: var(--gold); font-size: 11px; margin-top: 15px; text-transform: uppercase; }
         .risk-alert { background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; font-size: 9px; margin-bottom: 10px; text-align: center; font-weight: bold; }
-        
-        .accept-btn {
-            background: #1a1a1a; color: #444; border: none; padding: 15px;
-            border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; font-size: 10px;
-            cursor: not-allowed; transition: 0.3s;
-        }
+        .accept-btn { background: #1a1a1a; color: #444; border: none; padding: 15px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; font-size: 10px; cursor: not-allowed; transition: 0.3s; }
         .accept-btn.ready { background: var(--cyan); color: #000; cursor: pointer; box-shadow: 0 0 15px var(--cyan-glow); }
-
-        /* Preserving your original styles */
         .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; visibility: hidden; }
         #top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; position: relative; z-index: 9999; max-width: 440px; }
         .brand-box { display: flex; align-items: center; gap: 10px; }
@@ -99,12 +96,28 @@
         .premium-headline { font-size: 18px; color: var(--gold); text-align: center; margin: 15px 0 5px 0; font-family: 'Orbitron'; font-weight: bold; line-height: 1.3; }
         .sub-tagline { font-size: 11px; color: #888; text-align: center; margin-bottom: 25px; line-height: 1.6; }
         .trust-bar { display: flex; justify-content: space-around; background: var(--glass); padding: 15px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .trust-item { text-align: center; }
+        .trust-val { font-family: 'Orbitron'; font-size: 13px; color: var(--cyan); display: block; }
+        .trust-lab { font-size: 7.5px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .info-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 18px; border-radius: 20px; }
+        .info-card h3 { color: var(--p-green); font-size: 11px; margin: 0 0 6px 0; text-transform: uppercase; font-family: 'Orbitron'; }
+        .info-card p { font-size: 10.5px; color: #777; line-height: 1.5; margin: 0; }
         .terminal-box { background: #050505; border-left: 3px solid var(--cyan); padding: 18px; border-radius: 12px; margin-top: 25px; }
         .term-row { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 8px; font-family: monospace; }
+        .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.4rem; text-align: center; margin-bottom: 5px; }
+        .page-sub { font-size: 9px; color: var(--cyan); text-align: center; margin-bottom: 30px; letter-spacing: 2px; }
+        .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 18px 20px; border-radius: 22px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .task-card.done { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
         .status-pill { font-size: 9px; background: transparent; padding: 10px 18px; border-radius: 10px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
         
         /* NEW ANIMATIONS */
-        @keyframes welcomeFade { 0% { opacity: 0; transform: translateY(10px); } 30% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
+        @keyframes welcomeEffect { 
+            0% { opacity: 0; transform: scale(0.9); filter: blur(10px); } 
+            50% { opacity: 1; transform: scale(1.05); filter: blur(0px); }
+            80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: translateY(-20px); } 
+        }
         @keyframes binancePulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
@@ -112,6 +125,7 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
         @keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -127,7 +141,7 @@
 
         <div class="splash-footer">
             <div class="sync-text">INITIALIZING POLYGON_AMOY_NODE...</div>
-            <div style="font-size: 9px; color: var(--poly-purple); border: 1px solid rgba(130, 71, 229, 0.3); padding: 5px 12px; border-radius: 20px;">
+            <div style="display: inline-block; font-size: 9px; color: var(--poly-purple); border: 1px solid rgba(130, 71, 229, 0.4); padding: 6px 15px; border-radius: 20px; background: rgba(130, 71, 229, 0.05);">
                 NETWORK: AMOY MIRROR ACTIVE
             </div>
         </div>
@@ -139,22 +153,11 @@
             <div class="risk-alert">⚠️ WARNING: 100% CAPITAL RISK DISCLOSURE</div>
             <div class="legal-content" id="legal-scroll-area">
                 <p>Welcome to Adamas Protocol. By accessing this interface, you agree to the following terms with absolute consent:</p>
-                
-                <h4>1. NATURE OF SERVICE (TESTNET)</h4>
-                <p>Adamas Protocol is in a RESEARCH & DEVELOPMENT phase on the Polygon Amoy Testnet. All ABP points earned are system-generated numbers with ZERO (0) real-world monetary value.</p>
-                
-                <h4>2. ZERO LIABILITY CLAUSE</h4>
-                <p>The developers and founders shall have ZERO responsibility for any financial loss, wallet compromise, or technical failure. You use this software "AS-IS" at your own risk.</p>
-                
-                <h4>3. FINANCIAL RISK DISCLOSURE</h4>
-                <p>Cryptocurrency markets are extremely volatile. There is a 100% chance of losing your entire capital. The probability of profit is speculative and NOT guaranteed.</p>
-                
-                <h4>4. NO FINANCIAL ADVICE (NFA)</h4>
-                <p>Nothing within this protocol constitutes financial, legal, or investment advice. Any future investment is purely voluntary and high-risk.</p>
-                
-                <h4>5. GLOBAL COMPLIANCE</h4>
-                <p>Users are solely responsible for complying with local regulations in their jurisdiction (India, USA, etc.). If digital assets are restricted in your area, you must exit now.</p>
-                
+                <h4>1. NATURE OF SERVICE (TESTNET)</h4><p>Adamas Protocol is in a RESEARCH & DEVELOPMENT phase on the Polygon Amoy Testnet. All ABP points earned are system-generated numbers with ZERO (0) real-world monetary value.</p>
+                <h4>2. ZERO LIABILITY CLAUSE</h4><p>The developers and founders shall have ZERO responsibility for any financial loss, wallet compromise, or technical failure. You use this software "AS-IS" at your own risk.</p>
+                <h4>3. FINANCIAL RISK DISCLOSURE</h4><p>Cryptocurrency markets are extremely volatile. There is a 100% chance of losing your entire capital. The probability of profit is speculative and NOT guaranteed.</p>
+                <h4>4. NO FINANCIAL ADVICE (NFA)</h4><p>Nothing within this protocol constitutes financial, legal, or investment advice. Any future investment is purely voluntary and high-risk.</p>
+                <h4>5. GLOBAL COMPLIANCE</h4><p>Users are solely responsible for complying with local regulations in their jurisdiction (India, USA, etc.). If digital assets are restricted in your area, you must exit now.</p>
                 <p style="margin-top:20px; color:var(--cyan); font-weight:bold;">SCROLL TO THE BOTTOM TO ACCEPT TERMS AND INITIALIZE PROTOCOL.</p>
             </div>
             <button id="accept-btn" class="accept-btn">SCROLL TO ACCEPT</button>
@@ -220,7 +223,7 @@
     <script src="config.js"></script> 
 
     <script>
-        // --- UPDATED SPLASH LOGIC ---
+        // --- UPDATED SPLASH LOGIC (4.5s Total for Smoothness) ---
         setTimeout(() => {
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => {
@@ -228,9 +231,8 @@
                 document.getElementById('main-app').style.visibility = 'visible';
                 document.body.style.overflow = 'auto';
             }, 1000);
-        }, 4000); // 4 seconds total intro time
+        }, 4500); 
 
-        // --- LEGAL SCROLL LOGIC ---
         const scrollArea = document.getElementById('legal-scroll-area');
         const acceptBtn = document.getElementById('accept-btn');
         scrollArea.addEventListener('scroll', () => {
