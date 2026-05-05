@@ -19,51 +19,56 @@
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
 
-        /* --- 1. CINEMATIC SPLASH SCREEN (New Update) --- */
+        /* --- 1. CINEMATIC SPLASH SCREEN (Kinetic Typography) --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 99999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; overflow: hidden;
         }
-        .kinetic-text { font-size: 24px; font-weight: 900; letter-spacing: 8px; color: #fff; text-transform: uppercase; position: absolute; opacity: 0; }
+        .kinetic-text { font-size: 28px; font-weight: 900; letter-spacing: 8px; color: #fff; text-transform: uppercase; position: absolute; opacity: 0; text-align: center; width: 100%; }
         
-        /* Word Animations */
-        .word-1 { animation: dropIn 0.8s ease forwards; }
-        .word-2 { animation: dropIn 0.8s 0.8s ease forwards; }
-        .word-3 { animation: dropIn 0.8s 1.6s ease forwards; }
-        .word-4 { animation: dropIn 0.8s 2.4s ease forwards; }
+        /* Word Animations - Cinematic Drop */
+        .word-1 { animation: cinematicDrop 0.8s ease forwards; }
+        .word-2 { animation: cinematicDrop 0.8s 0.8s ease forwards; }
+        .word-3 { animation: cinematicDrop 0.8s 1.6s ease forwards; }
+        .word-4 { animation: cinematicDrop 0.8s 2.4s ease forwards; }
 
-        @keyframes dropIn {
-            0% { transform: scale(3); opacity: 0; filter: blur(15px); }
-            50% { transform: scale(1); opacity: 1; filter: blur(0px); }
-            100% { transform: scale(0.8); opacity: 0; filter: blur(5px); }
+        @keyframes cinematicDrop {
+            0% { transform: scale(4); opacity: 0; filter: blur(20px); color: var(--cyan); }
+            50% { transform: scale(1); opacity: 1; filter: blur(0px); color: #fff; }
+            100% { transform: scale(0.7); opacity: 0; filter: blur(10px); }
         }
 
-        .reveal-final { opacity: 0; display: flex; flex-direction: column; align-items: center; animation: finalReveal 1s 3.5s forwards; }
-        .splash-logo { width: 120px; border-radius: 50%; border: 2px solid var(--cyan); box-shadow: 0 0 30px var(--cyan-glow); margin-bottom: 20px; }
-        .admin-msg { font-size: 9px; color: var(--p-green); letter-spacing: 2px; font-family: monospace; }
+        .reveal-final { opacity: 0; display: flex; flex-direction: column; align-items: center; animation: finalReveal 1.2s 3.5s forwards; }
+        .splash-logo { width: 120px; border-radius: 50%; border: 2px solid var(--cyan); box-shadow: 0 0 40px var(--cyan-glow); margin-bottom: 20px; }
+        .admin-msg { font-size: 9px; color: var(--p-green); letter-spacing: 3px; font-family: monospace; text-transform: uppercase; }
 
-        @keyframes finalReveal { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes finalReveal { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
-        /* --- 2. LEGAL MODAL (New Update) --- */
-        #legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .legal-box { background: #0a0a0a; border: 1px solid var(--glass); width: 100%; max-width: 400px; border-radius: 25px; padding: 25px; display: flex; flex-direction: column; max-height: 80vh; }
-        .legal-content { overflow-y: auto; margin: 15px 0; font-size: 10px; color: #888; line-height: 1.6; }
-        .accept-btn { background: #1a1a1a; color: #444; border: none; padding: 15px; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; cursor: not-allowed; transition: 0.3s; }
-        .accept-btn.ready { background: var(--cyan); color: #000; cursor: pointer; box-shadow: 0 0 15px var(--cyan-glow); }
+        /* --- 2. LEGAL MODAL (Compliance) --- */
+        #legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
+        .legal-box { background: #080808; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; border-radius: 25px; padding: 30px; display: flex; flex-direction: column; max-height: 85vh; box-shadow: 0 20px 50px rgba(0,0,0,1); }
+        .legal-content { overflow-y: auto; margin: 20px 0; font-size: 11px; color: #666; line-height: 1.8; text-align: left; padding-right: 10px; }
+        .legal-content::-webkit-scrollbar { width: 3px; }
+        .legal-content::-webkit-scrollbar-thumb { background: var(--cyan); }
+        .accept-btn { background: #111; color: #333; border: 1px solid #222; padding: 18px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; cursor: not-allowed; transition: 0.4s; letter-spacing: 1px; }
+        .accept-btn.ready { background: var(--cyan); color: #000; cursor: pointer; border: none; box-shadow: 0 0 20px var(--cyan-glow); }
 
         /* --- APP CORE --- */
-        .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; visibility: hidden; }
+        .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; visibility: hidden; opacity: 0; transition: 1s ease; }
         #top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; position: relative; z-index: 9999; max-width: 440px; }
         .brand-box { display: flex; align-items: center; gap: 10px; }
         .nav-logo-img { height: 28px; filter: drop-shadow(0 0 5px var(--cyan-glow)); }
-        .network-badge { font-size: 8px; color: var(--gold); border: 1px solid rgba(255, 204, 0, 0.3); padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; font-weight: bold; background: rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px; }
-        .poly-dot { width: 6px; height: 6px; background: var(--poly-purple); border-radius: 50%; animation: blink 1s infinite; }
+        
+        .network-badge { font-size: 8px; color: var(--gold); border: 1px solid rgba(255, 204, 0, 0.3); padding: 5px 12px; border-radius: 20px; letter-spacing: 1px; font-weight: bold; background: rgba(0,0,0,0.5); display: flex; align-items: center; gap: 6px; }
+        .poly-dot { width: 6px; height: 6px; background: var(--poly-purple); border-radius: 50%; box-shadow: 0 0 8px var(--poly-purple); animation: blinker 1s infinite; }
+        
         .wallet-btn { background: linear-gradient(135deg, var(--cyan), #0080ff); border: none; color: #000; padding: 12px 20px; border-radius: 12px; font-size: 10px; cursor: pointer; box-shadow: 0 0 15px var(--cyan-glow); transition: 0.3s; font-family: 'Orbitron'; font-weight: 900; }
         
         section { display: none; width: 100%; max-width: 440px; flex-direction: column; }
         section.active-phase { display: flex; animation: fadeIn 0.8s ease; }
         
+        /* Rest of your existing styles preserved */
         .core-wrapper { position: relative; width: 160px; height: 160px; margin: 20px auto 10px; display: flex; align-items: center; justify-content: center; }
         .core-glow { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%); animation: pulseGlow 3s infinite ease-in-out; }
         .core-logo-circle { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--cyan); background: #000; z-index: 2; overflow: hidden; box-shadow: 0 0 25px var(--cyan-glow); animation: float 4s infinite ease-in-out; }
@@ -78,21 +83,14 @@
         .trust-val { font-family: 'Orbitron'; font-size: 13px; color: var(--cyan); display: block; }
         .trust-lab { font-size: 7.5px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
 
-        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .info-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 18px; border-radius: 20px; transition: 0.3s; }
-        .info-card h3 { color: var(--p-green); font-size: 11px; margin: 0 0 6px 0; text-transform: uppercase; font-family: 'Orbitron'; }
-        .info-card p { font-size: 10.5px; color: #777; line-height: 1.5; margin: 0; }
-        
         .terminal-box { background: #050505; border-left: 3px solid var(--cyan); padding: 18px; border-radius: 12px; margin-top: 25px; box-shadow: inset 0 0 10px #000; }
         .term-row { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 8px; font-family: monospace; }
         
-        .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.4rem; text-align: center; margin-bottom: 5px; }
-        .page-sub { font-size: 9px; color: var(--cyan); text-align: center; margin-bottom: 30px; letter-spacing: 2px; }
-        .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 18px 20px; border-radius: 22px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .task-card.done { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
+        .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 18px 20px; border-radius: 22px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .task-card.done { border-color: var(--p-green); background: rgba(173, 255, 47, 0.08); }
         .status-pill { font-size: 9px; background: transparent; padding: 10px 18px; border-radius: 10px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
         
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes blinker { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
         @keyframes slowRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
@@ -109,22 +107,22 @@
         <div class="kinetic-text word-4">PROTOCOL</div>
         <div class="reveal-final">
             <img src="assets/dashboard-logo.png" class="splash-logo">
-            <div class="admin-msg">ADMIN_HANDSHAKE_INITIALIZING...</div>
+            <div class="admin-msg">ESTABLISHING_SECURE_HANDSHAKE...</div>
         </div>
     </div>
 
     <div id="legal-modal">
         <div class="legal-box">
-            <h3 style="color:var(--cyan); text-align:center; font-size:14px;">PROTOCOL COMPLIANCE</h3>
+            <h3 style="color:var(--cyan); text-align:center; font-size:14px; margin:0;">PROTOCOL ACCESS</h3>
             <div class="legal-content" id="legal-scroll">
-                <p>By connecting your wallet, you agree to the following:</p>
-                <p>1. ADAMAS is in alpha testnet phase on Polygon Amoy.</p>
-                <p>2. Users are responsible for their own security.</p>
-                <p>3. Points (ABP) have no fixed monetary value until TGE.</p>
-                <p>4. Automation involves smart contract risk.</p>
-                <p style="margin-top:20px; color:var(--gold);">Please scroll to accept terms.</p>
+                <p style="color:#fff; font-weight:bold;">Terms of Engagement:</p>
+                <p>1. ADAMAS is currently in testnet deployment phase on the Polygon Amoy network.</p>
+                <p>2. By interacting with the protocol, you acknowledge the experimental nature of the infrastructure.</p>
+                <p>3. ABP points represent early-adopter governance weight and have no current liquidity.</p>
+                <p>4. Users must ensure their own local security when connecting non-custodial wallets.</p>
+                <p style="margin-top:20px; color:var(--gold); border:1px dashed #333; padding:10px;">SYSTEM NOTE: Please scroll to the bottom to verify compliance.</p>
             </div>
-            <button id="accept-btn" class="accept-btn" disabled>SCROLL TO ACCEPT</button>
+            <button id="accept-btn" class="accept-btn" disabled>SYSTEM_LOCKED</button>
         </div>
     </div>
 
@@ -163,15 +161,15 @@
         </section>
 
         <section id="phase-social">
-            <h2 class="page-title">IDENTITY SYNC</h2>
-            <p class="page-sub">LEVEL_01_VERIFICATION</p>
+            <h2 style="text-align:center; font-size:1.4rem; margin-bottom:5px;">IDENTITY SYNC</h2>
+            <p style="font-size:9px; color:var(--cyan); text-align:center; margin-bottom:30px; letter-spacing:2px;">LEVEL_01_VERIFICATION</p>
             <div class="task-list">
                 <div class="task-card" id="card-t1"><div class="task-meta"><b>TELEGRAM CHANNEL</b><br><small style="color:var(--p-green);">+200 ABP</small></div><div id="pill-t1" class="status-pill" onclick="handleTask('t1', 'https://t.me/ADSProtocol')">FOLLOW</div></div>
                 <div class="task-card" id="card-t2"><div class="task-meta"><b>TELEGRAM GROUP</b><br><small style="color:var(--p-green);">+200 ABP</small></div><div id="pill-t2" class="status-pill" onclick="handleTask('t2', 'https://t.me/adsprotocolcommunity')">FOLLOW</div></div>
                 <div class="task-card" id="card-t3"><div class="task-meta"><b>FOLLOW @DIAMO X</b><br><small style="color:var(--p-green);">+200 ABP</small></div><div id="pill-t3" class="status-pill" onclick="handleTask('t3', 'https://x.com/DiamoProtocol')">FOLLOW</div></div>
                 <div class="task-card" id="card-t4"><div class="task-meta"><b>FOLLOW @ADAMAS X</b><br><small style="color:var(--p-green);">+200 ABP</small></div><div id="pill-t4" class="status-pill" onclick="handleTask('t4', 'https://x.com/AdamasADS')">FOLLOW</div></div>
             </div>
-            <button id="final-btn" class="btn-master locked" onclick="finalRegistration()" style="background: linear-gradient(90deg, var(--cyan), #0080ff); color: #000; padding: 20px; border-radius: 18px; width: 100%; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 30px;">UNLOCK DASHBOARD</button>
+            <button id="final-btn" class="btn-master locked" onclick="finalRegistration()" style="background: linear-gradient(90deg, var(--cyan), #0080ff); color: #000; padding: 20px; border-radius: 18px; width: 100%; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 30px; box-shadow: 0 10px 30px rgba(0, 242, 255, 0.1);">UNLOCK DASHBOARD</button>
             <p id="lock-msg" style="font-size: 9px; color: #ff4444; margin-top: 15px; text-align: center;">SYNC REMAINING: 4</p>
         </section>
     </div>
@@ -185,26 +183,30 @@
         let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
         let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
 
-        // 1. SPLASH SCREEN (Cinematic kinetic effect)
+        // 1. SPLASH SCREEN LOGIC
         window.onload = function() {
             setTimeout(() => {
-                document.getElementById('splash-screen').style.opacity = '0';
+                const splash = document.getElementById('splash-screen');
+                const app = document.getElementById('main-app');
+                splash.style.opacity = '0';
+                splash.style.transition = 'opacity 0.8s ease';
                 setTimeout(() => {
-                    document.getElementById('splash-screen').style.display = 'none';
-                    document.getElementById('main-app').style.visibility = 'visible';
-                    // Auto-Redirect check
-                    if(activeWallet) handleEntry();
+                    splash.style.display = 'none';
+                    app.style.visibility = 'visible';
+                    app.style.opacity = '1';
+                    // Check if already registered
+                    if(activeWallet) autoVerifyUser();
                 }, 800);
-            }, 5500);
+            }, 5500); // 5.5s Cinematic timer
         }
 
         // 2. LEGAL MODAL LOGIC
         const scrollBox = document.getElementById('legal-scroll');
         const accBtn = document.getElementById('accept-btn');
         scrollBox.addEventListener('scroll', () => {
-            if (scrollBox.scrollHeight - scrollBox.scrollTop <= scrollBox.clientHeight + 1) {
+            if (scrollBox.scrollHeight - scrollBox.scrollTop <= scrollBox.clientHeight + 5) {
                 accBtn.classList.add('ready');
-                accBtn.innerText = "ACCEPT & PROCEED";
+                accBtn.innerText = "ACCESS PROTOCOL";
                 accBtn.disabled = false;
             }
         });
@@ -213,11 +215,22 @@
             switchToSocial();
         };
 
-        // 3. WALLET & REDIRECT LOGIC
+        // 3. CORE LOGIC
         document.getElementById('connect-trigger').addEventListener('click', handleEntry);
 
+        async function autoVerifyUser() {
+            // Check Firebase for existing user
+            const snap = await db.ref('users/' + activeWallet).once('value');
+            if(snap.exists()) {
+                localStorage.setItem('adamas_user', activeWallet);
+                window.location.href = "dashboard.html";
+            } else {
+                restoreSyncProgress();
+            }
+        }
+
         async function handleEntry() {
-            if (!window.ethereum) return alert("Use MetaMask/Trust Wallet.");
+            if (!window.ethereum) return alert("Please use MetaMask or Trust Wallet.");
             try {
                 document.getElementById('loader-line').style.display = 'block';
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -225,7 +238,6 @@
                 localStorage.setItem('adamas_temp_wallet', activeWallet);
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
 
-                // Point 4: Firebase Redirect Check
                 const snap = await db.ref('users/' + activeWallet).once('value');
                 if(snap.exists()) {
                     localStorage.setItem('adamas_user', activeWallet);
@@ -234,7 +246,9 @@
                     document.getElementById('legal-modal').style.display = 'flex';
                     restoreSyncProgress();
                 }
-            } catch (e) { document.getElementById('loader-line').style.display = 'none'; }
+            } catch (e) { 
+                document.getElementById('loader-line').style.display = 'none'; 
+            }
         }
 
         function switchToSocial() {
@@ -247,23 +261,28 @@
             if(taskStates[id] === 'init') {
                 window.open(link, '_blank');
                 taskStates[id] = 'awaiting';
-                saveState(); pill.innerText = "VERIFY";
+                saveState(); 
+                pill.innerText = "VERIFY";
             } else if(taskStates[id] === 'awaiting') {
                 pill.style.pointerEvents = 'none';
                 let sec = 12;
                 const timer = setInterval(() => {
-                    sec--; pill.innerHTML = `${sec}S`;
+                    sec--; 
+                    pill.innerHTML = `${sec}S`;
                     if(sec <= 0) {
                         clearInterval(timer);
-                        taskStates[id] = 'done'; tasksDone++;
-                        saveState(); markDone(id); updateMasterButton();
+                        taskStates[id] = 'done'; 
+                        tasksDone++;
+                        saveState(); 
+                        markDone(id); 
+                        updateMasterButton();
                     }
                 }, 1000);
             }
         }
 
         function restoreSyncProgress() {
-            // Point 5: Memory Restore
+            // Memory Point: Always check if tasks were already done in this browser
             Object.keys(taskStates).forEach(id => {
                 if(taskStates[id] === 'done') markDone(id);
             });
@@ -281,7 +300,7 @@
                 pill.innerText = "SYNCED"; 
                 pill.style.background = "var(--p-green)"; 
                 pill.style.color = "#000";
-                pill.onclick = null; // Point 5: Prevent re-click
+                pill.onclick = null; // Memory Point: Already followed
                 document.getElementById('card-' + id).classList.add('done');
             }
         }
@@ -302,13 +321,12 @@
             if(ref === activeWallet) ref = "DIRECT"; 
 
             try {
-                // Safety Point 6: Prevent double entry
-                const finalCheck = await db.ref('users/' + activeWallet).once('value');
-                if(finalCheck.exists()) { window.location.href = "dashboard.html"; return; }
+                const check = await db.ref('users/' + activeWallet).once('value');
+                if(check.exists()) { window.location.href = "dashboard.html"; return; }
 
                 await db.ref('users/' + activeWallet).set({
                     balance: 800, wallet: activeWallet, referredBy: ref,
-                    joinedAt: firebase.database.ServerValue.TIMESTAMP
+                    referralCount: 0, joinedAt: firebase.database.ServerValue.TIMESTAMP
                 });
 
                 if(ref !== "DIRECT") {
@@ -322,7 +340,7 @@
                 }
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration Error"); }
+            } catch (e) { alert("Registration Failed"); }
         }
     </script>
 </body>
