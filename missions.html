@@ -42,33 +42,30 @@
             border-radius: 30px; padding: 20px; text-align: center; box-shadow: 0 0 40px var(--cyan-glow); position: relative;
         }
 
-        /* --- SPINNING LOGO & BLADE --- */
-        @keyframes spinTarget { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .spinning-logo { 
-            width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--cyan); 
-            margin: 20px auto; animation: spinTarget 3s linear infinite;
-            background: url('assets/dashboard-logo.png') center/cover; box-shadow: 0 0 25px var(--cyan-glow);
+        /* --- PREMIUM SPIN WHEEL --- */
+        .wheel-container { position: relative; width: 220px; height: 220px; margin: 20px auto; }
+        #wheel {
+            width: 100%; height: 100%; border-radius: 50%; border: 5px solid #111;
+            background: conic-gradient(
+                #ff3e3e 0deg 45deg, #0a0a0a 45deg 90deg, 
+                #00f2ff 90deg 135deg, #0a0a0a 135deg 180deg,
+                #ffcc00 180deg 225deg, #0a0a0a 225deg 270deg,
+                #adff2f 270deg 315deg, #0a0a0a 315deg 360deg
+            );
+            box-shadow: 0 0 30px var(--cyan-glow);
+            transition: transform 5s cubic-bezier(0.15, 0, 0.1, 1);
+        }
+        .wheel-pointer {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 15px solid transparent;
+            border-right: 15px solid transparent; border-top: 25px solid var(--cyan); z-index: 10;
         }
 
-        /* --- CARD DECK --- */
-        .card-deck { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
-        .patti-card { 
-            width: 75px; height: 110px; background: #fff; border-radius: 12px; color: #000;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 28px; display: flex;
-            align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-        }
-        .shuffle { animation: shuffleCards 0.3s infinite alternate; }
-        @keyframes shuffleCards { from { transform: translateX(-20px) rotate(-10deg); } to { transform: translateX(20px) rotate(10deg); } }
-
-        /* --- MISSIONS --- */
         .header-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .logo-box-small { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--cyan); overflow: hidden; }
         .nav-logo-img { width: 100%; height: 100%; object-fit: cover; }
         .mission-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); padding: 18px; border-radius: 22px; margin-bottom: 15px; }
-        .status-pill { background: var(--cyan); color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-size: 9px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
-        .status-pill:disabled { background: #333; color: #777; cursor: not-allowed; }
-        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
-        .mine-tile { aspect-ratio: 1; background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
+        .status-pill { background: var(--cyan); color: #000; border: none; padding: 12px 18px; border-radius: 12px; font-size: 10px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
         
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
@@ -85,15 +82,21 @@
                 <div id="crash-multiplier" style="font-size: 40px; font-family:'Orbitron'; color:var(--gold); margin-top: -110px; position: relative; z-index: 5;">1.00x</div>
             </div>
 
-            <div id="generic-msg"></div>
+            <div id="spin-box" style="display:none;">
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div id="wheel"></div>
+                </div>
+                <p id="spin-status" style="font-size: 10px; color: var(--cyan); font-family: 'Orbitron';">LUCK_PROTOCOL: STANDBY</p>
+            </div>
             
             <div id="bet-container" style="margin-top: 70px;">
                 <div class="bet-box">
                     <span style="font-size: 9px; font-family:'Orbitron'; color:#666;">AMT</span>
-                    <input type="number" id="bet-amount" value="50" min="10">
+                    <input type="number" id="bet-amount" value="50" min="10" style="background:transparent; border:none; border-bottom:1px solid #333; color:var(--cyan); text-align:center; font-family:'Orbitron'; outline:none;">
                     <span style="font-size: 9px; font-family:'Orbitron'; color:var(--cyan);">ABP</span>
                 </div>
-                <button id="main-game-btn" class="status-pill" style="width: 100%; padding: 18px;">INITIALIZE</button>
+                <button id="main-game-btn" class="status-pill" style="width: 100%; margin-top: 15px;">INITIALIZE</button>
             </div>
         </div>
     </div>
@@ -118,15 +121,7 @@
                 <img src="assets/crash_game.png" class="game-img">
                 <div class="game-label">QUANTUM_CRASH</div>
             </div>
-            <div class="game-item" onclick="openKnifeHit()">
-                <img src="assets/dragon_tiger.png" class="game-img">
-                <div class="game-label">BLADE_SYNC</div>
-            </div>
-            <div class="game-item" onclick="openTeenPatti()">
-                <img src="assets/dice_game.png" class="game-img">
-                <div class="game-label">QUANTUM_PATTI</div>
-            </div>
-            <div class="game-item" onclick="openModule('SPIN_SYNC')">
+            <div class="game-item" onclick="openSpinSync()">
                 <img src="assets/spin_wheel.png" class="game-img">
                 <div class="game-label">SPIN_SYNC</div>
             </div>
@@ -134,17 +129,6 @@
 
         <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); margin: 10px 0 15px 5px; opacity: 0.6;">⚡ DAILY_MISSIONS</h2>
         <div id="daily-mission-list"></div>
-
-        <section style="margin-top: 40px; margin-bottom: 100px;">
-            <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--p-green); margin-left: 5px;">💎 DIAMOND_HUNT_V2</h2>
-            <div class="game-card">
-                <div id="mines-grid" class="mines-grid"></div>
-                <button id="mine-start-btn" class="status-pill" style="width: 100%;" onclick="initMines()">START_DECRYPTION (50 ABP)</button>
-                <div id="game-controls" style="display:none; flex-direction: column; gap: 10px;">
-                    <button class="status-pill" style="background: var(--p-green); width: 100%;" onclick="cashout()">SECURE_EARNINGS</button>
-                </div>
-            </div>
-        </section>
 
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item">🏠 HOME</a>
@@ -171,10 +155,18 @@
             { id: 'x_adamas', name: 'ADAMAS_X_RAID', link: 'https://x.com/AdamasADS', reward: 50 }
         ];
 
+        // --- BALANCE FORMATTING (K, M, B) ---
+        function formatBalance(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
+            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
+            return num.toFixed(2);
+        }
+
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
-                document.getElementById('header-balance').innerText = parseFloat(data.balance || 0).toFixed(2);
+                document.getElementById('header-balance').innerText = formatBalance(data.balance || 0);
                 document.getElementById('streak-badge').innerText = "STREAK: " + (data.streak || 1);
                 renderMissions(data.dailyTasks || {});
             }
@@ -185,7 +177,6 @@
             const container = document.getElementById('daily-mission-list');
             const today = new Date().toISOString().split('T')[0];
             container.innerHTML = '';
-
             dailyTasks.forEach(task => {
                 const isDone = completed[task.id] && completed[task.id].date === today;
                 const card = document.createElement('div');
@@ -209,78 +200,50 @@
             }, 5000);
         }
 
-        // --- GAME 1: BLADE SYNC (LOGO SPIN) ---
-        function openKnifeHit() {
+        // --- GAME: SPIN SYNC ---
+        let canSpin = true;
+        function openSpinSync() {
             document.getElementById('game-overlay').style.display = 'flex';
-            document.getElementById('overlay-title').innerText = "BLADE_SYNC_PROTOCOL";
+            document.getElementById('overlay-title').innerText = "SPIN_SYNC_V1";
             document.getElementById('crash-box').style.display = 'none';
-            document.getElementById('generic-msg').innerHTML = `
-                <div class="spinning-logo" id="target-logo"></div>
-                <p style="font-size:10px; color:var(--cyan);">STRIKE ROTATING LOGO FOR REWARD</p>
-            `;
+            document.getElementById('spin-box').style.display = 'block';
             const btn = document.getElementById('main-game-btn');
-            btn.innerText = "THROW BLADE (25 ABP)";
-            btn.onclick = () => throwKnife();
+            btn.innerText = "SPIN (100 ABP)";
+            btn.onclick = () => startSpin();
         }
 
-        async function throwKnife() {
+        async function startSpin() {
+            if(!canSpin) return;
             const snap = await userRef.child('balance').get();
-            if(snap.val() < 25) return alert("Insufficient ABP!");
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-25) });
+            if(snap.val() < 100) return alert("Low ABP!");
+            canSpin = false;
+            await userRef.update({ balance: firebase.database.ServerValue.increment(-100) });
             
-            const target = document.getElementById('target-logo');
-            target.style.animationDuration = '0.4s';
-            
-            setTimeout(async () => {
-                target.style.animationDuration = '3s';
-                if(Math.random() > 0.4) {
-                    await userRef.update({ balance: firebase.database.ServerValue.increment(75) });
-                    alert("TARGET SECURED! +75 ABP");
-                } else { alert("BLADE DEFLECTED!"); }
-            }, 500);
-        }
-
-        // --- GAME 2: QUANTUM PATTI (3X TRAIL) ---
-        function openTeenPatti() {
-            document.getElementById('game-overlay').style.display = 'flex';
-            document.getElementById('overlay-title').innerText = "QUANTUM_PATTI";
-            document.getElementById('crash-box').style.display = 'none';
-            renderDeck(['?', '?', '?']);
-            const btn = document.getElementById('main-game-btn');
-            btn.innerText = "DEAL CARDS";
-            btn.onclick = () => playPatti();
-        }
-
-        function renderDeck(vals, shuffle = false) {
-            let cardHTML = vals.map(v => `<div class="patti-card ${shuffle?'shuffle':''}">${v}</div>`).join('');
-            document.getElementById('generic-msg').innerHTML = `
-                <div class="card-deck">${cardHTML}</div>
-                <p style="font-size:8px; color:#555;">TRAIL (AAA, KKK, QQQ, JJJ) PAYS 3X AMOUNT</p>
-            `;
-        }
-
-        async function playPatti() {
-            const bet = parseInt(document.getElementById('bet-amount').value);
-            const snap = await userRef.child('balance').get();
-            if(snap.val() < bet) return alert("Low Balance!");
-
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
-            renderDeck(['🃏', '🃏', '🃏'], true);
+            const wheel = document.getElementById('wheel');
+            const spins = 10; 
+            const degrees = Math.floor(Math.random() * 360) + (spins * 360);
+            wheel.style.transform = `rotate(${degrees}deg)`;
 
             setTimeout(async () => {
-                const cards = ['A', 'K', 'Q', 'J'];
-                const res = [cards[Math.floor(Math.random()*4)], cards[Math.floor(Math.random()*4)], cards[Math.floor(Math.random()*4)]];
-                renderDeck(res, false);
+                const actualDeg = degrees % 360;
+                let win = 0;
+                if (actualDeg > 90 && actualDeg < 135) win = 250; 
+                else if (actualDeg > 180 && actualDeg < 225) win = 500;
+                else if (actualDeg > 270 && actualDeg < 315) win = 1000;
                 
-                if(res[0] === res[1] && res[1] === res[2]) {
-                    const win = bet * 3;
+                if(win > 0) {
                     await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
-                    alert(`JACKPOT TRAIL! +${win} ABP`);
-                } else { alert("NO TRAIL FOUND."); }
-            }, 1500);
+                    alert(`SYSTEM: JACKPOT DETECTED! +${win} ABP`);
+                } else { alert("SYSTEM: SECTOR_NULL. TRY AGAIN."); }
+                
+                canSpin = true;
+                wheel.style.transition = 'none';
+                wheel.style.transform = `rotate(${actualDeg}deg)`;
+                setTimeout(() => wheel.style.transition = 'transform 5s cubic-bezier(0.15, 0, 0.1, 1)', 50);
+            }, 5100);
         }
 
-        // --- CRASH LOGIC ---
+        // --- CRASH LOGIC (AEROPLANE EDITION) ---
         let crashInterval; let multiplier = 1.00; let isPlaying = false;
         const canvas = document.getElementById('crash-canvas');
         const ctx = canvas.getContext('2d');
@@ -289,10 +252,10 @@
         function openCrash() { 
             document.getElementById('game-overlay').style.display = 'flex';
             document.getElementById('crash-box').style.display = 'block';
-            document.getElementById('generic-msg').innerHTML = '';
+            document.getElementById('spin-box').style.display = 'none';
             resetCrash();
             const btn = document.getElementById('main-game-btn');
-            btn.innerText = "PLACE_BET";
+            btn.innerText = "LAUNCH_AIRCRAFT";
             btn.onclick = () => handleCrashAction();
         }
 
@@ -305,22 +268,26 @@
                 const snap = await userRef.child('balance').get();
                 if(snap.val() < bet) return alert("Low ABP!");
                 await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
-                isPlaying = true; resetCrash(); btn.innerText = "CASH OUT";
+                isPlaying = true; resetCrash(); btn.innerText = "SECURE_PROFIT";
+                
+                const isRareFlight = Math.random() < 0.03; // 3% Rare Chance for 500x
+                const crashPoint = isRareFlight ? (Math.random() * 400 + 100) : (Math.pow(Math.random(), -0.7));
+
                 crashInterval = setInterval(() => {
-                    multiplier += 0.015 + (multiplier * 0.005);
+                    multiplier += 0.012 + (multiplier * 0.006);
                     document.getElementById('crash-multiplier').innerText = multiplier.toFixed(2) + "x";
                     drawGraph();
-                    if(Math.random() < 0.02) { 
+                    if(multiplier >= crashPoint) { 
                         clearInterval(crashInterval); isPlaying = false; 
-                        document.getElementById('crash-multiplier').innerText = "CRASHED!";
-                        btn.innerText = "RETRY";
+                        document.getElementById('crash-multiplier').innerText = "SIGNAL_LOST!";
+                        btn.innerText = "RE-INITIALIZE";
                     }
-                }, 90);
+                }, 85);
             } else {
                 clearInterval(crashInterval); isPlaying = false;
                 const win = Math.floor(bet * multiplier);
                 await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
-                alert(`PROFIT: +${win} ABP`);
+                alert(`DATA SECURED: +${win} ABP`);
                 closeGame();
             }
         }
@@ -330,35 +297,14 @@
             ctx.beginPath(); ctx.strokeStyle = '#00f2ff'; ctx.lineWidth = 3;
             ctx.moveTo(0, canvas.height);
             let curX = points.length * 2.2;
-            let curY = canvas.height - (Math.pow(multiplier, 1.4) * 15);
+            let curY = canvas.height - (Math.pow(multiplier, 1.35) * 15);
             points.push({x: curX, y: curY});
             points.forEach(p => ctx.lineTo(p.x, p.y));
             ctx.stroke();
             ctx.drawImage(plane, curX - 15, curY - 15, 30, 30);
         }
 
-        // --- DIAMOND HUNT & UTILS ---
-        let mines = []; let gActive = false; let dFound = 0;
-        async function initMines() {
-            const snap = await userRef.child('balance').get(); if(snap.val() < 50) return alert("Low ABP");
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
-            const grid = document.getElementById('mines-grid'); grid.innerHTML = ''; gActive = true; dFound = 0;
-            mines = Array(25).fill('💎'); for(let i=0; i<5; i++) mines[Math.floor(Math.random()*25)] = '💣';
-            for(let i=0; i<25; i++) {
-                const t = document.createElement('div'); t.className = 'mine-tile';
-                t.onclick = () => {
-                    if(!gActive || t.innerText !== '') return;
-                    if(mines[i] === '💣') { t.innerText = '💣'; gActive = false; alert('BOOM!'); resetMines(); }
-                    else { t.innerText = '💎'; dFound++; }
-                };
-                grid.appendChild(t);
-            }
-            document.getElementById('mine-start-btn').style.display = 'none'; document.getElementById('game-controls').style.display = 'flex';
-        }
-        async function cashout() { if(dFound > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(dFound * 25) }); resetMines(); }
-        function resetMines() { document.getElementById('mine-start-btn').style.display = 'block'; document.getElementById('game-controls').style.display = 'none'; document.getElementById('mines-grid').innerHTML = ''; }
         function closeGame() { document.getElementById('game-overlay').style.display = 'none'; clearInterval(crashInterval); isPlaying = false; }
-        function openModule(n) { document.getElementById('game-overlay').style.display = 'flex'; document.getElementById('overlay-title').innerText = n; document.getElementById('crash-box').style.display = 'none'; document.getElementById('generic-msg').innerHTML = 'SYNCING_GAME_DATA...'; }
     </script>
 </body>
 </html>
