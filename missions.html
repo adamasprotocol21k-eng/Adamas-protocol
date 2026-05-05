@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ADAMAS | Mission Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
     <style>
         :root { 
             --cyan: #00f2ff; 
@@ -25,7 +24,7 @@
         .arcade-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
         .game-item {
             background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);
-            padding: 10px; text-align: center; position: relative; overflow: hidden; transition: 0.3s; cursor: pointer;
+            padding: 10px; text-align: center; transition: 0.3s; cursor: pointer;
         }
         .game-item:active { transform: scale(0.95); }
         .game-img { width: 100%; border-radius: 15px; aspect-ratio: 1/1; object-fit: cover; }
@@ -42,45 +41,26 @@
             border-radius: 30px; padding: 20px; text-align: center; box-shadow: 0 0 40px var(--cyan-glow); position: relative;
         }
 
-        /* --- NEW SPIN WHEEL UI --- */
-        .wheel-container { position: relative; width: 240px; height: 240px; margin: 20px auto; display: none; }
+        /* --- SPIN WHEEL --- */
+        .wheel-container { position: relative; width: 220px; height: 220px; margin: 20px auto; display: none; }
         #wheel {
-            width: 100%; height: 100%; border-radius: 50%; border: 5px solid #111;
-            background: conic-gradient(#ff3e3e 0deg 90deg, #00f2ff 90deg 180deg, #ffcc00 180deg 270deg, #adff2f 270deg 360deg);
-            box-shadow: 0 0 30px var(--cyan-glow); transition: transform 4s cubic-bezier(0.15, 0, 0.1, 1);
-            position: relative;
+            width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111;
+            background: conic-gradient(#ff3b3b 0% 25%, #00f2ff 25% 50%, #ffcc00 50% 75%, #adff2f 75% 100%);
+            transition: transform 4s cubic-bezier(0.15, 0, 0.1, 1);
         }
         .wheel-label { position: absolute; width: 100%; height: 100%; font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #000; pointer-events: none; }
-        .wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--cyan); z-index: 10; }
-
-        /* --- SPINNING LOGO --- */
-        @keyframes spinTarget { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .spinning-logo { 
-            width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--cyan); 
-            margin: 20px auto; animation: spinTarget 3s linear infinite;
-            background: url('assets/dashboard-logo.png') center/cover; box-shadow: 0 0 20px var(--cyan-glow);
-        }
-
-        /* --- CARD DECK --- */
-        .card-deck { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
-        .patti-card { 
-            width: 65px; height: 90px; background: #fff; border-radius: 8px; color: #000;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 22px; display: flex;
-            align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .shuffle { animation: shuffleCards 0.3s infinite alternate; }
-        @keyframes shuffleCards { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(-20px) rotate(5deg); } }
 
         /* --- MISSIONS --- */
         .header-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .logo-box-small { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--cyan); overflow: hidden; }
-        .nav-logo-img { width: 100%; height: 100%; object-fit: cover; }
         .mission-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); padding: 18px; border-radius: 22px; margin-bottom: 15px; }
         .status-pill { background: var(--cyan); color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-size: 9px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
-        .status-pill:disabled { background: #333; color: #777; cursor: not-allowed; }
         .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
         .mine-tile { aspect-ratio: 1; background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
-        
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #111; }
+        .nav-item { text-decoration: none; color: #444; font-size: 9px; font-family: 'Orbitron'; text-align: center; }
+        .nav-item.active { color: var(--cyan); }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
@@ -92,18 +72,18 @@
             <h2 id="overlay-title" style="font-family:'Orbitron'; color:#fff; font-size: 12px; margin-bottom: 15px;">MISSION_MODULE</h2>
             
             <div id="crash-box" style="display:none;">
-                <canvas id="crash-canvas" width="300" height="180"></canvas>
+                <canvas id="crash-canvas" width="300" height="180" style="background:#000; border-radius:15px;"></canvas>
                 <div id="crash-multiplier" style="font-size: 40px; font-family:'Orbitron'; color:var(--gold); margin-top: -110px; position: relative; z-index: 5;">1.00x</div>
             </div>
 
             <div id="spin-sync-box" class="wheel-container">
-                <div class="wheel-pointer"></div>
                 <div id="wheel">
-                    <div class="wheel-label" style="transform: rotate(45deg) translateY(-80px);">0x</div>
-                    <div class="wheel-label" style="transform: rotate(135deg) translateY(-80px);">2x</div>
-                    <div class="wheel-label" style="transform: rotate(225deg) translateY(-80px);">5x</div>
-                    <div class="wheel-label" style="transform: rotate(315deg) translateY(-80px);">10x</div>
+                    <div class="wheel-label" style="transform: rotate(45deg) translateY(-75px);">0x</div>
+                    <div class="wheel-label" style="transform: rotate(135deg) translateY(-75px);">2x</div>
+                    <div class="wheel-label" style="transform: rotate(225deg) translateY(-75px);">5x</div>
+                    <div class="wheel-label" style="transform: rotate(315deg) translateY(-75px);">10x</div>
                 </div>
+                <div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:25px solid var(--cyan); z-index:10;"></div>
             </div>
 
             <div id="generic-msg"></div>
@@ -123,8 +103,8 @@
         <div class="network-pill"><div class="dot"></div> POLYGON AMOY SYNC: ACTIVE</div>
 
         <header class="header-card">
-            <div class="brand-identity" onclick="window.location.href='dashboard.html'" style="cursor:pointer; display:flex; align-items:center; gap:10px;">
-                <div class="logo-box-small"><img src="assets/dashboard-logo.png" class="nav-logo-img"></div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="logo-box-small"><img src="assets/dashboard-logo.png" style="width:100%;"></div>
                 <div>
                     <span style="font-size: 8px; color: #555; letter-spacing: 2px; font-family: 'Orbitron';">VAULT_ASSETS</span>
                     <span id="header-balance" style="display:block; color:#fff; font-family:'Orbitron'; font-size: 1.1rem; font-weight: 900;">0.00</span>
@@ -139,40 +119,31 @@
                 <img src="assets/crash_game.png" class="game-img" onerror="this.src='https://i.ibb.co/vYm0FmX/aviator-fallback.png'">
                 <div class="game-label">QUANTUM_CRASH</div>
             </div>
-            <div class="game-item" onclick="openKnifeHit()">
-                <img src="assets/dragon_tiger.png" class="game-img" onerror="this.src='https://i.ibb.co/N6pP0v9/battle-fallback.png'">
-                <div class="game-label">BLADE_SYNC</div>
-            </div>
-            <div class="game-item" onclick="openTeenPatti()">
-                <img src="assets/dice_game.png" class="game-img" onerror="this.src='https://i.ibb.co/h9yS99B/dice-fallback.png'">
-                <div class="game-label">QUANTUM_PATTI</div>
-            </div>
             <div class="game-item" onclick="openSpinSync()">
                 <img src="assets/spin_wheel.png" class="game-img" onerror="this.src='https://i.ibb.co/zX8k9vH/spin-fallback.png'">
                 <div class="game-label">SPIN_SYNC</div>
+            </div>
+            <div class="game-item" onclick="scrollToMines()" style="grid-column: span 2;">
+                <img src="assets/dice_game.png" class="game-img" style="aspect-ratio: 2/1;" onerror="this.src='https://i.ibb.co/h9yS99B/dice-fallback.png'">
+                <div class="game-label">DIAMOND_HUNT_V2</div>
             </div>
         </div>
 
         <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); margin: 10px 0 15px 5px; opacity: 0.6;">⚡ DAILY_MISSIONS</h2>
         <div id="daily-mission-list"></div>
 
-        <section style="margin-top: 40px; margin-bottom: 100px;">
+        <section id="mines-sec" style="margin-top: 40px; margin-bottom: 100px;">
             <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--p-green); margin-left: 5px;">💎 DIAMOND_HUNT_V2</h2>
-            <div class="game-card">
-                <div id="mines-grid" class="mines-grid"></div>
-                <button id="mine-start-btn" class="status-pill" style="width: 100%;" onclick="initMines()">START_DECRYPTION (50 ABP)</button>
-                <div id="game-controls" style="display:none; flex-direction: column; gap: 10px;">
-                    <button class="status-pill" style="background: var(--p-green); width: 100%;" onclick="cashout()">SECURE_EARNINGS</button>
-                </div>
-            </div>
+            <div id="mines-grid" class="mines-grid"></div>
+            <button id="mine-start-btn" class="status-pill" style="width: 100%;" onclick="initMines()">DECRYPT (50 ABP)</button>
+            <button id="mine-cashout-btn" class="status-pill" style="width: 100%; background:var(--p-green); display:none; margin-top:10px;" onclick="cashout()">SECURE EARNINGS</button>
         </section>
 
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item">🏠 HOME</a>
-            <a href="vault.html" class="nav-item">🔒 VAULT</a>
-            <a href="missions.html" class="nav-item active">⚡ TASKS</a>
-            <a href="referral.html" class="nav-item">👥 NETWORK</a>
-            <a href="profile.html" class="nav-item">🏆 RANK</a>
+            <a href="dashboard.html" class="nav-item">🏠<br>HOME</a>
+            <a href="vault.html" class="nav-item">🔒<br>VAULT</a>
+            <a href="missions.html" class="nav-item active">⚡<br>TASKS</a>
+            <a href="referral.html" class="nav-item">👥<br>NETWORK</a>
         </nav>
     </div>
 
@@ -183,49 +154,46 @@
     <script>
         const userWallet = localStorage.getItem('adamas_user');
         const userRef = db.ref('users/' + userWallet);
-        // Clean high-res plane SVG for Crash Game
         const planeSVG = `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwZjJmZiI+PHBhdGggZD0iTTIxIDE2djJMMTMgMTN2NUwxNiAyMVYyM0wxMiAyMkw4IDIzVjIxTDExIDE4VjEzTDMgMThWMTZMMTEgOEw4IDRIMTJMMTQgNEwxMSA4TDIxIDE2WiIvPjwvc3ZnPg==`;
         const plane = new Image(); plane.src = planeSVG;
 
-        const dailyTasks = [
-            { id: 'tg_comm', name: 'COMMUNITY_SYNC', link: 'https://t.me/adsprotocolcommunity', reward: 50 },
-            { id: 'tg_ann', name: 'PROTOCOL_NEWS', link: 'https://t.me/ADSProtocol', reward: 50 },
-            { id: 'x_diamo', name: 'DIAMO_X_RAID', link: 'https://x.com/DiamoProtocol', reward: 50 },
-            { id: 'x_adamas', name: 'ADAMAS_X_RAID', link: 'https://x.com/AdamasADS', reward: 50 }
-        ];
-
-        // Format balance to Millions/Billions
-        function formatBalance(val) {
+        // --- ABP FORMATTING (K, M, B) ---
+        function formatABP(val) {
             if (val >= 1e9) return (val / 1e9).toFixed(2) + 'B';
             if (val >= 1e6) return (val / 1e6).toFixed(2) + 'M';
-            return parseFloat(val).toLocaleString(undefined, {minimumFractionDigits: 2});
+            if (val >= 1e3) return (val / 1e3).toFixed(1) + 'K';
+            return parseFloat(val).toFixed(2);
         }
 
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
-                document.getElementById('header-balance').innerText = formatBalance(data.balance || 0);
+                document.getElementById('header-balance').innerText = formatABP(data.balance || 0);
                 document.getElementById('streak-badge').innerText = "STREAK: " + (data.streak || 1);
-                renderMissions(data.dailyTasks || {});
+                renderTasks(data.dailyTasks || {});
             }
         });
 
-        // --- DAILY MISSION ENGINE ---
-        function renderMissions(completed) {
+        // --- TASKS ---
+        const dailyTasks = [
+            { id: 'tg_comm', name: 'COMMUNITY_SYNC', link: 'https://t.me/adsprotocolcommunity', reward: 50 },
+            { id: 'x_diamo', name: 'DIAMO_X_RAID', link: 'https://x.com/DiamoProtocol', reward: 50 }
+        ];
+
+        function renderTasks(completed) {
             const container = document.getElementById('daily-mission-list');
             const today = new Date().toISOString().split('T')[0];
             container.innerHTML = '';
             dailyTasks.forEach(task => {
                 const isDone = completed[task.id] && completed[task.id].date === today;
-                const card = document.createElement('div');
-                card.className = 'mission-card';
-                card.innerHTML = `<div><h4 style="margin:0; font-size:10px;">${task.name}</h4><span style="color:var(--p-green); font-size:9px;">+${task.reward} ABP</span></div>
-                <button class="status-pill" ${isDone ? 'disabled' : ''} onclick="handleDailyTask('${task.id}', '${task.link}', ${task.reward})">${isDone ? 'COMPLETED' : 'GO'}</button>`;
-                container.appendChild(card);
+                container.innerHTML += `<div class="mission-card">
+                    <div><h4 style="margin:0; font-size:10px;">${task.name}</h4><span style="color:var(--p-green); font-size:9px;">+${task.reward} ABP</span></div>
+                    <button class="status-pill" ${isDone ? 'disabled' : ''} onclick="handleTask('${task.id}','${task.link}',${task.reward})">${isDone?'DONE':'GO'}</button>
+                </div>`;
             });
         }
 
-        async function handleDailyTask(id, link, reward) {
+        async function handleTask(id, link, reward) {
             window.open(link, '_blank');
             setTimeout(async () => {
                 const today = new Date().toISOString().split('T')[0];
@@ -234,131 +202,51 @@
             }, 5000);
         }
 
-        // --- NEW SPIN SYNC LOGIC ---
-        function openSpinSync() {
-            document.getElementById('game-overlay').style.display = 'flex';
-            document.getElementById('overlay-title').innerText = "SPIN_SYNC";
-            document.getElementById('spin-sync-box').style.display = 'block';
-            document.getElementById('crash-box').style.display = 'none';
-            document.getElementById('generic-msg').innerHTML = '';
-            const btn = document.getElementById('main-game-btn');
-            btn.innerText = "SPIN (100 ABP)";
-            btn.onclick = () => playSpin();
-        }
-
-        async function playSpin() {
-            const bet = 100;
-            const snap = await userRef.child('balance').get();
-            if(snap.val() < bet) return alert("Low ABP!");
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
-            const wheel = document.getElementById('wheel');
-            const randomRotation = Math.floor(Math.random() * 360) + 1440; // 4 full spins
-            wheel.style.transform = `rotate(${randomRotation}deg)`;
-            setTimeout(async () => {
-                const actualDeg = (360 - (randomRotation % 360)) % 360;
-                let winMultiplier = 0;
-                if(actualDeg >= 0 && actualDeg < 90) winMultiplier = 0;
-                else if(actualDeg >= 90 && actualDeg < 180) winMultiplier = 2;
-                else if(actualDeg >= 180 && actualDeg < 270) winMultiplier = 5;
-                else winMultiplier = 10;
-                if(winMultiplier > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(bet * winMultiplier) });
-                alert(winMultiplier > 0 ? `JACKPOT! ${winMultiplier}x REWARD` : "0x - TRY AGAIN!");
-                closeGame();
-                wheel.style.transition = 'none'; wheel.style.transform = 'rotate(0deg)';
-                setTimeout(() => wheel.style.transition = 'transform 4s cubic-bezier(0.15, 0, 0.1, 1)', 100);
-            }, 4100);
-        }
-
-        // --- BLADE SYNC ---
-        function openKnifeHit() {
-            document.getElementById('game-overlay').style.display = 'flex';
-            document.getElementById('overlay-title').innerText = "BLADE_SYNC";
-            document.getElementById('spin-sync-box').style.display = 'none';
-            document.getElementById('crash-box').style.display = 'none';
-            document.getElementById('generic-msg').innerHTML = `<div class="spinning-logo" id="knife-target"></div><p style="font-size:10px; color:var(--cyan);">STRIKE THE NODE</p>`;
-            document.getElementById('main-game-btn').onclick = () => playKnife();
-        }
-
-        async function playKnife() {
-            const snap = await userRef.child('balance').get();
-            if(snap.val() < 25) return alert("Low ABP!");
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-25) });
-            const target = document.getElementById('knife-target');
-            target.style.animationDuration = '0.3s';
-            setTimeout(async () => {
-                target.style.animationDuration = '3s';
-                if(Math.random() > 0.5) {
-                    await userRef.update({ balance: firebase.database.ServerValue.increment(100) });
-                    alert("HIT! +100 ABP");
-                } else { alert("MISSED!"); }
-            }, 500);
-        }
-
-        // --- PATTI ---
-        function openTeenPatti() {
-            document.getElementById('game-overlay').style.display = 'flex';
-            document.getElementById('overlay-title').innerText = "QUANTUM_PATTI";
-            document.getElementById('spin-sync-box').style.display = 'none';
-            document.getElementById('crash-box').style.display = 'none';
-            renderDeck(['?', '?', '?']);
-            document.getElementById('main-game-btn').onclick = () => playPatti();
-        }
-
-        function renderDeck(vals, shuffle = false) {
-            const html = vals.map(v => `<div class="patti-card ${shuffle?'shuffle':''}">${v}</div>`).join('');
-            document.getElementById('generic-msg').innerHTML = `<div class="card-deck">${html}</div><p style="font-size:8px; color:#555;">TRAIL (AAA) PAYS 3X</p>`;
-        }
-
-        async function playPatti() {
-            const bet = parseInt(document.getElementById('bet-amount').value);
-            const snap = await userRef.child('balance').get();
-            if(snap.val() < bet) return alert("Low ABP!");
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
-            renderDeck(['🃏', '🃏', '🃏'], true);
-            setTimeout(async () => {
-                const faces = ['A', 'K', 'Q', 'J'];
-                const res = [faces[Math.floor(Math.random()*4)], faces[Math.floor(Math.random()*4)], faces[Math.floor(Math.random()*4)]];
-                renderDeck(res, false);
-                if(res[0] === res[1] && res[1] === res[2]) {
-                    await userRef.update({ balance: firebase.database.ServerValue.increment(bet * 3) });
-                    alert("TRAIL! 3X REWARD");
-                } else { alert("NO MATCH."); }
-            }, 1000);
-        }
-
-        // --- CRASH ---
+        // --- CRASH (500x Rare, High 2x) ---
         let crashInterval; let multiplier = 1.00; let isPlaying = false; let points = [];
         const canvas = document.getElementById('crash-canvas');
         const ctx = canvas.getContext('2d');
 
-        function openCrash() { 
+        function openCrash() {
             document.getElementById('game-overlay').style.display = 'flex';
             document.getElementById('crash-box').style.display = 'block';
             document.getElementById('spin-sync-box').style.display = 'none';
             document.getElementById('generic-msg').innerHTML = '';
             resetCrash();
-            document.getElementById('main-game-btn').onclick = () => handleCrashAction();
+            document.getElementById('main-game-btn').onclick = () => startCrash();
         }
 
         function resetCrash() { points = []; multiplier = 1.00; ctx.clearRect(0, 0, 300, 180); document.getElementById('crash-multiplier').innerText = "1.00x"; }
 
-        async function handleCrashAction() {
+        async function startCrash() {
             const bet = parseInt(document.getElementById('bet-amount').value);
             if(!isPlaying) {
                 const snap = await userRef.child('balance').get();
                 if(snap.val() < bet) return alert("Low ABP!");
                 await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
-                isPlaying = true; resetCrash(); document.getElementById('main-game-btn').innerText = "CASH OUT";
-                const crashPoint = Math.pow(Math.random(), -0.8) + 0.1;
+                
+                isPlaying = true; resetCrash(); 
+                document.getElementById('main-game-btn').innerText = "CASH OUT";
+                
+                // Logic: 80% to 2x, 0.1% to 500x
+                const rand = Math.random();
+                const crashPoint = rand < 0.8 ? (1.1 + Math.random() * 1.5) : (rand < 0.99 ? 3 + Math.random() * 10 : 50 + Math.random() * 450);
+
                 crashInterval = setInterval(() => {
-                    multiplier += 0.02 + (multiplier * 0.01);
+                    multiplier += 0.02 * (multiplier * 1.05);
                     document.getElementById('crash-multiplier').innerText = multiplier.toFixed(2) + "x";
                     drawGraph();
-                    if(multiplier >= crashPoint) { clearInterval(crashInterval); isPlaying = false; document.getElementById('crash-multiplier').innerText = "CRASHED!"; document.getElementById('main-game-btn').innerText = "RETRY"; }
+                    if(multiplier >= crashPoint) {
+                        clearInterval(crashInterval); isPlaying = false;
+                        document.getElementById('crash-multiplier').innerText = "BOOM!";
+                        document.getElementById('main-game-btn').innerText = "RETRY";
+                    }
                 }, 100);
             } else {
                 clearInterval(crashInterval); isPlaying = false;
-                await userRef.update({ balance: firebase.database.ServerValue.increment(Math.floor(bet * multiplier)) });
+                const win = Math.floor(bet * multiplier);
+                await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
+                alert(`SECURED: +${win} ABP`);
                 closeGame();
             }
         }
@@ -368,34 +256,69 @@
             ctx.beginPath(); ctx.strokeStyle = '#00f2ff'; ctx.lineWidth = 3;
             ctx.moveTo(0, 180);
             let curX = points.length * 2.5;
-            let curY = 180 - (Math.pow(multiplier, 1.3) * 12);
+            let curY = 180 - (Math.pow(multiplier, 1.2) * 15);
             points.push({x: curX, y: curY});
             points.forEach(p => ctx.lineTo(p.x, p.y));
             ctx.stroke();
-            ctx.save();
-            ctx.translate(curX, curY);
-            ctx.rotate(-45 * Math.PI / 180); // Rotate plane to fly upward
-            ctx.drawImage(plane, -15, -15, 30, 30);
-            ctx.restore();
+            ctx.save(); ctx.translate(curX, curY); ctx.rotate(-45 * Math.PI / 180);
+            ctx.drawImage(plane, -15, -15, 30, 30); ctx.restore();
         }
 
-        // --- MINES ---
+        // --- SPIN SYNC ---
+        function openSpinSync() {
+            document.getElementById('game-overlay').style.display = 'flex';
+            document.getElementById('overlay-title').innerText = "SPIN_SYNC";
+            document.getElementById('spin-sync-box').style.display = 'block';
+            document.getElementById('crash-box').style.display = 'none';
+            document.getElementById('generic-msg').innerHTML = '';
+            document.getElementById('main-game-btn').innerText = "SPIN (100 ABP)";
+            document.getElementById('main-game-btn').onclick = () => startSpin();
+        }
+
+        async function startSpin() {
+            const bet = 100;
+            const snap = await userRef.child('balance').get();
+            if(snap.val() < bet) return alert("Low ABP!");
+            await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
+
+            const wheel = document.getElementById('wheel');
+            const rotation = Math.floor(Math.random() * 360) + 1800; // 5 spins
+            wheel.style.transform = `rotate(${rotation}deg)`;
+
+            setTimeout(async () => {
+                const finalDeg = (360 - (rotation % 360)) % 360;
+                let mult = 0;
+                if(finalDeg < 90) mult = 0;
+                else if(finalDeg < 180) mult = 2;
+                else if(finalDeg < 270) mult = 5;
+                else mult = 10;
+
+                if(mult > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(bet * mult) });
+                alert(mult > 0 ? `SYNCED! ${mult}x REWARD` : "FAILED! 0x");
+                closeGame();
+                wheel.style.transition = 'none'; wheel.style.transform = 'rotate(0deg)';
+                setTimeout(() => wheel.style.transition = 'transform 4s cubic-bezier(0.15, 0, 0.1, 1)', 100);
+            }, 4100);
+        }
+
+        // --- CASINO MINES ---
         let mines = []; let gActive = false; let dFound = 0;
+        function scrollToMines() { document.getElementById('mines-sec').scrollIntoView({behavior:'smooth'}); }
         async function initMines() {
             const snap = await userRef.child('balance').get(); if(snap.val() < 50) return alert("Low ABP");
             await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
             const grid = document.getElementById('mines-grid'); grid.innerHTML = ''; gActive = true; dFound = 0;
-            mines = Array(25).fill('💎'); for(let i=0; i<5; i++) mines[Math.floor(Math.random()*25)] = '💣';
+            mines = Array(25).fill('💎'); for(let i=0; i<4; i++) mines[Math.floor(Math.random()*25)] = '💣';
             for(let i=0; i<25; i++) {
                 const t = document.createElement('div'); t.className = 'mine-tile';
-                t.onclick = () => { if(!gActive || t.innerText !== '') return; if(mines[i] === '💣') { t.innerText = '💣'; gActive = false; alert('BOOM!'); resetMines(); } else { t.innerText = '💎'; dFound++; } };
+                t.onclick = () => { if(!gActive || t.innerText !== '') return; if(mines[i] === '💣') { t.innerText = '💣'; gActive = false; alert('BOOM!'); resetMines(); } else { t.innerText = '💎'; dFound++; document.getElementById('mine-cashout-btn').style.display = 'block'; } };
                 grid.appendChild(t);
             }
-            document.getElementById('mine-start-btn').style.display = 'none'; document.getElementById('game-controls').style.display = 'flex';
+            document.getElementById('mine-start-btn').style.display = 'none';
         }
-        async function cashout() { if(dFound > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(dFound * 25) }); resetMines(); }
-        function resetMines() { document.getElementById('mine-start-btn').style.display = 'block'; document.getElementById('game-controls').style.display = 'none'; document.getElementById('mines-grid').innerHTML = ''; }
-        function closeGame() { document.getElementById('game-overlay').style.display = 'none'; document.getElementById('spin-sync-box').style.display = 'none'; clearInterval(crashInterval); isPlaying = false; document.getElementById('main-game-btn').innerText = "INITIALIZE"; }
+        async function cashout() { if(dFound > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(dFound * 30) }); resetMines(); }
+        function resetMines() { document.getElementById('mine-start-btn').style.display = 'block'; document.getElementById('mine-cashout-btn').style.display = 'none'; document.getElementById('mines-grid').innerHTML = ''; }
+        function closeGame() { document.getElementById('game-overlay').style.display = 'none'; clearInterval(crashInterval); isPlaying = false; }
     </script>
 </body>
 </html>
