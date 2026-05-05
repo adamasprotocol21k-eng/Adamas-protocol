@@ -62,6 +62,15 @@
         }
         .status-pill:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
 
+        /* --- CORE TAP GAME UI (NEW) --- */
+        .tap-zone { text-align: center; background: radial-gradient(circle, rgba(0,242,255,0.05) 0%, transparent 70%); padding: 20px; border-radius: 30px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.02); }
+        .core-tapper { width: 140px; height: 140px; margin: 15px auto; position: relative; cursor: pointer; transition: transform 0.1s; user-select: none; }
+        .core-tapper:active { transform: scale(0.95); }
+        .core-tapper img { width: 100%; filter: drop-shadow(0 0 15px var(--cyan-glow)); animation: pulseCore 2s infinite ease-in-out; }
+        .energy-wrap { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 10px; overflow: hidden; }
+        #energy-fill { width: 100%; height: 100%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); transition: width 0.3s; }
+        .plus-one { position: absolute; color: var(--cyan); font-family: 'Orbitron'; font-weight: 900; font-size: 14px; pointer-events: none; animation: floatUp 0.7s ease-out forwards; z-index: 100; }
+
         /* --- DIAMOND HUNT UI --- */
         .game-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.03); border-radius: 30px; padding: 25px; margin-top: 10px; }
         .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
@@ -77,6 +86,8 @@
         .btn-game { width: 100%; padding: 18px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; cursor: pointer; }
         
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes pulseCore { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-80px); opacity: 0; } }
     </style>
 </head>
 <body>
@@ -98,6 +109,20 @@
             </div>
             <div id="streak-badge" style="background: rgba(173, 255, 47, 0.05); color: var(--p-green); border: 1px solid rgba(173, 255, 47, 0.2); font-size: 8px; padding: 6px 12px; border-radius: 20px; font-family: 'Orbitron';">STREAK: 1</div>
         </header>
+
+        <div class="tap-zone">
+            <h3 style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; margin: 0; letter-spacing: 2px;">CORE_HARVEST_UNIT</h3>
+            <div class="core-tapper" id="core-tapper">
+                <img src="assets/dashboard-logo.png" alt="Core">
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 8px; font-family: 'Orbitron'; color: #555;">
+                <span>ENERGY_LEVEL</span>
+                <span id="energy-val">500 / 500</span>
+            </div>
+            <div class="energy-wrap">
+                <div id="energy-fill"></div>
+            </div>
+        </div>
 
         <div style="font-size: 7px; color: #444; text-align: center; margin-bottom: 20px; font-family: 'Orbitron'; letter-spacing: 1px;">
             MISSIONS ARE PART OF THE RESEARCH PHASE. NO REAL-WORLD VALUE ATTACHED.
@@ -170,6 +195,53 @@
         if (!userWallet) window.location.href = "index.html";
         const userRef = db.ref('users/' + userWallet);
 
+        // --- NEW TAP GAME LOGIC ---
+        let currentEnergy = 500;
+        const maxEnergy = 500;
+        const tapper = document.getElementById('core-tapper');
+
+        tapper.addEventListener('click', (e) => {
+            if(currentEnergy <= 0) return;
+            
+            // ABP Increment
+            userRef.update({ balance: firebase.database.ServerValue.increment(0.10) });
+            
+            // Energy decrement
+            currentEnergy--;
+            updateEnergyUI();
+
+            // Spawn floating text
+            const rect = tapper.getBoundingClientRect();
+            const x = e.clientX || rect.left + rect.width/2;
+            const y = e.clientY || rect.top + rect.height/2;
+            showFloatText(x, y);
+        });
+
+        function updateEnergyUI() {
+            const perc = (currentEnergy / maxEnergy) * 100;
+            document.getElementById('energy-fill').style.width = perc + "%";
+            document.getElementById('energy-val').innerText = `${currentEnergy} / ${maxEnergy}`;
+        }
+
+        function showFloatText(x, y) {
+            const txt = document.createElement('div');
+            txt.className = 'plus-one';
+            txt.innerText = '+0.10';
+            txt.style.left = x + "px";
+            txt.style.top = y + "px";
+            document.body.appendChild(txt);
+            setTimeout(() => txt.remove(), 700);
+        }
+
+        // Energy Recovery (1 point every 2 seconds)
+        setInterval(() => {
+            if(currentEnergy < maxEnergy) {
+                currentEnergy++;
+                updateEnergyUI();
+            }
+        }, 2000);
+
+        // --- EXISTING LOGIC ---
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
@@ -203,7 +275,6 @@
         async function checkQuiz(ansIndex) {
             if(ansIndex === 0) {
                 await userRef.update({ balance: firebase.database.ServerValue.increment(50), quizDone: true });
-                // POINT 5: SYNC TO GLOBAL
                 db.ref('global_stats/total_missions').set(firebase.database.ServerValue.increment(1));
                 alert("Correct Intelligence Sync! +50 ABP added.");
             } else {
@@ -219,7 +290,6 @@
             setTimeout(async () => {
                 await userRef.update({ balance: firebase.database.ServerValue.increment(reward) });
                 await userRef.child('completedMissions').child(mId).set(true);
-                // POINT 5: SYNC
                 db.ref('global_stats/total_missions').set(firebase.database.ServerValue.increment(1));
             }, 5000);
         }
