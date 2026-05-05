@@ -18,7 +18,7 @@
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .profile-wrapper { min-height: 100vh; padding: 15px; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; box-sizing: border-box; }
 
-        /* --- POINT 2: POLYGON IDENTITY --- */
+        /* --- IDENTITY & RANK CARD --- */
         .identity-badge {
             display: flex; align-items: center; justify-content: center; gap: 6px;
             background: rgba(130, 71, 229, 0.1); border: 1px solid rgba(130, 71, 229, 0.2);
@@ -26,7 +26,6 @@
             font-size: 8px; color: var(--poly-purple); font-family: 'Orbitron'; letter-spacing: 1px;
         }
 
-        /* --- RANK CARD & GAUGE --- */
         .rank-card {
             background: linear-gradient(145deg, rgba(15,15,20,0.9) 0%, rgba(5,5,5,1) 100%);
             border: 1px solid rgba(255,255,255,0.05); border-radius: 35px; padding: 35px 20px;
@@ -34,31 +33,25 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        .rank-badge {
-            width: 85px; height: 85px; margin: 0 auto 15px;
-            background: rgba(0,0,0,0.4); border: 2px solid var(--cyan);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 2.5rem; box-shadow: 0 0 20px var(--cyan-glow);
+        /* --- USER'S OWN HIGHLIGHT CARD (NEW) --- */
+        .user-rank-highlight {
+            background: rgba(0, 242, 255, 0.05);
+            border: 1px solid var(--cyan);
+            border-radius: 20px;
+            padding: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
         }
-
-        .gauge-container { position: relative; width: 200px; height: 110px; margin: 15px auto 0; overflow: hidden; }
-        .gauge-svg { width: 100%; height: 100%; }
-        .gauge-bg { fill: none; stroke: rgba(255,255,255,0.03); stroke-width: 10; stroke-linecap: round; }
-        .gauge-track { 
-            fill: none; stroke-width: 10; stroke-linecap: round; 
-            stroke-dasharray: 251; stroke-dashoffset: 251; 
-            transition: 2s ease-in-out; stroke: var(--cyan);
+        .user-rank-highlight .info { display: flex; align-items: center; gap: 12px; }
+        .user-rank-highlight .rank-circle {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--cyan);
+            color: #000; font-family: 'Orbitron'; font-weight: 900;
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+            box-shadow: 0 0 10px var(--cyan);
         }
-        
-        .needle {
-            position: absolute; bottom: 10px; left: 50%; width: 3px; height: 65px;
-            background: linear-gradient(to top, #fff, var(--cyan)); transform-origin: bottom center;
-            transform: translateX(-50%) rotate(-90deg); transition: 2s ease-in-out;
-            border-radius: 10px;
-        }
-
-        .score-value { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #fff; display: block; margin-top: -10px; }
-        .score-label { font-size: 7px; color: #555; font-family: 'Orbitron'; letter-spacing: 2px; text-transform: uppercase; }
 
         /* --- STAT GRID --- */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
@@ -69,14 +62,22 @@
         .stat-box .val { font-family: 'Orbitron'; font-size: 13px; font-weight: 900; color: #eee; display: block; margin-top: 4px; }
         .stat-box .lbl { font-size: 7px; color: #444; font-family: 'Orbitron'; letter-spacing: 1px; }
 
-        /* --- LEADERBOARD --- */
+        /* --- LEADERBOARD & AUTO-HIGHLIGHT --- */
         .leaderboard-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 18px; background: rgba(255,255,255,0.01);
             border-radius: 18px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03);
+            transition: 0.3s;
+        }
+        /* Highlight Class for User */
+        .leaderboard-item.is-me {
+            background: rgba(0, 242, 255, 0.08) !important;
+            border: 1px solid var(--cyan) !important;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.1);
         }
         .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 25px; color: var(--cyan); font-size: 12px; }
         .rank-addr { font-size: 10px; color: #555; flex: 1; margin-left: 10px; font-family: 'Orbitron'; }
+        .is-me .rank-addr { color: #fff; }
         .rank-pts { font-family: 'Orbitron'; font-size: 10px; color: #fff; font-weight: bold; }
 
         .logout-btn {
@@ -85,6 +86,16 @@
             border-radius: 18px; font-family: 'Orbitron'; font-size: 9px;
             letter-spacing: 3px; cursor: pointer; font-weight: 900;
         }
+        
+        /* [Original Gauge & Other Styles Preserved] */
+        .rank-badge { width: 85px; height: 85px; margin: 0 auto 15px; background: rgba(0,0,0,0.4); border: 2px solid var(--cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; box-shadow: 0 0 20px var(--cyan-glow); }
+        .gauge-container { position: relative; width: 200px; height: 110px; margin: 15px auto 0; overflow: hidden; }
+        .gauge-svg { width: 100%; height: 100%; }
+        .gauge-bg { fill: none; stroke: rgba(255,255,255,0.03); stroke-width: 10; stroke-linecap: round; }
+        .gauge-track { fill: none; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 251; stroke-dashoffset: 251; transition: 2s ease-in-out; stroke: var(--cyan); }
+        .needle { position: absolute; bottom: 10px; left: 50%; width: 3px; height: 65px; background: linear-gradient(to top, #fff, var(--cyan)); transform-origin: bottom center; transform: translateX(-50%) rotate(-90deg); transition: 2s ease-in-out; border-radius: 10px; }
+        .score-value { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #fff; display: block; margin-top: -10px; }
+        .score-label { font-size: 7px; color: #555; font-family: 'Orbitron'; letter-spacing: 2px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -95,8 +106,7 @@
                 <span style="width: 5px; height: 5px; background: var(--poly-purple); border-radius: 50%;"></span>
                 POLYGON_VALIDATOR_ID
             </div>
-            <div style="font-size: 8px; color: var(--cyan); font-family: 'Orbitron'; letter-spacing: 4px; opacity: 0.6;">IDENTITY_TERMINAL_v2</div>
-            <p id="user-wallet-full" style="font-size: 8px; color: #333; word-break: break-all; font-family: monospace; margin-top: 5px;">0x...</p>
+            <div id="user-wallet-full" style="font-size: 8px; color: #333; word-break: break-all; font-family: monospace;">0x...</div>
         </header>
 
         <section class="rank-card">
@@ -111,46 +121,32 @@
                 <div id="gauge-needle" class="needle"></div>
             </div>
 
-            <div style="margin-top: -5px;">
-                <span id="credit-score-val" class="score-value">300</span>
+            <div>
+                <span id="credit-score-val" class="score-value">...</span>
                 <span class="score-label">LOYALTY_SYNC_SCORE</span>
-                <div id="score-trend" style="font-family: 'Orbitron'; font-size: 8px; margin-top: 10px;">
-                    <span style="color: #444;">INITIALIZING_DATA_FETCH...</span>
-                </div>
-            </div>
-
-            <div style="margin-top: 25px; padding: 12px; background: rgba(0,242,255,0.02); border: 1px solid rgba(0,242,255,0.06); border-radius: 15px;">
-                <p id="eligibility-note" style="font-size: 7px; color: var(--cyan); font-weight: 900; font-family: 'Orbitron'; letter-spacing: 1px;">
-                    REQUIREMENT: 550_SCORE | 5_ACTIVE_NODES
-                </p>
             </div>
         </section>
 
-        <p style="font-size: 7px; color: #222; text-align: center; margin-top: 15px; font-family: 'Orbitron';">
-            OFFICIAL RESEARCH TERMINAL - POINTS ARE FOR ECOSYSTEM TESTING ONLY
-        </p>
-
-        <div class="stat-grid">
-            <div class="stat-box">
-                <span class="lbl">TOTAL_ABP</span>
-                <span id="stat-balance" class="val">0.00</span>
+        <div class="user-rank-highlight">
+            <div class="info">
+                <div class="rank-circle" id="my-rank-num">?</div>
+                <div>
+                    <div style="font-size: 10px; font-family: 'Orbitron'; color: #fff;">YOUR POSITION</div>
+                    <div style="font-size: 8px; color: var(--cyan); letter-spacing: 1px;">SYNCED TO BLOCKCHAIN</div>
+                </div>
             </div>
-            <div class="stat-box">
-                <span class="lbl">ACTIVE_NODES</span>
-                <span id="stat-refs" class="val">0</span>
-            </div>
-            <div class="stat-box">
-                <span class="lbl">PROTOCOL_STK</span>
-                <span id="stat-streak" class="val">1 DAY</span>
-            </div>
-            <div class="stat-box">
-                <span class="lbl">SYNC_RATE</span>
-                <span id="stat-social" class="val">0%</span>
-            </div>
+            <div id="my-rank-pts" style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">0 ABP</div>
         </div>
 
-        <section style="margin-top: 40px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px;">
+        <div class="stat-grid">
+            <div class="stat-box"><span class="lbl">TOTAL_ABP</span><span id="stat-balance" class="val">0.00</span></div>
+            <div class="stat-box"><span class="lbl">ACTIVE_NODES</span><span id="stat-refs" class="val">0</span></div>
+            <div class="stat-box"><span class="lbl">PROTOCOL_STK</span><span id="stat-streak" class="val">1 DAY</span></div>
+            <div class="stat-box"><span class="lbl">SYNC_RATE</span><span id="stat-social" class="val">0%</span></div>
+        </div>
+
+        <section style="margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
                 <h3 style="font-family: 'Orbitron'; font-size: 9px; color: #fff; letter-spacing: 2px; opacity: 0.6;">GLOBAL_LEADERBOARD</h3>
                 <span style="font-size: 8px; color: var(--p-green); font-family: 'Orbitron';">LIVE_FEED</span>
             </div>
@@ -179,17 +175,15 @@
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
 
-            // POINT 5: FIREBASE PERSISTENCE
             db.ref('users/' + userWallet.toLowerCase()).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
                     document.getElementById('stat-balance').innerText = (data.balance || 0).toFixed(2);
+                    document.getElementById('my-rank-pts').innerText = (data.balance || 0).toFixed(0) + " ABP";
                     document.getElementById('stat-streak').innerText = (data.streak || 1) + " DAYS";
                     
                     let tasksDone = 0;
-                    if(data.completedMissions) {
-                        tasksDone = Object.keys(data.completedMissions).length;
-                    }
+                    if(data.completedMissions) tasksDone = Object.keys(data.completedMissions).length;
                     const engagement = Math.round((tasksDone / 4) * 100);
                     document.getElementById('stat-social').innerText = engagement + "%";
                     
@@ -204,54 +198,53 @@
         };
 
         function calculateScore(data, engagement, refCount) {
-            // Complex Score Logic for Scarcity
             let score = 300 + (refCount * 50) + (engagement * 1.5) + ((data.streak || 1) * 10);
             if (refCount < 5 && score > 550) score = 550;
             score = Math.floor(Math.min(score, 900));
 
-            const scoreVal = document.getElementById('credit-score-val');
-            const gaugeFill = document.getElementById('gauge-fill');
-            const needle = document.getElementById('gauge-needle');
-            const trend = document.getElementById('score-trend');
-            const title = document.getElementById('rank-title');
-            const badge = document.getElementById('rank-glow');
-
-            scoreVal.innerText = score;
+            document.getElementById('credit-score-val').innerText = score;
             const percent = (score - 300) / 600;
-            needle.style.transform = `translateX(-50%) rotate(${(percent * 180) - 90}deg)`;
-            gaugeFill.style.strokeDashoffset = 251 - (percent * 251);
+            document.getElementById('gauge-needle').style.transform = `translateX(-50%) rotate(${(percent * 180) - 90}deg)`;
+            document.getElementById('gauge-fill').style.strokeDashoffset = 251 - (percent * 251);
 
-            if(score >= 750) {
-                gaugeFill.style.stroke = "var(--p-green)";
-                trend.innerHTML = `<span style="color: var(--p-green);">▲ ELITE_NODE_STATUS</span>`;
-                title.innerText = "EXECUTIVE_VALIDATOR"; badge.innerText = "🥇";
-            } else if (score >= 550) {
-                gaugeFill.style.stroke = "var(--cyan)";
-                trend.innerHTML = `<span style="color: var(--cyan);">▲ GROWTH_ESTABLISHED</span>`;
-                title.innerText = "PRIME_NODE"; badge.innerText = "🥈";
-            } else {
-                gaugeFill.style.stroke = "#ff3e3e";
-                trend.innerHTML = `<span style="color: #ff3e3e;">▼ DATA_SYNC_LOW</span>`;
-                title.innerText = "BASE_PARTICLE"; badge.innerText = "🥉";
-            }
+            const title = document.getElementById('rank-title');
+            if(score >= 750) { title.innerText = "EXECUTIVE_VALIDATOR"; document.getElementById('rank-glow').innerText = "🥇"; }
+            else if (score >= 550) { title.innerText = "PRIME_NODE"; document.getElementById('rank-glow').innerText = "🥈"; }
+            else { title.innerText = "BASE_PARTICLE"; document.getElementById('rank-glow').innerText = "🥉"; }
         }
 
         function loadLeaderboard() {
-            db.ref('users').orderByChild('balance').limitToLast(5).on('value', (snapshot) => {
+            // Load ALL users to find the exact rank (Limit to 50 for performance)
+            db.ref('users').orderByChild('balance').limitToLast(50).on('value', (snapshot) => {
                 const container = document.getElementById('leaderboard-container');
                 let users = [];
                 snapshot.forEach(child => { users.push({ wallet: child.key, ...child.val() }); });
                 users.reverse();
+
                 let html = "";
+                let foundMyRank = false;
+
                 users.forEach((u, index) => {
-                    let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
-                    html += `<div class="leaderboard-item">
-                                <div class="rank-num">${medal}</div>
-                                <div class="rank-addr">${u.wallet.substring(0,6)}...${u.wallet.slice(-4)}</div>
-                                <div class="rank-pts">${(u.balance || 0).toFixed(0)} ABP</div>
-                             </div>`;
+                    const isMe = u.wallet.toLowerCase() === userWallet.toLowerCase();
+                    const rankPosition = index + 1;
+
+                    if(isMe) {
+                        document.getElementById('my-rank-num').innerText = rankPosition;
+                        foundMyRank = true;
+                    }
+
+                    let medal = rankPosition === 1 ? "🥇" : rankPosition === 2 ? "🥈" : rankPosition === 3 ? "🥉" : rankPosition;
+                    
+                    html += `
+                        <div class="leaderboard-item ${isMe ? 'is-me' : ''}">
+                            <div class="rank-num">${medal}</div>
+                            <div class="rank-addr">${u.wallet.substring(0,6)}...${u.wallet.slice(-4)} ${isMe ? '(YOU)' : ''}</div>
+                            <div class="rank-pts">${(u.balance || 0).toFixed(0)} ABP</div>
+                        </div>`;
                 });
+
                 container.innerHTML = html;
+                if(!foundMyRank) document.getElementById('my-rank-num').innerText = "50+";
             });
         }
 
