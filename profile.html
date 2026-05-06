@@ -3,158 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Identity Terminal</title>
+    <title>ADAMAS | The Vault</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
         :root { 
-            --cyan: #00f2ff; 
-            --cyan-glow: rgba(0, 242, 255, 0.4); 
-            --p-green: #adff2f; 
-            --glass: rgba(255, 255, 255, 0.03); 
+            --neon-gold: #ffcc00; 
+            --cyan: #00f2ff;
+            --p-green: #adff2f;
+            --glass: rgba(255, 255, 255, 0.03);
             --poly-purple: #8247e5;
         }
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .profile-wrapper { min-height: 100vh; padding: 15px; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; box-sizing: border-box; }
+        .vault-wrapper { min-height: 100vh; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; }
 
-        /* --- IDENTITY & RANK CARD --- */
-        .identity-badge {
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            background: rgba(130, 71, 229, 0.1); border: 1px solid rgba(130, 71, 229, 0.2);
-            padding: 5px 15px; border-radius: 50px; width: fit-content; margin: 0 auto 20px;
-            font-size: 8px; color: var(--poly-purple); font-family: 'Orbitron'; letter-spacing: 1px;
+        /* --- PRO BRANDING --- */
+        .brand-identity { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 25px; }
+        .logo-box-vault {
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 2px solid var(--neon-gold); background: rgba(0,0,0,0.6);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
         }
+        .nav-logo-img { width: 75%; height: 75%; border-radius: 50%; filter: drop-shadow(0 0 5px var(--neon-gold)); }
 
-        .rank-card {
-            background: linear-gradient(145deg, rgba(15,15,20,0.9) 0%, rgba(5,5,5,1) 100%);
-            border: 1px solid rgba(255,255,255,0.05); border-radius: 35px; padding: 35px 20px;
-            text-align: center; position: relative; overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        }
-
-        .user-rank-highlight {
-            background: rgba(0, 242, 255, 0.05);
-            border: 1px solid var(--cyan);
-            border-radius: 20px;
-            padding: 15px;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
-        }
-        .user-rank-highlight .info { display: flex; align-items: center; gap: 12px; }
-        .user-rank-highlight .rank-circle {
-            width: 40px; height: 40px; border-radius: 50%; background: var(--cyan);
-            color: #000; font-family: 'Orbitron'; font-weight: 900;
-            display: flex; align-items: center; justify-content: center; font-size: 14px;
-            box-shadow: 0 0 10px var(--cyan);
-        }
-
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
-        .stat-box { 
-            background: var(--glass); padding: 15px 10px; border-radius: 18px; 
-            border: 1px solid rgba(255,255,255,0.03); text-align: center;
-        }
-        .stat-box .val { font-family: 'Orbitron'; font-size: 13px; font-weight: 900; color: #eee; display: block; margin-top: 4px; }
-        .stat-box .lbl { font-size: 7px; color: #444; font-family: 'Orbitron'; letter-spacing: 1px; }
-
-        .leaderboard-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 18px; background: rgba(255,255,255,0.01);
-            border-radius: 18px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03);
-            transition: 0.3s;
-        }
-        .leaderboard-item.is-me {
-            background: rgba(0, 242, 255, 0.08) !important;
-            border: 1px solid var(--cyan) !important;
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.1);
-        }
-        .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 25px; color: var(--cyan); font-size: 12px; }
-        .rank-addr { font-size: 10px; color: #555; flex: 1; margin-left: 10px; font-family: 'Orbitron'; }
-        .is-me .rank-addr { color: #fff; }
-        .rank-pts { font-family: 'Orbitron'; font-size: 10px; color: #fff; font-weight: bold; }
-
-        .logout-btn {
-            width: 100%; margin-top: 35px; background: rgba(255, 62, 62, 0.03); 
-            border: 1px solid rgba(255, 62, 62, 0.1); color: #ff3e3e; padding: 16px; 
-            border-radius: 18px; font-family: 'Orbitron'; font-size: 9px;
-            letter-spacing: 3px; cursor: pointer; font-weight: 900;
+        /* --- VAULT TERMINAL BOX --- */
+        .vault-container {
+            text-align: center; padding: 35px 22px;
+            background: radial-gradient(circle at center, rgba(255, 204, 0, 0.05) 0%, rgba(0,0,0,0.4) 100%);
+            border-radius: 35px; border: 1px solid rgba(255, 204, 0, 0.15);
+            margin-bottom: 25px; position: relative; overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
         }
         
-        .rank-badge { width: 85px; height: 85px; margin: 0 auto 15px; background: rgba(0,0,0,0.4); border: 2px solid var(--cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; box-shadow: 0 0 20px var(--cyan-glow); }
-        .gauge-container { position: relative; width: 200px; height: 110px; margin: 15px auto 0; overflow: hidden; }
-        .gauge-svg { width: 100%; height: 100%; }
-        .gauge-bg { fill: none; stroke: rgba(255,255,255,0.03); stroke-width: 10; stroke-linecap: round; }
-        .gauge-track { fill: none; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 251; stroke-dashoffset: 251; transition: 2s ease-in-out; stroke: var(--cyan); }
-        .needle { position: absolute; bottom: 10px; left: 50%; width: 3px; height: 65px; background: linear-gradient(to top, #fff, var(--cyan)); transform-origin: bottom center; transform: translateX(-50%) rotate(-90deg); transition: 2s ease-in-out; border-radius: 10px; }
-        .score-value { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #fff; display: block; margin-top: -10px; }
-        .score-label { font-size: 7px; color: #555; font-family: 'Orbitron'; letter-spacing: 2px; text-transform: uppercase; }
+        .vault-lock-icon {
+            font-size: 3.5rem; margin-bottom: 20px; display: block;
+            filter: drop-shadow(0 0 15px var(--neon-gold));
+            transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .scarcity-tag {
+            background: var(--neon-gold); color: #000;
+            font-family: 'Orbitron'; font-weight: 900;
+            font-size: 8px; padding: 6px 16px; border-radius: 10px;
+            letter-spacing: 2px; display: inline-block;
+            box-shadow: 0 4px 10px rgba(255, 204, 0, 0.3);
+        }
+
+        /* --- CHECKLIST SYSTEM --- */
+        .check-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px; background: rgba(255,255,255,0.02);
+            border-radius: 20px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.04);
+            transition: 0.3s;
+        }
+        .check-label { font-size: 9px; color: #666; font-family: 'Orbitron'; letter-spacing: 1.5px; }
+        .check-status { font-family: 'Orbitron'; font-size: 10px; font-weight: 900; letter-spacing: 1px; color: #333; }
+        .status-completed { color: var(--p-green); text-shadow: 0 0 10px rgba(173, 255, 47, 0.3); }
+
+        .btn-lock {
+            background: rgba(255,255,255,0.03); color: #444; cursor: not-allowed;
+            border: 1px solid rgba(255,255,255,0.05); padding: 18px; width: 100%;
+            border-radius: 20px; font-family: 'Orbitron'; font-size: 10px;
+            font-weight: 900; transition: 0.4s; letter-spacing: 2px;
+        }
+        .btn-unlocked {
+            background: var(--cyan) !important; color: #000 !important;
+            cursor: pointer !important; box-shadow: 0 10px 25px rgba(0, 242, 255, 0.3);
+            border: none !important;
+        }
+
+        .unlocked-shimmer { animation: shimmer 3s infinite linear; background: linear-gradient(to right, transparent, rgba(173, 255, 47, 0.03), transparent); background-size: 200% 100%; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     </style>
 </head>
 <body>
 
-    <div class="profile-wrapper">
-        <header style="text-align: center; margin-bottom: 10px;">
-            <div class="identity-badge">
-                <span style="width: 5px; height: 5px; background: var(--poly-purple); border-radius: 50%;"></span>
-                POLYGON_VALIDATOR_ID
+    <div class="vault-wrapper">
+        <div class="brand-identity">
+            <div class="logo-box-vault">
+                <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
             </div>
-            <div id="user-wallet-full" style="font-size: 8px; color: #333; word-break: break-all; font-family: monospace;">0x...</div>
+        </div>
+
+        <header style="text-align: center; margin-bottom: 30px;">
+            <div class="scarcity-tag">GENESIS_MODULE</div>
+            <h1 style="font-family: 'Orbitron'; font-size: 1.4rem; letter-spacing: 4px; margin: 15px 0 5px 0; color: #fff;">THE <span style="color: var(--neon-gold);">VAULT</span></h1>
+            <p style="font-size: 8px; color: #555; letter-spacing: 2px; font-family: 'Orbitron';">ENCRYPTED_ASSET_FORGING</p>
         </header>
 
-        <section class="rank-card">
-            <div id="rank-glow" class="rank-badge">🎖️</div>
-            <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; font-size: 1rem; letter-spacing: 2px; margin: 0;">SCANNING...</h2>
+        <section class="vault-container" id="vault-main-box">
+            <div style="position: absolute; top: 18px; right: 20px; background: rgba(130, 71, 229, 0.1); border: 1px solid rgba(130, 71, 229, 0.3); color: var(--poly-purple); font-size: 7px; padding: 5px 12px; border-radius: 20px; font-family: 'Orbitron';">POLYGON_MIRROR</div>
             
-            <div class="gauge-container">
-                <svg class="gauge-svg" viewBox="0 0 100 60">
-                    <path class="gauge-bg" d="M10 50 A40 40 0 0 1 90 50" />
-                    <path id="gauge-fill" class="gauge-track" d="M10 50 A40 40 0 0 1 90 50" />
-                </svg>
-                <div id="gauge-needle" class="needle"></div>
+            <div class="vault-lock-icon" id="vault-icon">🔒</div>
+            <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold); margin-bottom: 30px; letter-spacing: 3px; font-weight: 900;">PROTOCOL_LOCKED</div>
+            
+            <div style="text-align: left; padding: 0 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 9px; font-family: 'Orbitron'; margin-bottom: 12px; letter-spacing: 1px;">
+                    <span style="color: #666;">COMMUNITY_SYNC: <span style="color:#fff;" id="target-label">21,000 ADS</span></span>
+                    <span id="genesis-percent" style="color: var(--cyan);">0%</span>
+                </div>
+                <div style="height: 6px; background: #080808; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03);">
+                    <div id="genesis-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-gold), var(--p-green)); transition: 2s ease-in-out;"></div>
+                </div>
+                <p style="font-size: 8px; color: #444; margin-top: 20px; text-align: center; line-height: 1.8; font-family: 'Orbitron';">
+                    MINTING MODULE ACTIVATES AT <span style="color: var(--cyan);">100% SYNC</span>
+                </p>
             </div>
 
-            <div>
-                <span id="credit-score-val" class="score-value">...</span>
-                <span class="score-label">LOYALTY_SYNC_SCORE</span>
+            <div style="margin-top: 35px;">
+                <button class="btn-lock" id="wallet-btn" disabled>AWAITING_CRITERIA_MATCH</button>
             </div>
         </section>
 
-        <div class="user-rank-highlight">
-            <div class="info">
-                <div class="rank-circle" id="my-rank-num">?</div>
-                <div>
-                    <div style="font-size: 10px; font-family: 'Orbitron'; color: #fff;">YOUR POSITION</div>
-                    <div style="font-size: 8px; color: var(--cyan); letter-spacing: 1px;">SYNCED TO BLOCKCHAIN</div>
+        <section style="background: var(--glass); border: 1px solid rgba(255,255,255,0.05); border-radius: 30px; padding: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: #fff; letter-spacing: 2px;">SYNC_ELIGIBILITY</h3>
+                <span id="eligibility-status" style="font-size: 8px; font-family: 'Orbitron'; color: #ff3366; background: rgba(255,51,102,0.1); padding: 6px 14px; border-radius: 20px;">PENDING</span>
+            </div>
+            
+            <div id="rank-checklist">
+                <div class="check-item">
+                    <span class="check-label">MINING_VOLUME</span>
+                    <span id="check-points" class="check-status">0/5,000 ABP</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-label">ACTIVE_NODES</span>
+                    <span id="check-refs" class="check-status">0/3 NODES</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-label">SYNC_STREAK</span>
+                    <span id="check-status-streak" class="check-status">0/5 DAYS</span>
                 </div>
             </div>
-            <div id="my-rank-pts" style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">0 ABP</div>
-        </div>
-
-        <div class="stat-grid">
-            <div class="stat-box"><span class="lbl">TOTAL_ABP</span><span id="stat-balance" class="val">0.00</span></div>
-            <div class="stat-box"><span class="lbl">ACTIVE_NODES</span><span id="stat-refs" class="val">0</span></div>
-            <div class="stat-box"><span class="lbl">PROTOCOL_STK</span><span id="stat-streak" class="val">1 DAY</span></div>
-            <div class="stat-box"><span class="lbl">SYNC_RATE</span><span id="stat-social" class="val">0%</span></div>
-        </div>
-
-        <section style="margin-top: 30px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 9px; color: #fff; letter-spacing: 2px; opacity: 0.6;">GLOBAL_LEADERBOARD</h3>
-                <span style="font-size: 8px; color: var(--p-green); font-family: 'Orbitron';">LIVE_FEED</span>
-            </div>
-            <div id="leaderboard-container"></div>
+            <p style="font-size: 8px; color: #333; text-align: center; margin-top: 15px; font-family: 'Orbitron';">PROTOCOL REQUIRES ALL LEDGER PARAMS TO BE ACTIVE</p>
         </section>
-
-        <button class="logout-btn" onclick="logout()">TERMINATE_SESSION</button>
 
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item">🏠 HOME</a>
+            <a href="vault.html" class="nav-item active">🔒 VAULT</a>
             <a href="missions.html" class="nav-item">⚡ TASKS</a>
             <a href="referral.html" class="nav-item">👥 NETWORK</a>
-            <a href="profile.html" class="nav-item active">🏆 RANK</a>
+            <a href="profile.html" class="nav-item">🏆 RANK</a>
         </nav>
     </div>
 
@@ -164,90 +155,73 @@
     
     <script>
         const userWallet = localStorage.getItem('adamas_user');
+        if(!userWallet) { window.location.href = "index.html"; }
+        const userRef = db.ref('users/' + userWallet.toLowerCase());
 
-        window.onload = () => {
-            if(!userWallet) window.location.href = "index.html";
-            document.getElementById('user-wallet-full').innerText = userWallet;
+        userRef.on('value', snap => {
+            const data = snap.val();
+            if(data) {
+                let criteriaMet = 0;
+                
+                // Volume Check
+                const balance = Math.floor(parseFloat(data.balance) || 0);
+                const ptEl = document.getElementById('check-points');
+                ptEl.innerText = `${balance.toLocaleString()}/5,000 ABP`;
+                if(balance >= 5000) { ptEl.classList.add("status-completed"); criteriaMet++; }
 
-            db.ref('users/' + userWallet.toLowerCase()).on('value', (snapshot) => {
-                const data = snapshot.val();
-                if(data) {
-                    document.getElementById('stat-balance').innerText = formatABP(data.balance);
-                    document.getElementById('my-rank-pts').innerText = formatABP(data.balance) + " ABP";
-                    document.getElementById('stat-streak').innerText = (data.streak || 1) + " DAYS";
+                // Streak Check
+                const streak = parseInt(data.streak) || 1;
+                const streakEl = document.getElementById('check-status-streak');
+                streakEl.innerText = `${streak}/5 DAYS`;
+                if(streak >= 5) { streakEl.classList.add("status-completed"); criteriaMet++; }
+
+                // Referral Check
+                db.ref('users').orderByChild('referredBy').equalTo(userWallet.toLowerCase()).once('value', refSnap => {
+                    const count = refSnap.numChildren() || 0;
+                    const refEl = document.getElementById('check-refs');
+                    refEl.innerText = `${count}/3 NODES`;
+                    if(count >= 3) { refEl.classList.add("status-completed"); criteriaMet++; }
+
+                    const statusBadge = document.getElementById('eligibility-status');
+                    const walletBtn = document.getElementById('wallet-btn');
+
+                    if(criteriaMet >= 3) {
+                        statusBadge.innerText = "VERIFIED_ELIGIBLE";
+                        statusBadge.style.color = "var(--p-green)";
+                        statusBadge.style.background = "rgba(173, 255, 47, 0.1)";
+                        checkGlobalSync();
+                    } else {
+                        statusBadge.innerText = "INCOMPLETE";
+                        walletBtn.innerText = "COMPLETE_ALL_REQUIREMENTS";
+                    }
+                });
+            }
+        });
+
+        function checkGlobalSync() {
+            db.ref('global_stats/total_forged').on('value', snap => {
+                const total = parseFloat(snap.val()) || 0; 
+                const target = 21000;
+                const percent = Math.min((total / target) * 100, 100).toFixed(1);
+                
+                document.getElementById('genesis-percent').innerText = percent + "%";
+                document.getElementById('genesis-fill').style.width = percent + "%";
+                
+                if(percent >= 100) {
+                    document.getElementById('vault-icon').innerText = "🔓";
+                    document.getElementById('vault-main-box').classList.add('unlocked-shimmer');
+                    const statusText = document.getElementById('vault-status-text');
+                    statusText.innerText = "PROTOCOL_ACTIVE";
+                    statusText.style.color = "var(--p-green)";
                     
-                    let tasksDone = 0;
-                    if(data.completedMissions) tasksDone = Object.keys(data.completedMissions).length;
-                    const engagement = Math.round((tasksDone / 4) * 100);
-                    document.getElementById('stat-social').innerText = engagement + "%";
-                    
-                    db.ref('users').orderByChild('referredBy').equalTo(userWallet.toLowerCase()).once('value', refSnap => {
-                        const refCount = refSnap.numChildren() || 0;
-                        document.getElementById('stat-refs').innerText = refCount;
-                        calculateScore(data, engagement, refCount);
-                    });
+                    const walletBtn = document.getElementById('wallet-btn');
+                    walletBtn.disabled = false;
+                    walletBtn.innerText = "CONNECT_POLYGON_WALLET";
+                    walletBtn.className = "btn-lock btn-unlocked";
+                } else {
+                    document.getElementById('wallet-btn').innerText = "AWAITING_COMMUNITY_SYNC";
                 }
             });
-            loadLeaderboard();
-        };
-
-        function calculateScore(data, engagement, refCount) {
-            let score = 300 + (refCount * 50) + (engagement * 1.5) + ((data.streak || 1) * 10);
-            if (refCount < 5 && score > 550) score = 550;
-            score = Math.floor(Math.min(score, 900));
-
-            document.getElementById('credit-score-val').innerText = score;
-            const percent = (score - 300) / 600;
-            document.getElementById('gauge-needle').style.transform = `translateX(-50%) rotate(${(percent * 180) - 90}deg)`;
-            document.getElementById('gauge-fill').style.strokeDashoffset = 251 - (percent * 251);
-
-            const title = document.getElementById('rank-title');
-            if(score >= 750) { title.innerText = "EXECUTIVE_VALIDATOR"; document.getElementById('rank-glow').innerText = "🥇"; }
-            else if (score >= 550) { title.innerText = "PRIME_NODE"; document.getElementById('rank-glow').innerText = "🥈"; }
-            else { title.innerText = "BASE_PARTICLE"; document.getElementById('rank-glow').innerText = "🥉"; }
-        }
-
-        function loadLeaderboard() {
-            db.ref('users').orderByChild('balance').limitToLast(50).on('value', (snapshot) => {
-                const container = document.getElementById('leaderboard-container');
-                let users = [];
-                snapshot.forEach(child => { users.push({ wallet: child.key, ...child.val() }); });
-                users.reverse();
-
-                let html = "";
-                let foundMyRank = false;
-
-                users.forEach((u, index) => {
-                    const isMe = u.wallet.toLowerCase() === userWallet.toLowerCase();
-                    const rankPosition = index + 1;
-
-                    if(isMe) {
-                        document.getElementById('my-rank-num').innerText = rankPosition;
-                        foundMyRank = true;
-                    }
-
-                    let medal = rankPosition === 1 ? "🥇" : rankPosition === 2 ? "🥈" : rankPosition === 3 ? "🥉" : rankPosition;
-                    
-                    html += `
-                        <div class="leaderboard-item ${isMe ? 'is-me' : ''}">
-                            <div class="rank-num">${medal}</div>
-                            <div class="rank-addr">${u.wallet.substring(0,6)}...${u.wallet.slice(-4)} ${isMe ? '(YOU)' : ''}</div>
-                            <div class="rank-pts">${formatABP(u.balance)} ABP</div>
-                        </div>`;
-                });
-
-                container.innerHTML = html;
-                if(!foundMyRank) document.getElementById('my-rank-num').innerText = "50+";
-            });
-        }
-
-        function logout() { localStorage.removeItem('adamas_user'); window.location.href = "index.html"; }
-
-        function formatABP(num) {
-            if (num >= 1e9) return (num/1e9).toFixed(2) + 'B';
-            if (num >= 1e6) return (num/1e6).toFixed(2) + 'M';
-            if (num >= 1e3) return (num/1e3).toFixed(1) + 'K';
-            return parseFloat(num || 0).toFixed(2);
         }
     </script>
 </body>
