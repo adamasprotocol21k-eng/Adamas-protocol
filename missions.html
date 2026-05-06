@@ -9,15 +9,20 @@
     <style>
         :root { 
             --cyan: #00f2ff; 
-            --cyan-glow: rgba(0, 242, 255, 0.4); 
+            --cyan-glow: rgba(0, 242, 255, 0.6); 
             --gold: #ffcc00;
             --p-green: #adff2f; 
             --glass: rgba(255, 255, 255, 0.03); 
             --error: #ff3366;
+            --premium-glow: 0 0 15px var(--cyan-glow), 0 0 30px rgba(0, 242, 255, 0.2);
         }
 
-        body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .mission-wrapper { min-height: 100vh; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; }
+        /* --- GLOBAL STABILITY FIX --- */
+        body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; touch-action: manipulation; }
+        .mission-wrapper { min-height: 100vh; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; contain: layout; }
+
+        /* --- PREMIUM GLOWING TEXT --- */
+        .glowing-abp { color: var(--cyan) !important; text-shadow: var(--premium-glow); font-weight: 900; }
 
         /* --- HEADER SYNC --- */
         .header-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
@@ -36,42 +41,35 @@
         .game-icon-svg { width: 28px; height: 28px; margin-bottom: 8px; }
         .game-label { font-family: 'Orbitron'; font-size: 7px; color: #fff; letter-spacing: 1px; }
 
-        /* --- MISSION CARDS --- */
-        .mission-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); padding: 18px; border-radius: 22px; margin-bottom: 15px; }
-        .mission-card h4 { font-family: 'Orbitron'; font-size: 11px; margin: 0; color: #fff; }
-        .mission-reward { font-size: 9px; color: var(--p-green); font-family: 'Orbitron'; margin-top: 5px; display: block; }
-
-        .status-pill { background: var(--cyan); color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-size: 9px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
-        .status-pill:disabled { background: #222; color: #555; cursor: not-allowed; }
-
-        /* --- GLOBAL OVERLAY SYSTEM --- */
-        .game-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .game-window { width: 92%; max-width: 380px; background: #050505; border: 1px solid rgba(255,255,255,0.1); border-radius: 35px; padding: 25px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,1); }
+        /* --- GLOBAL OVERLAY (ANTI-GLITCH) --- */
+        .game-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.98); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        .game-window { width: 92%; max-width: 400px; background: #050505; border: 1px solid rgba(255,255,255,0.1); border-radius: 35px; padding: 25px; text-align: center; position: relative; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,1); will-change: transform; transform: translateZ(0); }
         
-        /* --- MINI DASHBOARD INSIDE OVERLAY --- */
-        .game-mini-dash { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 15px; padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .dash-label { font-family: 'Orbitron'; font-size: 7px; color: #666; }
-        .dash-val { font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); font-weight: 900; }
+        .game-mini-dash { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 15px; padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .dash-label { font-family: 'Orbitron'; font-size: 7px; color: #666; letter-spacing: 1px; }
+        .dash-val { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); font-weight: 900; text-shadow: 0 0 10px var(--cyan-glow); }
 
-        /* --- BETTING CONTROLS (CASINO STYLE) --- */
-        .casino-panel { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 15px; border-radius: 20px; margin-top: 20px; }
-        .bet-input-wrap { display: flex; background: #000; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .casino-panel { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 18px; border-radius: 22px; margin-top: 20px; width: 100%; box-sizing: border-box; }
+        .bet-input-wrap { display: flex; background: #000; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .bet-input-wrap label { font-family: 'Orbitron'; font-size: 8px; color: #555; }
-        .bet-input-wrap input { background: transparent; border: none; color: #fff; font-family: 'Orbitron'; text-align: right; outline: none; width: 60%; font-size: 12px; }
+        .bet-input-wrap input { background: transparent; border: none; color: #fff; font-family: 'Orbitron'; text-align: right; outline: none; width: 60%; font-size: 13px; font-weight: 700; }
 
-        .reward-ledger { margin-top: 15px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; }
-        .ledger-item { font-family: 'Orbitron'; font-size: 7px; display: flex; align-items: center; gap: 6px; color: #777; }
-        .dot { width: 5px; height: 5px; border-radius: 50%; }
+        /* --- SPIN WHEEL --- */
+        #wheel-svg { will-change: transform; transform: translateZ(0); filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)); }
 
-        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 15px 0; }
-        .mine-tile { aspect-ratio: 1; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-        .mine-tile.win { background: rgba(173, 255, 47, 0.1); border-color: var(--p-green); box-shadow: inset 0 0 10px var(--p-green); }
-        .mine-tile.loss { background: rgba(255, 51, 102, 0.1); border-color: var(--error); box-shadow: inset 0 0 10px var(--error); }
+        /* --- MINES GRID --- */
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 15px 0; min-height: 240px; }
+        .mine-tile { aspect-ratio: 1; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: transform 0.1s; }
+        .mine-tile:active { transform: scale(0.9); }
+        .mine-tile.win { background: rgba(173, 255, 47, 0.1); border-color: var(--p-green); box-shadow: inset 0 0 15px var(--p-green); }
+        .mine-tile.loss { background: rgba(255, 51, 102, 0.1); border-color: var(--error); box-shadow: inset 0 0 15px var(--error); }
 
-        #multiplier-display { font-family: 'Orbitron'; font-size: 4rem; font-weight: 900; margin: 20px 0; color: var(--cyan); text-shadow: 0 0 20px var(--cyan-glow); }
-        .live-profit { font-family: 'Orbitron'; font-size: 9px; color: var(--p-green); margin-bottom: 10px; opacity: 0.8; }
+        /* --- CRASH --- */
+        #multiplier-display { font-family: 'Orbitron'; font-size: 4rem; font-weight: 900; margin: 15px 0; color: var(--cyan); text-shadow: var(--premium-glow); font-variant-numeric: tabular-nums; }
+        .live-profit { font-family: 'Orbitron'; font-size: 9px; color: var(--p-green); margin-bottom: 15px; background: rgba(173, 255, 47, 0.05); padding: 5px 12px; border-radius: 20px; display: inline-block; }
 
-        .btn-game { width: 100%; padding: 16px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; cursor: pointer; text-transform: uppercase; }
+        .btn-game { width: 100%; padding: 16px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; cursor: pointer; text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .btn-game:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
@@ -80,28 +78,28 @@
         <div class="game-window">
             <span onclick="closeAllGames()" style="position:absolute; top: 15px; right: 20px; color: #555; font-family:'Orbitron'; cursor:pointer; font-size: 10px;">[ CLOSE ]</span>
             <div class="game-mini-dash">
-                <span class="dash-label">AVAILABLE_ABP</span>
+                <span class="dash-label">TERMINAL_BALANCE</span>
                 <span class="dash-val in-game-balance">0.00</span>
             </div>
             
-            <div style="position:relative; width: 220px; height: 220px; margin: auto;">
-                <svg width="220" height="220" viewBox="0 0 200 200" id="wheel-svg" style="transition: transform 5s cubic-bezier(0.2, 0, 0, 1);">
+            <div style="position:relative; width: 220px; height: 220px; margin: 10px auto;">
+                <svg width="220" height="220" viewBox="0 0 200 200" id="wheel-svg" style="transition: transform 5s cubic-bezier(0.15, 0, 0, 1);">
                     <path d="M100,100 L100,5 A95,95 0 0,1 195,100 Z" fill="#ff3b3b"/>
                     <path d="M100,100 L195,100 A95,95 0 0,1 100,195 Z" fill="#00f2ff"/>
                     <path d="M100,100 L100,195 A95,95 0 0,1 5,100 Z" fill="#ffcc00"/>
                     <path d="M100,100 L5,100 A95,95 0 0,1 100,5 Z" fill="#adff2f"/>
                 </svg>
-                <div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); border-left:12px solid transparent; border-right:12px solid transparent; border-top:25px solid #fff; filter: drop-shadow(0 0 5px #fff); z-index:10;"></div>
+                <div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); border-left:12px solid transparent; border-right:12px solid transparent; border-top:25px solid #fff; filter: drop-shadow(0 0 8px #fff); z-index:10;"></div>
             </div>
 
             <div class="casino-panel">
-                <div class="bet-input-wrap"><label>BET</label><input type="number" id="bet-spin" value="100"></div>
-                <button class="btn-game" style="background:var(--cyan); color:#000;" onclick="spinWheel()">SPIN_ENGINE</button>
-                <div class="reward-ledger">
-                    <div class="ledger-item"><div class="dot" style="background:#adff2f"></div> GREEN: 5.0x</div>
-                    <div class="ledger-item"><div class="dot" style="background:#ffcc00"></div> GOLD: 2.0x</div>
-                    <div class="ledger-item"><div class="dot" style="background:#00f2ff"></div> BLUE: 1.5x</div>
-                    <div class="ledger-item"><div class="dot" style="background:#ff3b3b"></div> RED: 0x</div>
+                <div class="bet-input-wrap"><label>BET_AMOUNT</label><input type="number" id="bet-spin" value="100"></div>
+                <button class="btn-game" style="background:var(--cyan); color:#000;" onclick="spinWheel()">EXECUTE_SPIN</button>
+                <div class="reward-ledger" style="margin-top:15px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; font-family:'Orbitron'; font-size:7px; color:#555;">
+                    <div style="display:flex; align-items:center; gap:5px;"><div style="width:5px;height:5px;border-radius:50%;background:#adff2f"></div> GREEN: 5.0x</div>
+                    <div style="display:flex; align-items:center; gap:5px;"><div style="width:5px;height:5px;border-radius:50%;background:#ffcc00"></div> GOLD: 2.0x</div>
+                    <div style="display:flex; align-items:center; gap:5px;"><div style="width:5px;height:5px;border-radius:50%;background:#00f2ff"></div> BLUE: 1.5x</div>
+                    <div style="display:flex; align-items:center; gap:5px;"><div style="width:5px;height:5px;border-radius:50%;background:#ff3b3b"></div> RED: 0x</div>
                 </div>
             </div>
         </div>
@@ -111,16 +109,16 @@
         <div class="game-window">
             <span onclick="closeAllGames()" style="position:absolute; top: 15px; right: 20px; color: #555; font-family:'Orbitron'; cursor:pointer; font-size: 10px;">[ CLOSE ]</span>
             <div class="game-mini-dash">
-                <span class="dash-label">AVAILABLE_ABP</span>
+                <span class="dash-label">TERMINAL_BALANCE</span>
                 <span class="dash-val in-game-balance">0.00</span>
             </div>
             
             <div id="mines-grid" class="mines-grid"></div>
             
             <div class="casino-panel">
-                <div class="bet-input-wrap"><label>BET</label><input type="number" id="bet-mines" value="50"></div>
-                <div id="mine-init-box"><button class="btn-game" style="background:var(--p-green); color:#000;" onclick="initMines()">INIT_DIAMOND_GRID</button></div>
-                <div id="mine-action-box" style="display:none;"><button class="btn-game" style="background:var(--cyan); color:#000;" onclick="cashoutMines()">SECURE_ASSETS</button></div>
+                <div class="bet-input-wrap"><label>BET_AMOUNT</label><input type="number" id="bet-mines" value="50"></div>
+                <div id="mine-init-box"><button class="btn-game" style="background:var(--p-green); color:#000;" onclick="initMines()">INIT_QUANTUM_GRID</button></div>
+                <div id="mine-action-box" style="display:none;"><button class="btn-game" style="background:var(--cyan); color:#000;" onclick="cashoutMines()">SECURE_EARNINGS</button></div>
             </div>
         </div>
     </div>
@@ -129,7 +127,7 @@
         <div class="game-window">
             <span onclick="closeAllGames()" style="position:absolute; top: 15px; right: 20px; color: #555; font-family:'Orbitron'; cursor:pointer; font-size: 10px;">[ CLOSE ]</span>
             <div class="game-mini-dash">
-                <span class="dash-label">AVAILABLE_ABP</span>
+                <span class="dash-label">TERMINAL_BALANCE</span>
                 <span class="dash-val in-game-balance">0.00</span>
             </div>
             
@@ -137,8 +135,8 @@
             <div class="live-profit" id="crash-profit">EST. PROFIT: 0.00 ABP</div>
             
             <div class="casino-panel">
-                <div class="bet-input-wrap"><label>BET</label><input type="number" id="bet-crash" value="100"></div>
-                <div id="crash-init-box"><button class="btn-game" style="background:var(--error); color:#fff;" onclick="startCrash()">PREDICT_LINK</button></div>
+                <div class="bet-input-wrap"><label>BET_AMOUNT</label><input type="number" id="bet-crash" value="100"></div>
+                <div id="crash-init-box"><button class="btn-game" style="background:var(--error); color:#fff;" onclick="startCrash()">LAUNCH_LINK</button></div>
                 <div id="crash-action-box" style="display:none;"><button class="btn-game" style="background:var(--cyan); color:#000;" onclick="cashoutCrash()">CASHOUT_NOW</button></div>
             </div>
         </div>
@@ -150,7 +148,7 @@
                 <div class="logo-box-small"><img src="assets/dashboard-logo.png" class="nav-logo-img"></div>
                 <div>
                     <span style="font-size: 8px; color: #555; letter-spacing: 2px; font-family: 'Orbitron';">VAULT_ASSETS</span>
-                    <span id="header-balance" style="display:block; color:#fff; font-family:'Orbitron'; font-size: 1.1rem; font-weight: 900;">0.00</span>
+                    <span id="header-balance" class="glowing-abp" style="display:block; font-family:'Orbitron'; font-size: 1.15rem;">0.00</span>
                 </div>
             </div>
             <div id="streak-badge" style="background: rgba(173, 255, 47, 0.05); color: var(--p-green); border: 1px solid rgba(173, 255, 47, 0.2); font-size: 8px; padding: 6px 12px; border-radius: 20px; font-family: 'Orbitron';">STREAK: 1</div>
@@ -243,35 +241,52 @@
             }
         });
 
-        function openGame(type) { document.getElementById('overlay-' + type).style.display = 'flex'; }
-        function closeAllGames() { document.querySelectorAll('.game-overlay').forEach(el => el.style.display = 'none'); resetCrash(); }
+        // --- GLOBAL OVERLAY LOGIC (NO SCROLL GLITCH) ---
+        function openGame(type) { 
+            document.body.style.overflow = 'hidden'; // Prevents background shifting
+            document.getElementById('overlay-' + type).style.display = 'flex'; 
+        }
+        function closeAllGames() { 
+            document.querySelectorAll('.game-overlay').forEach(el => el.style.display = 'none'); 
+            document.body.style.overflow = 'auto';
+            resetCrash(); 
+        }
 
-        // --- SPIN WHEEL LOGIC ---
+        // --- SPIN WHEEL LOGIC (FIXED TRANSITION & PERFORMANCE) ---
         let spinning = false;
         async function spinWheel() {
             const bet = parseInt(document.getElementById('bet-spin').value);
-            if(spinning || currentBalance < bet || bet < 1) return alert("Invalid Bet or Low Balance!");
+            if(spinning || currentBalance < bet || bet < 1) return;
+            
             spinning = true;
             await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
             
-            const randomRotation = 1800 + Math.floor(Math.random() * 360); // 5 complete rounds + random
-            document.getElementById('wheel-svg').style.transform = `rotate(${randomRotation}deg)`;
+            const wheel = document.getElementById('wheel-svg');
+            // 6-10 full rotations + random angle for real casino feel
+            const randomRotation = 2160 + Math.floor(Math.random() * 360); 
+            wheel.style.transition = 'transform 5s cubic-bezier(0.15, 0, 0.15, 1)';
+            wheel.style.transform = `rotate(${randomRotation}deg)`;
             
             setTimeout(async () => {
                 let m = 0; const finalDeg = randomRotation % 360;
-                if(finalDeg < 90) m = 5; else if(finalDeg < 180) m = 2; else if(finalDeg < 270) m = 1.5;
+                if(finalDeg >= 0 && finalDeg < 90) m = 5; 
+                else if(finalDeg >= 90 && finalDeg < 180) m = 2; 
+                else if(finalDeg >= 180 && finalDeg < 270) m = 1.5;
+                
                 const win = Math.floor(bet * m);
-                await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
-                alert(m > 0 ? `JACKPOT! +${win} ABP` : "SYSTEM CRASH: 0 ABP");
+                if(win > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
+                
+                // Achievement Alert with Glow
+                alert(m > 0 ? `JACKPOT! +${win} ABP SECURED` : "NODE CRASHED: 0 ABP");
                 spinning = false;
-            }, 5100);
+            }, 5200);
         }
 
         // --- DIAMOND HUNT LOGIC ---
         let mines = [], gameActive = false, gems = 0, currentMinesBet = 0;
         async function initMines() {
             currentMinesBet = parseInt(document.getElementById('bet-mines').value);
-            if(currentBalance < currentMinesBet || currentMinesBet < 1) return alert("Invalid Balance!");
+            if(currentBalance < currentMinesBet || currentMinesBet < 1) return;
             await userRef.update({ balance: firebase.database.ServerValue.increment(-currentMinesBet) });
             const grid = document.getElementById('mines-grid');
             grid.innerHTML = ''; gameActive = true; gems = 0;
@@ -285,7 +300,7 @@
                     tile.classList.add('revealed');
                     if(mines[i] === '💣') { 
                         tile.innerText = '💣'; tile.classList.add('loss'); gameActive = false; 
-                        alert('NODE EXPLODED!'); resetMinesUI(); 
+                        alert('CRITICAL FAILURE: NODE EXPLODED!'); resetMinesUI(); 
                     } else { 
                         tile.innerText = '💎'; tile.classList.add('win'); gems++; 
                     }
@@ -308,24 +323,28 @@
             document.getElementById('mine-action-box').style.display = 'none';
         }
 
-        // --- CRASH LOGIC ---
+        // --- CRASH LOGIC (FIXED MULTIPLIER BLINK) ---
         let crashVal = 1.0, crashInterval, isCrashing = false, currentCrashBet = 0;
         async function startCrash() {
             currentCrashBet = parseInt(document.getElementById('bet-crash').value);
-            if(currentBalance < currentCrashBet || currentCrashBet < 1) return alert("Invalid Balance!");
+            if(currentBalance < currentCrashBet || currentCrashBet < 1) return;
             await userRef.update({ balance: firebase.database.ServerValue.increment(-currentCrashBet) });
             isCrashing = true; crashVal = 1.0;
             document.getElementById('crash-init-box').style.display = 'none';
             document.getElementById('crash-action-box').style.display = 'block';
-            const limit = (Math.random() * 4 + 1).toFixed(2);
+            const limit = (Math.random() * 4.5 + 1.1).toFixed(2);
+            
             crashInterval = setInterval(() => {
                 crashVal += 0.04;
-                document.getElementById('multiplier-display').innerText = crashVal.toFixed(2) + "x";
+                const disp = document.getElementById('multiplier-display');
+                disp.innerText = crashVal.toFixed(2) + "x";
                 document.getElementById('crash-profit').innerText = `EST. PROFIT: ${Math.floor(currentCrashBet * crashVal)} ABP`;
+                
                 if(crashVal >= limit) {
                     clearInterval(crashInterval);
-                    document.getElementById('multiplier-display').style.color = "var(--error)";
-                    setTimeout(resetCrash, 1500);
+                    disp.style.color = "var(--error)";
+                    disp.style.textShadow = "0 0 20px var(--error)";
+                    setTimeout(resetCrash, 1800);
                 }
             }, 100);
         }
@@ -334,13 +353,15 @@
             clearInterval(crashInterval);
             const win = Math.floor(currentCrashBet * crashVal);
             await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
-            alert(`CASHOUT SUCCESS: ${win} ABP`);
+            alert(`CASHOUT SUCCESS: +${win} ABP`);
             resetCrash();
         }
         function resetCrash() {
             clearInterval(crashInterval); isCrashing = false;
-            document.getElementById('multiplier-display').innerText = "1.00x";
-            document.getElementById('multiplier-display').style.color = "var(--cyan)";
+            const disp = document.getElementById('multiplier-display');
+            disp.innerText = "1.00x";
+            disp.style.color = "var(--cyan)";
+            disp.style.textShadow = "var(--premium-glow)";
             document.getElementById('crash-init-box').style.display = 'block';
             document.getElementById('crash-action-box').style.display = 'none';
             document.getElementById('crash-profit').innerText = `EST. PROFIT: 0.00 ABP`;
