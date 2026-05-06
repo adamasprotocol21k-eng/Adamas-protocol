@@ -33,7 +33,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        /* --- USER'S OWN HIGHLIGHT CARD (NEW) --- */
         .user-rank-highlight {
             background: rgba(0, 242, 255, 0.05);
             border: 1px solid var(--cyan);
@@ -53,7 +52,6 @@
             box-shadow: 0 0 10px var(--cyan);
         }
 
-        /* --- STAT GRID --- */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
         .stat-box { 
             background: var(--glass); padding: 15px 10px; border-radius: 18px; 
@@ -62,14 +60,12 @@
         .stat-box .val { font-family: 'Orbitron'; font-size: 13px; font-weight: 900; color: #eee; display: block; margin-top: 4px; }
         .stat-box .lbl { font-size: 7px; color: #444; font-family: 'Orbitron'; letter-spacing: 1px; }
 
-        /* --- LEADERBOARD & AUTO-HIGHLIGHT --- */
         .leaderboard-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 18px; background: rgba(255,255,255,0.01);
             border-radius: 18px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03);
             transition: 0.3s;
         }
-        /* Highlight Class for User */
         .leaderboard-item.is-me {
             background: rgba(0, 242, 255, 0.08) !important;
             border: 1px solid var(--cyan) !important;
@@ -87,7 +83,6 @@
             letter-spacing: 3px; cursor: pointer; font-weight: 900;
         }
         
-        /* [Original Gauge & Other Styles Preserved] */
         .rank-badge { width: 85px; height: 85px; margin: 0 auto 15px; background: rgba(0,0,0,0.4); border: 2px solid var(--cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; box-shadow: 0 0 20px var(--cyan-glow); }
         .gauge-container { position: relative; width: 200px; height: 110px; margin: 15px auto 0; overflow: hidden; }
         .gauge-svg { width: 100%; height: 100%; }
@@ -150,8 +145,7 @@
                 <h3 style="font-family: 'Orbitron'; font-size: 9px; color: #fff; letter-spacing: 2px; opacity: 0.6;">GLOBAL_LEADERBOARD</h3>
                 <span style="font-size: 8px; color: var(--p-green); font-family: 'Orbitron';">LIVE_FEED</span>
             </div>
-            <div id="leaderboard-container">
-                </div>
+            <div id="leaderboard-container"></div>
         </section>
 
         <button class="logout-btn" onclick="logout()">TERMINATE_SESSION</button>
@@ -214,7 +208,6 @@
         }
 
         function loadLeaderboard() {
-            // Load ALL users to find the exact rank (Limit to 50 for performance)
             db.ref('users').orderByChild('balance').limitToLast(50).on('value', (snapshot) => {
                 const container = document.getElementById('leaderboard-container');
                 let users = [];
@@ -239,7 +232,7 @@
                         <div class="leaderboard-item ${isMe ? 'is-me' : ''}">
                             <div class="rank-num">${medal}</div>
                             <div class="rank-addr">${u.wallet.substring(0,6)}...${u.wallet.slice(-4)} ${isMe ? '(YOU)' : ''}</div>
-                            <div class="rank-pts">${(formatABP(u.balance) + " ABP"</div>
+                            <div class="rank-pts">${formatABP(u.balance)} ABP</div>
                         </div>`;
                 });
 
@@ -249,13 +242,13 @@
         }
 
         function logout() { localStorage.removeItem('adamas_user'); window.location.href = "index.html"; }
-        function formatABP(num) {
-    if (num >= 1e9) return (num/1e9).toFixed(2) + 'B';
-    if (num >= 1e6) return (num/1e6).toFixed(2) + 'M';
-    if (num >= 1e3) return (num/1e3).toFixed(1) + 'K';
-    return parseFloat(num || 0).toFixed(2);
-}
 
+        function formatABP(num) {
+            if (num >= 1e9) return (num/1e9).toFixed(2) + 'B';
+            if (num >= 1e6) return (num/1e6).toFixed(2) + 'M';
+            if (num >= 1e3) return (num/1e3).toFixed(1) + 'K';
+            return parseFloat(num || 0).toFixed(2);
+        }
     </script>
 </body>
 </html>
